@@ -1,0 +1,25 @@
+name: push
+
+on:
+  push:
+    branches:
+      - '*'
+
+jobs:
+  push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Intall Dependencies
+        run: npm ci --cache .npm --prefer-offline --ignore-scripts
+
+      - name: Run lint
+        run: npm run lint
