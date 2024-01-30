@@ -2,7 +2,12 @@
   "name": "@workspaces/source",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "start": "nx run-many -t serve",
+    "start:back": "nx run api-pure-institutional:serve",
+    "lint": "nx format:check --all",
+    "lint:write": "nx format:write --all"
+  },
   "private": true,
   "dependencies": {},
   "devDependencies": {
