@@ -7,6 +7,8 @@
     "start:back": "nx run api-pure-institutional:serve",
     "lint": "nx format:check --all",
     "lint:write": "nx format:write --all",
+    "prisma:migrate": "prisma migrate dev",
+    "docker": "docker-compose up",
     "prepare": "husky"
   },
   "private": true,
@@ -62,7 +64,9 @@
     "@nestjs/common": "^10.0.2",
     "@nestjs/core": "^10.0.2",
     "@nestjs/platform-express": "^10.0.2",
+    "@prisma/client": "^5.9.0",
     "axios": "^1.0.0",
+    "nestjs-prisma": "^0.22.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-router-dom": "6.11.2",
