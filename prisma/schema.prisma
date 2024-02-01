@@ -6,19 +6,118 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-  schemas  = ["summons", "geral"]
+  schemas  = ["summons", "general"]
 }
 
+model Auth {
+  auth_id String @id @default(uuid())
+  user_id String
+  email String @unique
+  password String
+  user User @relation(fields: [user_id], references: [user_id])
 
-model Teste {
-    id String @id @default(uuid())
-    name String
-    @@schema("geral")
+  @@schema("general")
 }
 
+model User {
+  user_id String @id @default(uuid())
+  name String  @db.VarChar(100)
+  nick_name String @db.VarChar(100)
+  status Status @default(ACTIVE)
+  birth_date DateTime
+  created_at DateTime
+  updated_at DateTime
+  user_x_departament User_X_Departament[]
+  user_x_summons User_X_Summons[]
+  auth Auth[]
 
-model Teste1 {
-    id String @id @default(uuid())
-    name String
-    @@schema("summons")
+  @@schema("general")
+}
+
+model User_X_Departament {
+  departament_id String
+  user_id String
+  created_at DateTime
+  updated_at DateTime
+  user User @relation(fields: [user_id], references: [user_id])
+  departament Departament @relation(fields: [departament_id], references: [departament_id])
+
+  @@id([user_id, departament_id])
+  @@schema("general")
+}
+
+model Departament {
+  departament_id String @id @default(uuid())
+  name String @db.VarChar(100)
+  description String
+  created_at DateTime
+  updated_at DateTime
+  user_x_departament User_X_Departament[]
+  departament_x_company Departament_X_Company[]
+
+  @@schema("general")
+}
+
+model Departament_X_Company {
+  departament_id String
+  company_id String
+  created_at DateTime
+  updated_at DateTime
+  departament Departament @relation(fields: [departament_id], references: [departament_id])
+  company Company @relation(fields: [company_id], references: [company_id])
+
+  @@id([departament_id, company_id])
+  @@schema("general")
+}
+
+model Company {
+  company_id String @id @default(uuid())
+  name String @db.VarChar(100)
+  cnpj String @db.VarChar(14)
+  created_at DateTime
+  updated_at DateTime
+  departament_x_company Departament_X_Company[]
+
+  @@schema("general")
+}
+
+model User_X_Summons {
+  user_id String
+  summons_id String
+  created_at DateTime
+  updated_at DateTime
+  user User @relation(fields: [user_id], references: [user_id])
+  summons Summons @relation(fields: [summons_id], references: [summons_id])
+
+  @@id([user_id, summons_id])
+  @@schema("general")
+}
+
+enum Status {
+  ACTIVE
+  INACTIVE
+  BLOCKED
+
+  @@schema("general")
+}
+
+model Summons {
+  summons_id String @id @default(uuid())
+  title String
+  description String
+  status SummonsStatus @default(PENDING)
+  created_at DateTime
+  updated_at DateTime
+  user_x_summons User_X_Summons[]
+
+  @@schema("summons")
+}
+
+enum SummonsStatus {
+  STARTED
+  PENDING
+  PAUSED
+  FINISHED
+
+  @@schema("summons")
 }
