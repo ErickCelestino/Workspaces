@@ -4,10 +4,11 @@
   "license": "MIT",
   "scripts": {
     "start": "nx run-many -t serve",
-    "start:back": "nx run api-pure-institutional:serve",
+    "start:back": "nx run api-summons:serve",
     "lint": "nx format:check --all",
     "lint:write": "nx format:write --all",
     "prisma:migrate": "prisma migrate dev",
+    "prisma:studio": "prisma studio",
     "docker": "docker-compose up",
     "prepare": "husky"
   },

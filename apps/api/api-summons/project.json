@@ -1,5 +1,5 @@
 {
-  "name": "api-api-summons",
+  "name": "api-summons",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/api/api-summons/src",
   "projectType": "application",
@@ -26,14 +26,14 @@
       "executor": "@nx/js:node",
       "defaultConfiguration": "development",
       "options": {
-        "buildTarget": "api-api-summons:build"
+        "buildTarget": "api-summons:build"
       },
       "configurations": {
         "development": {
-          "buildTarget": "api-api-summons:build:development"
+          "buildTarget": "api-summons:build:development"
         },
         "production": {
-          "buildTarget": "api-api-summons:build:production"
+          "buildTarget": "api-summons:build:production"
         }
       }
     },

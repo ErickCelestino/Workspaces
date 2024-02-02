@@ -1,7 +1,7 @@
 {
-  "name": "api-api-summons-e2e",
+  "name": "api-summons-e2e",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
-  "implicitDependencies": ["api-api-summons"],
+  "implicitDependencies": ["api-summons"],
   "projectType": "application",
   "targets": {
     "e2e": {
