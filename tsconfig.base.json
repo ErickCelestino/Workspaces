@@ -15,6 +15,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@workspaces/data-access": ["libs/data-access/src/index.ts"],
       "@workspaces/domain": ["libs/domain/src/index.ts"],
       "@workspaces/feature": ["libs/feature/src/index.ts"]
     }
