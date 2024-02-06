@@ -1,2 +1,2 @@
 export * from './lib/repository';
-export * from './lib/dtos';
+export * from './lib/dto';
