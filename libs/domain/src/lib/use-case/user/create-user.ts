@@ -14,7 +14,7 @@ export class CreateUser
     @Inject('CreateUserRepository')
     private createUserRepository: CreateUserRepository,
     @Inject('FilterByEmailOrNicknameRepository')
-    private filterEmailOrNicknameRepository: FilterByEmailOrNicknameRepository
+    private filterNicknameRepository: FilterByEmailOrNicknameRepository
   ) {}
 
   async execute(
@@ -34,11 +34,9 @@ export class CreateUser
       nickName: nickName,
     };
 
-    const filterResult = await this.filterEmailOrNicknameRepository.filter(
-      filterDto
-    );
+    const filterResult = await this.filterNicknameRepository.filter(filterDto);
 
-    if (filterResult.length > 1) {
+    if (filterResult.length > 0) {
       return left(new EntityAlreadyExists(nickName));
     }
 
