@@ -24,9 +24,10 @@ model User {
   name String  @db.VarChar(100)
   nick_name String @db.VarChar(100)
   status Status @default(ACTIVE)
-  birth_date DateTime
-  created_at DateTime
-  updated_at DateTime
+  birth_date DateTime?
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+  deleted_at DateTime?
   user_x_departament User_X_Departament[]
   user_x_summons User_X_Summons[]
   auth Auth[]
@@ -37,8 +38,10 @@ model User {
 model User_X_Departament {
   departament_id String
   user_id String
-  created_at DateTime
-  updated_at DateTime
+  status Status @default(ACTIVE)
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+  deleted_at DateTime?
   user User @relation(fields: [user_id], references: [user_id])
   departament Departament @relation(fields: [departament_id], references: [departament_id])
 
@@ -50,8 +53,10 @@ model Departament {
   departament_id String @id @default(uuid())
   name String @db.VarChar(100)
   description String
-  created_at DateTime
-  updated_at DateTime
+  status Status @default(ACTIVE)
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+  deleted_at DateTime?
   user_x_departament User_X_Departament[]
   departament_x_company Departament_X_Company[]
 
@@ -61,8 +66,10 @@ model Departament {
 model Departament_X_Company {
   departament_id String
   company_id String
-  created_at DateTime
-  updated_at DateTime
+  status Status @default(ACTIVE)
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+  deleted_at DateTime?
   departament Departament @relation(fields: [departament_id], references: [departament_id])
   company Company @relation(fields: [company_id], references: [company_id])
 
@@ -74,8 +81,10 @@ model Company {
   company_id String @id @default(uuid())
   name String @db.VarChar(100)
   cnpj String @db.VarChar(14)
-  created_at DateTime
-  updated_at DateTime
+  status Status @default(ACTIVE)
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+  deleted_at DateTime?
   departament_x_company Departament_X_Company[]
 
   @@schema("general")
@@ -84,8 +93,10 @@ model Company {
 model User_X_Summons {
   user_id String
   summons_id String
-  created_at DateTime
-  updated_at DateTime
+  status Status @default(ACTIVE)
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+  deleted_at DateTime?
   user User @relation(fields: [user_id], references: [user_id])
   summons Summons @relation(fields: [summons_id], references: [summons_id])
 
@@ -106,8 +117,9 @@ model Summons {
   title String
   description String
   status SummonsStatus @default(PENDING)
-  created_at DateTime
-  updated_at DateTime
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+  deleted_at DateTime?
   user_x_summons User_X_Summons[]
 
   @@schema("summons")
