@@ -27,7 +27,8 @@ const makeSut = (): SutTypes => {
 
   const createUserDto: CreateUserDto = {
     name: userMock.name,
-    nickName: userMock.nickname,
+    nickname: userMock.nickname,
+    birthDate: new Date(),
   };
 
   const filterNickNameDto: FilterByEmailOrNicknameDto = {
@@ -62,7 +63,8 @@ describe('CreateUser', () => {
 
     const createUserDto: CreateUserDto = {
       name: '',
-      nickName: userMock.nickname,
+      nickname: userMock.nickname,
+      birthDate: new Date(),
     };
 
     const result = await sut.execute(createUserDto);
@@ -76,7 +78,8 @@ describe('CreateUser', () => {
 
     const createUserDto: CreateUserDto = {
       name: userMock.name,
-      nickName: '',
+      nickname: '',
+      birthDate: new Date(),
     };
 
     const result = await sut.execute(createUserDto);

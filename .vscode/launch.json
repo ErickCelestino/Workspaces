@@ -15,11 +15,11 @@
       ]
     },
     {
-      "name": "api-pure-institutional – Server",
+      "name": "api-general – Server",
       "type": "node",
       "request": "launch",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "start:back"],
+      "runtimeArgs": ["run", "start:back-general"],
       "outputCapture": "std",
       "internalConsoleOptions": "openOnSessionStart",
       "console": "internalConsole",

@@ -1,9 +1,11 @@
-import { faker } from '@faker-js/faker';
 import { User } from '../../../src/lib/entity/user';
+import { faker } from '@faker-js/faker';
+import { authMock } from './auth.mock';
 
 export const userMock: User = {
-  id: faker.string.uuid(),
-  email: faker.string.alpha(3),
+  user_id: faker.string.uuid(),
   name: faker.string.alpha(3),
   nickname: faker.string.alpha(3),
+  birthDate: faker.date.birthdate(),
+  auth: [authMock],
 };

@@ -5,7 +5,7 @@ import { CreateUser, CreateUserDto } from '@workspaces/domain';
 export class CreateUserService {
   constructor(private useCase: CreateUser) {}
 
-  async create(registerUserDto: CreateUserDto) {
-    return this.useCase.execute(registerUserDto);
+  async create(createUserDto: CreateUserDto) {
+    return this.useCase.execute(createUserDto);
   }
 }

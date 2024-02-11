@@ -6,11 +6,12 @@ export class CreateUserRepositoryImpl implements CreateUserRepository {
   constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
 
   async create(input: CreateUserDto): Promise<void> {
-    const { name, nickName } = input;
+    const { name, nickname, birthDate } = input;
     await this.prismaService.user.create({
       data: {
         name: name,
-        nick_name: nickName,
+        nick_name: nickname,
+        birth_date: new Date(birthDate),
       },
     });
 

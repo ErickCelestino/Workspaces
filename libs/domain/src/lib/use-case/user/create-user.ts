@@ -20,24 +20,23 @@ export class CreateUser
   async execute(
     input: CreateUserDto
   ): Promise<Either<InsufficientCharacters, void>> {
-    const { name, nickName } = input;
+    const { name, nickname } = input;
 
     if (name.length < 3) {
       return left(new InsufficientCharacters('name'));
     }
-
-    if (nickName.length < 3) {
+    if (nickname.length < 3) {
       return left(new InsufficientCharacters('nickName'));
     }
 
     const filterDto: FilterByEmailOrNicknameDto = {
-      nickName: nickName,
+      nickName: nickname,
     };
 
     const filterResult = await this.filterNicknameRepository.filter(filterDto);
 
     if (filterResult.length > 0) {
-      return left(new EntityAlreadyExists(nickName));
+      return left(new EntityAlreadyExists(nickname));
     }
 
     await this.createUserRepository.create(input);

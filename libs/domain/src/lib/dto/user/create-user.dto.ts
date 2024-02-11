@@ -1,4 +1,5 @@
 export interface CreateUserDto {
   name: string;
-  nickName: string;
+  nickname: string;
+  birthDate: Date;
 }

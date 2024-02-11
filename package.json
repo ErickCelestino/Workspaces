@@ -4,7 +4,8 @@
   "license": "MIT",
   "scripts": {
     "start": "nx run-many -t serve",
-    "start:back": "nx run api-summons:serve",
+    "start:back-summons": "nx run api-summons:serve",
+    "start:back-general": "nx run api-general:serve",
     "lint": "nx format:check --all",
     "lint:write": "nx format:write --all",
     "test": "nx run-many -t test",

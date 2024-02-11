@@ -1,6 +1,9 @@
+import { Auth } from './auth';
+
 export interface User {
-  id: string;
+  user_id: string;
   name: string;
   nickname: string;
-  email: string;
+  birthDate: Date | null;
+  auth: Auth[];
 }
