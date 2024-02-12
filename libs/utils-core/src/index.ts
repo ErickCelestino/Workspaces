@@ -1,1 +1,1 @@
-export * from './lib/utils-core';
+export * from './lib/hash-generator';

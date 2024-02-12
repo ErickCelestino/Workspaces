@@ -8,7 +8,11 @@ import { Either, left, right } from '../../shared/either';
 import { Inject } from '@nestjs/common';
 
 export class CreateUser
-  implements UseCase<CreateUserDto, Either<InsufficientCharacters, void>>
+  implements
+    UseCase<
+      CreateUserDto,
+      Either<InsufficientCharacters | EntityAlreadyExists, void>
+    >
 {
   constructor(
     @Inject('CreateUserRepository')
@@ -19,7 +23,7 @@ export class CreateUser
 
   async execute(
     input: CreateUserDto
-  ): Promise<Either<InsufficientCharacters, void>> {
+  ): Promise<Either<InsufficientCharacters | EntityAlreadyExists, void>> {
     const { name, nickname } = input;
 
     if (name.length < 3) {
