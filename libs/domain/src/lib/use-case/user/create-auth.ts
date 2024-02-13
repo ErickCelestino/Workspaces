@@ -1,7 +1,15 @@
 import { UseCase } from '../../base/use-case';
-import { CreateAuthDto } from '../../dto';
-import { EntityNotExists, InsufficientCharacters } from '../../error';
-import { CreateAuthRepository, FindUserByIdRepository } from '../../repository';
+import { CreateAuthDto, FilterByEmailOrNicknameDto } from '../../dto';
+import {
+  EntityAlreadyExists,
+  EntityNotExists,
+  InsufficientCharacters,
+} from '../../error';
+import {
+  CreateAuthRepository,
+  FilterByEmailOrNicknameRepository,
+  FindUserByIdRepository,
+} from '../../repository';
 import { Either, left, right } from '../../shared/either';
 import { HashGenerator } from '@workspaces/utils-core';
 import { Inject } from '@nestjs/common';
@@ -14,6 +22,8 @@ export class CreateAuth
     >
 {
   constructor(
+    @Inject('FilterByEmailOrNicknameRepository')
+    private filterByEmailRepository: FilterByEmailOrNicknameRepository,
     @Inject('FindUserByIdRepository')
     private findUserByIdRepository: FindUserByIdRepository,
     @Inject('HashGenerator')
@@ -39,9 +49,19 @@ export class CreateAuth
       return left(new EntityNotExists('User'));
     }
 
+    const filterDto: FilterByEmailOrNicknameDto = {
+      email: email,
+    };
+
+    const filteredEmail = await this.filterByEmailRepository.filter(filterDto);
+
+    if (filteredEmail.length > 1) {
+      return left(new EntityAlreadyExists(email));
+    }
+
     const userResult = await this.findUserByIdRepository.find(user_id);
 
-    if (userResult.length < 1) {
+    if (userResult.user_id.length < 1) {
       return left(new EntityNotExists('User'));
     }
 
