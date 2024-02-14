@@ -55,7 +55,7 @@ export class CreateAuth
 
     const filteredEmail = await this.filterByEmailRepository.filter(filterDto);
 
-    if (filteredEmail.length > 1) {
+    if (filteredEmail.length > 0) {
       return left(new EntityAlreadyExists(email));
     }
 
