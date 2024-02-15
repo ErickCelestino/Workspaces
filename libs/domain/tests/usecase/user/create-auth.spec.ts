@@ -57,14 +57,19 @@ const makeSut = (): SutTypes => {
 };
 
 describe('CreateAuth', () => {
-  it('should left InsufficientCharacters if sent an email with less than three characters', async () => {
-    const { sut } = makeSut();
+  it('should return undefined if send correct user', async () => {
+    const { createAuthDto, sut } = makeSut();
 
-    const createAuthDto: CreateAuthDto = {
-      email: '',
-      password: 'aaa',
-      user_id: authMock.user_id,
-    };
+    const result = await sut.execute(createAuthDto);
+
+    expect(result.isRight()).toBe(true);
+    expect(result.value).toBe(undefined);
+  });
+
+  it('should left InsufficientCharacters if sent an email with less than three characters', async () => {
+    const { sut, createAuthDto } = makeSut();
+
+    createAuthDto.email = '';
 
     const result = await sut.execute(createAuthDto);
 
@@ -73,13 +78,9 @@ describe('CreateAuth', () => {
   });
 
   it('should left InsufficientCharacters if sent an password with less than three characters', async () => {
-    const { sut } = makeSut();
+    const { sut, createAuthDto } = makeSut();
 
-    const createAuthDto: CreateAuthDto = {
-      email: authMock.email,
-      password: '',
-      user_id: authMock.user_id,
-    };
+    createAuthDto.password = '';
 
     const result = await sut.execute(createAuthDto);
 
@@ -88,13 +89,9 @@ describe('CreateAuth', () => {
   });
 
   it('should left EntityNotExists if sent an user id with less than three characters', async () => {
-    const { sut } = makeSut();
+    const { sut, createAuthDto } = makeSut();
 
-    const createAuthDto: CreateAuthDto = {
-      email: authMock.email,
-      password: 'aaa',
-      user_id: '',
-    };
+    createAuthDto.user_id = '';
 
     const result = await sut.execute(createAuthDto);
 
@@ -103,12 +100,14 @@ describe('CreateAuth', () => {
   });
 
   it('should return EntityAlreadyExists if send email already exist in database', async () => {
-    const {
-      createAuthDto,
-      createAuthRepository,
-      findUserByIdRepository,
-      hashGenerator,
-    } = makeSut();
+    const { createAuthRepository, findUserByIdRepository, hashGenerator } =
+      makeSut();
+
+    const createAuthDto: CreateAuthDto = {
+      user_id: 'invalid_id',
+      email: authMock.email,
+      password: 'valid_password',
+    };
 
     const mockEmptyRepository: FilterByEmailOrNicknameRepository = {
       filter: jest.fn(async () => [userMock]),
@@ -125,5 +124,32 @@ describe('CreateAuth', () => {
 
     expect(result.isLeft()).toBe(true);
     expect(result.value).toBeInstanceOf(EntityAlreadyExists);
+  });
+
+  it('should return EntityNotExists if send invalid user id', async () => {
+    const {
+      createAuthDto,
+      createAuthRepository,
+      filterEmailRepository,
+      hashGenerator,
+    } = makeSut();
+
+    userMock.user_id = '';
+
+    const mockEmptyRepository: FindUserByIdRepository = {
+      find: jest.fn(async () => userMock),
+    };
+
+    const sut = new CreateAuth(
+      filterEmailRepository,
+      mockEmptyRepository,
+      hashGenerator,
+      createAuthRepository
+    );
+
+    const result = await sut.execute(createAuthDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.value).toBeInstanceOf(EntityNotExists);
   });
 });

@@ -5,6 +5,6 @@ export class HashGeneratorMock implements HashGenerator {
   input = '';
   async hash(input: string): Promise<string> {
     this.input = input;
-    return '';
+    return 'hash';
   }
 }

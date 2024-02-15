@@ -56,7 +56,11 @@ export class CreateAuth
     const filteredEmail = await this.filterByEmailRepository.filter(filterDto);
 
     if (filteredEmail.length > 0) {
-      return left(new EntityAlreadyExists(email));
+      for (const filteredEmailItem of filteredEmail) {
+        if (filteredEmailItem.user_id !== user_id) {
+          return left(new EntityAlreadyExists(email));
+        }
+      }
     }
 
     const userResult = await this.findUserByIdRepository.find(user_id);
