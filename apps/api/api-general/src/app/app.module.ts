@@ -3,9 +3,10 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { CreateUserModule } from './create-user/create-user.module';
+import { CreateAuthModule } from './create-auth/create-auth.module';
 
 @Module({
-  imports: [CreateUserModule],
+  imports: [CreateUserModule, CreateAuthModule],
   controllers: [AppController],
   providers: [AppService],
 })

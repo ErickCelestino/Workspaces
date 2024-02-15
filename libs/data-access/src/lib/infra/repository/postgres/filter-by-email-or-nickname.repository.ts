@@ -26,6 +26,7 @@ export class FilterByEmailOrNicknameRepositoryImpl
           select: {
             auth_id: true,
             email: true,
+            user_id: true,
           },
         },
       },
