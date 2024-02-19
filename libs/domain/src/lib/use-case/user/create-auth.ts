@@ -9,9 +9,9 @@ import {
   CreateAuthRepository,
   FilterByEmailOrNicknameRepository,
   FindUserByIdRepository,
+  HashGenerator,
 } from '../../repository';
 import { Either, left, right } from '../../shared/either';
-import { HashGenerator } from '@workspaces/utils-core';
 import { Inject } from '@nestjs/common';
 
 export class CreateAuth

@@ -8,7 +8,7 @@ import {
   FilterByEmailOrNicknameRepositoryImpl,
   FindUserByIdRepositoryImpl,
 } from '@workspaces/data-access';
-import { HashGeneratorImpl } from '@workspaces/utils-core';
+import { HashGeneratorImpl } from '@workspaces/data-access';
 
 @Module({
   controllers: [CreateAuthController],

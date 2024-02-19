@@ -17,8 +17,7 @@
     "paths": {
       "@workspaces/data-access": ["libs/data-access/src/index.ts"],
       "@workspaces/domain": ["libs/domain/src/index.ts"],
-      "@workspaces/feature": ["libs/feature/src/index.ts"],
-      "@workspaces/utils-core": ["libs/utils-core/src/index.ts"]
+      "@workspaces/feature": ["libs/feature/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

@@ -1,5 +1,4 @@
-// eslint-disable-next-line @nx/enforce-module-boundaries
-import { HashGenerator } from '../../../../utils-core';
+import { HashGenerator } from '../../../src';
 
 export class HashGeneratorMock implements HashGenerator {
   input = '';

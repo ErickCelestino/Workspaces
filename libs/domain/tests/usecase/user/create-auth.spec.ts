@@ -1,5 +1,3 @@
-// eslint-disable-next-line @nx/enforce-module-boundaries
-import { HashGenerator } from '../../../../utils-core';
 import {
   CreateAuth,
   CreateAuthDto,
@@ -9,6 +7,7 @@ import {
   FilterByEmailOrNicknameRepository,
   FindUserByIdRepository,
   InsufficientCharacters,
+  HashGenerator,
 } from '../../../src';
 import { userMock } from '../../entity';
 import { authMock } from '../../entity/user/auth.mock';
