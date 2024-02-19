@@ -9,7 +9,7 @@ import {
   CreateAuthRepository,
   FilterByEmailOrNicknameRepository,
   FindUserByIdRepository,
-  HashGenerator,
+  HashGeneratorRepository,
 } from '../../repository';
 import { Either, left, right } from '../../shared/either';
 import { Inject } from '@nestjs/common';
@@ -26,8 +26,8 @@ export class CreateAuth
     private filterByEmailRepository: FilterByEmailOrNicknameRepository,
     @Inject('FindUserByIdRepository')
     private findUserByIdRepository: FindUserByIdRepository,
-    @Inject('HashGenerator')
-    private hashGenerator: HashGenerator,
+    @Inject('HashGeneratorRepository')
+    private hashGenerator: HashGeneratorRepository,
     @Inject('CreateAuthRepository')
     private createAuthRepository: CreateAuthRepository
   ) {}

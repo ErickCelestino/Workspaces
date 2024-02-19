@@ -7,7 +7,7 @@ import {
   FilterByEmailOrNicknameRepository,
   FindUserByIdRepository,
   InsufficientCharacters,
-  HashGenerator,
+  HashGeneratorRepository,
 } from '../../../src';
 import { userMock } from '../../entity';
 import { authMock } from '../../entity/user/auth.mock';
@@ -15,7 +15,7 @@ import {
   CreateAuthRepositoryMock,
   FilterByEmailOrNicknameRepositoryMock,
   FindUserByIdRepositoryMock,
-  HashGeneratorMock,
+  HashGeneratorRepositoryMock,
 } from '../../repository';
 
 interface SutTypes {
@@ -24,13 +24,13 @@ interface SutTypes {
   createAuthRepository: CreateAuthRepository;
   findUserByIdRepository: FindUserByIdRepository;
   filterEmailRepository: FilterByEmailOrNicknameRepository;
-  hashGenerator: HashGenerator;
+  hashGenerator: HashGeneratorRepository;
 }
 
 const makeSut = (): SutTypes => {
   const createAuthRepository = new CreateAuthRepositoryMock();
   const findUserByIdRepository = new FindUserByIdRepositoryMock();
-  const hashGenerator = new HashGeneratorMock();
+  const hashGenerator = new HashGeneratorRepositoryMock();
   const filterEmailRepository = new FilterByEmailOrNicknameRepositoryMock();
   const createAuthDto: CreateAuthDto = {
     email: authMock.email,

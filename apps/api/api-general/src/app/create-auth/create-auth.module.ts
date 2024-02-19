@@ -28,7 +28,7 @@ import { HashGeneratorImpl } from '@workspaces/data-access';
       useClass: CreateAuthRepositoryImpl,
     },
     {
-      provide: 'HashGenerator',
+      provide: 'HashGeneratorRepository',
       useClass: HashGeneratorImpl,
     },
     {

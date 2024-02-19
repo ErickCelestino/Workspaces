@@ -1,6 +1,6 @@
-import { HashGenerator } from '../../../src';
+import { HashGeneratorRepository } from '../../../src';
 
-export class HashGeneratorMock implements HashGenerator {
+export class HashGeneratorRepositoryMock implements HashGeneratorRepository {
   input = '';
   async hash(input: string): Promise<string> {
     this.input = input;
