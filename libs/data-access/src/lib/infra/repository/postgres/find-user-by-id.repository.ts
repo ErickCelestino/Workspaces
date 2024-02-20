@@ -19,7 +19,9 @@ export class FindUserByIdRepositoryImpl implements FindUserByIdRepository {
           select: {
             auth_id: true,
             email: true,
+            password: true,
             user_id: true,
+            status: true,
           },
         },
       },
@@ -31,6 +33,8 @@ export class FindUserByIdRepositoryImpl implements FindUserByIdRepository {
         authId: auth.auth_id,
         userId: auth.user_id,
         email: auth.email,
+        password: auth.password,
+        status: auth.status,
       };
     });
 

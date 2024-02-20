@@ -10,6 +10,7 @@
     "lint:write": "nx format:write --all",
     "test": "nx run-many -t test",
     "test:coverage": "nx run-many -t test --codeCoverage",
+    "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "prisma:studio": "prisma studio",
     "docker": "docker-compose up",

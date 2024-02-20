@@ -12,9 +12,21 @@ datasource db {
 model Auth {
   auth_id String @id @default(uuid())
   user_id String
-  email String @unique
-  password String
+  email String
+  password String?
+  access_token String?
+  status AuthStatus @default(DEFAULT)
   user User @relation(fields: [user_id], references: [user_id])
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+  deleted_at DateTime?
+
+  @@schema("general")
+}
+
+enum AuthStatus {
+  GOOGLE
+  DEFAULT
 
   @@schema("general")
 }
