@@ -35,7 +35,7 @@ export class CreateAuth
   async execute(
     input: CreateAuthDto
   ): Promise<Either<InsufficientCharacters | EntityNotExists, void>> {
-    const { email, password, user_id } = input;
+    const { email, password, userId } = input;
 
     if (email.length < 3) {
       return left(new InsufficientCharacters('Email'));
@@ -45,7 +45,7 @@ export class CreateAuth
       return left(new InsufficientCharacters('Password'));
     }
 
-    if (user_id.length < 3) {
+    if (userId.length < 3) {
       return left(new EntityNotExists('User'));
     }
 
@@ -57,15 +57,15 @@ export class CreateAuth
 
     if (filteredEmail.length > 0) {
       for (const filteredEmailItem of filteredEmail) {
-        if (filteredEmailItem.user_id !== user_id) {
+        if (filteredEmailItem.userId !== userId) {
           return left(new EntityAlreadyExists(email));
         }
       }
     }
 
-    const userResult = await this.findUserByIdRepository.find(user_id);
+    const userResult = await this.findUserByIdRepository.find(userId);
 
-    if (userResult.user_id.length < 1) {
+    if (userResult.userId.length < 1) {
       return left(new EntityNotExists('User'));
     }
 

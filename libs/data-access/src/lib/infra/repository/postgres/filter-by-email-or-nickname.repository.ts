@@ -1,5 +1,6 @@
 import { Inject } from '@nestjs/common';
 import {
+  Auth,
   FilterByEmailOrNicknameDto,
   FilterByEmailOrNicknameRepository,
   User,
@@ -33,9 +34,17 @@ export class FilterByEmailOrNicknameRepositoryImpl
     });
 
     const mapResult: User[] = userList.map((user) => {
+      const mappedAuth: Auth[] = user.auth.map((auth) => {
+        return {
+          authId: auth.auth_id,
+          userId: auth.user_id,
+          email: auth.email,
+        };
+      });
+
       return {
-        user_id: user.user_id,
-        auth: user.auth,
+        userId: user.user_id,
+        auth: mappedAuth,
         name: user.name,
         nickname: user.nick_name,
         birthDate: user.birth_date,

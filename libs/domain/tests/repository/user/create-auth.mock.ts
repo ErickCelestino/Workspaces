@@ -4,7 +4,7 @@ export class CreateAuthRepositoryMock implements CreateAuthRepository {
   createAuth: CreateAuthDto = {
     email: '',
     password: '',
-    user_id: '',
+    userId: '',
   };
   async create(input: CreateAuthDto): Promise<void> {
     this.createAuth = input;

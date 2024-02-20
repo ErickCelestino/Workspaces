@@ -2,7 +2,7 @@ import { Auth } from '../../../src';
 import { faker } from '@faker-js/faker';
 
 export const authMock: Auth = {
-  auth_id: faker.string.uuid(),
-  user_id: faker.string.uuid(),
+  authId: faker.string.uuid(),
+  userId: faker.string.uuid(),
   email: faker.internet.email(),
 };

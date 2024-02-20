@@ -10,7 +10,7 @@ export class CreateAuthRepositoryImpl implements CreateAuthRepository {
       data: {
         email: input.email,
         password: input.password,
-        user_id: input.user_id,
+        user_id: input.userId,
       },
     });
 

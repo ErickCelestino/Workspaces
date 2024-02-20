@@ -35,7 +35,7 @@ const makeSut = (): SutTypes => {
   const createAuthDto: CreateAuthDto = {
     email: authMock.email,
     password: 'any_password',
-    user_id: authMock.auth_id,
+    userId: authMock.authId,
   };
 
   const sut = new CreateAuth(
@@ -90,7 +90,7 @@ describe('CreateAuth', () => {
   it('should left EntityNotExists if sent an user id with less than three characters', async () => {
     const { sut, createAuthDto } = makeSut();
 
-    createAuthDto.user_id = '';
+    createAuthDto.userId = '';
 
     const result = await sut.execute(createAuthDto);
 
@@ -103,7 +103,7 @@ describe('CreateAuth', () => {
       makeSut();
 
     const createAuthDto: CreateAuthDto = {
-      user_id: 'invalid_id',
+      userId: 'invalid_id',
       email: authMock.email,
       password: 'valid_password',
     };
@@ -133,7 +133,7 @@ describe('CreateAuth', () => {
       hashGenerator,
     } = makeSut();
 
-    userMock.user_id = '';
+    userMock.userId = '';
 
     const mockEmptyRepository: FindUserByIdRepository = {
       find: jest.fn(async () => userMock),

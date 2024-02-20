@@ -1,5 +1,5 @@
 export interface Auth {
-  auth_id: string;
-  user_id: string;
+  authId: string;
+  userId: string;
   email: string;
 }
