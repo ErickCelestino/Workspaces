@@ -1,5 +1,5 @@
 import { UseCase } from '../../base/use-case';
-import { CreateAuthDto, FilterByEmailOrNicknameDto } from '../../dto';
+import { CreateAuthDto } from '../../dto';
 import {
   EntityAlreadyExists,
   EntityNotExists,
@@ -49,18 +49,10 @@ export class CreateAuth
       return left(new EntityNotExists('User'));
     }
 
-    const filterDto: FilterByEmailOrNicknameDto = {
-      email: email,
-    };
+    const filteredEmail = await this.filterByEmailRepository.filter(email);
 
-    const filteredEmail = await this.filterByEmailRepository.filter(filterDto);
-
-    if (filteredEmail.length > 0) {
-      for (const filteredEmailItem of filteredEmail) {
-        if (filteredEmailItem.userId !== userId) {
-          return left(new EntityAlreadyExists(email));
-        }
-      }
+    if (filteredEmail.userId.length > 0) {
+      return left(new EntityAlreadyExists(email));
     }
 
     const userResult = await this.findUserByIdRepository.find(userId);

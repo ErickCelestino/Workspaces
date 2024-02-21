@@ -1,1 +1,1 @@
-export * from './compare-hash.dto';
+export * from './validate-hash.dto';

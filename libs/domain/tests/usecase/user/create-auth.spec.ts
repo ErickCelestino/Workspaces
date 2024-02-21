@@ -109,7 +109,7 @@ describe('CreateAuth', () => {
     };
 
     const mockEmptyRepository: FilterByEmailOrNicknameRepository = {
-      filter: jest.fn(async () => [userMock]),
+      filter: jest.fn(async () => userMock),
     };
 
     const sut = new CreateAuth(

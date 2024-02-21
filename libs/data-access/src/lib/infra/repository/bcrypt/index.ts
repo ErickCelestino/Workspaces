@@ -1,2 +1,2 @@
-export * from './compare-hash.impl';
-export * from './hash-generator.impl';
+export * from './validate-hash.repository';
+export * from './hash-generator.repository';

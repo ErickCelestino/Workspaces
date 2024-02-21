@@ -92,7 +92,7 @@ describe('CreateUser', () => {
     const { createUserDto, createUserRepository } = makeSut();
 
     const mockEmptyRepository: FilterByEmailOrNicknameRepository = {
-      filter: jest.fn(async () => [userMock]),
+      filter: jest.fn(async () => userMock),
     };
 
     const sut = new CreateUser(createUserRepository, mockEmptyRepository);

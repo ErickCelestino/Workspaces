@@ -1,7 +1,6 @@
 import { Inject } from '@nestjs/common';
 import {
   Auth,
-  FilterByEmailOrNicknameDto,
   FilterByEmailOrNicknameRepository,
   User,
 } from '@workspaces/domain';
@@ -12,11 +11,21 @@ export class FilterByEmailOrNicknameRepositoryImpl
 {
   constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
 
-  async filter(input: FilterByEmailOrNicknameDto): Promise<User[]> {
-    const userList = await this.prismaService.user.findMany({
+  async filter(input: string): Promise<User> {
+    const userResult = await this.prismaService.user.findFirst({
       where: {
-        ...(input.email ? { auth: { some: { email: input.email } } } : {}),
-        ...(input.nickName ? { nick_name: input.nickName } : {}),
+        OR: [
+          {
+            nick_name: input,
+          },
+          {
+            auth: {
+              some: {
+                email: input,
+              },
+            },
+          },
+        ],
       },
       select: {
         user_id: true,
@@ -28,29 +37,33 @@ export class FilterByEmailOrNicknameRepositoryImpl
             auth_id: true,
             email: true,
             user_id: true,
+            status: true,
+            password: true,
           },
         },
       },
     });
 
-    const mapResult: User[] = userList.map((user) => {
-      const mappedAuth: Auth[] = user.auth.map((auth) => {
-        return {
-          authId: auth.auth_id,
-          userId: auth.user_id,
-          email: auth.email,
-        };
-      });
-
+    const mappedAuth = userResult?.auth == null ? [] : userResult.auth;
+    const findedAuth: Auth[] = mappedAuth.map((auth) => {
       return {
-        userId: user.user_id,
-        auth: mappedAuth,
-        name: user.name,
-        nickname: user.nick_name,
-        birthDate: user.birth_date,
+        authId: auth.auth_id,
+        userId: auth.user_id,
+        email: auth.email,
+        status: auth.status,
+        password: auth.password,
       };
     });
 
-    return mapResult;
+    const mappedUser: User = {
+      name: userResult?.name == null ? '' : userResult.name,
+      nickname: userResult?.nick_name == null ? '' : userResult.nick_name,
+      birthDate:
+        userResult?.birth_date == null ? new Date() : userResult.birth_date,
+      userId: userResult?.user_id == null ? '' : userResult.user_id,
+      auth: findedAuth,
+    };
+
+    return mappedUser;
   }
 }

@@ -1,14 +1,19 @@
-import { FilterByEmailOrNicknameDto } from '../../../src/lib/dto/user/filter-by-email-or-nickname.dto';
-import { User } from '../../../src/lib/entity';
-import { FilterByEmailOrNicknameRepository } from '../../../src/lib/repository/user/filter-by-email-or-nickname';
+import { User, FilterByEmailOrNicknameRepository } from '../../../src';
 
 export class FilterByEmailOrNicknameRepositoryMock
   implements FilterByEmailOrNicknameRepository
 {
-  filterEmailOrNickname: FilterByEmailOrNicknameDto = {};
+  input = '';
 
-  async filter(input: FilterByEmailOrNicknameDto): Promise<User[]> {
-    this.filterEmailOrNickname = input;
-    return [];
+  async filter(input: string): Promise<User> {
+    const emptyUser: User = {
+      auth: [],
+      birthDate: new Date(),
+      name: '',
+      nickname: '',
+      userId: '',
+    };
+    this.input = input;
+    return emptyUser;
   }
 }
