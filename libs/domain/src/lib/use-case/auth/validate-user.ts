@@ -1,6 +1,6 @@
 import { Inject } from '@nestjs/common';
 import { UseCase } from '../../base/use-case';
-import { ValidateHashDto, LoginDto, SignInDto } from '../../dto';
+import { ValidateHashDto, LoginDto } from '../../dto';
 import {
   EntityNotExists,
   IncorrectPassword,
@@ -14,9 +14,12 @@ import {
 import { Either, left, right } from '../../shared/either';
 import { Auth } from '../../entity';
 
-export class login
+export class ValidateUser
   implements
-    UseCase<LoginDto, Either<InsufficientCharacters | EntityNotExists, string>>
+    UseCase<
+      LoginDto,
+      Either<InsufficientCharacters | EntityNotExists, boolean>
+    >
 {
   constructor(
     @Inject('FilterByEmailOrNicknameRepository')
@@ -29,7 +32,7 @@ export class login
 
   async execute(
     input: LoginDto
-  ): Promise<Either<InsufficientCharacters | EntityNotExists, string>> {
+  ): Promise<Either<InsufficientCharacters | EntityNotExists, boolean>> {
     const { email, password } = input;
 
     if (email.length < 1) {
@@ -79,13 +82,13 @@ export class login
       left(new IncorrectPassword());
     }
 
-    const signInDto: SignInDto = {
-      email: email,
-      user_id: filteredUserEmail.userId,
-    };
+    // const signInDto: SignInDto = {
+    //   email: email,
+    //   user_id: filteredUserEmail.userId,
+    // };
 
-    const signInResult = await this.signInRepository.sign(signInDto);
+    // const signInResult = await this.signInRepository.sign(signInDto);
 
-    return right(signInResult);
+    return right(validateResult);
   }
 }
