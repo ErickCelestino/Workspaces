@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
 import { CreateAuthService } from './create-auth.service';
 import { CreateAuthController } from './create-auth.controller';
-import { PrismaService } from '../../prisma.service';
 import { CreateAuth } from '@workspaces/domain';
 import {
   CreateAuthRepositoryImpl,
   FilterByEmailOrNicknameRepositoryImpl,
   FindUserByIdRepositoryImpl,
+  PrismaService,
 } from '@workspaces/data-access';
 import { HashGeneratorImpl } from '@workspaces/data-access';
 

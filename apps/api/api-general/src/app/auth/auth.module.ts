@@ -9,8 +9,8 @@ import {
   LocalAuthGuard,
   LocalStrategy,
   JwtStrategy,
+  PrismaService,
 } from '@workspaces/data-access';
-import { PrismaService } from '../../prisma.service';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 
