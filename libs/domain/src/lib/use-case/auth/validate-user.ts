@@ -1,6 +1,6 @@
 import { Inject } from '@nestjs/common';
 import { UseCase } from '../../base/use-case';
-import { ValidateHashDto, LoginDto } from '../../dto';
+import { ValidateHashDto, LoginDto, ValidateUserDto } from '../../dto';
 import {
   EntityNotExists,
   IncorrectPassword,
@@ -9,7 +9,6 @@ import {
 import {
   FilterByEmailOrNicknameRepository,
   ValidateHashRepository,
-  SignInRepository,
 } from '../../repository';
 import { Either, left, right } from '../../shared/either';
 import { Auth } from '../../entity';
@@ -17,22 +16,20 @@ import { Auth } from '../../entity';
 export class ValidateUser
   implements
     UseCase<
-      LoginDto,
-      Either<InsufficientCharacters | EntityNotExists, boolean>
+      ValidateUserDto,
+      Either<InsufficientCharacters | EntityNotExists, LoginDto>
     >
 {
   constructor(
     @Inject('FilterByEmailOrNicknameRepository')
     private filterEmail: FilterByEmailOrNicknameRepository,
-    @Inject('CompareHashRepository')
-    private validateHashRespository: ValidateHashRepository,
-    @Inject('CompareHashRepository')
-    private signInRepository: SignInRepository
+    @Inject('ValidateHashRepository')
+    private validateHashRespository: ValidateHashRepository
   ) {}
 
   async execute(
-    input: LoginDto
-  ): Promise<Either<InsufficientCharacters | EntityNotExists, boolean>> {
+    input: ValidateUserDto
+  ): Promise<Either<InsufficientCharacters | EntityNotExists, LoginDto>> {
     const { email, password } = input;
 
     if (email.length < 1) {
@@ -79,16 +76,14 @@ export class ValidateUser
     );
 
     if (!validateResult) {
-      left(new IncorrectPassword());
+      return left(new IncorrectPassword());
     }
 
-    // const signInDto: SignInDto = {
-    //   email: email,
-    //   user_id: filteredUserEmail.userId,
-    // };
+    const returnDto: LoginDto = {
+      email: input.email,
+      error: '',
+    };
 
-    // const signInResult = await this.signInRepository.sign(signInDto);
-
-    return right(validateResult);
+    return right(returnDto);
   }
 }

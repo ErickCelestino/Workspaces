@@ -28,6 +28,18 @@
         "TS_NODE_PROJECT": "${workspaceFolder}/apps/api/api-general/tsconfig.json"
       },
       "cwd": "${workspaceFolder}/apps/api/api-general"
+    },
+    {
+      "name": "api-firefox – Server",
+      "type": "firefox",
+      "request": "launch",
+      "url": "http://localhost:3001",
+      "pathMappings": [
+        {
+          "url": "http://localhost:3001/libs",
+          "path": "${workspaceFolder}/libs"
+        }
+      ]
     }
   ]
 }

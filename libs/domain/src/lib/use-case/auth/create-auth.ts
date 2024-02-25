@@ -54,7 +54,6 @@ export class CreateAuth
     if (filteredEmail.userId.length > 0) {
       return left(new EntityAlreadyExists(email));
     }
-
     const userResult = await this.findUserByIdRepository.find(userId);
 
     if (userResult.userId.length < 1) {

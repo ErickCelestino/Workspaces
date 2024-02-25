@@ -1,2 +1,2 @@
 export * from './create-auth';
-export * from './sing-in';
+export * from './sign-in';

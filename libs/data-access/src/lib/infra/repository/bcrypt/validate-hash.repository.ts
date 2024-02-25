@@ -3,6 +3,6 @@ import * as bcrypt from 'bcrypt';
 
 export class ValidateHashRepositoryImpl implements ValidateHashRepository {
   async validate(input: ValidateHashDto): Promise<boolean> {
-    return bcrypt.compare(input.key, input.hash);
+    return await bcrypt.compare(input.key, input.hash);
   }
 }
