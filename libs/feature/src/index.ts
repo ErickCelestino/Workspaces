@@ -1,2 +1,2 @@
-export * from './lib/feature';
+export * from './lib/containers';
 export * from './lib/teste';
