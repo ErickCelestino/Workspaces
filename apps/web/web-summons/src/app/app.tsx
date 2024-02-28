@@ -1,30 +1,18 @@
 import { Component } from 'react';
 import './app.scss';
 import AppRouters from './app-routers';
+import { AuthProvider } from '@workspaces/feature';
 
 class App extends Component {
   render() {
     return (
       <div>
-        <AppRouters />
+        <AuthProvider>
+          <AppRouters />
+        </AuthProvider>
       </div>
     );
   }
 }
 
 export default App;
-/*
-export function App() {
-  useEffect(() => {
-    loadData();
-  }, []);
-
-  async function loadData() {
-    const response = (await axios.get('/api')).data;
-    console.log(response);
-  }
-  return (
-
-  );
-}
-*/

@@ -1,6 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
 import { Component } from 'react';
-import { Teste, LoginContainer } from '@workspaces/feature';
+import { LoginContainer, ProtectedLayout } from '@workspaces/feature';
 
 class AppRouters extends Component {
   render() {
@@ -8,7 +8,14 @@ class AppRouters extends Component {
       <Routes>
         <Route path="/login" element={<LoginContainer />} />
 
-        <Route path="/" element={<Teste />} />
+        <Route
+          path="/"
+          element={
+            <ProtectedLayout>
+              <h2>Olá esse é o componente de teste</h2>
+            </ProtectedLayout>
+          }
+        />
       </Routes>
     );
   }
