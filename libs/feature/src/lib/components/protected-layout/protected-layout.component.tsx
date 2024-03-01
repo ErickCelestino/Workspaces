@@ -1,10 +1,17 @@
-import { useAuth } from '../../context/auth-provider/useAuth';
+import { useAuth } from '../../context';
+import { NotificationCardComponent } from '../notification-card';
 
 export const ProtectedLayout = ({ children }: { children: JSX.Element }) => {
   const auth = useAuth();
 
   if (!auth.email) {
-    return <h1>You don't have access</h1>;
+    return (
+      <NotificationCardComponent
+        title="Você não tem acesso a esta página"
+        buttonText="Fazer Login"
+        imageUrl="/assets/svg/denied-access.svg"
+      />
+    );
   }
 
   return children;
