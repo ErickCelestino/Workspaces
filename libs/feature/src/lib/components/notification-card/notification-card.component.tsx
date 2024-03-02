@@ -25,6 +25,7 @@ export const NotificationCardComponent: FC<NotificationCardProps> = ({
             height: imageUrl ? '100%' : '20%',
             maxHeight: 440,
             maxWidth: 800,
+            minHeight: 240,
           }}
         >
           <CardContent

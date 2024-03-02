@@ -36,3 +36,6 @@
 - npm i -D @types/passport-local
 - npm i @nestjs/jwt passport-jwt
 - npm i -D @types/passport-jwt
+
+// https://jovemnerd.com.br/podcasts/nerdcast-rpg/rpg-ghanor-5-o-tripa-de-pedra-a-cuica-e-o-pata-rachada
+// 58:59
