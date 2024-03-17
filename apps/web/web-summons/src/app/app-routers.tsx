@@ -6,7 +6,15 @@ class AppRouters extends Component {
   render() {
     return (
       <Routes>
-        <Route path="/login" element={<LoginContainer />} />
+        <Route
+          path="/login"
+          element={
+            <LoginContainer
+              cardImage="/assets/svg/login-image.svg"
+              logo="/assets/png/summons-image.png"
+            />
+          }
+        />
 
         <Route
           path="/"

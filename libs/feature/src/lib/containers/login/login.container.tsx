@@ -7,6 +7,7 @@ import {
   FormControlLabel,
   TextField,
   Typography,
+  useTheme,
 } from '@mui/material';
 import { FormAuthCard } from '../../components';
 import { useAuthContext } from '../../contexts/auth/useAuth-context';
@@ -14,9 +15,28 @@ import { ValidateUserDto } from '@workspaces/domain';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-export const LoginContainer: React.FC = () => {
+interface LoginContainerProps {
+  cardImage: string;
+  logo: string;
+  title?: string;
+  passwordLabel?: string;
+  emailLabel?: string;
+  buttonTitle?: string;
+  remenberTitle?: string;
+}
+
+export const LoginContainer: React.FC<LoginContainerProps> = ({
+  cardImage = '',
+  logo = '',
+  title = 'Fazer Login',
+  passwordLabel = 'Digite seu Password',
+  emailLabel = 'Digite seu Email',
+  buttonTitle = 'Entrar',
+  remenberTitle = 'Lembrar',
+}) => {
   const auth = useAuthContext();
   const history = useNavigate();
+  const theme = useTheme();
 
   const onFinish = async (data: ValidateUserDto) => {
     try {
@@ -40,22 +60,26 @@ export const LoginContainer: React.FC = () => {
   };
 
   return (
-    <FormAuthCard imageUrl="/assets/svg/login-image.svg">
+    <FormAuthCard imageUrl={cardImage}>
       <Container component="main" maxWidth="xs">
         <Box
           sx={{
-            marginTop: 8,
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
           }}
         >
           <Avatar
-            sx={{ mb: 2, bgcolor: 'secondary.main', height: 85, width: 85 }}
-            src="/assets/png/summons-image.png"
+            sx={{
+              mb: theme.spacing(1),
+              bgcolor: 'secondary.main',
+              height: theme.spacing(15),
+              width: theme.spacing(15),
+            }}
+            src={logo}
           />
           <Typography component="h1" variant="h5">
-            Fazer Login
+            {title}
           </Typography>
           <Box
             component="form"
@@ -68,7 +92,7 @@ export const LoginContainer: React.FC = () => {
               required
               fullWidth
               id="email"
-              label="Digite seu Email"
+              label={emailLabel}
               name="email"
               autoComplete="email"
               autoFocus
@@ -78,7 +102,7 @@ export const LoginContainer: React.FC = () => {
               required
               fullWidth
               id="password"
-              label="Digite seu Password"
+              label={passwordLabel}
               name="password"
               type="password"
               autoComplete="current-password"
@@ -88,17 +112,22 @@ export const LoginContainer: React.FC = () => {
                 display: 'flex',
                 justifySelf: 'start',
               }}
-              control={<Checkbox value="lembrar" color="primary" />}
-              label="Lembrar"
+              control={<Checkbox value={remenberTitle} color="primary" />}
+              label={remenberTitle}
             />
 
             <Button
               type="submit"
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 2, height: '4rem', fontSize: '1.3rem' }}
+              sx={{
+                mt: theme.spacing(1),
+                mb: theme.spacing(1),
+                height: theme.spacing(8),
+                fontSize: '1.3rem',
+              }}
             >
-              Entrar
+              {buttonTitle}
             </Button>
           </Box>
         </Box>

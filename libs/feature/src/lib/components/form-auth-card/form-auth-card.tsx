@@ -1,6 +1,5 @@
-import { Card } from '@mui/material';
+import { Box, Card, useMediaQuery, useTheme } from '@mui/material';
 import { FC, ReactNode } from 'react';
-import { FlexGrid } from '../grid';
 
 interface FormAuthCardProps {
   imageUrl: string;
@@ -11,26 +10,43 @@ export const FormAuthCard: FC<FormAuthCardProps> = ({
   imageUrl = '',
   children,
 }) => {
+  const theme = useTheme();
+  const smDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const mdDown = useMediaQuery(theme.breakpoints.down('md'));
+
   return (
-    <FlexGrid>
+    <Box
+      width="100%"
+      height="100%"
+      display="flex"
+      flexDirection="column"
+      alignItems="center"
+      justifyContent="center"
+    >
       <Card
         sx={{
           textAlign: 'center',
-          height: 635,
-          width: 1070,
+          height: smDown ? '100vh' : theme.spacing(79),
+          width: smDown
+            ? '100%'
+            : mdDown
+            ? theme.spacing(65)
+            : theme.spacing(133),
           flexDirection: 'row',
-          marginTop: '8rem',
           display: 'flex',
           justifyContent: 'center',
+          alignItems: 'center',
         }}
       >
-        <img
-          src={imageUrl}
-          alt="auth"
-          style={{ maxWidth: '50%', height: '100%', flex: '0 0 50%' }}
-        />
-        <div style={{ flex: '0 0 50%' }}>{children}</div>
+        {!mdDown && (
+          <img
+            src={imageUrl}
+            alt="auth"
+            style={{ width: '50%', height: '100%', flex: '0 0 50%' }}
+          />
+        )}
+        {children}
       </Card>
-    </FlexGrid>
+    </Box>
   );
 };
