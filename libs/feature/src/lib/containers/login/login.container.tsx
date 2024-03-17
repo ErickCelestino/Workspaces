@@ -9,13 +9,13 @@ import {
   Typography,
 } from '@mui/material';
 import { FormAuthCard } from '../../components';
-import { useAuth } from '../../context/auth-provider/useAuth';
+import { useAuthContext } from '../../contexts/auth/useAuth-context';
 import { ValidateUserDto } from '@workspaces/domain';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export const LoginContainer: React.FC = () => {
-  const auth = useAuth();
+  const auth = useAuthContext();
   const history = useNavigate();
 
   const onFinish = async (data: ValidateUserDto) => {

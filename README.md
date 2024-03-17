@@ -37,5 +37,5 @@
 - npm i @nestjs/jwt passport-jwt
 - npm i -D @types/passport-jwt
 
-// https://jovemnerd.com.br/podcasts/nerdcast-rpg/rpg-ghanor-5-o-tripa-de-pedra-a-cuica-e-o-pata-rachada
-// 2:39:39
+// https://jovemnerd.com.br/podcasts/nerdcast-rpg/rpg-ghanor-6-o-paladino-a-aureola-e-o-paraiso
+// 19:59S

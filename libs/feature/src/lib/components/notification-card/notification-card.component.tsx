@@ -1,6 +1,5 @@
-import { Button, Card, CardContent, Typography } from '@mui/material';
+import { Box, Button, Card, CardContent, Typography } from '@mui/material';
 import { FC } from 'react';
-import { FlexGrid } from '../grid';
 
 interface NotificationCardProps {
   title: string;
@@ -9,6 +8,34 @@ interface NotificationCardProps {
   imageUrl?: string;
 }
 
+/*
+import { Box, useMediaQuery, useTheme } from "@mui/material";
+import React, { ReactNode } from "react";
+
+interface ILayoutBaseNotificationLayout {
+  children: ReactNode;
+}
+
+export const LayoutBaseNotificationLayout: React.FC<ILayoutBaseNotificationLayout> = ({
+  children
+}) => {
+  const theme = useTheme();
+  const smDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const mdDown = useMediaQuery(theme.breakpoints.down('md'))
+
+  return (
+    <Box
+      height="100%"
+      display="flex"
+      flexDirection="column"
+    >
+      {children}
+    </Box>
+  )
+}
+
+*/
+
 export const NotificationCardComponent: FC<NotificationCardProps> = ({
   buttonText = 'button text',
   title = 'title text',
@@ -16,7 +43,7 @@ export const NotificationCardComponent: FC<NotificationCardProps> = ({
   imageUrl,
 }) => {
   return (
-    <FlexGrid>
+    <Box width="100%" height="100%" display="flex" flexDirection="column">
       <Card
         sx={{
           textAlign: 'center',
@@ -54,6 +81,6 @@ export const NotificationCardComponent: FC<NotificationCardProps> = ({
           </Button>
         </CardContent>
       </Card>
-    </FlexGrid>
+    </Box>
   );
 };
