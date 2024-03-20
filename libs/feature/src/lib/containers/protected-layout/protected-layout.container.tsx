@@ -1,6 +1,6 @@
-import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../../contexts';
-import { NotificationCardComponent } from '../notification-card';
+import { NotificationCardComponent } from '../../components';
+import { useNavigate } from 'react-router-dom';
 
 export const ProtectedLayout = ({ children }: { children: JSX.Element }) => {
   const auth = useAuthContext();

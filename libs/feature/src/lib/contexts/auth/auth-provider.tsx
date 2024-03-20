@@ -4,9 +4,9 @@ import {
   getUserLocalStorage,
   setUserLocalStorage,
 } from '../../services';
-import { IContext, IAuthProvider, ILoggedUser } from '@workspaces/domain';
+import { IAuthContext, IAuthProvider, ILoggedUser } from '@workspaces/domain';
 
-export const AuthContext = createContext<IContext>({} as IContext);
+export const AuthContext = createContext<IAuthContext>({} as IAuthContext);
 
 export const AuthProvider = ({ children }: IAuthProvider) => {
   const [user, setUser] = useState<ILoggedUser | null>();
