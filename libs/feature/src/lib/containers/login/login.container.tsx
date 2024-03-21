@@ -10,7 +10,7 @@ import {
   useTheme,
 } from '@mui/material';
 import { FormAuthCard } from '../../components';
-import { useAuthContext } from '../../contexts/auth/useAuth-context';
+import { useAuth } from '../../hooks';
 import { ValidateUserDto } from '@workspaces/domain';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -35,7 +35,7 @@ export const LoginContainer: React.FC<LoginContainerProps> = ({
   buttonTitle = 'Entrar',
   remenberTitle = 'Lembrar',
 }) => {
-  const auth = useAuthContext();
+  const auth = useAuth();
   const history = useNavigate();
   const theme = useTheme();
   const { showSnackbarAlert, SnackbarAlert } = useSnackbarAlert();
