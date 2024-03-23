@@ -1,18 +1,18 @@
 import {
   Avatar,
   Box,
-  Button,
   Checkbox,
   Container,
   FormControlLabel,
+  Link,
   TextField,
   Typography,
   useTheme,
 } from '@mui/material';
-import { FormAuthCard } from '../../components';
+import { FormAuthCard, FormButton } from '../../components';
 import { useAuth } from '../../hooks';
 import { ValidateUserDto } from '@workspaces/domain';
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSnackbarAlert } from '../../hooks';
 
@@ -24,6 +24,8 @@ interface LoginContainerProps {
   emailLabel?: string;
   buttonTitle?: string;
   remenberTitle?: string;
+  registerTitle?: string;
+  registerHref?: string;
 }
 
 export const LoginContainer: React.FC<LoginContainerProps> = ({
@@ -34,17 +36,28 @@ export const LoginContainer: React.FC<LoginContainerProps> = ({
   emailLabel = 'Digite seu Email',
   buttonTitle = 'Entrar',
   remenberTitle = 'Lembrar',
+  registerTitle = 'Quer se cadastrar?',
+  registerHref = '/register',
 }) => {
   const auth = useAuth();
   const history = useNavigate();
   const theme = useTheme();
   const { showSnackbarAlert, SnackbarAlert } = useSnackbarAlert();
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
 
   const onFinish = async (data: ValidateUserDto) => {
     try {
+      setSuccess(false);
+      setLoading(true);
       await auth.authenticate(data.email, data.password);
+      setSuccess(true);
+      setLoading(false);
+
       history('/');
     } catch (error) {
+      //setLoading(false);
+      //setSuccess(false);
       showSnackbarAlert({
         message: 'Erro no E-mail ou no Password',
         severity: 'error',
@@ -113,28 +126,28 @@ export const LoginContainer: React.FC<LoginContainerProps> = ({
                 type="password"
                 autoComplete="current-password"
               />
-              <FormControlLabel
-                sx={{
-                  display: 'flex',
-                  justifySelf: 'start',
-                }}
-                control={<Checkbox value={remenberTitle} color="primary" />}
-                label={remenberTitle}
+              <Box display="flex" justifyContent="space-between">
+                <FormControlLabel
+                  sx={{
+                    display: 'flex',
+                    justifySelf: 'start',
+                  }}
+                  control={<Checkbox value={remenberTitle} color="primary" />}
+                  label={remenberTitle}
+                />
+                <Typography
+                  component={Link}
+                  underline="hover"
+                  href={registerHref}
+                >
+                  {registerTitle}
+                </Typography>
+              </Box>
+              <FormButton
+                success={success}
+                loading={loading}
+                buttonTitle={buttonTitle}
               />
-
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                sx={{
-                  mt: theme.spacing(1),
-                  mb: theme.spacing(1),
-                  height: theme.spacing(8),
-                  fontSize: '1.3rem',
-                }}
-              >
-                {buttonTitle}
-              </Button>
             </Box>
           </Box>
         </Container>
