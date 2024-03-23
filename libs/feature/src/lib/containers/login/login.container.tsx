@@ -56,8 +56,8 @@ export const LoginContainer: React.FC<LoginContainerProps> = ({
 
       history('/');
     } catch (error) {
-      //setLoading(false);
-      //setSuccess(false);
+      setLoading(false);
+      setSuccess(false);
       showSnackbarAlert({
         message: 'Erro no E-mail ou no Password',
         severity: 'error',
