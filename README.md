@@ -19,7 +19,7 @@
 
 - npm i -D @nx/nest
 - npx nx g @nx/nest:application --name=<nome da aplicação> --frontendProject=<nome da aplicação do front> --directory=<nome do diretorio> --strict=true
-- nx g resource [RESOURCE_NAME] -p nome aplicacao
+- nx g resource [RESOURCE_NAME] -p [APPLICATION_NAME]
 
 ## Comandos de biblioteca
 
@@ -32,3 +32,10 @@
 - npx husky init
 - npm run prepare
 - echo "npx lint-staged" > .husky/pre-commit
+- npm i @nestjs/passport passport passport-local
+- npm i -D @types/passport-local
+- npm i @nestjs/jwt passport-jwt
+- npm i -D @types/passport-jwt
+
+// https://jovemnerd.com.br/podcasts/nerdcast-rpg/rpg-ghanor-6-o-paladino-a-aureola-e-o-paraiso
+// 19:59S
