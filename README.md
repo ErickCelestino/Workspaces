@@ -1,41 +1,19 @@
 # Workspaces
 
-## Comandos Front
+- Hello, this repository aims to record my evolution using the NX tool, as well as in Typescript, NestJS and React so far, as well as the use of CI and Unit Tests.
 
-### Angular
+# Summons Software
 
-- npm i -D @nx/angular
-- npx nx g @nx/angular:application --name=<nome da aplicação> --directory=apps/front/<nome do diretorio> --routing=true --style=scss --standalone=false --no-interactive
+### Login Page
 
-## React
+- Desktop
 
-- npm add -D @nx/react
-- npx nx g @nx/react:application --name=web-pure-institutional --directory=apps/web/web-pure-institutional --globalCss=true --projectNameAndRootFormat=as-provided --routing=true --style=scss --tags=application
-- nx g @nx/react:library --name=feature --unitTestRunner=jest --directory=libs/feature --projectNameAndRootFormat=as-provided
+  - ![Desktop-Login](https://github.com/ErickCelestino/Workspaces/assets/99321670/04e621ba-c617-48a0-9c2f-70ccba922e76)
 
-## Comandos Back
+- Tablet
 
-### NestJs
+  - ![Tablet-Login](https://github.com/ErickCelestino/Workspaces/assets/99321670/a3ccfa25-c894-4083-a640-30da3dd9723c)
 
-- npm i -D @nx/nest
-- npx nx g @nx/nest:application --name=<nome da aplicação> --frontendProject=<nome da aplicação do front> --directory=<nome do diretorio> --strict=true
-- nx g resource [RESOURCE_NAME] -p [APPLICATION_NAME]
+- Mobile
 
-## Comandos de biblioteca
-
-- npx nx g @nx/js:library --name=<nome da biblioteca> --unitTestRunner=jest --directory=libs/<nome do diretorio>--projectNameAndRootFormat=as-provided
-
-## Comandos de configuração
-
-- npx create-nx-workspace@latest nx-test
-- npm i -D husky lint-staged
-- npx husky init
-- npm run prepare
-- echo "npx lint-staged" > .husky/pre-commit
-- npm i @nestjs/passport passport passport-local
-- npm i -D @types/passport-local
-- npm i @nestjs/jwt passport-jwt
-- npm i -D @types/passport-jwt
-
-// https://jovemnerd.com.br/podcasts/nerdcast-rpg/rpg-ghanor-6-o-paladino-a-aureola-e-o-paraiso
-// 19:59S
+  - ![Mobile-Login](https://github.com/ErickCelestino/Workspaces/assets/99321670/e978b901-4262-4d6c-aa99-24ddb13e928c)
