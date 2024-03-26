@@ -1,6 +1,10 @@
 import { Route, Routes } from 'react-router-dom';
 import { Component } from 'react';
-import { LoginContainer, ProtectedLayout } from '@workspaces/feature';
+import {
+  CreateUser,
+  LoginContainer,
+  ProtectedLayout,
+} from '@workspaces/feature';
 
 class AppRouters extends Component {
   render() {
@@ -11,6 +15,16 @@ class AppRouters extends Component {
           element={
             <LoginContainer
               cardImage="/assets/svg/login-image.svg"
+              logo="/assets/png/summons-image.png"
+            />
+          }
+        />
+
+        <Route
+          path="/register"
+          element={
+            <CreateUser
+              cardImage="/assets/svg/create-user.svg"
               logo="/assets/png/summons-image.png"
             />
           }

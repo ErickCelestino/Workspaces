@@ -48,8 +48,6 @@ export const LoginContainer: React.FC<LoginContainerProps> = ({
 
   const onFinish = async (data: ValidateUserDto) => {
     try {
-      setSuccess(false);
-      setLoading(true);
       await auth.authenticate(data.email, data.password);
       setSuccess(true);
       setLoading(false);
@@ -69,6 +67,8 @@ export const LoginContainer: React.FC<LoginContainerProps> = ({
     event: React.FormEvent<HTMLFormElement>
   ): Promise<void> => {
     event.preventDefault();
+    setSuccess(false);
+    setLoading(true);
     const data = new FormData(event.currentTarget);
 
     await onFinish({
