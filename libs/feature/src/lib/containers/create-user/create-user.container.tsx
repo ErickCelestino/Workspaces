@@ -9,11 +9,12 @@ import {
   Typography,
   useTheme,
 } from '@mui/material';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { CreateUserRequest } from '../../services/http/user/create-user';
+import { useForm } from 'react-hook-form';
 import { CreateUserDto } from '@workspaces/domain';
+import { setUserIdLocalStorage } from '../../services';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 
 interface CreateUserProps {
   cardImage: string;
@@ -26,6 +27,14 @@ interface CreateUserProps {
   passwordLabel?: string;
   confirmPasswordLabel?: string;
 }
+
+export const CreateUserSchema = z
+  .object({
+    name: z.string().min(2).max(50),
+    nickname: z.string().min(3).max(50),
+    birthDate: z.string().optional(),
+  })
+  .required();
 
 export const CreateUser: FC<CreateUserProps> = ({
   cardImage,
@@ -40,114 +49,109 @@ export const CreateUser: FC<CreateUserProps> = ({
 }) => {
   //const history = useNavigate();
   const theme = useTheme();
-  const { SnackbarAlert } = useSnackbarAlert();
+  const { handleSubmit, register } = useForm<CreateUserDto>({
+    mode: 'all',
+    criteriaMode: 'all',
+    resolver: zodResolver(CreateUserSchema),
+    defaultValues: {
+      name: '',
+      nickname: '',
+      birthDate: new Date(),
+    },
+  });
+  const { showSnackbarAlert, SnackbarAlert } = useSnackbarAlert();
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
 
-  const createUser = (data: CreateUserDto) => {
-    const result = CreateUserRequest(data);
-    return result;
+  const createUser = async (data: CreateUserDto) => {
+    try {
+      const result = await CreateUserRequest(data);
+      return result;
+    } catch (error) {
+      showSnackbarAlert({
+        message: (error as { message: string }).message,
+        severity: 'error',
+      });
+      setLoading(false);
+    }
   };
 
-  const handleData = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const handleData = async (data: CreateUserDto) => {
     setSuccess(false);
     setLoading(true);
-    const data = new FormData(event.currentTarget);
-
-    const createdUserId = await createUser({
-      name: `${data.get('name')}`,
-      nickname: `${data.get('nickname')}`,
-      birthDate: new Date(`${data.get('bithDate')}`),
-    });
-
-    console.log(createdUserId);
+    const createdUserId = await createUser?.(data);
+    setUserIdLocalStorage(createdUserId);
   };
 
   return (
     <>
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <FormAuthCard imageUrl={cardImage}>
-          <Container component="main" maxWidth="xs">
-            <Box
+      <FormAuthCard imageUrl={cardImage}>
+        <Container component="main" maxWidth="xs">
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+            }}
+          >
+            <Avatar
               sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
+                mb: theme.spacing(1),
+                bgcolor: 'secondary.main',
+                height: theme.spacing(15),
+                width: theme.spacing(15),
               }}
+              src={logo}
+            />
+            <Typography component="h1" variant="h5">
+              {title}
+            </Typography>
+            <Box
+              component="form"
+              onSubmit={handleSubmit(handleData)}
+              noValidate
+              sx={{ mt: 1 }}
             >
-              <Avatar
-                sx={{
-                  mb: theme.spacing(1),
-                  bgcolor: 'secondary.main',
-                  height: theme.spacing(15),
-                  width: theme.spacing(15),
-                }}
-                src={logo}
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                id="name"
+                disabled={loading}
+                label={nameLabel}
+                autoComplete="name"
+                autoFocus
+                {...register('name')}
               />
-              <Typography component="h1" variant="h5">
-                {title}
-              </Typography>
-              <Box
-                component="form"
-                onSubmit={handleData}
-                noValidate
-                sx={{ mt: 1 }}
-              >
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  id="name"
-                  label={nameLabel}
-                  name="name"
-                  autoComplete="name"
-                  autoFocus
-                />
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  id="nickname"
-                  label={nicknameLabel}
-                  name="nickname"
-                  autoComplete="nickname"
-                />
-                <DatePicker
-                  sx={{
-                    width: '100%',
-                  }}
-                  label={birthDateLabel}
-                  name="bithDate"
-                />
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  id="password"
-                  label={passwordLabel}
-                  name="password"
-                  autoComplete="password"
-                />
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  id="confirmPassword"
-                  label={confirmPasswordLabel}
-                  name="confirmPassword"
-                  autoComplete="confirmPassword"
-                />
-                <FormButton
-                  success={success}
-                  loading={loading}
-                  buttonTitle={buttonTitle}
-                />
-              </Box>
+              <TextField
+                margin="normal"
+                required
+                disabled={loading}
+                fullWidth
+                id="nickname"
+                label={nicknameLabel}
+                {...register('nickname')}
+                autoComplete="nickname"
+              />
+              <TextField
+                margin="normal"
+                type="date"
+                disabled={loading}
+                InputLabelProps={{ shrink: true, required: true }}
+                label={birthDateLabel}
+                id="birthDate"
+                fullWidth
+                {...register('birthDate')}
+              />
+              <FormButton
+                success={success}
+                loading={loading}
+                buttonTitle={buttonTitle}
+              />
             </Box>
-          </Container>
-        </FormAuthCard>
-      </LocalizationProvider>
+          </Box>
+        </Container>
+      </FormAuthCard>
       {SnackbarAlert}
     </>
   );
