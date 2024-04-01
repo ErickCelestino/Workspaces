@@ -14,7 +14,7 @@ import { useForm } from 'react-hook-form';
 import { CreateUserDto } from '@workspaces/domain';
 import { setUserIdLocalStorage } from '../../services';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
+import { CreateUserSchema } from '../../shared';
 
 interface CreateUserProps {
   cardImage: string;
@@ -27,14 +27,6 @@ interface CreateUserProps {
   passwordLabel?: string;
   confirmPasswordLabel?: string;
 }
-
-export const CreateUserSchema = z
-  .object({
-    name: z.string().min(2).max(50),
-    nickname: z.string().min(3).max(50),
-    birthDate: z.string().optional(),
-  })
-  .required();
 
 export const CreateUser: FC<CreateUserProps> = ({
   cardImage,
@@ -49,7 +41,11 @@ export const CreateUser: FC<CreateUserProps> = ({
 }) => {
   //const history = useNavigate();
   const theme = useTheme();
-  const { handleSubmit, register } = useForm<CreateUserDto>({
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = useForm<CreateUserDto>({
     mode: 'all',
     criteriaMode: 'all',
     resolver: zodResolver(CreateUserSchema),
@@ -116,6 +112,8 @@ export const CreateUser: FC<CreateUserProps> = ({
                 margin="normal"
                 required
                 fullWidth
+                error={!!errors.name}
+                helperText={errors.name?.message}
                 id="name"
                 disabled={loading}
                 label={nameLabel}
@@ -128,6 +126,8 @@ export const CreateUser: FC<CreateUserProps> = ({
                 required
                 disabled={loading}
                 fullWidth
+                error={!!errors.nickname}
+                helperText={errors.nickname?.message}
                 id="nickname"
                 label={nicknameLabel}
                 {...register('nickname')}
@@ -137,7 +137,7 @@ export const CreateUser: FC<CreateUserProps> = ({
                 margin="normal"
                 type="date"
                 disabled={loading}
-                InputLabelProps={{ shrink: true, required: true }}
+                InputLabelProps={{ shrink: true }}
                 label={birthDateLabel}
                 id="birthDate"
                 fullWidth
