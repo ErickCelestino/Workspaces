@@ -1,14 +1,11 @@
 import { FC, useState } from 'react';
-import { FormAuthCard, FormButton } from '../../components';
-import { useSnackbarAlert } from '../../hooks';
 import {
-  Avatar,
-  Box,
-  Container,
-  TextField,
-  Typography,
-  useTheme,
-} from '@mui/material';
+  FormAuthCard,
+  FormButton,
+  StepperCustomHorizontal,
+} from '../../components';
+import { useSnackbarAlert } from '../../hooks';
+import { Avatar, Box, Container, TextField, useTheme } from '@mui/material';
 import { CreateUserRequest } from '../../services/http/user/create-user';
 import { useForm } from 'react-hook-form';
 import { CreateUserDto } from '@workspaces/domain';
@@ -19,7 +16,6 @@ import { CreateUserSchema } from '../../shared';
 interface CreateUserProps {
   cardImage: string;
   logo: string;
-  title?: string;
   buttonTitle?: string;
   nameLabel?: string;
   nicknameLabel?: string;
@@ -31,7 +27,6 @@ interface CreateUserProps {
 export const CreateUser: FC<CreateUserProps> = ({
   cardImage,
   logo,
-  title = 'Fazer Cadastro',
   buttonTitle = 'Confirmar Cadastro',
   nameLabel = 'Digite seu Nome',
   nicknameLabel = 'Digite seu Nickname',
@@ -99,15 +94,13 @@ export const CreateUser: FC<CreateUserProps> = ({
               }}
               src={logo}
             />
-            <Typography component="h1" variant="h5">
-              {title}
-            </Typography>
             <Box
               component="form"
               onSubmit={handleSubmit(handleData)}
               noValidate
               sx={{ mt: 1 }}
             >
+              <StepperCustomHorizontal activeStep={0} />
               <TextField
                 margin="normal"
                 required
