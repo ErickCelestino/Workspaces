@@ -3,4 +3,5 @@ export interface AuthConfirmProps {
   passwordLabel?: string;
   confirmPasswordLabel?: string;
   buttonTitle?: string;
+  showAlert?: (message: string) => void;
 }

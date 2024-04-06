@@ -4,7 +4,13 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CreateAuthSchema } from '../../shared';
 import { FormButton } from '../form-button';
-import { AuthConfirmProps } from '@workspaces/domain';
+import {
+  AuthConfirmProps,
+  CreateAuthDto,
+  ErrorResponse,
+} from '@workspaces/domain';
+import { CreateAuth, getUserIdLocalStorage } from '../../services';
+import axios, { AxiosError } from 'axios';
 
 interface ConfirmPassword {
   email: string;
@@ -17,6 +23,7 @@ export const FormAuthConfirm: FC<AuthConfirmProps> = ({
   passwordLabel = 'Digite sua senha',
   confirmPasswordLabel = 'Digite sua senha novamente',
   buttonTitle = 'Finalizar Cadastro',
+  showAlert,
 }) => {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -36,10 +43,32 @@ export const FormAuthConfirm: FC<AuthConfirmProps> = ({
     },
   });
 
+  const createAuth = async (request: CreateAuthDto) => {
+    try {
+      await CreateAuth(request);
+    } catch (error) {
+      console.error((error as { message: string }).message);
+      if (axios.isAxiosError(error)) {
+        const axiosError = error as AxiosError<ErrorResponse>;
+        console.log(axiosError.response?.data.error);
+        showAlert?.(`${axiosError.response?.data.error.message}`);
+      }
+      setLoading(false);
+    }
+  };
+
   const handleData = async (data: ConfirmPassword) => {
     setSuccess(false);
     setLoading(true);
-    console.log(data);
+    const userId = getUserIdLocalStorage();
+
+    const request: CreateAuthDto = {
+      email: data.email,
+      password: data.password,
+      userId: userId,
+    };
+    console.log(request);
+    await createAuth(request);
   };
 
   return (

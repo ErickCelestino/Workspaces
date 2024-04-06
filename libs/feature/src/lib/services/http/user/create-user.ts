@@ -1,7 +1,10 @@
-import { CreateUserDto } from '@workspaces/domain';
+import { CreateUserDto, CreateUserResponse } from '@workspaces/domain';
 import { generalApi } from '../axios-config';
 
-export async function CreateUserRequest(input: CreateUserDto): Promise<string> {
-  const request = await generalApi.post('create-user', input);
-  return request.data;
+export async function CreateUserRequest(input: CreateUserDto) {
+  const resultId = await generalApi.post<CreateUserResponse>(
+    'create-user',
+    input
+  );
+  return resultId.data.user_id;
 }

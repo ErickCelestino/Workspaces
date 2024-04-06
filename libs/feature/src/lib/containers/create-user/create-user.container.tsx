@@ -7,6 +7,7 @@ import {
 import { Avatar, Box, Container, useTheme } from '@mui/material';
 import { FormCreateUser } from '../../components/form-create-user';
 import { FormCreateUserProps } from '@workspaces/domain';
+import { useSnackbarAlert } from '../../hooks';
 
 interface CreateUserProps {
   cardImage: string;
@@ -16,6 +17,7 @@ interface CreateUserProps {
 
 export const CreateUser: FC<CreateUserProps> = ({ cardImage, logo }) => {
   //const history = useNavigate();
+  const { showSnackbarAlert, SnackbarAlert } = useSnackbarAlert();
   const theme = useTheme();
   const [step, setStep] = useState(0);
 
@@ -23,33 +25,48 @@ export const CreateUser: FC<CreateUserProps> = ({ cardImage, logo }) => {
     setStep(stepPosition);
   };
 
-  return (
-    <FormAuthCard imageUrl={cardImage}>
-      <Container component="main" maxWidth="xs">
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >
-          <Avatar
-            sx={{
-              mb: theme.spacing(1),
-              bgcolor: 'secondary.main',
-              height: theme.spacing(15),
-              width: theme.spacing(15),
-            }}
-            src={logo}
-          />
-          <Box sx={{ mt: 1 }}>
-            <StepperCustomHorizontal activeStep={step} />
-            {step === 0 && <FormCreateUser onData={handleCreateUser} />}
+  const showErrorAlert = (message: string) => {
+    showSnackbarAlert({
+      message: message,
+      severity: 'error',
+    });
+  };
 
-            {step === 1 && <FormAuthConfirm />}
+  return (
+    <>
+      <FormAuthCard imageUrl={cardImage}>
+        <Container component="main" maxWidth="xs">
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+            }}
+          >
+            <Avatar
+              sx={{
+                mb: theme.spacing(1),
+                bgcolor: 'secondary.main',
+                height: theme.spacing(15),
+                width: theme.spacing(15),
+              }}
+              src={logo}
+            />
+            <Box sx={{ mt: 1 }}>
+              <StepperCustomHorizontal activeStep={step} />
+              {step === 0 && (
+                <FormCreateUser
+                  onData={handleCreateUser}
+                  showAlert={showErrorAlert}
+                />
+              )}
+
+              {step === 1 && <FormAuthConfirm showAlert={showErrorAlert} />}
+            </Box>
           </Box>
-        </Box>
-      </Container>
-    </FormAuthCard>
+        </Container>
+      </FormAuthCard>
+      {SnackbarAlert}
+    </>
   );
 };
