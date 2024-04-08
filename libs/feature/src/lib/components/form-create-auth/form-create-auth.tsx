@@ -2,7 +2,7 @@ import { Box, TextField } from '@mui/material';
 import { FC, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { CreateAuthSchema } from '../../shared';
+import { CreateAuthSchema, EmailExist } from '../../shared';
 import { FormButton } from '../form-button';
 import {
   AuthConfirmProps,
@@ -11,6 +11,7 @@ import {
 } from '@workspaces/domain';
 import { CreateAuth, getUserIdLocalStorage } from '../../services';
 import axios, { AxiosError } from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 interface ConfirmPassword {
   email: string;
@@ -25,6 +26,7 @@ export const FormAuthConfirm: FC<AuthConfirmProps> = ({
   buttonTitle = 'Finalizar Cadastro',
   showAlert,
 }) => {
+  const history = useNavigate();
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
 
@@ -46,12 +48,15 @@ export const FormAuthConfirm: FC<AuthConfirmProps> = ({
   const createAuth = async (request: CreateAuthDto) => {
     try {
       await CreateAuth(request);
+      history('/login');
     } catch (error) {
       console.error((error as { message: string }).message);
       if (axios.isAxiosError(error)) {
         const axiosError = error as AxiosError<ErrorResponse>;
-        console.log(axiosError.response?.data.error);
-        showAlert?.(`${axiosError.response?.data.error.message}`);
+        if (axiosError.response?.data.error.name === 'EntityAlreadyExists') {
+          const message = EmailExist(request.email);
+          showAlert?.(message);
+        }
       }
       setLoading(false);
     }
@@ -67,7 +72,6 @@ export const FormAuthConfirm: FC<AuthConfirmProps> = ({
       password: data.password,
       userId: userId,
     };
-    console.log(request);
     await createAuth(request);
   };
 

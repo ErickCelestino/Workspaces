@@ -16,7 +16,6 @@ interface CreateUserProps {
 }
 
 export const CreateUser: FC<CreateUserProps> = ({ cardImage, logo }) => {
-  //const history = useNavigate();
   const { showSnackbarAlert, SnackbarAlert } = useSnackbarAlert();
   const theme = useTheme();
   const [step, setStep] = useState(0);
