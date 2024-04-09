@@ -1,8 +1,14 @@
-import { Box, TextField } from '@mui/material';
+import {
+  Box,
+  Icon,
+  IconButton,
+  InputAdornment,
+  TextField,
+} from '@mui/material';
 import { FC, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { CreateAuthSchema, EmailExist } from '../../shared';
+import { CreateAuthSchema, EntityExist } from '../../shared';
 import { FormButton } from '../form-button';
 import {
   AuthConfirmProps,
@@ -29,6 +35,13 @@ export const FormAuthConfirm: FC<AuthConfirmProps> = ({
   const history = useNavigate();
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+  const handleClickShowConfirmPassword = () =>
+    setShowConfirmPassword((show) => !show);
 
   const {
     handleSubmit,
@@ -54,7 +67,7 @@ export const FormAuthConfirm: FC<AuthConfirmProps> = ({
       if (axios.isAxiosError(error)) {
         const axiosError = error as AxiosError<ErrorResponse>;
         if (axiosError.response?.data.error.name === 'EntityAlreadyExists') {
-          const message = EmailExist(request.email);
+          const message = EntityExist(request.email, 'e-mail');
           showAlert?.(message);
         }
       }
@@ -92,9 +105,27 @@ export const FormAuthConfirm: FC<AuthConfirmProps> = ({
       />
 
       <TextField
+        type={showPassword ? 'text' : 'password'}
         margin="normal"
         required
         fullWidth
+        InputProps={{
+          endAdornment: (
+            <InputAdornment position="end">
+              <IconButton
+                aria-label="toggle password visibility"
+                onClick={handleClickShowPassword}
+                edge="end"
+              >
+                {showPassword ? (
+                  <Icon>visibility_off</Icon>
+                ) : (
+                  <Icon>visibility</Icon>
+                )}
+              </IconButton>
+            </InputAdornment>
+          ),
+        }}
         error={!!errors.password}
         helperText={errors.password?.message}
         id="password"
@@ -105,9 +136,27 @@ export const FormAuthConfirm: FC<AuthConfirmProps> = ({
       />
 
       <TextField
-        margin="normal"
+        type={showConfirmPassword ? 'text' : 'password'}
         required
+        margin="normal"
         fullWidth
+        InputProps={{
+          endAdornment: (
+            <InputAdornment position="end">
+              <IconButton
+                aria-label="toggle confirm password visibility"
+                onClick={handleClickShowConfirmPassword}
+                edge="end"
+              >
+                {showConfirmPassword ? (
+                  <Icon>visibility_off</Icon>
+                ) : (
+                  <Icon>visibility</Icon>
+                )}
+              </IconButton>
+            </InputAdornment>
+          ),
+        }}
         error={!!errors.confirmPassword}
         helperText={errors.confirmPassword?.message}
         id="confirmPassword"

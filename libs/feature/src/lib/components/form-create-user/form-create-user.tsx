@@ -9,7 +9,7 @@ import {
 } from '@workspaces/domain';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { CreateUserSchema } from '../../shared';
+import { CreateUserSchema, EntityExist } from '../../shared';
 import axios, { AxiosError } from 'axios';
 
 export const FormCreateUser: FC<FormCreateUserProps> = ({
@@ -38,15 +38,18 @@ export const FormCreateUser: FC<FormCreateUserProps> = ({
     },
   });
 
-  const createUser = async (data: CreateUserDto) => {
+  const createUser = async (request: CreateUserDto) => {
     try {
-      const result = await CreateUserRequest(data);
+      const result = await CreateUserRequest(request);
       return result;
     } catch (error) {
       console.error((error as { message: string }).message);
       if (axios.isAxiosError(error)) {
         const axiosError = error as AxiosError<ErrorResponse>;
-        showAlert?.(`${axiosError.response?.data.error.message}`);
+        if (axiosError.response?.data.error.name === 'EntityAlreadyExists') {
+          const message = EntityExist(request.nickname, 'nickname');
+          showAlert?.(message);
+        }
       }
       setLoading(false);
     }
@@ -92,9 +95,10 @@ export const FormCreateUser: FC<FormCreateUserProps> = ({
       <TextField
         margin="normal"
         type="date"
-        required
         disabled={loading}
-        InputLabelProps={{ shrink: true }}
+        error={!!errors.birthDate}
+        helperText={errors.birthDate?.message}
+        InputLabelProps={{ shrink: true, required: true }}
         label={birthDateLabel}
         id="birthDate"
         fullWidth

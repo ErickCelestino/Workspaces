@@ -59,7 +59,6 @@ export const CreateUser: FC<CreateUserProps> = ({ cardImage, logo }) => {
                   showAlert={showErrorAlert}
                 />
               )}
-
               {step === 1 && <FormAuthConfirm showAlert={showErrorAlert} />}
             </Box>
           </Box>
