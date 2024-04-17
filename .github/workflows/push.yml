@@ -18,7 +18,7 @@ jobs:
           node-version: '20'
 
       - name: Intall Dependencies
-        run: npm install --package-lock-only
+        run: npm install
 
       - name: Run lint
         run: npm run lint
