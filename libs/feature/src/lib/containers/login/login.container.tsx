@@ -15,6 +15,9 @@ import { ValidateUserDto } from '@workspaces/domain';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSnackbarAlert } from '../../hooks';
+import { useForm } from 'react-hook-form';
+import { LoginSchema } from '../../shared';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 interface LoginContainerProps {
   cardImage: string;
@@ -32,7 +35,7 @@ export const LoginContainer: React.FC<LoginContainerProps> = ({
   cardImage = '',
   logo = '',
   title = 'Fazer Login',
-  passwordLabel = 'Digite seu Password',
+  passwordLabel = 'Digite sua Senha',
   emailLabel = 'Digite seu Email',
   buttonTitle = 'Entrar',
   remenberTitle = 'Lembrar',
@@ -45,6 +48,20 @@ export const LoginContainer: React.FC<LoginContainerProps> = ({
   const { showSnackbarAlert, SnackbarAlert } = useSnackbarAlert();
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = useForm<ValidateUserDto>({
+    mode: 'all',
+    criteriaMode: 'all',
+    resolver: zodResolver(LoginSchema),
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+  });
 
   const onFinish = async (data: ValidateUserDto) => {
     try {
@@ -63,19 +80,19 @@ export const LoginContainer: React.FC<LoginContainerProps> = ({
     }
   };
 
-  const handleLogin = async (
-    event: React.FormEvent<HTMLFormElement>
-  ): Promise<void> => {
-    event.preventDefault();
-    setSuccess(false);
-    setLoading(true);
-    const data = new FormData(event.currentTarget);
+  // const handleLogin = async (
+  //   event: React.FormEvent<HTMLFormElement>
+  // ): Promise<void> => {
+  //   event.preventDefault();
+  //   setSuccess(false);
+  //   setLoading(true);
+  //   const data = new FormData(event.currentTarget);
 
-    await onFinish({
-      email: `${data.get('email')}`,
-      password: `${data.get('password')}`,
-    });
-  };
+  //   await onFinish({
+  //     email: `${data.get('email')}`,
+  //     password: `${data.get('password')}`,
+  //   });
+  // };
 
   return (
     <>
@@ -102,7 +119,7 @@ export const LoginContainer: React.FC<LoginContainerProps> = ({
             </Typography>
             <Box
               component="form"
-              onSubmit={handleLogin}
+              onSubmit={handleSubmit(onFinish)}
               noValidate
               sx={{ mt: 1 }}
             >
@@ -110,21 +127,25 @@ export const LoginContainer: React.FC<LoginContainerProps> = ({
                 margin="normal"
                 required
                 fullWidth
+                error={!!errors.email}
+                helperText={errors.email?.message}
                 id="email"
                 label={emailLabel}
-                name="email"
                 autoComplete="email"
                 autoFocus
+                {...register('email')}
               />
               <TextField
                 margin="normal"
                 required
                 fullWidth
+                error={!!errors.password}
+                helperText={errors.password?.message}
                 id="password"
                 label={passwordLabel}
-                name="password"
                 type="password"
                 autoComplete="current-password"
+                {...register('password')}
               />
               <Box display="flex" justifyContent="space-between">
                 <FormControlLabel

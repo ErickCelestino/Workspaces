@@ -5,11 +5,12 @@ export const InvalidEmail = (langue: Langue) => {
 
   switch (langue) {
     case 'EN':
-      message = 'The e-mail is invalid';
+      message = `The email address is invalid!`;
       break;
     default:
-      message = 'O e-mail é inválido';
+      message = `O endereço de email é inválido!`;
       break;
   }
+
   return message;
 };
