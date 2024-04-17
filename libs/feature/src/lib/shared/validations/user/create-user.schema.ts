@@ -1,5 +1,13 @@
 import { z } from 'zod';
-import { EntityMaxLength, EntityMinLength } from '../../messages';
+import {
+  EntityMaxLength,
+  EntityMinLength,
+  InferiorDate,
+  MinDate,
+} from '../../messages';
+
+const eighteenYearsAgo = new Date();
+eighteenYearsAgo.setFullYear(eighteenYearsAgo.getFullYear() - 18);
 
 export const CreateUserSchema = z
   .object({
@@ -19,6 +27,13 @@ export const CreateUserSchema = z
       .max(50, {
         message: EntityMaxLength({ entity: 'nickname', minOrMax: 50 }, 'PT-BR'),
       }),
-    birthDate: z.string().optional(),
+    birthDate: z.coerce
+      .date()
+      .min(new Date('1900-01-01'), {
+        message: MinDate('PT-BR'),
+      })
+      .max(eighteenYearsAgo, {
+        message: InferiorDate('PT-BR'),
+      }),
   })
   .required();

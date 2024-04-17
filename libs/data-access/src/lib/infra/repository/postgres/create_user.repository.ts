@@ -5,7 +5,7 @@ import { PrismaService } from 'nestjs-prisma';
 export class CreateUserRepositoryImpl implements CreateUserRepository {
   constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
 
-  async create(input: CreateUserDto): Promise<void> {
+  async create(input: CreateUserDto): Promise<string> {
     const { name, nickname, birthDate } = input;
     await this.prismaService.user.create({
       data: {
@@ -14,7 +14,14 @@ export class CreateUserRepositoryImpl implements CreateUserRepository {
         birth_date: new Date(birthDate),
       },
     });
+    const resultUser = await this.prismaService.user.findFirst({
+      where: {
+        nick_name: nickname,
+      },
+    });
 
-    return undefined;
+    const id = resultUser?.user_id == undefined ? '' : resultUser?.user_id;
+
+    return id;
   }
 }

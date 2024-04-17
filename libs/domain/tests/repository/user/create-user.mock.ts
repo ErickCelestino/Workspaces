@@ -1,4 +1,5 @@
 import { CreateUserDto, CreateUserRepository } from '../../../src';
+import { userMock } from '../../entity';
 
 export class CreateUserRepositoryMock implements CreateUserRepository {
   createUser: CreateUserDto = {
@@ -6,7 +7,9 @@ export class CreateUserRepositoryMock implements CreateUserRepository {
     nickname: '',
     birthDate: new Date(),
   };
-  async create(input: CreateUserDto): Promise<void> {
+  async create(input: CreateUserDto): Promise<string> {
     this.createUser = input;
+
+    return userMock.userId;
   }
 }

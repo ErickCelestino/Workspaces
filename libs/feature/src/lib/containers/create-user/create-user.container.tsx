@@ -1,77 +1,34 @@
 import { FC, useState } from 'react';
 import {
   FormAuthCard,
-  FormButton,
+  FormAuthConfirm,
   StepperCustomHorizontal,
 } from '../../components';
+import { Avatar, Box, Container, useTheme } from '@mui/material';
+import { FormCreateUser } from '../../components/form-create-user';
+import { FormCreateUserProps } from '@workspaces/domain';
 import { useSnackbarAlert } from '../../hooks';
-import { Avatar, Box, Container, TextField, useTheme } from '@mui/material';
-import { CreateUserRequest } from '../../services/http/user/create-user';
-import { useForm } from 'react-hook-form';
-import { CreateUserDto } from '@workspaces/domain';
-import { setUserIdLocalStorage } from '../../services';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { CreateUserSchema } from '../../shared';
 
 interface CreateUserProps {
   cardImage: string;
   logo: string;
-  buttonTitle?: string;
-  nameLabel?: string;
-  nicknameLabel?: string;
-  birthDateLabel?: string;
-  passwordLabel?: string;
-  confirmPasswordLabel?: string;
+  createUserLabel?: FormCreateUserProps;
 }
 
-export const CreateUser: FC<CreateUserProps> = ({
-  cardImage,
-  logo,
-  buttonTitle = 'Confirmar Cadastro',
-  nameLabel = 'Digite seu Nome',
-  nicknameLabel = 'Digite seu Nickname',
-  birthDateLabel = 'Digite sua data de Nascimento',
-  passwordLabel = 'Digite sua senha',
-  confirmPasswordLabel = 'Digite sua senha novamente',
-}) => {
-  //const history = useNavigate();
-  const theme = useTheme();
-  const {
-    handleSubmit,
-    register,
-    formState: { errors },
-  } = useForm<CreateUserDto>({
-    mode: 'all',
-    criteriaMode: 'all',
-    resolver: zodResolver(CreateUserSchema),
-    defaultValues: {
-      name: '',
-      nickname: '',
-      birthDate: new Date(),
-    },
-  });
+export const CreateUser: FC<CreateUserProps> = ({ cardImage, logo }) => {
   const { showSnackbarAlert, SnackbarAlert } = useSnackbarAlert();
-  const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
+  const theme = useTheme();
+  const [step, setStep] = useState(0);
 
-  const createUser = async (data: CreateUserDto) => {
-    try {
-      const result = await CreateUserRequest(data);
-      return result;
-    } catch (error) {
-      showSnackbarAlert({
-        message: (error as { message: string }).message,
-        severity: 'error',
-      });
-      setLoading(false);
-    }
+  const handleCreateUser = (stepPosition: number) => {
+    setStep(stepPosition);
   };
 
-  const handleData = async (data: CreateUserDto) => {
-    setSuccess(false);
-    setLoading(true);
-    const createdUserId = await createUser?.(data);
-    setUserIdLocalStorage(createdUserId);
+  const showErrorAlert = (message: string) => {
+    showSnackbarAlert({
+      message: message,
+      severity: 'error',
+    });
   };
 
   return (
@@ -94,53 +51,15 @@ export const CreateUser: FC<CreateUserProps> = ({
               }}
               src={logo}
             />
-            <Box
-              component="form"
-              onSubmit={handleSubmit(handleData)}
-              noValidate
-              sx={{ mt: 1 }}
-            >
-              <StepperCustomHorizontal activeStep={0} />
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                error={!!errors.name}
-                helperText={errors.name?.message}
-                id="name"
-                disabled={loading}
-                label={nameLabel}
-                autoComplete="name"
-                autoFocus
-                {...register('name')}
-              />
-              <TextField
-                margin="normal"
-                required
-                disabled={loading}
-                fullWidth
-                error={!!errors.nickname}
-                helperText={errors.nickname?.message}
-                id="nickname"
-                label={nicknameLabel}
-                {...register('nickname')}
-                autoComplete="nickname"
-              />
-              <TextField
-                margin="normal"
-                type="date"
-                disabled={loading}
-                InputLabelProps={{ shrink: true }}
-                label={birthDateLabel}
-                id="birthDate"
-                fullWidth
-                {...register('birthDate')}
-              />
-              <FormButton
-                success={success}
-                loading={loading}
-                buttonTitle={buttonTitle}
-              />
+            <Box sx={{ mt: 1 }}>
+              <StepperCustomHorizontal activeStep={step} />
+              {step === 0 && (
+                <FormCreateUser
+                  onData={handleCreateUser}
+                  showAlert={showErrorAlert}
+                />
+              )}
+              {step === 1 && <FormAuthConfirm showAlert={showErrorAlert} />}
             </Box>
           </Box>
         </Container>
