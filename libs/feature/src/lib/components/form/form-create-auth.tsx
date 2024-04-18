@@ -9,7 +9,7 @@ import { FC, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CreateAuthSchema, EntityExist } from '../../shared';
-import { FormButton } from '../form-button';
+import { FormButton } from './form-button.component';
 import {
   AuthConfirmProps,
   CreateAuthDto,

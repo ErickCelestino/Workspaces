@@ -5,7 +5,7 @@ import {
   StepperCustomHorizontal,
 } from '../../components';
 import { Avatar, Box, Container, useTheme } from '@mui/material';
-import { FormCreateUser } from '../../components/form-create-user';
+import { FormCreateUser } from '../../components';
 import { FormCreateUserProps } from '@workspaces/domain';
 import { useSnackbarAlert } from '../../hooks';
 
