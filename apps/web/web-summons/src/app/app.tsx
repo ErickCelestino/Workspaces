@@ -1,20 +1,37 @@
-import { Component } from 'react';
 import './app.scss';
-import AppRouters from './app-routers';
-import { AppThemeProvider, AuthProvider } from '@workspaces/feature';
+import { AppRouters, AuthRouters } from './routes';
+import {
+  AppThemeProvider,
+  AuthProvider,
+  DrawerProvider,
+  MiniDrawer,
+  useAuth,
+} from '@workspaces/feature';
 
-class App extends Component {
-  render() {
-    return (
-      <div>
-        <AuthProvider>
-          <AppThemeProvider>
+const App = () => {
+  return (
+    <AuthProvider>
+      <AppThemeProvider>
+        <Content />
+      </AppThemeProvider>
+    </AuthProvider>
+  );
+};
+
+const Content = () => {
+  const auth = useAuth();
+  return (
+    <>
+      {!auth.isAuthenticated && <AuthRouters />}
+      {auth.isAuthenticated && (
+        <DrawerProvider>
+          <MiniDrawer image="https://github.com/ErickCelestino.png">
             <AppRouters />
-          </AppThemeProvider>
-        </AuthProvider>
-      </div>
-    );
-  }
-}
+          </MiniDrawer>
+        </DrawerProvider>
+      )}
+    </>
+  );
+};
 
 export default App;

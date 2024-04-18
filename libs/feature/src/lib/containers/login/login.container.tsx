@@ -12,7 +12,7 @@ import {
 import { FormAuthCard, FormButton } from '../../components';
 import { useAuth } from '../../hooks';
 import { ValidateUserDto } from '@workspaces/domain';
-import React, { useState } from 'react';
+import React, { ReactNode, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSnackbarAlert } from '../../hooks';
 import { useForm } from 'react-hook-form';
@@ -29,6 +29,7 @@ interface LoginContainerProps {
   remenberTitle?: string;
   registerTitle?: string;
   registerHref?: string;
+  children?: ReactNode;
 }
 
 export const LoginContainer: React.FC<LoginContainerProps> = ({
@@ -41,6 +42,7 @@ export const LoginContainer: React.FC<LoginContainerProps> = ({
   remenberTitle = 'Lembrar',
   registerTitle = 'Quer se cadastrar?',
   registerHref = '/register',
+  children,
 }) => {
   const auth = useAuth();
   const history = useNavigate();

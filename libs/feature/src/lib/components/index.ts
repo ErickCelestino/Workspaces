@@ -1,4 +1,5 @@
 export * from './alert';
+export * from './drawer';
 export * from './form-auth-card';
 export * from './form-button';
 export * from './form-create-auth';
