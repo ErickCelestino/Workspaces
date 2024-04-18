@@ -1,5 +1,5 @@
 import { Box, TextField } from '@mui/material';
-import { FormButton } from '../form-button';
+import { FormButton } from './form-button.component';
 import { FC, useState } from 'react';
 import { CreateUserRequest, setUserIdLocalStorage } from '../../services';
 import {
