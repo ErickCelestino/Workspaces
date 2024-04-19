@@ -16,7 +16,7 @@ export class CreateCompany
     >
 {
   constructor(
-    @Inject('FilterCompanyByCnpj')
+    @Inject('FilterCompanyByCnpjRepository')
     private filterCompanyByCnpj: FilterCompanyByCnpjRepository,
     @Inject('CreateCompanyRepository')
     private createCompany: CreateCompanyRepository
@@ -36,7 +36,7 @@ export class CreateCompany
 
     const filterResult = await this.filterCompanyByCnpj.filter(cnpj);
 
-    if (filterResult == undefined) {
+    if (filterResult !== undefined) {
       return left(new EntityAlreadyExists(name));
     }
 
