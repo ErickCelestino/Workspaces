@@ -2,6 +2,7 @@ import {
   CreateCompany,
   CreateCompanyDto,
   CreateCompanyRepository,
+  EntityAlreadyExists,
   FilterCompanyByCnpjRepository,
   InsufficientCharacters,
 } from '../../../src';
@@ -78,5 +79,23 @@ describe('CreateCompany', () => {
 
     expect(result.isRight()).toBe(false);
     expect(result.value).toBeInstanceOf(InsufficientCharacters);
+  });
+
+  it('should return EntityAlreadyExists if exists company in system', async () => {
+    const { createCompanyDto, createCompanyRepository } = makeSut();
+
+    const mockInvalidRepository: FilterCompanyByCnpjRepository = {
+      filter: jest.fn(async () => companyMock),
+    };
+
+    const sut = new CreateCompany(
+      mockInvalidRepository,
+      createCompanyRepository
+    );
+
+    const result = await sut.execute(createCompanyDto);
+
+    expect(result.isRight()).toBe(false);
+    expect(result.value).toBeInstanceOf(EntityAlreadyExists);
   });
 });
