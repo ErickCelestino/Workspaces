@@ -8,6 +8,7 @@ export class FilterCompanyByCnpjRepositoryImpl
   constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
 
   async filter(input: string): Promise<Company | undefined> {
+    console.log(input);
     const userResult = await this.prismaService.company.findFirst({
       where: {
         cnpj: input,

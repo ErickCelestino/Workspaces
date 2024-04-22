@@ -1,4 +1,5 @@
 import {
+  ConsultCNPJRepository,
   CreateCompany,
   CreateCompanyDto,
   CreateCompanyRepository,
@@ -7,13 +8,15 @@ import {
   FilterCompanyByCnpjRepository,
   InsufficientCharacters,
   ValidateCNPJRepository,
+  ConsultCNPJResponse,
 } from '../../../src';
 import { companyMock } from '../../entity';
 import {
+  ConsultCNPJRepositoryMock,
   CreateCompanyRepositoryMock,
   FilterCompanyByCnpjRepositoryMock,
+  ValidateCNPJRepositoryMock,
 } from '../../repository';
-import { ValidateCNPJRepositoryMock } from '../../repository/company/validate-cnpj.mock';
 
 interface SutTypes {
   sut: CreateCompany;
@@ -21,12 +24,14 @@ interface SutTypes {
   createCompanyRepository: CreateCompanyRepository;
   filterCompanyByCnpjRepository: FilterCompanyByCnpjRepository;
   validateCnpjRepository: ValidateCNPJRepository;
+  consultCnpjRepository: ConsultCNPJRepository;
 }
 
 const makeSut = (): SutTypes => {
   const createCompanyRepository = new CreateCompanyRepositoryMock();
   const filterCompanyByCnpjRepository = new FilterCompanyByCnpjRepositoryMock();
   const validateCnpjRepository = new ValidateCNPJRepositoryMock();
+  const consultCnpjRepository = new ConsultCNPJRepositoryMock();
 
   const createCompanyDto: CreateCompanyDto = {
     name: companyMock.name,
@@ -36,13 +41,15 @@ const makeSut = (): SutTypes => {
   const sut = new CreateCompany(
     filterCompanyByCnpjRepository,
     createCompanyRepository,
-    validateCnpjRepository
+    validateCnpjRepository,
+    consultCnpjRepository
   );
 
   return {
     createCompanyRepository,
     filterCompanyByCnpjRepository,
     validateCnpjRepository,
+    consultCnpjRepository,
     createCompanyDto,
     sut,
   };
@@ -93,6 +100,7 @@ describe('CreateCompany', () => {
       createCompanyDto,
       createCompanyRepository,
       validateCnpjRepository,
+      consultCnpjRepository,
     } = makeSut();
 
     const mockInvalidRepository: FilterCompanyByCnpjRepository = {
@@ -102,7 +110,8 @@ describe('CreateCompany', () => {
     const sut = new CreateCompany(
       mockInvalidRepository,
       createCompanyRepository,
-      validateCnpjRepository
+      validateCnpjRepository,
+      consultCnpjRepository
     );
 
     const result = await sut.execute(createCompanyDto);
@@ -116,15 +125,44 @@ describe('CreateCompany', () => {
       createCompanyDto,
       createCompanyRepository,
       filterCompanyByCnpjRepository,
+      consultCnpjRepository,
     } = makeSut();
 
     const mockInvalidRepository: ValidateCNPJRepository = {
-      validate: jest.fn(async () => false),
+      validate: jest.fn(() => false),
     };
 
     const sut = new CreateCompany(
       filterCompanyByCnpjRepository,
       createCompanyRepository,
+      mockInvalidRepository,
+      consultCnpjRepository
+    );
+
+    const result = await sut.execute(createCompanyDto);
+
+    expect(result.isRight()).toBe(false);
+    expect(result.value).toBeInstanceOf(EntityIsInvalid);
+  });
+
+  it('should return EntityIsInvalid if consult cnpj is invalid', async () => {
+    const {
+      createCompanyDto,
+      createCompanyRepository,
+      filterCompanyByCnpjRepository,
+      validateCnpjRepository,
+    } = makeSut();
+
+    const mockEmptyReponse: ConsultCNPJResponse = {} as ConsultCNPJResponse;
+
+    const mockInvalidRepository: ConsultCNPJRepository = {
+      consult: jest.fn(async () => mockEmptyReponse),
+    };
+
+    const sut = new CreateCompany(
+      filterCompanyByCnpjRepository,
+      createCompanyRepository,
+      validateCnpjRepository,
       mockInvalidRepository
     );
 

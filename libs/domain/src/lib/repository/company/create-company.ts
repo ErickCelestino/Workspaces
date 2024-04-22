@@ -1,5 +1,9 @@
 import { CreateCompanyDto } from '../../dto';
+import { ConsultCNPJResponse } from '../../entity';
 
 export interface CreateCompanyRepository {
-  create(input: CreateCompanyDto): Promise<void>;
+  create(
+    inputDto: CreateCompanyDto,
+    inputData: ConsultCNPJResponse
+  ): Promise<void>;
 }

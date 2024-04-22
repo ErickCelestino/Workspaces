@@ -1,6 +1,7 @@
 import { UseCase } from '../../base/use-case';
 import { CreateCompanyDto } from '../../dto';
 import {
+  ConsultCNPJRepository,
   CreateCompanyRepository,
   FilterCompanyByCnpjRepository,
   ValidateCNPJRepository,
@@ -26,7 +27,9 @@ export class CreateCompany
     @Inject('CreateCompanyRepository')
     private createCompany: CreateCompanyRepository,
     @Inject('ValidateCNPJRepository')
-    private validateCnpj: ValidateCNPJRepository
+    private validateCnpj: ValidateCNPJRepository,
+    @Inject('ConsultCNPJRepository')
+    private consultCnpj: ConsultCNPJRepository
   ) {}
 
   async execute(
@@ -42,19 +45,25 @@ export class CreateCompany
       return left(new InsufficientCharacters(cnpjString));
     }
 
-    const validateCnpj = await this.validateCnpj.validate(cnpjString);
+    const validateCnpj = this.validateCnpj.validate(cnpj);
 
     if (validateCnpj == false) {
-      return left(new EntityIsInvalid(cnpj));
+      return left(new EntityIsInvalid(cnpjString));
     }
 
-    const filterResult = await this.filterCompanyByCnpj.filter(cnpj);
+    const filterInDataBase = await this.filterCompanyByCnpj.filter(cnpj);
 
-    if (filterResult !== undefined) {
+    if (filterInDataBase !== undefined) {
       return left(new EntityAlreadyExists(name));
     }
 
-    await this.createCompany.create(input);
+    const consultCnpjResult = await this.consultCnpj.consult(cnpj);
+
+    if (Object.keys(consultCnpjResult).length < 1) {
+      return left(new EntityIsInvalid(cnpjString));
+    }
+
+    await this.createCompany.create(input, consultCnpjResult);
 
     return right(undefined);
   }

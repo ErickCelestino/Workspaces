@@ -5,3 +5,4 @@ export * from './config';
 export * from './drawer';
 export * from './form';
 export * from './user';
+export * from './utils';

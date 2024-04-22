@@ -1,43 +1,30 @@
-import { Inject } from '@nestjs/common';
 import { ValidateCNPJRepository } from '@workspaces/domain';
-import { PrismaService } from 'nestjs-prisma';
 
 export class ValidateCNPJRepositoryImpl implements ValidateCNPJRepository {
-  constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
-  async validate(input: string): Promise<boolean> {
-    input = input.replace(/\D/g, '');
+  validate(input: string): boolean {
+    const b: number[] = [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
+    const c: string = String(input).replace(/[^\d]/g, '');
 
-    if (input.length !== 14) {
-      return false;
+    if (c.length !== 14 || /(.)\1{13}/.test(c)) return false;
+
+    function calculateDigitSum(digits: string, multipliers: number[]): number {
+      return digits
+        .split('')
+        .map((digit, index) => parseInt(digit) * multipliers[index])
+        .reduce((acc, curr) => acc + curr, 0);
     }
 
-    if (/^(\d)\1+$/.test(input)) {
-      return false;
-    }
+    const firstDigitSum = calculateDigitSum(c.substring(0, 12), b.slice(1));
+    const firstDigit = parseInt(c[12]);
+    const calculatedFirstDigit =
+      firstDigitSum % 11 < 2 ? 0 : 11 - (firstDigitSum % 11);
+    if (firstDigit !== calculatedFirstDigit) return false;
 
-    let soma = 0;
-    let peso = 2;
-    for (let i = 11; i >= 0; i--) {
-      soma += parseInt(input.charAt(i)) * peso;
-      peso = peso === 9 ? 2 : peso + 1;
-    }
-    const digitoVerificador1 = soma % 11 < 2 ? 0 : 11 - (soma % 11);
-
-    if (parseInt(input.charAt(12)) !== digitoVerificador1) {
-      return false;
-    }
-
-    soma = 0;
-    peso = 2;
-    for (let i = 12; i >= 0; i--) {
-      soma += parseInt(input.charAt(i)) * peso;
-      peso = peso === 9 ? 2 : peso + 1;
-    }
-    const digitoVerificador2 = soma % 11 < 2 ? 0 : 11 - (soma % 11);
-
-    if (parseInt(input.charAt(13)) !== digitoVerificador2) {
-      return false;
-    }
+    const secondDigitSum = calculateDigitSum(c.substring(0, 13), b);
+    const secondDigit = parseInt(c[13]);
+    const calculatedSecondDigit =
+      secondDigitSum % 11 < 2 ? 0 : 11 - (secondDigitSum % 11);
+    if (secondDigit !== calculatedSecondDigit) return false;
 
     return true;
   }
