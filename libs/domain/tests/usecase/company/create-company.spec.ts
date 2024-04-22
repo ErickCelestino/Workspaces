@@ -3,25 +3,30 @@ import {
   CreateCompanyDto,
   CreateCompanyRepository,
   EntityAlreadyExists,
+  EntityIsInvalid,
   FilterCompanyByCnpjRepository,
   InsufficientCharacters,
+  ValidateCNPJRepository,
 } from '../../../src';
 import { companyMock } from '../../entity';
 import {
   CreateCompanyRepositoryMock,
   FilterCompanyByCnpjRepositoryMock,
 } from '../../repository';
+import { ValidateCNPJRepositoryMock } from '../../repository/company/validate-cnpj.mock';
 
 interface SutTypes {
   sut: CreateCompany;
   createCompanyDto: CreateCompanyDto;
   createCompanyRepository: CreateCompanyRepository;
   filterCompanyByCnpjRepository: FilterCompanyByCnpjRepository;
+  validateCnpjRepository: ValidateCNPJRepository;
 }
 
 const makeSut = (): SutTypes => {
   const createCompanyRepository = new CreateCompanyRepositoryMock();
   const filterCompanyByCnpjRepository = new FilterCompanyByCnpjRepositoryMock();
+  const validateCnpjRepository = new ValidateCNPJRepositoryMock();
 
   const createCompanyDto: CreateCompanyDto = {
     name: companyMock.name,
@@ -30,12 +35,14 @@ const makeSut = (): SutTypes => {
 
   const sut = new CreateCompany(
     filterCompanyByCnpjRepository,
-    createCompanyRepository
+    createCompanyRepository,
+    validateCnpjRepository
   );
 
   return {
     createCompanyRepository,
     filterCompanyByCnpjRepository,
+    validateCnpjRepository,
     createCompanyDto,
     sut,
   };
@@ -82,7 +89,11 @@ describe('CreateCompany', () => {
   });
 
   it('should return EntityAlreadyExists if exists company in system', async () => {
-    const { createCompanyDto, createCompanyRepository } = makeSut();
+    const {
+      createCompanyDto,
+      createCompanyRepository,
+      validateCnpjRepository,
+    } = makeSut();
 
     const mockInvalidRepository: FilterCompanyByCnpjRepository = {
       filter: jest.fn(async () => companyMock),
@@ -90,12 +101,36 @@ describe('CreateCompany', () => {
 
     const sut = new CreateCompany(
       mockInvalidRepository,
-      createCompanyRepository
+      createCompanyRepository,
+      validateCnpjRepository
     );
 
     const result = await sut.execute(createCompanyDto);
 
     expect(result.isRight()).toBe(false);
     expect(result.value).toBeInstanceOf(EntityAlreadyExists);
+  });
+
+  it('should return EntityIsInvalid when a invalid cnpj', async () => {
+    const {
+      createCompanyDto,
+      createCompanyRepository,
+      filterCompanyByCnpjRepository,
+    } = makeSut();
+
+    const mockInvalidRepository: ValidateCNPJRepository = {
+      validate: jest.fn(async () => false),
+    };
+
+    const sut = new CreateCompany(
+      filterCompanyByCnpjRepository,
+      createCompanyRepository,
+      mockInvalidRepository
+    );
+
+    const result = await sut.execute(createCompanyDto);
+
+    expect(result.isRight()).toBe(false);
+    expect(result.value).toBeInstanceOf(EntityIsInvalid);
   });
 });
