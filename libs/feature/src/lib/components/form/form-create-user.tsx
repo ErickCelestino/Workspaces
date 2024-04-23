@@ -59,7 +59,6 @@ export const FormCreateUser: FC<FormCreateUserProps> = ({
     setSuccess(false);
     setLoading(true);
     const createdUserId = await createUser(data);
-    console.log(createdUserId);
     if (createdUserId !== undefined) {
       setUserIdLocalStorage(createdUserId);
       onData?.(1);

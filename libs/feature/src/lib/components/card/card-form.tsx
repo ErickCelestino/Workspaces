@@ -27,7 +27,7 @@ export const CardForm: FC<CardFormProps> = ({ children, title }) => {
           }}
         >
           <Typography
-            variant="h3"
+            variant={mdDown ? 'h5' : 'h3'}
             sx={{
               margin: theme.spacing(3),
             }}
