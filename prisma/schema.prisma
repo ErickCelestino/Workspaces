@@ -32,11 +32,19 @@ enum AuthStatus {
   @@schema("general")
 }
 
+enum UserType {
+  DEFAULT
+  DEFAULT_ADMIN
+  ADMIN
+  @@schema("general")
+}
+
 model User {
   user_id String @id @default(uuid())
   name String  @db.VarChar(100)
   nick_name String @db.VarChar(100)
   status Status @default(ACTIVE)
+  type UserType @default(DEFAULT)
   birth_date DateTime?
   created_at DateTime @default(now())
   updated_at DateTime @default(now())
@@ -110,6 +118,7 @@ model Company {
   departament_x_company Departament_X_Company[]
   user_x_company User_X_Company[]
   company_data Company_Data[]
+  company_responsible Company_Responsible[]
 
   @@schema("general")
 }
@@ -138,6 +147,8 @@ model Company_Responsible {
   created_at DateTime @default(now())
   updated_at DateTime @default(now())
   deleted_at DateTime?
+
+  company Company @relation(fields: [company_id], references: [company_id])
 
   @@schema("general")
 }
