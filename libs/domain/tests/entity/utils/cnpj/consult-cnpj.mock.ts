@@ -2,17 +2,17 @@ import { faker } from '@faker-js/faker';
 import { ConsultCNPJResponse } from '../../../../src';
 
 export const ConsultCnpjMock: ConsultCNPJResponse = {
-  abertura: faker.string.alpha(3),
-  bairro: faker.string.alpha(3),
-  cep: faker.string.alpha(3),
+  opening: faker.string.alpha(3),
+  district: faker.string.alpha(3),
+  zipcode: faker.string.alpha(3),
   email: faker.internet.email(),
-  logradouro: faker.string.alpha(3),
-  municipio: faker.string.alpha(3),
-  natureza_juridica: faker.string.alpha(3),
-  nome: faker.string.alpha(3),
-  numero: faker.string.alpha(3),
-  porte: faker.string.alpha(3),
-  situacao: faker.string.alpha(3),
-  telefone: faker.string.alpha(3),
+  street: faker.string.alpha(3),
+  city: faker.string.alpha(3),
+  legal_nature: faker.string.alpha(3),
+  name: faker.string.alpha(3),
+  number: faker.string.alpha(3),
+  port: faker.string.alpha(3),
+  situation: faker.string.alpha(3),
+  telephone: faker.string.alpha(3),
   uf: faker.string.alpha(2),
 };

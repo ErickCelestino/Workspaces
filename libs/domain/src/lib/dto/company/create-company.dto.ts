@@ -1,4 +1,4 @@
 export interface CreateCompanyDto {
-  name: string;
+  fantasy_name: string;
   cnpj: string;
 }

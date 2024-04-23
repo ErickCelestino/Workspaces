@@ -1,15 +1,15 @@
 export interface ConsultCNPJResponse {
-  nome: string;
-  logradouro: string;
-  numero: string;
-  municipio: string;
-  bairro: string;
+  name: string;
+  street: string;
+  number: string;
+  city: string;
+  district: string;
   uf: string;
-  cep: string;
+  zipcode: string;
   email: string;
-  telefone: string;
-  natureza_juridica: string;
-  porte: string;
-  situacao: string;
-  abertura: string;
+  telephone: string;
+  legal_nature: string;
+  port: string;
+  situation: string;
+  opening: string;
 }

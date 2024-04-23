@@ -1,14 +1,17 @@
 import { UseCase } from '../../base/use-case';
-import { CreateCompanyDto } from '../../dto';
+import { CreateCompanyAddressDto, CreateCompanyDto } from '../../dto';
 import {
   ConsultCNPJRepository,
   CreateCompanyRepository,
   FilterCompanyByCnpjRepository,
   ValidateCNPJRepository,
+  CreateCompanyAddressRepository,
+  FilterCityByNameRepository,
 } from '../../repository';
 import {
   EntityAlreadyExists,
   EntityIsInvalid,
+  EntityNotExists,
   InsufficientCharacters,
 } from '../../error';
 import { Either, left, right } from '../../shared/either';
@@ -29,17 +32,21 @@ export class CreateCompany
     @Inject('ValidateCNPJRepository')
     private validateCnpj: ValidateCNPJRepository,
     @Inject('ConsultCNPJRepository')
-    private consultCnpj: ConsultCNPJRepository
+    private consultCnpj: ConsultCNPJRepository,
+    @Inject('CreateCompanyAddressRepository')
+    private createCompanyAddress: CreateCompanyAddressRepository,
+    @Inject('FilterCityByNameRepository')
+    private filterCityByName: FilterCityByNameRepository
   ) {}
 
   async execute(
     input: CreateCompanyDto
   ): Promise<Either<InsufficientCharacters | EntityAlreadyExists, void>> {
-    const { name, cnpj } = input;
+    const { fantasy_name, cnpj } = input;
     const cnpjString = 'cnpj';
 
-    if (name.length < 3) {
-      return left(new InsufficientCharacters('name'));
+    if (fantasy_name.length < 3) {
+      return left(new InsufficientCharacters('fantasy name'));
     }
     if (cnpj.length < 14) {
       return left(new InsufficientCharacters(cnpjString));
@@ -54,7 +61,7 @@ export class CreateCompany
     const filterInDataBase = await this.filterCompanyByCnpj.filter(cnpj);
 
     if (filterInDataBase !== undefined) {
-      return left(new EntityAlreadyExists(name));
+      return left(new EntityAlreadyExists(fantasy_name));
     }
 
     const consultCnpjResult = await this.consultCnpj.consult(cnpj);
@@ -63,7 +70,27 @@ export class CreateCompany
       return left(new EntityIsInvalid(cnpjString));
     }
 
-    await this.createCompany.create(input, consultCnpjResult);
+    const cityResult = await this.filterCityByName.filter(
+      consultCnpjResult.city
+    );
+
+    if (Object.keys(cityResult).length < 1) {
+      return left(new EntityNotExists('city'));
+    }
+    const companyId = await this.createCompany.create(input, consultCnpjResult);
+
+    const dto: CreateCompanyAddressDto = {
+      address: {
+        city_id: cityResult.city_id,
+        district: consultCnpjResult.district,
+        number: consultCnpjResult.number,
+        street: consultCnpjResult.street,
+        zipcode: consultCnpjResult.zipcode,
+      },
+      company_id: companyId,
+    };
+
+    await this.createCompanyAddress.create(dto);
 
     return right(undefined);
   }

@@ -5,5 +5,5 @@ export interface CreateCompanyRepository {
   create(
     inputDto: CreateCompanyDto,
     inputData: ConsultCNPJResponse
-  ): Promise<void>;
+  ): Promise<string>;
 }
