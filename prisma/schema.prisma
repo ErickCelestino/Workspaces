@@ -16,10 +16,11 @@ model Auth {
   password String?
   access_token String?
   status AuthStatus @default(DEFAULT)
-  user User @relation(fields: [user_id], references: [user_id])
   created_at DateTime @default(now())
   updated_at DateTime @default(now())
   deleted_at DateTime?
+
+  user User @relation(fields: [user_id], references: [user_id])
 
   @@schema("general")
 }
@@ -40,9 +41,12 @@ model User {
   created_at DateTime @default(now())
   updated_at DateTime @default(now())
   deleted_at DateTime?
+
   user_x_departament User_X_Departament[]
   user_x_summons User_X_Summons[]
   auth Auth[]
+  summons_status Summons_Status[]
+  user_x_company User_X_Company[]
 
   @@schema("general")
 }
@@ -54,6 +58,7 @@ model User_X_Departament {
   created_at DateTime @default(now())
   updated_at DateTime @default(now())
   deleted_at DateTime?
+
   user User @relation(fields: [user_id], references: [user_id])
   departament Departament @relation(fields: [departament_id], references: [departament_id])
 
@@ -69,6 +74,7 @@ model Departament {
   created_at DateTime @default(now())
   updated_at DateTime @default(now())
   deleted_at DateTime?
+
   user_x_departament User_X_Departament[]
   departament_x_company Departament_X_Company[]
 
@@ -82,6 +88,7 @@ model Departament_X_Company {
   created_at DateTime @default(now())
   updated_at DateTime @default(now())
   deleted_at DateTime?
+
   departament Departament @relation(fields: [departament_id], references: [departament_id])
   company Company @relation(fields: [company_id], references: [company_id])
 
@@ -91,14 +98,62 @@ model Departament_X_Company {
 
 model Company {
   company_id String @id @default(uuid())
-  name String @db.VarChar(100)
+  fantasy_name String @db.VarChar(200)
+  social_reason String  @db.VarChar(200)
   cnpj String @db.VarChar(14)
   status Status @default(ACTIVE)
   created_at DateTime @default(now())
   updated_at DateTime @default(now())
   deleted_at DateTime?
-  departament_x_company Departament_X_Company[]
 
+  company_x_address Company_X_Address[]
+  departament_x_company Departament_X_Company[]
+  user_x_company User_X_Company[]
+  company_data Company_Data[]
+
+  @@schema("general")
+}
+
+model Company_Data {
+  company_data_id String @id @default(uuid())
+  responsible_email String
+  company_id String
+  phone String
+  opening String
+  port String
+  situation String
+  legal_natural  String
+
+  company Company @relation(fields: [company_id], references: [company_id])
+
+  @@schema("general")
+}
+
+model Company_Responsible {
+  company_responsible_id String @id @default(uuid())
+  name String
+  company_id String
+  cpf String @db.VarChar(11)
+  birth_date DateTime
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+  deleted_at DateTime?
+
+  @@schema("general")
+}
+
+model User_X_Company {
+  user_id String
+  company_id String
+  status Status @default(ACTIVE)
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+  deleted_at DateTime?
+
+  user User @relation(fields: [user_id], references: [user_id])
+  company Company @relation(fields: [company_id], references: [company_id])
+
+  @@id([user_id, company_id])
   @@schema("general")
 }
 
@@ -109,10 +164,80 @@ model User_X_Summons {
   created_at DateTime @default(now())
   updated_at DateTime @default(now())
   deleted_at DateTime?
+
   user User @relation(fields: [user_id], references: [user_id])
   summons Summons @relation(fields: [summons_id], references: [summons_id])
 
   @@id([user_id, summons_id])
+  @@schema("general")
+}
+
+model Company_X_Address {
+  company_id String
+  address_id String
+  status Status @default(ACTIVE)
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+  deleted_at DateTime?
+
+  address Address @relation(fields: [address_id], references: [address_id])
+  company Company @relation(fields: [company_id], references: [company_id])
+
+  @@id([address_id, company_id])
+  @@schema("general")
+}
+
+model Address {
+  address_id String @id @default(uuid())
+  district String
+  street String
+  number String
+  complement String
+  zipcode String
+  city_id String
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+  deleted_at DateTime?
+
+  company_address Company_X_Address[]
+  city City @relation(fields: [city_id],  references: [city_id])
+
+  @@schema("general")
+}
+
+model City {
+  city_id String @id @default(uuid())
+  name String
+  state_id String
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+  deleted_at DateTime?
+
+  address Address[]
+  state State @relation(fields: [state_id],  references: [state_id])
+
+  @@schema("general")
+}
+
+model State {
+  state_id String @id @default(uuid())
+  name String
+  coutry_id String
+  ur String @db.VarChar(2)
+
+  country Country @relation(fields: [coutry_id], references: [country_id])
+
+  city City[]
+  @@schema("general")
+}
+
+model Country {
+  country_id String @id @default(uuid())
+  name String
+  ur String @db.VarChar(2)
+
+  state State[]
+
   @@schema("general")
 }
 
@@ -128,11 +253,28 @@ model Summons {
   summons_id String @id @default(uuid())
   title String
   description String
-  status SummonsStatus @default(PENDING)
+  status_id String
   created_at DateTime @default(now())
   updated_at DateTime @default(now())
   deleted_at DateTime?
+
   user_x_summons User_X_Summons[]
+  summons_status Summons_Status @relation(fields: [status_id], references: [summons_status_id])
+
+  @@schema("summons")
+}
+
+model Summons_Status {
+  summons_status_id String @id @default(uuid())
+  status SummonsStatus @default(PENDING)
+  update_user_id String
+
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+  deleted_at DateTime?
+
+  summons Summons[]
+  summons_status User @relation(fields: [update_user_id], references: [user_id])
 
   @@schema("summons")
 }
