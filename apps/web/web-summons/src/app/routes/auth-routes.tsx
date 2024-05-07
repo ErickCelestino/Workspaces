@@ -23,8 +23,6 @@ export const AuthRouters = () => {
           />
         }
       />
-
-      <Route path="*" element={<Navigate to="/login" />} />
     </Routes>
   );
 };
