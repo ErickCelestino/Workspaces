@@ -7,8 +7,8 @@ import {
   FilterByEmailOrNicknameRepositoryImpl,
   FindUserByIdRepositoryImpl,
   PrismaService,
+  HashGeneratorImpl,
 } from '@workspaces/data-access';
-import { HashGeneratorImpl } from '@workspaces/data-access';
 
 @Module({
   controllers: [CreateAuthController],
