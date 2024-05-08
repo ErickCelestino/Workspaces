@@ -1,4 +1,10 @@
-import { createContext, useEffect, useState } from 'react';
+import {
+  createContext,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import {
   LoginRequest,
   getUserLocalStorage,
@@ -19,22 +25,24 @@ export const AuthProvider = ({ children }: IAuthProvider) => {
     }
   }, []);
 
-  async function authenticate(email: string, password: string) {
+  const authenticate = useCallback(async (email: string, password: string) => {
     const response = await LoginRequest(email, password);
-
     const payload = { token: response.token, email };
 
     setUser(payload);
     setUserLocalStorage(payload);
-  }
+  }, []);
 
-  function logout() {
+  const logout = useCallback(() => {
     setUser(null);
     setUserLocalStorage(null);
-  }
+  }, []);
 
+  const isAuthenticated = useMemo(() => !!user, [user]);
   return (
-    <AuthContext.Provider value={{ ...user, authenticate, logout }}>
+    <AuthContext.Provider
+      value={{ ...user, authenticate, logout, isAuthenticated }}
+    >
       {children}
     </AuthContext.Provider>
   );

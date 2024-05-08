@@ -8,7 +8,7 @@ async function bootstrap() {
   app.enableCors({
     origin: '*',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-    allowedHeaders: 'Content-Type, Accept',
+    allowedHeaders: '*',
   });
   const globalPrefix = 'api-general';
   app.setGlobalPrefix(globalPrefix);

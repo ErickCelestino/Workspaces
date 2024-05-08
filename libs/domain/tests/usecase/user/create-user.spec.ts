@@ -1,4 +1,5 @@
 import {
+  CreateError,
   CreateUser,
   CreateUserDto,
   CreateUserRepository,
@@ -48,14 +49,14 @@ const makeSut = (): SutTypes => {
 
 describe('CreateUser', () => {
   it('should return void when a correct user is created', async () => {
-    const { sut, createUserDto } = makeSut();
+    const { createUserDto, sut } = makeSut();
 
     const result = await sut.execute(createUserDto);
     console.log(result.value);
 
     expect(result.isLeft()).toBe(false);
     expect(result.isRight()).toBe(true);
-    expect(result.value).toBe(undefined);
+    expect(result.value).toBe(userMock.userId);
   });
 
   it('should return InsufficientCharacters when a incorrect name', async () => {
@@ -101,5 +102,20 @@ describe('CreateUser', () => {
 
     expect(result.isLeft()).toBe(true);
     expect(result.value).toBeInstanceOf(EntityAlreadyExists);
+  });
+
+  it('should return CreateError if there is no user created in the database', async () => {
+    const { createUserDto, filterNickNameRepository } = makeSut();
+
+    const mockEmptyRepository: CreateUserRepository = {
+      create: jest.fn(async () => ''),
+    };
+
+    const sut = new CreateUser(mockEmptyRepository, filterNickNameRepository);
+
+    const result = await sut.execute(createUserDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.value).toBeInstanceOf(CreateError);
   });
 });

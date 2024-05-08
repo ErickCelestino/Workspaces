@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from 'axios';
-import { getUserLocalStorage } from '../utils';
+import { getUserLocalStorage } from '../../utils';
 
 export const generalApi = axios.create({
   baseURL: 'http://localhost:3001/api-general',

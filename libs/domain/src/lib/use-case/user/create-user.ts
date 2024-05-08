@@ -1,6 +1,10 @@
 import { UseCase } from '../../base/use-case';
 import { CreateUserDto } from '../../dto';
-import { EntityAlreadyExists, InsufficientCharacters } from '../../error';
+import {
+  CreateError,
+  EntityAlreadyExists,
+  InsufficientCharacters,
+} from '../../error';
 import { CreateUserRepository } from '../../repository';
 import { FilterByEmailOrNicknameRepository } from '../../repository/user/filter-by-email-or-nickname';
 import { Either, left, right } from '../../shared/either';
@@ -10,7 +14,7 @@ export class CreateUser
   implements
     UseCase<
       CreateUserDto,
-      Either<InsufficientCharacters | EntityAlreadyExists, void>
+      Either<InsufficientCharacters | EntityAlreadyExists, string>
     >
 {
   constructor(
@@ -22,7 +26,7 @@ export class CreateUser
 
   async execute(
     input: CreateUserDto
-  ): Promise<Either<InsufficientCharacters | EntityAlreadyExists, void>> {
+  ): Promise<Either<InsufficientCharacters | EntityAlreadyExists, string>> {
     const { name, nickname } = input;
 
     if (name.length < 3) {
@@ -38,8 +42,12 @@ export class CreateUser
       return left(new EntityAlreadyExists(nickname));
     }
 
-    await this.createUserRepository.create(input);
+    const fiterUser = await this.createUserRepository.create(input);
 
-    return right(undefined);
+    if (fiterUser.length < 1) {
+      return left(new CreateError('User'));
+    }
+
+    return right(fiterUser);
   }
 }

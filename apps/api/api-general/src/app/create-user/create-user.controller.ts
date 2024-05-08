@@ -7,8 +7,11 @@ import {
 } from '@nestjs/common';
 import { CreateUserService } from './create-user.service';
 import { ZodValidationPipe } from '../pipes/zod-validation-pipe';
-import { createUserSchema } from './create-user.schema';
-import { CreateUserDto } from '@workspaces/domain';
+import {
+  CreateUserDto,
+  CreateUserResponse,
+  createUserSchema,
+} from '@workspaces/domain';
 
 @Controller('create-user')
 export class CreateUserController {
@@ -18,8 +21,11 @@ export class CreateUserController {
   @UsePipes(new ZodValidationPipe(createUserSchema))
   async create(@Body() input: CreateUserDto) {
     const result = await this.createUserService.create(input);
+    const response: CreateUserResponse = {
+      user_id: `${result.value}`,
+    };
 
-    if (result.isRight()) return;
+    if (result.isRight()) return response;
     else
       throw new BadRequestException({
         error: {
