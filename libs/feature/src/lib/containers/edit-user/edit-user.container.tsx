@@ -11,7 +11,10 @@ export const EditUserContainer = () => {
         height={theme.spacing(63)}
         width={theme.spacing(100)}
       >
-        <FormEditUser />
+        <FormEditUser
+          nameLabel="Digite o nome"
+          birthDateLabel="Digite sua Data de Nascimento"
+        />
       </FormCard>
     </LayoutBase>
   );
