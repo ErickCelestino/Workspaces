@@ -14,7 +14,7 @@ export class ListUserRepositoryImpl implements ListUserRepository {
           { name: { contains: input, mode: 'insensitive' } },
           {
             auth: {
-              every: { email: { contains: input, mode: 'insensitive' } },
+              some: { email: { contains: input, mode: 'insensitive' } },
             },
           },
         ],
@@ -38,18 +38,16 @@ export class ListUserRepositoryImpl implements ListUserRepository {
       },
     });
 
-    const teste = userResult == null ? [] : userResult;
-    const mappedUsers: UserList[] = teste.map((user) => {
+    const mappedUsers: UserList[] = userResult.map((user) => {
       return {
-        name: user.name,
-        nickname: user.nick_name,
-        birthDate: user.birth_date,
-        userId: user.user_id,
-        email: user.auth[0].email,
+        name: user.name == null ? '' : user.name,
+        nickname: user.nick_name == null ? '' : user.nick_name,
+        birthDate: user.birth_date == null ? new Date() : user.birth_date,
+        userId: user.user_id == null ? '' : user.user_id,
+        email: user.auth[0].email == null ? '' : user.auth[0].email,
       };
     });
-
-    // console.log(mappedUsers)
+    console.log(`teste: ${mappedUsers[0].email}`);
     return mappedUsers;
   }
 }

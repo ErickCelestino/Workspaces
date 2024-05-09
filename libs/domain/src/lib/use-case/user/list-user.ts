@@ -30,6 +30,8 @@ export class ListUser
 
     const listUserResult = await this.listUserRepository.list(sanitizedInput);
 
+    console.log(listUserResult[0].email);
+
     return right(listUserResult);
   }
 }
