@@ -1,4 +1,4 @@
-import { Box, Divider } from '@mui/material';
+import { Box } from '@mui/material';
 import { ListUser } from '../../components';
 import { LayoutBase } from '../../layout';
 import { useEffect, useState } from 'react';
@@ -6,11 +6,11 @@ import { ListUserRequest } from '../../services';
 import { UserList } from '@workspaces/domain';
 
 export const ListUserContainer = () => {
-  const [data, setData] = useState<UserList[]>([]);
+  const [userList, setUserList] = useState<UserList[]>([]);
   useEffect(() => {
     const getData = async () => {
       const result = await ListUserRequest('');
-      console.log(result);
+      setUserList(result);
     };
     getData();
   }, []);
@@ -19,7 +19,17 @@ export const ListUserContainer = () => {
     <LayoutBase title="Listagem de Usuários">
       <Box width="100%" display="flex" justifyContent="center">
         <Box width="80%">
-          <ListUser image="teste" imageAlt="imagem de teste" name="aa" />
+          {userList.map((user) => (
+            <ListUser
+              key={user.userId}
+              image="teste"
+              imageAlt={`image from ${user.name}`}
+              name={`Nome: ${user.name}`}
+              userId={`ID: ${user.userId}`}
+              email={`Email: ${user.email}`}
+              nickname={`Nickname: ${user.nickname}`}
+            />
+          ))}
         </Box>
       </Box>
     </LayoutBase>
