@@ -1,10 +1,16 @@
-import { CreateUserDto, CreateUserResponse } from '@workspaces/domain';
+import {
+  CreateUserDto,
+  CreateUserResponse,
+  ListUserDto,
+  UserList,
+} from '@workspaces/domain';
 import { generalApi } from '../axios-config';
 
-export async function ListUserRequest(input: CreateUserDto) {
-  const resultId = await generalApi.post<CreateUserResponse>(
-    'create-user',
-    input
-  );
-  return resultId.data.user_id;
+export async function ListUserRequest(input: string) {
+  const result = await generalApi.get<UserList>('list-user', {
+    params: {
+      filter: input,
+    },
+  });
+  return result.data;
 }

@@ -16,7 +16,6 @@ export class ListUser
 
   async execute(input: string): Promise<Either<SyntaxError, UserList[]>> {
     const sanitizedInput = this.btrinSanitizeRepository.btrin(input);
-
     if (sanitizedInput === undefined) {
       return left(new SyntaxError());
     }
