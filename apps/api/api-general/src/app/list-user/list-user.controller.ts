@@ -6,8 +6,6 @@ import {
   UsePipes,
 } from '@nestjs/common';
 import { ListUserService } from './list-user.service';
-import { ZodValidationPipe } from '../pipes/zod-validation-pipe';
-import { listUserSchema } from './list-user.schema';
 import { ListUserDto } from '@workspaces/domain';
 
 @Controller('list-user')
@@ -15,7 +13,6 @@ export class ListUserController {
   constructor(private readonly listUserService: ListUserService) {}
 
   @Get()
-  @UsePipes(new ZodValidationPipe(listUserSchema))
   async getListUsers(@Body() input: ListUserDto) {
     const result = await this.listUserService.list(input.input.toString());
 

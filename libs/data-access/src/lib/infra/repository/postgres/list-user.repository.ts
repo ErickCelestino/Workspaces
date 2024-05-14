@@ -8,14 +8,18 @@ export class ListUserRepositoryImpl implements ListUserRepository {
   async list(input: string): Promise<UserList[]> {
     const userResult = await this.prismaService.user.findMany({
       where: {
-        OR: [
-          { name: { contains: input, mode: 'insensitive' } },
-          {
-            auth: {
-              some: { email: { contains: input, mode: 'insensitive' } },
-            },
-          },
-        ],
+        ...(input !== null
+          ? {
+              OR: [
+                { name: { contains: input, mode: 'insensitive' } },
+                {
+                  auth: {
+                    some: { email: { contains: input, mode: 'insensitive' } },
+                  },
+                },
+              ],
+            }
+          : {}),
       },
       orderBy: {
         name: 'asc',

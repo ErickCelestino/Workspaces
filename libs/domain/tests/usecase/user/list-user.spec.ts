@@ -45,17 +45,6 @@ describe('ListUser', () => {
     expect(result.value);
   });
 
-  it('should left Insufficient Characters if sent an input with less than two characters', async () => {
-    const { sut, listUserDto } = makeSut();
-
-    listUserDto.input = '';
-
-    const result = await sut.execute(listUserDto.input);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(InsufficientCharacters);
-  });
-
   it('should left SyntaxError if sent an input with any syntax error not sanitized', async () => {
     const { sut, listUserDto, btrinSanitizeRepository } = makeSut();
 
