@@ -1,5 +1,5 @@
 import { Box } from '@mui/material';
-import { ListUser } from '../../components';
+import { ListUser, SearchUser } from '../../components';
 import { LayoutBase } from '../../layout';
 import { useEffect, useState } from 'react';
 import { ListUserRequest } from '../../services';
@@ -7,6 +7,7 @@ import { UserList } from '@workspaces/domain';
 
 export const ListUserContainer = () => {
   const [userList, setUserList] = useState<UserList[]>([]);
+
   useEffect(() => {
     const getData = async () => {
       const result = await ListUserRequest('');
@@ -15,15 +16,21 @@ export const ListUserContainer = () => {
     getData();
   }, []);
 
+  const handleData = async (text: string) => {
+    const result = await ListUserRequest(text);
+    setUserList(result);
+  };
+
   return (
     <LayoutBase title="Listagem de Usuários">
       <Box width="100%" display="flex" justifyContent="center">
         <Box width="80%">
+          <SearchUser onSearch={handleData} placeholder="Pesquisar Usuário" />
           {userList.map((user) => (
             <ListUser
               key={user.userId}
               image="teste"
-              imageAlt={`image from ${user.name}`}
+              imageAlt={`Image from ${user.name}`}
               name={`Nome: ${user.name}`}
               userId={`ID: ${user.userId}`}
               email={`Email: ${user.email}`}
