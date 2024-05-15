@@ -1,5 +1,9 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
-import { TestContainer, useDrawerContext } from '@workspaces/feature';
+import {
+  ListUserContainer,
+  TestContainer,
+  useDrawerContext,
+} from '@workspaces/feature';
 import { useEffect } from 'react';
 
 export const AppRouters = () => {
@@ -12,12 +16,18 @@ export const AppRouters = () => {
         icon: 'home',
         path: '/home',
       },
+      {
+        label: 'Usuários',
+        icon: 'list',
+        path: '/list-user',
+      },
     ]);
   }, [setDrawerOptions]);
 
   return (
     <Routes>
       <Route path="/home" element={<TestContainer />} />
+      <Route path="list-user" element={<ListUserContainer />} />
 
       <Route path="*" element={<Navigate to="/home" />} />
     </Routes>

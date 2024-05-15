@@ -15,6 +15,7 @@
     "prisma:migrate": "prisma migrate dev",
     "prisma:studio": "prisma studio",
     "docker": "docker-compose up",
+    "docker:ze": "docker compose up",
     "prepare": "husky"
   },
   "private": true,
