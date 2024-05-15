@@ -1,4 +1,8 @@
-import { ListUserDto, ListUserRepository, UserList } from '../../../src';
+import {
+  ListUserDto,
+  ListUserRepository,
+  ListUserResponseDto,
+} from '../../../src';
 import { listUserMock } from '../../entity';
 
 export class ListUserRepositoryMock implements ListUserRepository {
@@ -6,8 +10,12 @@ export class ListUserRepositoryMock implements ListUserRepository {
     input: '',
   };
 
-  async list(input: string): Promise<UserList[]> {
-    this.listUser.input = input;
-    return listUserMock;
+  async list(input: ListUserDto): Promise<ListUserResponseDto> {
+    this.listUser.input = input.input;
+    return {
+      total: 1,
+      totalPages: 1,
+      users: listUserMock,
+    };
   }
 }

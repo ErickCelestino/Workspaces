@@ -1,5 +1,5 @@
-import { UserList } from '../../entity';
+import { ListUserDto, ListUserResponseDto } from '../../dto';
 
 export interface ListUserRepository {
-  list(input: string): Promise<UserList[]>;
+  list(input: ListUserDto): Promise<ListUserResponseDto>;
 }

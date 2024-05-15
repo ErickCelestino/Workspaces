@@ -6,8 +6,12 @@ export class ListUserController {
   constructor(private readonly listUserService: ListUserService) {}
 
   @Get()
-  async getListUsers(@Query('filter') input: string) {
-    const result = await this.listUserService.list(input);
+  async getListUsers(
+    @Query('filter') input: string,
+    @Query('skip') skip: number,
+    @Query('take') take: number
+  ) {
+    const result = await this.listUserService.list({ input, skip, take });
 
     if (result.isRight()) return result.value;
     else

@@ -23,8 +23,8 @@ export const ListUserContainer = () => {
 
   return (
     <LayoutBase title="Listagem de Usuários">
-      <Box width="100%" display="flex" justifyContent="center">
-        <Box width="80%">
+      <Box display="flex" justifyContent="center">
+        <Box width="70%">
           <SearchUser onSearch={handleData} placeholder="Pesquisar Usuário" />
           {userList.map((user) => (
             <ListUser

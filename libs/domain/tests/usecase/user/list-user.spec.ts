@@ -1,6 +1,5 @@
 import {
   BtrinSanitizeRepository,
-  InsufficientCharacters,
   ListUser,
   ListUserDto,
   ListUserRepository,
@@ -39,7 +38,7 @@ describe('ListUser', () => {
   it('should return a list of users if the input is correct', async () => {
     const { listUserDto, sut } = makeSut();
 
-    const result = await sut.execute(listUserDto.input);
+    const result = await sut.execute(listUserDto);
 
     expect(result.isRight());
     expect(result.value);
@@ -50,7 +49,7 @@ describe('ListUser', () => {
 
     btrinSanitizeRepository.btrin = () => undefined;
 
-    const result = await sut.execute(listUserDto.input);
+    const result = await sut.execute(listUserDto);
 
     expect(result.isLeft()).toBe(true);
     expect(result.value).toBeInstanceOf(SyntaxError);
