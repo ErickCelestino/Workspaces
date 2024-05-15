@@ -6,7 +6,7 @@ import {
   EntityNotExists,
   FindUserByIdRepository,
   InsufficientCharacters,
-  User,
+  UserList,
 } from '../../../src';
 import { userMock } from '../../entity';
 import {
@@ -85,7 +85,7 @@ describe('EditUser', () => {
   it('should return EntityNotExists when a not exist user in database', async () => {
     const { editUserDto, editUserRepository } = makeSut();
 
-    const mockResult = {} as User;
+    const mockResult = {} as UserList;
 
     const mockEmptyRepository: FindUserByIdRepository = {
       find: jest.fn(async () => mockResult),

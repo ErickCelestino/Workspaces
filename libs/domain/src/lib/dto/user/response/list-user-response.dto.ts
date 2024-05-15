@@ -1,4 +1,4 @@
-import { UserList } from '../../entity';
+import { UserList } from '../../../entity';
 
 export interface ListUserResponseDto {
   total: number;
