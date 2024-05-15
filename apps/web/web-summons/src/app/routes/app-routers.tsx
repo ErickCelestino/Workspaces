@@ -1,6 +1,7 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 import {
   EditUserContainer,
+  ListUserContainer,
   TestContainer,
   useDrawerContext,
 } from '@workspaces/feature';
@@ -17,9 +18,9 @@ export const AppRouters = () => {
         path: '/home',
       },
       {
-        label: 'Editar Usuário',
-        icon: 'edit',
-        path: '/edit-user',
+        label: 'Usuários',
+        icon: 'list',
+        path: '/list-user',
       },
     ]);
   }, [setDrawerOptions]);
@@ -28,6 +29,7 @@ export const AppRouters = () => {
     <Routes>
       <Route path="/home" element={<TestContainer />} />
       <Route path="/edit-user" element={<EditUserContainer />} />
+      <Route path="list-user" element={<ListUserContainer />} />
 
       <Route path="*" element={<Navigate to="/home" />} />
     </Routes>
