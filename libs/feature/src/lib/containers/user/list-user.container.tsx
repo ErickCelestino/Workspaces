@@ -1,4 +1,4 @@
-import { Box, Pagination, useTheme } from '@mui/material';
+import { Box, Icon, Pagination, Typography, useTheme } from '@mui/material';
 import { ListUser, SearchUser } from '../../components';
 import { LayoutBase } from '../../layout';
 import { useEffect, useState } from 'react';
@@ -78,7 +78,16 @@ export const ListUserContainer = () => {
                   />
                 ))
               ) : (
-                <div>Sem Dados</div>
+                <Box
+                  marginTop={theme.spacing(2)}
+                  width="100%"
+                  display="flex"
+                  justifyContent="center"
+                >
+                  <Typography variant="h4">
+                    Não foram encontrados registros
+                  </Typography>
+                </Box>
               )}
             </Box>
             <Box

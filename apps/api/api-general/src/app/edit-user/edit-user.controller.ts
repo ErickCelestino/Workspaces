@@ -2,7 +2,7 @@ import {
   BadRequestException,
   Body,
   Controller,
-  Post,
+  Put,
   UsePipes,
 } from '@nestjs/common';
 import { EditUserService } from './edit-user.service';
@@ -13,7 +13,7 @@ import { ZodValidationPipe } from '../pipes/zod-validation-pipe';
 export class EditUserController {
   constructor(private readonly editUserService: EditUserService) {}
 
-  @Post()
+  @Put()
   @UsePipes(new ZodValidationPipe(editUserSchema))
   async create(@Body() input: EditUserDto) {
     const result = await this.editUserService.edit(input);

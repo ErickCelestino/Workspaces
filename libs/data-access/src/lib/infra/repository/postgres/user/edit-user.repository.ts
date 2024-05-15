@@ -13,7 +13,7 @@ export class EditUserRepositoryImpl implements EditUserRepository {
       },
       data: {
         name,
-        birth_date: birthDate,
+        ...(birthDate!.toString().length > 1 ? { birth_date: birthDate } : {}),
       },
     });
   }
