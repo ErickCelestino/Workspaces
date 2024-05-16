@@ -1,3 +1,4 @@
+import { Inject } from '@nestjs/common';
 import { UseCase } from '../../base/use-case';
 import { UserList } from '../../entity';
 import { EntityNotEmpty, EntityNotExists } from '../../error';
@@ -8,7 +9,10 @@ export class FindUserById
   implements
     UseCase<string, Either<EntityNotEmpty | EntityNotExists, UserList>>
 {
-  constructor(private findUserById: FindUserByIdRepository) {}
+  constructor(
+    @Inject('FindUserByIdRepository')
+    private findUserById: FindUserByIdRepository
+  ) {}
   async execute(
     input: string
   ): Promise<Either<EntityNotEmpty | EntityNotExists, UserList>> {
