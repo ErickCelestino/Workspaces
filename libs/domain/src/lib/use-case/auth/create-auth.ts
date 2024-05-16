@@ -56,7 +56,7 @@ export class CreateAuth
     }
     const userResult = await this.findUserByIdRepository.find(userId);
 
-    if (userResult.userId.length < 1) {
+    if (Object.keys(userResult).length < 1) {
       return left(new EntityNotExists('User'));
     }
 
