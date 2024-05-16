@@ -1,9 +1,11 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Box, TextField } from '@mui/material';
-import { EditUserDto } from '@workspaces/domain';
-import { FC, useState } from 'react';
+import { Box, TextField, useTheme } from '@mui/material';
+import { EditUserDto, UserList } from '@workspaces/domain';
+import { FC, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { CreateUserSchema } from '../../shared';
+import { CreateUserSchema, EditUserSchema } from '../../shared';
+import { FindUserRequest, getItemLocalStorage } from '../../services';
+import { FormButton } from './form-button.component';
 
 interface FormEditUserProps {
   nameLabel: string;
@@ -16,27 +18,52 @@ export const FormEditUser: FC<FormEditUserProps> = ({
 }) => {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const theme = useTheme();
 
   const {
     handleSubmit,
     register,
     formState: { errors },
+    reset,
   } = useForm<EditUserDto>({
     mode: 'all',
     criteriaMode: 'all',
-    resolver: zodResolver(CreateUserSchema),
+    resolver: zodResolver(EditUserSchema),
     defaultValues: {
-      id: '',
       name: '',
+      id: '',
       birthDate: new Date(),
     },
   });
 
+  useEffect(() => {
+    const getUserData = async () => {
+      const getUserId = getItemLocalStorage('eu');
+      const result = await FindUserRequest(getUserId);
+      const formattedBirthDate = result.birthDate
+        ? new Date(result.birthDate).toISOString().split('T')[0]
+        : new Date();
+      reset({
+        id: result.userId,
+        name: result.name,
+        birthDate: formattedBirthDate as Date,
+      });
+    };
+    getUserData();
+  }, [reset]);
+
+  const handleUserData = async (data: EditUserDto) => {
+    console.log(`teste: ${data.name}`);
+  };
+
   return (
-    <Box width="80%">
+    <Box width="80%" component="form" onSubmit={handleSubmit(handleUserData)}>
       <TextField
+        sx={{
+          width: theme.spacing(40),
+        }}
         margin="normal"
-        required
+        InputLabelProps={{ shrink: true, required: true }}
         disabled={true}
         error={!!errors.id}
         helperText={errors.id?.message}
@@ -47,7 +74,7 @@ export const FormEditUser: FC<FormEditUserProps> = ({
       />
       <TextField
         margin="normal"
-        required
+        InputLabelProps={{ shrink: true, required: true }}
         disabled={loading}
         fullWidth
         error={!!errors.name}
@@ -68,6 +95,11 @@ export const FormEditUser: FC<FormEditUserProps> = ({
         id="birthDate"
         fullWidth
         {...register('birthDate')}
+      />
+      <FormButton
+        buttonTitle={loading ? 'Salvando...' : 'Salvar Alteração'}
+        loading={loading}
+        success={success}
       />
     </Box>
   );
