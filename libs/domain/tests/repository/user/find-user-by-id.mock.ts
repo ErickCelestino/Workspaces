@@ -1,5 +1,5 @@
-import { FindUserByIdRepository, User, UserList } from '../../../src';
-import { listUserMock, userMock } from '../../entity';
+import { FindUserByIdRepository, UserList } from '../../../src';
+import { listUserMock } from '../../entity';
 
 export class FindUserByIdRepositoryMock implements FindUserByIdRepository {
   id = '';
