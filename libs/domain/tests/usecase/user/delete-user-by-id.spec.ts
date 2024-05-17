@@ -5,12 +5,15 @@ import {
   EntityNotEmpty,
   EntityNotExists,
   FindUserByIdRepository,
+  NotPermissionError,
   UserList,
+  VerifyUserStatusByIdRepository,
 } from '../../../src';
 import { userMock } from '../../entity';
 import {
   DeleteUserByIdRepositoryMock,
   FindUserByIdRepositoryMock,
+  VerifyUserStatusByIdRepositoryMock,
 } from '../../repository';
 
 interface SutTypes {
@@ -18,25 +21,31 @@ interface SutTypes {
   deleteUserByIdDto: DeleteUserByIdDto;
   deleteUserByIdRepository: DeleteUserByIdRepository;
   findUserByIdRepository: FindUserByIdRepository;
+  verifyUserStatusById: VerifyUserStatusByIdRepository;
 }
 
 const makeSut = (): SutTypes => {
   const deleteUserByIdRepository = new DeleteUserByIdRepositoryMock();
   const findUserByIdRepository = new FindUserByIdRepositoryMock();
+  const verifyUserStatusById = new VerifyUserStatusByIdRepositoryMock();
 
   const deleteUserByIdDto: DeleteUserByIdDto = {
     id: userMock.userId,
+    description: 'any_description',
+    loggedUser: userMock.userId,
   };
 
   const sut = new DeleteUserById(
     deleteUserByIdRepository,
-    findUserByIdRepository
+    findUserByIdRepository,
+    verifyUserStatusById
   );
 
   return {
     deleteUserByIdRepository,
     findUserByIdRepository,
     deleteUserByIdDto,
+    verifyUserStatusById,
     sut,
   };
 };
@@ -62,8 +71,32 @@ describe('DeleteUserById', () => {
     expect(result.value).toBeInstanceOf(EntityNotEmpty);
   });
 
+  it('should return EntityNotEmpty when a passed empty logged user id', async () => {
+    const { sut, deleteUserByIdDto } = makeSut();
+    deleteUserByIdDto.loggedUser = '';
+    const result = await sut.execute(deleteUserByIdDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
+    expect(result.value).toBeInstanceOf(EntityNotEmpty);
+  });
+
+  it('should return EntityNotEmpty when a passed empty description', async () => {
+    const { sut, deleteUserByIdDto } = makeSut();
+    deleteUserByIdDto.description = '';
+    const result = await sut.execute(deleteUserByIdDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
+    expect(result.value).toBeInstanceOf(EntityNotEmpty);
+  });
+
   it('should return EntityNotExists when a not exist user in database', async () => {
-    const { deleteUserByIdDto, deleteUserByIdRepository } = makeSut();
+    const {
+      deleteUserByIdDto,
+      deleteUserByIdRepository,
+      verifyUserStatusById,
+    } = makeSut();
 
     const mockResult = {} as UserList;
 
@@ -73,12 +106,36 @@ describe('DeleteUserById', () => {
 
     const sut = new DeleteUserById(
       deleteUserByIdRepository,
-      mockEmptyRepository
+      mockEmptyRepository,
+      verifyUserStatusById
     );
 
     const result = await sut.execute(deleteUserByIdDto);
 
     expect(result.isLeft()).toBe(true);
     expect(result.value).toBeInstanceOf(EntityNotExists);
+  });
+
+  it('should return NotPermissionError when a logged user passed it does not have permission in database', async () => {
+    const {
+      deleteUserByIdDto,
+      deleteUserByIdRepository,
+      findUserByIdRepository,
+    } = makeSut();
+
+    const mockEmptyRepository: VerifyUserStatusByIdRepository = {
+      verify: jest.fn(async () => 'DEFAULT'),
+    };
+
+    const sut = new DeleteUserById(
+      deleteUserByIdRepository,
+      findUserByIdRepository,
+      mockEmptyRepository
+    );
+    deleteUserByIdDto.id = 'any_id';
+    const result = await sut.execute(deleteUserByIdDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.value).toBeInstanceOf(NotPermissionError);
   });
 });

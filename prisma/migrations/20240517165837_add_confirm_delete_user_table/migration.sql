@@ -1,6 +1,7 @@
 -- CreateTable
 CREATE TABLE "general"."ConfirmDeleteUser" (
     "id" TEXT NOT NULL,
+    "responsibly_user" TEXT NOT NULL,
     "user_id" TEXT NOT NULL,
     "description" VARCHAR(1000) NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,

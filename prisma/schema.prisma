@@ -41,6 +41,7 @@ enum UserType {
 
 model ConfirmDeleteUser {
   id String @id @default(uuid())
+  responsibly_user String
   user_id String
   description String @db.VarChar(1000)
   created_at DateTime @default(now())

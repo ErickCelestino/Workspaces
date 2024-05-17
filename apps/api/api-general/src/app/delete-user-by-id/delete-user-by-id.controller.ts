@@ -3,21 +3,29 @@ import {
   Body,
   Controller,
   Delete,
+  Param,
   Query,
-  UsePipes,
 } from '@nestjs/common';
 import { DeleteUserByIdService } from './delete-user-by-id.service';
-import { ZodValidationPipe } from '../pipes/zod-validation-pipe';
-import { DeleteUserByIdDto, deleteUserByIdSchema } from '@workspaces/domain';
+import { DeleteUserByIdDto } from '@workspaces/domain';
 
 @Controller('delete-user-by-id')
 export class DeleteUserByIdController {
   constructor(private readonly deleteUserByIdService: DeleteUserByIdService) {}
 
-  @Delete()
-  @UsePipes(new ZodValidationPipe(deleteUserByIdSchema))
-  async edit(@Body() input: DeleteUserByIdDto) {
-    const result = await this.deleteUserByIdService.delete(input);
+  @Delete(':id')
+  async edit(
+    @Body() description: string,
+    @Param('id') idToDelete: string,
+    @Query('logged_user') loggedUser: string
+  ) {
+    const dto: DeleteUserByIdDto = {
+      description,
+      id: idToDelete,
+      loggedUser,
+    };
+
+    const result = await this.deleteUserByIdService.delete(dto);
 
     if (result.isRight()) return;
     else
