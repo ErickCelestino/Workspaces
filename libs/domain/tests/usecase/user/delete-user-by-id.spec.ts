@@ -138,4 +138,26 @@ describe('DeleteUserById', () => {
     expect(result.isLeft()).toBe(true);
     expect(result.value).toBeInstanceOf(NotPermissionError);
   });
+
+  it('should return NotPermissionError when a logged user passed is empty return from database', async () => {
+    const {
+      deleteUserByIdDto,
+      deleteUserByIdRepository,
+      findUserByIdRepository,
+    } = makeSut();
+
+    const mockEmptyRepository: VerifyUserStatusByIdRepository = {
+      verify: jest.fn(async () => ''),
+    };
+
+    const sut = new DeleteUserById(
+      deleteUserByIdRepository,
+      findUserByIdRepository,
+      mockEmptyRepository
+    );
+    const result = await sut.execute(deleteUserByIdDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.value).toBeInstanceOf(EntityNotExists);
+  });
 });
