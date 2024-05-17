@@ -11,6 +11,7 @@ import {
 } from '../../services';
 import { FormButton } from './form-button.component';
 import axios, { AxiosError } from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 interface FormEditUserProps {
   nameLabel: string;
@@ -25,6 +26,7 @@ export const FormEditUser: FC<FormEditUserProps> = ({
 }) => {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const navigate = useNavigate();
   const theme = useTheme();
 
   const {
@@ -61,6 +63,8 @@ export const FormEditUser: FC<FormEditUserProps> = ({
 
   const editUser = async (request: EditUserDto) => {
     try {
+      const getUserId = getItemLocalStorage('eu');
+      request.id = getUserId;
       const result = await EditUserRequest(request);
       console.log(result);
       return result;
@@ -84,6 +88,7 @@ export const FormEditUser: FC<FormEditUserProps> = ({
     await editUser(data);
     setSuccess(true);
     setLoading(false);
+    navigate('/list-user');
   };
 
   return (
