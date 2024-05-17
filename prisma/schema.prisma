@@ -39,6 +39,16 @@ enum UserType {
   @@schema("general")
 }
 
+model ConfirmDeleteUser {
+  id String @id @default(uuid())
+  user_id String
+  description String @db.VarChar(1000)
+  created_at DateTime @default(now())
+  users User @relation(fields: [user_id], references: [user_id])
+
+  @@schema("general")
+}
+
 model User {
   user_id String @id @default(uuid())
   name String  @db.VarChar(100)
@@ -55,6 +65,7 @@ model User {
   auth Auth[]
   summons_status Summons_Status[]
   user_x_company User_X_Company[]
+  confirmDeleteUser ConfirmDeleteUser[]
 
   @@schema("general")
 }
