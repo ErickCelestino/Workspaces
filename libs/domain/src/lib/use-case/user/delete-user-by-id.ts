@@ -1,0 +1,41 @@
+import { Inject } from '@nestjs/common';
+import { UseCase } from '../../base/use-case';
+import { DeleteUserByIdDto } from '../../dto';
+import { EntityNotEmpty, EntityNotExists } from '../../error';
+import {
+  DeleteUserByIdRepository,
+  FindUserByIdRepository,
+} from '../../repository';
+import { Either, left, right } from '../../shared/either';
+
+export class DeleteUserById
+  implements
+    UseCase<DeleteUserByIdDto, Either<EntityNotEmpty | EntityNotExists, void>>
+{
+  constructor(
+    @Inject('DeleteUserByIdRepository')
+    private deleteUserByIdRepository: DeleteUserByIdRepository,
+    @Inject('FindUserByIdRepository')
+    private findUserByIdRepository: FindUserByIdRepository
+  ) {}
+  async execute(
+    input: DeleteUserByIdDto
+  ): Promise<Either<EntityNotEmpty | EntityNotExists, void>> {
+    const { id } = input;
+    const idString = 'id';
+
+    if (id.length < 1) {
+      return left(new EntityNotEmpty(idString));
+    }
+
+    const findedUser = await this.findUserByIdRepository.find(id);
+
+    if (Object.keys(findedUser).length < 1) {
+      return left(new EntityNotExists(idString));
+    }
+
+    await this.deleteUserByIdRepository.delete({ id });
+
+    return right(undefined);
+  }
+}
