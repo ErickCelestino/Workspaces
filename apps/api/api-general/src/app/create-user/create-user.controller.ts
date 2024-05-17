@@ -9,7 +9,7 @@ import { CreateUserService } from './create-user.service';
 import { ZodValidationPipe } from '../pipes/zod-validation-pipe';
 import {
   CreateUserDto,
-  CreateUserResponse,
+  CreateUserResponseDto,
   createUserSchema,
 } from '@workspaces/domain';
 
@@ -21,7 +21,7 @@ export class CreateUserController {
   @UsePipes(new ZodValidationPipe(createUserSchema))
   async create(@Body() input: CreateUserDto) {
     const result = await this.createUserService.create(input);
-    const response: CreateUserResponse = {
+    const response: CreateUserResponseDto = {
       user_id: `${result.value}`,
     };
 

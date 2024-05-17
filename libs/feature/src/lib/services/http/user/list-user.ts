@@ -4,7 +4,6 @@ import { generalApi } from '../axios-config';
 export async function ListUserRequest(input: ListUserDto) {
   const skip = input?.skip || 0;
   const take = input?.take || 4;
-  console.log(take);
   const result = await generalApi.get<ListUserResponseDto>('list-user', {
     params: {
       filter: input.input,

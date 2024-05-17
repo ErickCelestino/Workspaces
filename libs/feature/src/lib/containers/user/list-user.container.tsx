@@ -1,17 +1,19 @@
-import { Box, Pagination, useTheme } from '@mui/material';
+import { Box, Pagination, Typography, useTheme } from '@mui/material';
 import { ListUser, SearchUser } from '../../components';
 import { LayoutBase } from '../../layout';
 import { useEffect, useState } from 'react';
-import { ListUserRequest } from '../../services';
+import { ListUserRequest, setItemLocalStorage } from '../../services';
 import { ErrorResponse, UserList } from '@workspaces/domain';
 import { useSnackbarAlert } from '../../hooks';
 import axios, { AxiosError } from 'axios';
 import { ConnectionError } from '../../shared';
+import { useNavigate } from 'react-router-dom';
 
 export const ListUserContainer = () => {
   const [userList, setUserList] = useState<UserList[]>([]);
   const [totalPage, setTotalPage] = useState<number>(1);
   const theme = useTheme();
+  const navigate = useNavigate();
   const { showSnackbarAlert, SnackbarAlert } = useSnackbarAlert();
 
   useEffect(() => {
@@ -58,6 +60,11 @@ export const ListUserContainer = () => {
     }
   };
 
+  const editUser = (id: string) => {
+    setItemLocalStorage(id, 'eu');
+    navigate('/edit-user');
+  };
+
   return (
     <>
       <LayoutBase title="Listagem de Usuários">
@@ -68,6 +75,7 @@ export const ListUserContainer = () => {
               {userList.length > 0 ? (
                 userList.map((user) => (
                   <ListUser
+                    editUser={() => editUser(user.userId)}
                     key={user.userId}
                     image="teste"
                     imageAlt={`Image from ${user.name}`}
@@ -78,7 +86,16 @@ export const ListUserContainer = () => {
                   />
                 ))
               ) : (
-                <div>Sem Dados</div>
+                <Box
+                  marginTop={theme.spacing(2)}
+                  width="100%"
+                  display="flex"
+                  justifyContent="center"
+                >
+                  <Typography variant="h4">
+                    Não foram encontrados registros
+                  </Typography>
+                </Box>
               )}
             </Box>
             <Box

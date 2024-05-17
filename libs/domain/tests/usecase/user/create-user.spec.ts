@@ -5,8 +5,8 @@ import {
   CreateUserRepository,
   EntityAlreadyExists,
   InsufficientCharacters,
+  FilterByEmailOrNicknameDto,
 } from '../../../src';
-import { FilterByEmailOrNicknameDto } from '../../../src/lib/dto/user/filter-by-email-or-nickname.dto';
 import { FilterByEmailOrNicknameRepository } from '../../../src/lib/repository/user/filter-by-email-or-nickname';
 import { userMock } from '../../entity';
 import {

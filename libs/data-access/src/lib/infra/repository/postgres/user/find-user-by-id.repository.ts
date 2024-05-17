@@ -1,11 +1,11 @@
 import { Inject } from '@nestjs/common';
-import { FindUserByIdRepository, User, Auth } from '@workspaces/domain';
+import { FindUserByIdRepository, UserList } from '@workspaces/domain';
 import { PrismaService } from 'nestjs-prisma';
 
 export class FindUserByIdRepositoryImpl implements FindUserByIdRepository {
   constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
 
-  async find(id: string): Promise<User> {
+  async find(id: string): Promise<UserList> {
     const userResult = await this.prismaService.user.findFirst({
       where: {
         user_id: id,
@@ -27,24 +27,13 @@ export class FindUserByIdRepositoryImpl implements FindUserByIdRepository {
       },
     });
 
-    const mappedAuth = userResult?.auth == null ? [] : userResult.auth;
-    const findedAuth: Auth[] = mappedAuth.map((auth) => {
-      return {
-        authId: auth.auth_id,
-        userId: auth.user_id,
-        email: auth.email,
-        password: auth.password,
-        status: auth.status,
-      };
-    });
-
-    const mappedUser: User = {
+    const mappedUser: UserList = {
       name: userResult?.name == null ? '' : userResult.name,
       nickname: userResult?.nick_name == null ? '' : userResult.nick_name,
       birthDate:
         userResult?.birth_date == null ? new Date() : userResult.birth_date,
       userId: userResult?.user_id == null ? '' : userResult.user_id,
-      auth: findedAuth,
+      email: userResult?.auth[0]?.email ?? '',
     };
 
     return mappedUser;
