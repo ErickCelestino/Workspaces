@@ -1,25 +1,35 @@
 import { useTheme } from '@mui/material';
 import { FormCard, FormEditUser } from '../../components';
 import { LayoutBase } from '../../layout';
-import { useEffect, useState } from 'react';
-import { UserList } from '@workspaces/domain';
-import { FindUserRequest, getItemLocalStorage } from '../../services';
+import { useSnackbarAlert } from '../../hooks';
 
 export const EditUserContainer = () => {
+  const { showSnackbarAlert, SnackbarAlert } = useSnackbarAlert();
   const theme = useTheme();
 
+  const showErrorAlert = (message: string) => {
+    showSnackbarAlert({
+      message: message,
+      severity: 'error',
+    });
+  };
+
   return (
-    <LayoutBase title="Editar Usuario">
-      <FormCard
-        title="Editar os dados do Usuario"
-        height={theme.spacing(63)}
-        width={theme.spacing(100)}
-      >
-        <FormEditUser
-          nameLabel="Digite o nome"
-          birthDateLabel="Digite sua Data de Nascimento"
-        />
-      </FormCard>
-    </LayoutBase>
+    <>
+      <LayoutBase title="Editar Usuario">
+        <FormCard
+          title="Editar os dados do Usuario"
+          height={theme.spacing(63)}
+          width={theme.spacing(100)}
+        >
+          <FormEditUser
+            showAlert={showErrorAlert}
+            nameLabel="Digite o nome"
+            birthDateLabel="Digite sua Data de Nascimento"
+          />
+        </FormCard>
+      </LayoutBase>
+      {SnackbarAlert}
+    </>
   );
 };

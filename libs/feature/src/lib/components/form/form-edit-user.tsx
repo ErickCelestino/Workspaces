@@ -1,20 +1,27 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Box, TextField, useTheme } from '@mui/material';
-import { EditUserDto, UserList } from '@workspaces/domain';
+import { EditUserDto, ErrorResponse } from '@workspaces/domain';
 import { FC, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { CreateUserSchema, EditUserSchema } from '../../shared';
-import { FindUserRequest, getItemLocalStorage } from '../../services';
+import { EditUserSchema, EntityNotExist } from '../../shared';
+import {
+  EditUserRequest,
+  FindUserRequest,
+  getItemLocalStorage,
+} from '../../services';
 import { FormButton } from './form-button.component';
+import axios, { AxiosError } from 'axios';
 
 interface FormEditUserProps {
   nameLabel: string;
   birthDateLabel: string;
+  showAlert?: (message: string) => void;
 }
 
 export const FormEditUser: FC<FormEditUserProps> = ({
   nameLabel,
   birthDateLabel,
+  showAlert,
 }) => {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -52,8 +59,31 @@ export const FormEditUser: FC<FormEditUserProps> = ({
     getUserData();
   }, [reset]);
 
+  const editUser = async (request: EditUserDto) => {
+    try {
+      const result = await EditUserRequest(request);
+      console.log(result);
+      return result;
+    } catch (error) {
+      console.error(error);
+      console.error((error as { message: string }).message);
+      if (axios.isAxiosError(error)) {
+        const axiosError = error as AxiosError<ErrorResponse>;
+        if (axiosError.response?.data.error?.name === 'EntityNotExists') {
+          const message = EntityNotExist(request.id);
+          showAlert?.(message);
+        }
+      }
+      setLoading(false);
+    }
+  };
+
   const handleUserData = async (data: EditUserDto) => {
-    console.log(`teste: ${data.name}`);
+    setSuccess(false);
+    setLoading(true);
+    await editUser(data);
+    setSuccess(true);
+    setLoading(false);
   };
 
   return (

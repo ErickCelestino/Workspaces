@@ -1,4 +1,4 @@
-import { Box, Icon, Pagination, Typography, useTheme } from '@mui/material';
+import { Box, Pagination, Typography, useTheme } from '@mui/material';
 import { ListUser, SearchUser } from '../../components';
 import { LayoutBase } from '../../layout';
 import { useEffect, useState } from 'react';

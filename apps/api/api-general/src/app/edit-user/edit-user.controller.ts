@@ -15,7 +15,7 @@ export class EditUserController {
 
   @Put()
   @UsePipes(new ZodValidationPipe(editUserSchema))
-  async create(@Body() input: EditUserDto) {
+  async edit(@Body() input: EditUserDto) {
     const result = await this.editUserService.edit(input);
 
     if (result.isRight()) return;
