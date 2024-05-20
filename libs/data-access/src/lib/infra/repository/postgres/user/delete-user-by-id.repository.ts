@@ -8,7 +8,7 @@ import { PrismaService } from 'nestjs-prisma';
 export class DeleteUserByIdRepositoryImpl implements DeleteUserByIdRepository {
   constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
   async delete(input: DeleteUserByIdDto): Promise<void> {
-    await this.prismaService.confirmDeleteUser.create({
+    await this.prismaService.confirm_Delete_User.create({
       data: {
         user_id: input.id,
         description: input.description,

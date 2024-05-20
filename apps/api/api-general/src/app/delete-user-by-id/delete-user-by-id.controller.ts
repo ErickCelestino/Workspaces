@@ -15,16 +15,15 @@ export class DeleteUserByIdController {
 
   @Delete(':id')
   async edit(
-    @Body() description: string,
+    @Body() input: { description: string },
     @Param('id') idToDelete: string,
     @Query('logged_user') loggedUser: string
   ) {
     const dto: DeleteUserByIdDto = {
-      description,
+      description: input.description,
       id: idToDelete,
       loggedUser,
     };
-
     const result = await this.deleteUserByIdService.delete(dto);
 
     if (result.isRight()) return;
