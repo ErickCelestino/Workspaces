@@ -1,5 +1,10 @@
 import { Box, Pagination, Typography, useTheme } from '@mui/material';
-import { ListUser, SearchUser, SimpleModal } from '../../components';
+import {
+  FormDeleteUser,
+  ListUser,
+  SearchUser,
+  SimpleModal,
+} from '../../components';
 import { LayoutBase } from '../../layout';
 import { useEffect, useState } from 'react';
 import { ListUserRequest, setItemLocalStorage } from '../../services';
@@ -86,7 +91,7 @@ export const ListUserContainer = () => {
         height={60}
         width={80}
       >
-        <div>tes</div>
+        <FormDeleteUser />
       </SimpleModal>
       <LayoutBase title="Listagem de Usuários">
         <Box display="flex" justifyContent="center">

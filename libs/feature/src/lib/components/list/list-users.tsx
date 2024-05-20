@@ -54,12 +54,12 @@ export const ListUser: FC<ListUserProps> = ({
               <Button
                 onClick={editUser}
                 sx={{ marginRight: theme.spacing(0.5) }}
-                variant="outlined"
                 color="warning"
+                variant="contained"
               >
                 Editar
               </Button>
-              <Button onClick={deleteUser} variant="outlined" color="error">
+              <Button onClick={deleteUser} color="error" variant="contained">
                 Excluir
               </Button>
             </Box>

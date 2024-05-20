@@ -3,13 +3,13 @@ import { Box, TextField, useTheme } from '@mui/material';
 import { EditUserDto, ErrorResponse } from '@workspaces/domain';
 import { FC, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { EditUserSchema, EntityNotExist } from '../../shared';
+import { EditUserSchema, EntityNotExist } from '../../../shared';
 import {
   EditUserRequest,
   FindUserRequest,
   getItemLocalStorage,
-} from '../../services';
-import { FormButton } from './form-button.component';
+} from '../../../services';
+import { FormButton } from '../form-button.component';
 import axios, { AxiosError } from 'axios';
 import { useNavigate } from 'react-router-dom';
 

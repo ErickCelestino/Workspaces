@@ -8,14 +8,14 @@ import {
 import { FC, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { CreateAuthSchema, EntityExist } from '../../shared';
-import { FormButton } from './form-button.component';
+import { CreateAuthSchema, EntityExist } from '../../../shared';
+import { FormButton } from '../form-button.component';
 import {
   AuthConfirmProps,
   CreateAuthDto,
   ErrorResponse,
 } from '@workspaces/domain';
-import { CreateAuth, getUserIdLocalStorage } from '../../services';
+import { CreateAuth, getUserIdLocalStorage } from '../../../services';
 import axios, { AxiosError } from 'axios';
 import { useNavigate } from 'react-router-dom';
 
