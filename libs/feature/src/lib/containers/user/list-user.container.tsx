@@ -1,5 +1,5 @@
 import { Box, Pagination, Typography, useTheme } from '@mui/material';
-import { ListUser, SearchUser } from '../../components';
+import { ListUser, SearchUser, SimpleModal } from '../../components';
 import { LayoutBase } from '../../layout';
 import { useEffect, useState } from 'react';
 import { ListUserRequest, setItemLocalStorage } from '../../services';
@@ -10,6 +10,7 @@ import { ConnectionError } from '../../shared';
 import { useNavigate } from 'react-router-dom';
 
 export const ListUserContainer = () => {
+  const [openPopUp, setPopUp] = useState<boolean>(false);
   const [userList, setUserList] = useState<UserList[]>([]);
   const [totalPage, setTotalPage] = useState<number>(1);
   const theme = useTheme();
@@ -24,6 +25,10 @@ export const ListUserContainer = () => {
     };
     getData();
   }, []);
+
+  const handlePopUpClose = () => {
+    setPopUp(false);
+  };
 
   const showErrorAlert = (message: string) => {
     showSnackbarAlert({
@@ -63,10 +68,26 @@ export const ListUserContainer = () => {
   const editUser = (id: string) => {
     setItemLocalStorage(id, 'eu');
     navigate('/edit-user');
+    setItemLocalStorage('', 'eu');
+  };
+
+  const deleteUser = (id: string) => {
+    setItemLocalStorage(id, 'du');
+    setPopUp(true);
   };
 
   return (
     <>
+      <SimpleModal
+        open={openPopUp}
+        close={handlePopUpClose}
+        title="Deletar o Usuário"
+        description="Caso você deseje realmente deletar o usuário por favor indicar o motivo no campo a baixo"
+        height={60}
+        width={80}
+      >
+        <div>tes</div>
+      </SimpleModal>
       <LayoutBase title="Listagem de Usuários">
         <Box display="flex" justifyContent="center">
           <Box width="70%">
@@ -75,6 +96,7 @@ export const ListUserContainer = () => {
               {userList.length > 0 ? (
                 userList.map((user) => (
                   <ListUser
+                    deleteUser={() => deleteUser(user.userId)}
                     editUser={() => editUser(user.userId)}
                     key={user.userId}
                     image="teste"
