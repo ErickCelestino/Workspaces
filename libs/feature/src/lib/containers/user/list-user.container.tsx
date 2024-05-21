@@ -112,6 +112,8 @@ export const ListUserContainer = () => {
                     userId={`ID: ${user.userId}`}
                     email={`Email: ${user.email}`}
                     nickname={`Nickname: ${user.nickname}`}
+                    status={`Status: ${user.status}`}
+                    statusColor={user.status == 'ACTIVE' ? 'success' : 'error'}
                   />
                 ))
               ) : (
