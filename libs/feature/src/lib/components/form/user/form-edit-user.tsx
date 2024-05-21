@@ -74,7 +74,7 @@ export const FormEditUser: FC<FormEditUserProps> = ({
       if (axios.isAxiosError(error)) {
         const axiosError = error as AxiosError<ErrorResponse>;
         if (axiosError.response?.data.error?.name === 'EntityNotExists') {
-          const message = EntityNotExist(request.id);
+          const message = EntityNotExist(request.id, 'PT-BR');
           showAlert?.(message);
         }
       }

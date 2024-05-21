@@ -88,10 +88,13 @@ export const ListUserContainer = () => {
         close={handlePopUpClose}
         title="Deletar o Usuário"
         description="Caso você deseje realmente deletar o usuário por favor indicar o motivo no campo a baixo"
-        height={60}
+        height={50}
         width={80}
       >
-        <FormDeleteUser />
+        <FormDeleteUser
+          showAlert={showErrorAlert}
+          cancelAction={handlePopUpClose}
+        />
       </SimpleModal>
       <LayoutBase title="Listagem de Usuários">
         <Box display="flex" justifyContent="center">
