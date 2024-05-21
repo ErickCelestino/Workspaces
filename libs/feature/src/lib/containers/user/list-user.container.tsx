@@ -72,8 +72,8 @@ export const ListUserContainer = () => {
 
   const editUser = (id: string) => {
     setItemLocalStorage(id, 'eu');
+    console.log(`teste: ${id}`);
     navigate('/edit-user');
-    setItemLocalStorage('', 'eu');
   };
 
   const deleteUser = (id: string) => {
