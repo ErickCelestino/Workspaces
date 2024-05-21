@@ -97,7 +97,7 @@ export const ListUserContainer = () => {
       </SimpleModal>
       <LayoutBase title="Listagem de Usuários">
         <Box display="flex" justifyContent="center">
-          <Box width="70%">
+          <Box width="60%">
             <SearchUser onSearch={handleData} placeholder="Pesquisar Usuário" />
             <Box width="95%">
               {userList.length > 0 ? (
