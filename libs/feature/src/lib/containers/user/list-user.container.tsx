@@ -1,4 +1,10 @@
-import { Box, Pagination, Typography, useTheme } from '@mui/material';
+import {
+  Box,
+  Pagination,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from '@mui/material';
 import {
   FormDeleteUser,
   ListUser,
@@ -19,6 +25,8 @@ export const ListUserContainer = () => {
   const [userList, setUserList] = useState<UserList[]>([]);
   const [totalPage, setTotalPage] = useState<number>(1);
   const theme = useTheme();
+  const smDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const mdDown = useMediaQuery(theme.breakpoints.down('md'));
   const navigate = useNavigate();
   const { showSnackbarAlert, SnackbarAlert } = useSnackbarAlert();
 
@@ -86,9 +94,9 @@ export const ListUserContainer = () => {
         open={openPopUp}
         close={handlePopUpClose}
         title="Deletar o Usuário"
-        description="Caso você deseje realmente deletar o usuário por favor indicar o motivo no campo a baixo"
+        subTitle="Caso você deseje realmente deletar o usuário por favor indicar o motivo no campo a baixo:"
         height={50}
-        width={80}
+        width={smDown ? 40 : mdDown ? 50 : 80}
       >
         <FormDeleteUser
           showAlert={showErrorAlert}
@@ -97,7 +105,7 @@ export const ListUserContainer = () => {
       </SimpleModal>
       <LayoutBase title="Listagem de Usuários">
         <Box display="flex" justifyContent="center">
-          <Box width="70%">
+          <Box width="60%">
             <SearchUser onSearch={handleData} placeholder="Pesquisar Usuário" />
             <Box width="95%">
               {userList.length > 0 ? (
@@ -112,6 +120,8 @@ export const ListUserContainer = () => {
                     userId={`ID: ${user.userId}`}
                     email={`Email: ${user.email}`}
                     nickname={`Nickname: ${user.nickname}`}
+                    status={`Status: ${user.status}`}
+                    statusColor={user.status == 'ACTIVE' ? 'success' : 'error'}
                   />
                 ))
               ) : (

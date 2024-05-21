@@ -4,6 +4,7 @@ import {
   Button,
   CircularProgress,
   TextField,
+  useMediaQuery,
   useTheme,
 } from '@mui/material';
 import { FC, useState } from 'react';
@@ -34,6 +35,8 @@ export const FormDeleteUser: FC<FormDeleteUserProps> = ({
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const theme = useTheme();
+  const smDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const mdDown = useMediaQuery(theme.breakpoints.down('md'));
 
   const {
     handleSubmit,
@@ -103,7 +106,7 @@ export const FormDeleteUser: FC<FormDeleteUserProps> = ({
       }}
       onSubmit={handleSubmit(handleData)}
     >
-      {loading ?? (
+      {loading && (
         <CircularProgress
           sx={{
             mt: theme.spacing(1),
@@ -122,12 +125,16 @@ export const FormDeleteUser: FC<FormDeleteUserProps> = ({
       >
         <TextField
           sx={{
-            width: theme.spacing(60),
+            width: smDown
+              ? theme.spacing(35)
+              : mdDown
+              ? theme.spacing(45)
+              : theme.spacing(60),
           }}
           margin="normal"
           fullWidth
           multiline
-          rows={6}
+          rows={smDown ? 4 : mdDown ? 5 : 6}
           error={!!errors.description}
           helperText={errors.description?.message}
           id="description"
@@ -137,7 +144,7 @@ export const FormDeleteUser: FC<FormDeleteUserProps> = ({
         />
         <Box
           sx={{
-            marginTop: 'auto',
+            marginTop: smDown ? '2rem' : mdDown ? '1rem' : 'auto',
             display: 'flex',
             justifyContent: 'center',
           }}

@@ -9,7 +9,9 @@ import {
   Typography,
   Button,
   useTheme,
+  Chip,
 } from '@mui/material';
+import { StatusColor } from '@workspaces/domain';
 import { FC } from 'react';
 
 interface ListUserProps {
@@ -19,6 +21,8 @@ interface ListUserProps {
   userId: string;
   email: string;
   nickname: string;
+  status: string;
+  statusColor: StatusColor;
   editUser?: () => void;
   deleteUser?: () => void;
 }
@@ -30,6 +34,8 @@ export const ListUser: FC<ListUserProps> = ({
   userId,
   email,
   nickname,
+  status,
+  statusColor,
   editUser,
   deleteUser,
 }) => {
@@ -41,7 +47,6 @@ export const ListUser: FC<ListUserProps> = ({
           <Avatar alt={imageAlt} src={image} />
         </ListItemAvatar>
         <ListItemText>
-          <Typography>{userId}</Typography>
           <Box
             sx={{
               display: 'flex',
@@ -49,7 +54,7 @@ export const ListUser: FC<ListUserProps> = ({
               justifyContent: 'space-between',
             }}
           >
-            <Typography>{name}</Typography>
+            <Typography>{userId}</Typography>
             <Box marginBottom={theme.spacing(2)}>
               <Button
                 onClick={editUser}
@@ -63,6 +68,17 @@ export const ListUser: FC<ListUserProps> = ({
                 Excluir
               </Button>
             </Box>
+          </Box>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              marginBottom: theme.spacing(2),
+            }}
+          >
+            <Typography>{name}</Typography>
+            <Chip color={statusColor} label={status} />
           </Box>
 
           <Box

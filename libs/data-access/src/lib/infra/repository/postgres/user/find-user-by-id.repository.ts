@@ -15,13 +15,12 @@ export class FindUserByIdRepositoryImpl implements FindUserByIdRepository {
         name: true,
         nick_name: true,
         birth_date: true,
+        status: true,
         auth: {
           select: {
             auth_id: true,
             email: true,
             password: true,
-            user_id: true,
-            status: true,
           },
         },
       },
@@ -34,6 +33,7 @@ export class FindUserByIdRepositoryImpl implements FindUserByIdRepository {
         userResult?.birth_date == null ? new Date() : userResult.birth_date,
       userId: userResult?.user_id == null ? '' : userResult.user_id,
       email: userResult?.auth[0]?.email ?? '',
+      status: userResult?.status ?? '',
     };
 
     return mappedUser;

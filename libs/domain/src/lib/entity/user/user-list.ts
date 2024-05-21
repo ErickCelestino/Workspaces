@@ -4,4 +4,5 @@ export interface UserList {
   nickname: string;
   birthDate: Date | null;
   email: string;
+  status: string;
 }
