@@ -15,7 +15,7 @@ import {
   CreateAuthDto,
   ErrorResponse,
 } from '@workspaces/domain';
-import { CreateAuth, getUserIdLocalStorage } from '../../../services';
+import { CreateAuth, getItemLocalStorage } from '../../../services';
 import axios, { AxiosError } from 'axios';
 import { useNavigate } from 'react-router-dom';
 
@@ -78,7 +78,7 @@ export const FormAuthConfirm: FC<AuthConfirmProps> = ({
   const handleData = async (data: ConfirmPassword) => {
     setSuccess(false);
     setLoading(true);
-    const userId = getUserIdLocalStorage();
+    const userId = getItemLocalStorage('ui');
 
     const request: CreateAuthDto = {
       email: data.email,
