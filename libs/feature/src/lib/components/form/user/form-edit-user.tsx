@@ -1,5 +1,11 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Box, TextField, useTheme } from '@mui/material';
+import {
+  Box,
+  MenuItem,
+  TextField,
+  useMediaQuery,
+  useTheme,
+} from '@mui/material';
 import { EditUserDto, ErrorResponse } from '@workspaces/domain';
 import { FC, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -26,8 +32,11 @@ export const FormEditUser: FC<FormEditUserProps> = ({
 }) => {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [status, setStatus] = useState('');
   const navigate = useNavigate();
   const theme = useTheme();
+  const smDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const mdDown = useMediaQuery(theme.breakpoints.down('md'));
 
   const {
     handleSubmit,
@@ -41,6 +50,7 @@ export const FormEditUser: FC<FormEditUserProps> = ({
     defaultValues: {
       name: '',
       id: '',
+      status: '',
       birthDate: new Date(),
     },
   });
@@ -57,6 +67,8 @@ export const FormEditUser: FC<FormEditUserProps> = ({
         name: result.name,
         birthDate: formattedBirthDate as Date,
       });
+
+      setStatus(result.status);
     };
     getUserData();
   }, [reset]);
@@ -66,7 +78,6 @@ export const FormEditUser: FC<FormEditUserProps> = ({
       const getUserId = getItemLocalStorage('eu');
       request.id = getUserId;
       const result = await EditUserRequest(request);
-      console.log(result);
       return result;
     } catch (error) {
       console.error(error);
@@ -85,28 +96,66 @@ export const FormEditUser: FC<FormEditUserProps> = ({
   const handleUserData = async (data: EditUserDto) => {
     setSuccess(false);
     setLoading(true);
+    console.log(data);
     await editUser(data);
     setSuccess(true);
     setLoading(false);
     navigate('/list-user');
   };
 
+  const statusList = ['ACTIVE', 'INACTIVE'];
+
+  const handleChangeStatus = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setStatus(event.target.value);
+  };
+
   return (
     <Box width="80%" component="form" onSubmit={handleSubmit(handleUserData)}>
-      <TextField
-        sx={{
-          width: theme.spacing(40),
-        }}
-        margin="normal"
-        InputLabelProps={{ shrink: true, required: true }}
-        disabled={true}
-        error={!!errors.id}
-        helperText={errors.id?.message}
-        id="id"
-        label="id"
-        {...register('id')}
-        autoComplete="id"
-      />
+      <Box>
+        <TextField
+          sx={{
+            width: smDown
+              ? '100%'
+              : mdDown
+              ? theme.spacing(45)
+              : theme.spacing(42),
+            marginRight: mdDown ? '' : theme.spacing(4.5),
+          }}
+          margin="normal"
+          InputLabelProps={{ shrink: true, required: true }}
+          disabled={true}
+          error={!!errors.id}
+          helperText={errors.id?.message}
+          id="id"
+          label="id"
+          {...register('id')}
+          autoComplete="id"
+        />
+
+        <TextField
+          sx={{
+            width: smDown
+              ? '100%'
+              : mdDown
+              ? theme.spacing(45)
+              : theme.spacing(30),
+          }}
+          select
+          value={status}
+          margin="normal"
+          error={!!errors.status}
+          helperText={errors.status?.message}
+          id="status"
+          label="status"
+          {...register('status', { onChange: handleChangeStatus })}
+        >
+          {statusList.map((item) => (
+            <MenuItem key={item} value={item}>
+              {item}
+            </MenuItem>
+          ))}
+        </TextField>
+      </Box>
       <TextField
         margin="normal"
         InputLabelProps={{ shrink: true, required: true }}
@@ -131,11 +180,17 @@ export const FormEditUser: FC<FormEditUserProps> = ({
         fullWidth
         {...register('birthDate')}
       />
-      <FormButton
-        buttonTitle={loading ? 'Salvando...' : 'Salvar Alteração'}
-        loading={loading}
-        success={success}
-      />
+      <Box
+        sx={{
+          marginTop: mdDown ? '1rem' : '4rem',
+        }}
+      >
+        <FormButton
+          buttonTitle={loading ? 'Salvando...' : 'Salvar Alteração'}
+          loading={loading}
+          success={success}
+        />
+      </Box>
     </Box>
   );
 };

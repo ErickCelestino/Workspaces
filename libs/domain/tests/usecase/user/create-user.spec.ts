@@ -52,7 +52,6 @@ describe('CreateUser', () => {
     const { createUserDto, sut } = makeSut();
 
     const result = await sut.execute(createUserDto);
-    console.log(result.value);
 
     expect(result.isLeft()).toBe(false);
     expect(result.isRight()).toBe(true);

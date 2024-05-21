@@ -27,5 +27,13 @@ export const EditUserSchema = z
       .max(eighteenYearsAgo, {
         message: InferiorDate('PT-BR'),
       }),
+    status: z
+      .string()
+      .min(2, {
+        message: EntityMinLength({ entity: 'status', minOrMax: 2 }, 'PT-BR'),
+      })
+      .max(50, {
+        message: EntityMaxLength({ entity: 'status', minOrMax: 50 }, 'PT-BR'),
+      }),
   })
   .required();

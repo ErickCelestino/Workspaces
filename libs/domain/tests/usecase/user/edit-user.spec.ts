@@ -29,6 +29,7 @@ const makeSut = (): SutTypes => {
     id: userMock.userId,
     name: userMock.name,
     birthDate: new Date(),
+    status: 'ACTIVE',
   };
 
   const sut = new EditUser(editUserRepository, findUserByIdRepository);
@@ -59,6 +60,7 @@ describe('EditUser', () => {
       id: '',
       birthDate: new Date(),
       name: userMock.name,
+      status: 'ACTIVE',
     };
 
     const result = await sut.execute(editUserDto);
@@ -74,6 +76,7 @@ describe('EditUser', () => {
       id: userMock.userId,
       birthDate: new Date(),
       name: '',
+      status: 'ACTIVE',
     };
 
     const result = await sut.execute(editUserDto);
