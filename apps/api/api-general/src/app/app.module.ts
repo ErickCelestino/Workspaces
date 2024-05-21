@@ -8,6 +8,7 @@ import { AuthModule } from './auth/auth.module';
 import { EditUserModule } from './edit-user/edit-user.module';
 import { ListUserModule } from './list-user/list-user.module';
 import { FindUserByIdModule } from './find-user-by-id/find-user-by-id.module';
+import { DeleteUserByIdModule } from './delete-user-by-id/delete-user-by-id.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { FindUserByIdModule } from './find-user-by-id/find-user-by-id.module';
     ListUserModule,
     EditUserModule,
     FindUserByIdModule,
+    DeleteUserByIdModule,
   ],
   controllers: [AppController],
   providers: [AppService],

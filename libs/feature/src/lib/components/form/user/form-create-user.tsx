@@ -1,7 +1,7 @@
 import { Box, TextField } from '@mui/material';
-import { FormButton } from './form-button.component';
+import { FormButton } from '../form-button.component';
 import { FC, useState } from 'react';
-import { CreateUserRequest, setUserIdLocalStorage } from '../../services';
+import { CreateUserRequest, setItemLocalStorage } from '../../../services';
 import {
   CreateUserDto,
   ErrorResponse,
@@ -9,7 +9,7 @@ import {
 } from '@workspaces/domain';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { CreateUserSchema, EntityExist } from '../../shared';
+import { CreateUserSchema, EntityExist } from '../../../shared';
 import axios, { AxiosError } from 'axios';
 
 export const FormCreateUser: FC<FormCreateUserProps> = ({
@@ -61,7 +61,7 @@ export const FormCreateUser: FC<FormCreateUserProps> = ({
     const createdUserId = await createUser(data);
     console.log(createdUserId);
     if (createdUserId !== undefined) {
-      setUserIdLocalStorage(createdUserId);
+      setItemLocalStorage(createdUserId, 'ui');
       onData?.(1);
     }
   };

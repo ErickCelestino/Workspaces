@@ -20,6 +20,7 @@ interface ListUserProps {
   email: string;
   nickname: string;
   editUser?: () => void;
+  deleteUser?: () => void;
 }
 
 export const ListUser: FC<ListUserProps> = ({
@@ -30,6 +31,7 @@ export const ListUser: FC<ListUserProps> = ({
   email,
   nickname,
   editUser,
+  deleteUser,
 }) => {
   const theme = useTheme();
   return (
@@ -52,12 +54,12 @@ export const ListUser: FC<ListUserProps> = ({
               <Button
                 onClick={editUser}
                 sx={{ marginRight: theme.spacing(0.5) }}
-                variant="outlined"
                 color="warning"
+                variant="contained"
               >
                 Editar
               </Button>
-              <Button variant="outlined" color="error">
+              <Button onClick={deleteUser} color="error" variant="contained">
                 Excluir
               </Button>
             </Box>
