@@ -18,6 +18,7 @@ import { useSnackbarAlert } from '../../hooks';
 import { useForm } from 'react-hook-form';
 import { LoginSchema } from '../../shared';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { ListUserRequest, setItemLocalStorage } from '../../services';
 
 interface LoginContainerProps {
   cardImage: string;
@@ -65,13 +66,20 @@ export const LoginContainer: React.FC<LoginContainerProps> = ({
     },
   });
 
+  const setLocalUserId = async (email: string) => {
+    const user = await ListUserRequest({ input: email });
+    if (Object.keys(user).length > 0) {
+      setItemLocalStorage(user.users[0].userId, 'ui');
+    }
+    history('/');
+  };
+
   const onFinish = async (data: ValidateUserDto) => {
     try {
       await auth.authenticate(data.email, data.password);
       setSuccess(true);
       setLoading(false);
-
-      history('/');
+      await setLocalUserId(data.email);
     } catch (error) {
       setLoading(false);
       setSuccess(false);
@@ -81,20 +89,6 @@ export const LoginContainer: React.FC<LoginContainerProps> = ({
       });
     }
   };
-
-  // const handleLogin = async (
-  //   event: React.FormEvent<HTMLFormElement>
-  // ): Promise<void> => {
-  //   event.preventDefault();
-  //   setSuccess(false);
-  //   setLoading(true);
-  //   const data = new FormData(event.currentTarget);
-
-  //   await onFinish({
-  //     email: `${data.get('email')}`,
-  //     password: `${data.get('password')}`,
-  //   });
-  // };
 
   return (
     <>
