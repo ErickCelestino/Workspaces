@@ -1,10 +1,18 @@
-import { useTheme, Modal, Typography, css, styled, Box } from '@mui/material';
+import {
+  useTheme,
+  Modal,
+  Typography,
+  css,
+  styled,
+  Box,
+  useMediaQuery,
+} from '@mui/material';
 import { grey } from '@mui/material/colors';
 import { FC, ReactNode } from 'react';
 
 interface SimpleModalProps {
   title: string;
-  description: string;
+  subTitle: string;
   width: number;
   height: number;
   children: ReactNode;
@@ -14,7 +22,7 @@ interface SimpleModalProps {
 
 export const SimpleModal: FC<SimpleModalProps> = ({
   title,
-  description,
+  subTitle,
   width,
   height,
   children,
@@ -22,6 +30,9 @@ export const SimpleModal: FC<SimpleModalProps> = ({
   close,
 }) => {
   const theme = useTheme();
+  const smDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const mdDown = useMediaQuery(theme.breakpoints.down('md'));
+
   return (
     <Modal
       open={open}
@@ -44,21 +55,33 @@ export const SimpleModal: FC<SimpleModalProps> = ({
             fontWeight: 800,
             justifyContent: 'center',
           }}
-          variant="h4"
+          variant={mdDown ? 'h5' : 'h4'}
         >
           {title}
         </Typography>
 
-        <Typography
-          variant="body1"
+        <Box
           sx={{
-            lineHeight: '1.5rem',
-            fontWeight: 400,
-            marginBottom: '4px',
+            display: 'flex',
+            width: smDown
+              ? theme.spacing(35)
+              : mdDown
+              ? theme.spacing(40)
+              : theme.spacing(55),
+            alignSelf: 'center',
           }}
         >
-          {description}
-        </Typography>
+          <Typography
+            variant="body1"
+            sx={{
+              lineHeight: '1.5rem',
+              fontWeight: 400,
+              marginBottom: '4px',
+            }}
+          >
+            {subTitle}
+          </Typography>
+        </Box>
 
         <Box display="flex" justifyContent="center">
           {children}
