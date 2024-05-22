@@ -26,14 +26,18 @@ export class EditUser
   async execute(
     input: EditUserDto
   ): Promise<Either<InsufficientCharacters | EntityNotExists, void>> {
-    const { id, name } = input;
+    const { id, name, status } = input;
 
-    if (id.length < 1) {
+    if (Object.keys(id).length < 1) {
       return left(new EntityNotEmpty('id'));
     }
 
-    if (name.length < 3) {
+    if (Object.keys(name).length < 3) {
       return left(new InsufficientCharacters('name'));
+    }
+
+    if (Object.keys(status).length < 1) {
+      return left(new EntityNotEmpty('status'));
     }
 
     const userFinded = await this.findUserByIdRepository.find(id);
