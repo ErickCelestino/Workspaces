@@ -1,5 +1,9 @@
+import { useAppNameContext } from '../../contexts';
 import { LayoutBase } from '../../layout';
 
 export const TestContainer = () => {
-  return <LayoutBase title="Página Incial">Teste</LayoutBase>;
+  const { appName } = useAppNameContext();
+  return (
+    <LayoutBase title="Página Incial">{`Nome do app: ${appName}`}</LayoutBase>
+  );
 };
