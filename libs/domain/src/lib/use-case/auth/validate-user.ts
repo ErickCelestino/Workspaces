@@ -32,17 +32,17 @@ export class ValidateUser
   ): Promise<Either<InsufficientCharacters | EntityNotExists, LoginDto>> {
     const { email, password } = input;
 
-    if (email.length < 1) {
+    if (Object.keys(email).length < 1) {
       return left(new InsufficientCharacters('Email'));
     }
 
-    if (password.length < 1) {
+    if (Object.keys(password).length < 1) {
       return left(new InsufficientCharacters('Password'));
     }
 
     const filteredUserEmail = await this.filterEmail.filter(email);
 
-    if (filteredUserEmail.userId.length < 1) {
+    if (Object.keys(filteredUserEmail).length < 1) {
       return left(new EntityNotExists('User'));
     }
 
@@ -59,7 +59,7 @@ export class ValidateUser
       return auth;
     });
 
-    if (filteredAuth[0].authId.length < 1) {
+    if (Object.keys(filteredAuth[0]).length < 1) {
       return left(new EntityNotExists('Auth'));
     }
 

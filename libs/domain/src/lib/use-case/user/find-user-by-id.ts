@@ -17,7 +17,7 @@ export class FindUserById
     input: string
   ): Promise<Either<EntityNotEmpty | EntityNotExists, UserList>> {
     const idString = 'id';
-    if (input.length < 1) {
+    if (Object.keys(input).length < 1) {
       return left(new EntityNotEmpty(idString));
     }
 

@@ -37,21 +37,21 @@ export class CreateAuth
   ): Promise<Either<InsufficientCharacters | EntityNotExists, void>> {
     const { email, password, userId } = input;
 
-    if (email.length < 3) {
+    if (Object.keys(email).length < 1 || email.length < 3) {
       return left(new InsufficientCharacters('Email'));
     }
 
-    if (password.length < 3) {
+    if (Object.keys(password).length < 1 || password.length < 3) {
       return left(new InsufficientCharacters('Password'));
     }
 
-    if (userId.length < 3) {
+    if (Object.keys(userId).length < 1) {
       return left(new EntityNotExists('User'));
     }
 
     const filteredEmail = await this.filterByEmailRepository.filter(email);
 
-    if (filteredEmail.userId.length > 0) {
+    if (Object.keys(filteredEmail).length > 0) {
       return left(new EntityAlreadyExists(email));
     }
     const userResult = await this.findUserByIdRepository.find(userId);
