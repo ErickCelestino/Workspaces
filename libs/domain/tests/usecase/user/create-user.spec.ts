@@ -6,6 +6,7 @@ import {
   EntityAlreadyExists,
   InsufficientCharacters,
   FilterByEmailOrNicknameDto,
+  EntityNotEmpty,
 } from '../../../src';
 import { FilterByEmailOrNicknameRepository } from '../../../src/lib/repository/user/filter-by-email-or-nickname';
 import { userMock } from '../../entity';
@@ -27,6 +28,7 @@ const makeSut = (): SutTypes => {
   const filterNickNameRepository = new FilterByEmailOrNicknameRepositoryMock();
 
   const createUserDto: CreateUserDto = {
+    appId: 'any_id',
     name: userMock.name,
     nickname: userMock.nickname,
     birthDate: new Date(),
@@ -62,6 +64,7 @@ describe('CreateUser', () => {
     const { sut } = makeSut();
 
     const createUserDto: CreateUserDto = {
+      appId: 'any_id',
       name: '',
       nickname: userMock.nickname,
       birthDate: new Date(),
@@ -77,6 +80,7 @@ describe('CreateUser', () => {
     const { sut } = makeSut();
 
     const createUserDto: CreateUserDto = {
+      appId: 'any_id',
       name: userMock.name,
       nickname: '',
       birthDate: new Date(),
@@ -86,6 +90,22 @@ describe('CreateUser', () => {
 
     expect(result.isLeft()).toBe(true);
     expect(result.value).toBeInstanceOf(InsufficientCharacters);
+  });
+
+  it('should return EntityNotEmpty when a incorrect app id', async () => {
+    const { sut } = makeSut();
+
+    const createUserDto: CreateUserDto = {
+      appId: '',
+      name: userMock.name,
+      nickname: userMock.nickname,
+      birthDate: new Date(),
+    };
+
+    const result = await sut.execute(createUserDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.value).toBeInstanceOf(EntityNotEmpty);
   });
 
   it('should return EntityAlreadyExists if already exist  user in database', async () => {

@@ -3,6 +3,7 @@ import { userMock } from '../../entity';
 
 export class CreateUserRepositoryMock implements CreateUserRepository {
   createUser: CreateUserDto = {
+    appId: '',
     name: '',
     nickname: '',
     birthDate: new Date(),

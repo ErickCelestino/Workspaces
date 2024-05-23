@@ -6,7 +6,8 @@ export class CreateUserRepositoryImpl implements CreateUserRepository {
   constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
 
   async create(input: CreateUserDto): Promise<string> {
-    const { name, nickname, birthDate } = input;
+    const { name, nickname, birthDate, appId } = input;
+
     await this.prismaService.user.create({
       data: {
         name: name,
@@ -21,6 +22,13 @@ export class CreateUserRepositoryImpl implements CreateUserRepository {
     });
 
     const id = resultUser?.user_id == undefined ? '' : resultUser?.user_id;
+
+    await this.prismaService.user_X_Application.create({
+      data: {
+        app_id: appId,
+        user_id: id,
+      },
+    });
 
     return id;
   }
