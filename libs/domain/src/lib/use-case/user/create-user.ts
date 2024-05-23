@@ -59,7 +59,6 @@ export class CreateUser
     }
 
     const filteredAppId = await this.findAppByIdRepository.find(appId);
-    console.log(filteredAppId);
     if (
       Object.keys(filteredAppId).length < 1 ||
       Object.keys(filteredAppId?.id).length < 1
