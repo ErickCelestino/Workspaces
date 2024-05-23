@@ -20,7 +20,6 @@ const Content = () => {
   const auth = useAuth();
   return (
     <>
-      <span>aa: {!auth.isAuthenticated}</span>
       {!auth.isAuthenticated && <AuthRouters />}
       {auth.isAuthenticated && (
         <DrawerProvider>
