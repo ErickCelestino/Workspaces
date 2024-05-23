@@ -58,13 +58,13 @@ export class CreateUser
       return left(new InsufficientCharacters('nickName'));
     }
 
-    const filteredAppId = await this.findAppByIdRepository.find('App Id');
-
+    const filteredAppId = await this.findAppByIdRepository.find(appId);
+    console.log(filteredAppId);
     if (
       Object.keys(filteredAppId).length < 1 ||
       Object.keys(filteredAppId?.id).length < 1
     ) {
-      return left(new EntityNotExists(appId));
+      return left(new EntityNotExists('app id'));
     }
 
     const filterResult = await this.filterNicknameRepository.filter(nickname);
