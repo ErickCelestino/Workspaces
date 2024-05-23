@@ -1,6 +1,7 @@
 import './app.scss';
 import { AppRouters, AuthRouters } from './routes';
 import {
+  AppNameProvider,
   AppThemeProvider,
   AuthProvider,
   DrawerProvider,

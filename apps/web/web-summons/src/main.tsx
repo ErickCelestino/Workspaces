@@ -8,7 +8,7 @@ import { AppNameProvider } from '@workspaces/feature';
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
-const appName = 'Summons';
+const appName = process.env['NX_APP_ID'] || '';
 root.render(
   <StrictMode>
     <BrowserRouter>
