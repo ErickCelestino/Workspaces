@@ -1,21 +1,21 @@
 import { createContext, FC, ReactNode, useContext } from 'react';
 
 interface AppContextProps {
-  appName: string;
+  appId: string;
 }
 
 const AppContext = createContext<AppContextProps | undefined>(undefined);
 
-export const AppNameProvider: FC<{ children: ReactNode; appName: string }> = ({
+export const AppIdProvider: FC<{ children: ReactNode; appId: string }> = ({
   children,
-  appName,
+  appId,
 }) => {
   return (
-    <AppContext.Provider value={{ appName }}>{children}</AppContext.Provider>
+    <AppContext.Provider value={{ appId }}>{children}</AppContext.Provider>
   );
 };
 
-export const useAppNameContext = () => {
+export const useAppIdContext = () => {
   const context = useContext(AppContext);
   if (!context) {
     throw new Error('useAppContext must be used within an AppProvider');

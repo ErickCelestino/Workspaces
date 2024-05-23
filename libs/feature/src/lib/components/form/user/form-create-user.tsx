@@ -11,6 +11,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { CreateUserSchema, EntityExist } from '../../../shared';
 import axios, { AxiosError } from 'axios';
+import { useAppIdContext } from '../../../contexts';
 
 export const FormCreateUser: FC<FormCreateUserProps> = ({
   buttonTitle = 'Cadastrar Usuario',
@@ -58,6 +59,8 @@ export const FormCreateUser: FC<FormCreateUserProps> = ({
   const handleData = async (data: CreateUserDto) => {
     setSuccess(false);
     setLoading(true);
+    const { appId } = useAppIdContext();
+    data.appId = appId;
     const createdUserId = await createUser(data);
     console.log(createdUserId);
     if (createdUserId !== undefined) {
