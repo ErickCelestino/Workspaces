@@ -3,7 +3,7 @@ import * as ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 
 import App from './app/app';
-import { AppIdProvider } from '@workspaces/feature';
+import { AppIdProvider, AuthProvider } from '@workspaces/feature';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -13,7 +13,9 @@ root.render(
   <StrictMode>
     <BrowserRouter>
       <AppIdProvider appId={appId}>
-        <App />
+        <AuthProvider>
+          <App />
+        </AuthProvider>
       </AppIdProvider>
     </BrowserRouter>
   </StrictMode>

@@ -4,9 +4,10 @@ import {
   CreateError,
   EntityAlreadyExists,
   EntityNotEmpty,
+  EntityNotExists,
   InsufficientCharacters,
 } from '../../error';
-import { CreateUserRepository } from '../../repository';
+import { CreateUserRepository, FindAppByIdRepository } from '../../repository';
 import { FilterByEmailOrNicknameRepository } from '../../repository/user/filter-by-email-or-nickname';
 import { Either, left, right } from '../../shared/either';
 import { Inject } from '@nestjs/common';
@@ -16,7 +17,10 @@ export class CreateUser
     UseCase<
       CreateUserDto,
       Either<
-        InsufficientCharacters | EntityAlreadyExists | EntityNotEmpty,
+        | InsufficientCharacters
+        | EntityAlreadyExists
+        | EntityNotEmpty
+        | EntityNotExists,
         string
       >
     >
@@ -25,14 +29,19 @@ export class CreateUser
     @Inject('CreateUserRepository')
     private createUserRepository: CreateUserRepository,
     @Inject('FilterByEmailOrNicknameRepository')
-    private filterNicknameRepository: FilterByEmailOrNicknameRepository
+    private filterNicknameRepository: FilterByEmailOrNicknameRepository,
+    @Inject('FindAppByIdRepository')
+    private findAppByIdRepository: FindAppByIdRepository
   ) {}
 
   async execute(
     input: CreateUserDto
   ): Promise<
     Either<
-      InsufficientCharacters | EntityAlreadyExists | EntityNotEmpty,
+      | InsufficientCharacters
+      | EntityAlreadyExists
+      | EntityNotEmpty
+      | EntityNotExists,
       string
     >
   > {
@@ -49,9 +58,18 @@ export class CreateUser
       return left(new InsufficientCharacters('nickName'));
     }
 
+    const filteredAppId = await this.findAppByIdRepository.find('App Id');
+
+    if (
+      Object.keys(filteredAppId).length < 1 ||
+      Object.keys(filteredAppId?.id).length < 1
+    ) {
+      return left(new EntityNotExists(appId));
+    }
+
     const filterResult = await this.filterNicknameRepository.filter(nickname);
 
-    if (Object.keys(filterResult).length > 0) {
+    if (Object.keys(filterResult?.userId).length > 0) {
       return left(new EntityAlreadyExists(nickname));
     }
 

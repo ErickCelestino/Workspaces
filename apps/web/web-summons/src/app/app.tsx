@@ -10,11 +10,9 @@ import {
 
 const App = () => {
   return (
-    <AuthProvider>
-      <AppThemeProvider>
-        <Content />
-      </AppThemeProvider>
-    </AuthProvider>
+    <AppThemeProvider>
+      <Content />
+    </AppThemeProvider>
   );
 };
 
@@ -22,6 +20,7 @@ const Content = () => {
   const auth = useAuth();
   return (
     <>
+      <span>aa: {!auth.isAuthenticated}</span>
       {!auth.isAuthenticated && <AuthRouters />}
       {auth.isAuthenticated && (
         <DrawerProvider>

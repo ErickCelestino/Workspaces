@@ -7,12 +7,16 @@ import {
   InsufficientCharacters,
   FilterByEmailOrNicknameDto,
   EntityNotEmpty,
+  FindAppByIdRepository,
+  FilterByEmailOrNicknameRepository,
+  EntityNotExists,
+  App,
 } from '../../../src';
-import { FilterByEmailOrNicknameRepository } from '../../../src/lib/repository/user/filter-by-email-or-nickname';
 import { userMock } from '../../entity';
 import {
   CreateUserRepositoryMock,
   FilterByEmailOrNicknameRepositoryMock,
+  FindAppByIdRepositoryMock,
 } from '../../repository';
 
 interface SutTypes {
@@ -21,11 +25,13 @@ interface SutTypes {
   filterNickNameDto: FilterByEmailOrNicknameDto;
   createUserRepository: CreateUserRepository;
   filterNickNameRepository: FilterByEmailOrNicknameRepository;
+  findAppByIdRepository: FindAppByIdRepository;
 }
 
 const makeSut = (): SutTypes => {
   const createUserRepository = new CreateUserRepositoryMock();
   const filterNickNameRepository = new FilterByEmailOrNicknameRepositoryMock();
+  const findAppByIdRepository = new FindAppByIdRepositoryMock();
 
   const createUserDto: CreateUserDto = {
     appId: 'any_id',
@@ -38,11 +44,16 @@ const makeSut = (): SutTypes => {
     nickName: userMock.nickname,
   };
 
-  const sut = new CreateUser(createUserRepository, filterNickNameRepository);
+  const sut = new CreateUser(
+    createUserRepository,
+    filterNickNameRepository,
+    findAppByIdRepository
+  );
 
   return {
     createUserRepository,
     filterNickNameRepository,
+    findAppByIdRepository,
     createUserDto,
     filterNickNameDto,
     sut,
@@ -109,13 +120,18 @@ describe('CreateUser', () => {
   });
 
   it('should return EntityAlreadyExists if already exist  user in database', async () => {
-    const { createUserDto, createUserRepository } = makeSut();
+    const { createUserDto, createUserRepository, findAppByIdRepository } =
+      makeSut();
 
     const mockEmptyRepository: FilterByEmailOrNicknameRepository = {
       filter: jest.fn(async () => userMock),
     };
 
-    const sut = new CreateUser(createUserRepository, mockEmptyRepository);
+    const sut = new CreateUser(
+      createUserRepository,
+      mockEmptyRepository,
+      findAppByIdRepository
+    );
 
     const result = await sut.execute(createUserDto);
 
@@ -123,14 +139,43 @@ describe('CreateUser', () => {
     expect(result.value).toBeInstanceOf(EntityAlreadyExists);
   });
 
+  it('should return EntityNotExists if already exist app in database', async () => {
+    const { createUserDto, createUserRepository, filterNickNameRepository } =
+      makeSut();
+
+    const appMock = {
+      id: '',
+    } as App;
+
+    const mockEmptyRepository: FindAppByIdRepository = {
+      find: jest.fn(async () => appMock),
+    };
+
+    const sut = new CreateUser(
+      createUserRepository,
+      filterNickNameRepository,
+      mockEmptyRepository
+    );
+
+    const result = await sut.execute(createUserDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.value).toBeInstanceOf(EntityNotExists);
+  });
+
   it('should return CreateError if there is no user created in the database', async () => {
-    const { createUserDto, filterNickNameRepository } = makeSut();
+    const { createUserDto, filterNickNameRepository, findAppByIdRepository } =
+      makeSut();
 
     const mockEmptyRepository: CreateUserRepository = {
       create: jest.fn(async () => ''),
     };
 
-    const sut = new CreateUser(mockEmptyRepository, filterNickNameRepository);
+    const sut = new CreateUser(
+      mockEmptyRepository,
+      filterNickNameRepository,
+      findAppByIdRepository
+    );
 
     const result = await sut.execute(createUserDto);
 
