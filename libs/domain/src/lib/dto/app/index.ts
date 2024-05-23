@@ -1,1 +1,1 @@
-export * from './find-app-by-name.dto';
+export * from './find-app-by-id.dto';
