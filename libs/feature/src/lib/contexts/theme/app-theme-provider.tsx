@@ -1,8 +1,9 @@
-import { Box, ThemeProvider } from '@mui/material';
+import { Box, ThemeProvider, stepContentClasses } from '@mui/material';
 import React, { ReactNode, useCallback, useMemo, useState } from 'react';
 import { ThemeContext } from './theme-context';
 import { ThemeName } from '../../types';
 import { LighTheme, DarkTheme } from '../../themes';
+import { getItemLocalStorage, setItemLocalStorage } from '../../services';
 
 interface AppThemeProviderProps {
   children: ReactNode;
@@ -11,12 +12,16 @@ interface AppThemeProviderProps {
 export const AppThemeProvider: React.FC<AppThemeProviderProps> = ({
   children,
 }) => {
-  const [themeName, setThemeName] = useState<ThemeName>('light');
+  const [themeName, setThemeName] = useState<ThemeName>(() => {
+    return getItemLocalStorage('theme') || 'light';
+  });
 
   const toggleTheme = useCallback(() => {
-    setThemeName((oldThemeName) =>
-      oldThemeName === 'light' ? 'dark' : 'light'
-    );
+    setThemeName((oldThemeName) => {
+      const newThemeName = oldThemeName === 'light' ? 'dark' : 'light';
+      setItemLocalStorage(newThemeName, 'theme');
+      return newThemeName;
+    });
   }, []);
 
   const theme = useMemo(() => {

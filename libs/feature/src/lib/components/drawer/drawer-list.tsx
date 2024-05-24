@@ -7,6 +7,7 @@ import {
   Icon,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { useDrawerContext } from '../../contexts';
 
 interface DrawerListItemProps {
   items: DrawerOption[];
@@ -20,6 +21,7 @@ export const DrawerListItem = ({
   onClick,
 }: DrawerListItemProps) => {
   const navigate = useNavigate();
+  const { isDrawerOpen, toggleDrawerOpen } = useDrawerContext();
   const handleClick = (to: string) => {
     return () => {
       navigate(to);
@@ -32,7 +34,7 @@ export const DrawerListItem = ({
       {items.map(({ label, icon, path }) => (
         <ListItem key={label} disablePadding sx={{ display: 'block' }}>
           <ListItemButton
-            onClick={handleClick(path)}
+            onClick={isDrawerOpen ? handleClick(path) : toggleDrawerOpen}
             sx={{
               minHeight: 48,
               justifyContent: open ? 'initial' : 'center',

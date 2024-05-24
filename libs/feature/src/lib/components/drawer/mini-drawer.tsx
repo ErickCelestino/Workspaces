@@ -1,4 +1,4 @@
-import { useDrawerContext } from '../../contexts';
+import { useAppThemeContext, useDrawerContext } from '../../contexts';
 import { DrawerHeader } from './drawer-header';
 import { DrawerListItem } from './drawer-list';
 import { FC, ReactNode } from 'react';
@@ -10,8 +10,13 @@ import {
   Divider,
   useMediaQuery,
   Avatar,
+  Button,
+  Icon,
+  Typography,
+  IconButton,
 } from '@mui/material';
 import MuiDrawer from '@mui/material/Drawer';
+import { removeItemLocalStorage } from '../../services';
 
 const drawerWidth = 200;
 
@@ -56,12 +61,25 @@ const Drawer = styled(MuiDrawer)(({ theme, open }) => ({
 interface MiniDrawerProps {
   children: ReactNode;
   image: string;
+  logoutTitle?: string;
+  themeTitle?: string;
 }
 
-export const MiniDrawer: FC<MiniDrawerProps> = ({ children, image }) => {
+export const MiniDrawer: FC<MiniDrawerProps> = ({
+  children,
+  image,
+  logoutTitle = 'Fazer Logout',
+  themeTitle = 'Alterar Tema',
+}) => {
   const theme = useTheme();
+  const { toggleTheme } = useAppThemeContext();
   const { isDrawerOpen, toggleDrawerOpen, drawerOptions } = useDrawerContext();
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
+
+  const logout = () => {
+    removeItemLocalStorage('u');
+    window.location.reload();
+  };
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -98,6 +116,54 @@ export const MiniDrawer: FC<MiniDrawerProps> = ({ children, image }) => {
             onClick={smDown ? toggleDrawerOpen : undefined}
           />
         </List>
+        <Box
+          sx={{
+            marginTop: 'auto',
+          }}
+        >
+          <Divider />
+          {isDrawerOpen && (
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                padding: theme.spacing(2),
+              }}
+            >
+              <Button
+                onClick={logout}
+                color="inherit"
+                sx={{
+                  marginBottom: theme.spacing(0.5),
+                }}
+                startIcon={<Icon>logout</Icon>}
+              >
+                <Typography>{logoutTitle}</Typography>
+              </Button>
+
+              <Button
+                onClick={toggleTheme}
+                color="inherit"
+                startIcon={<Icon>dark_mode</Icon>}
+              >
+                <Typography>{themeTitle}</Typography>
+              </Button>
+            </Box>
+          )}
+          {!isDrawerOpen && (
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                padding: theme.spacing(1),
+              }}
+            >
+              <IconButton onClick={toggleDrawerOpen}>
+                <Icon>settings</Icon>
+              </IconButton>
+            </Box>
+          )}
+        </Box>
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: theme.spacing(1) }}>
         {children}
