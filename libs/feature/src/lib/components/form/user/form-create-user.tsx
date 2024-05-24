@@ -9,8 +9,9 @@ import {
 } from '@workspaces/domain';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { CreateUserSchema, EntityExist } from '../../../shared';
+import { CreateUserSchema, EntityExist, EntityNotExist } from '../../../shared';
 import axios, { AxiosError } from 'axios';
+import { useAppIdContext } from '../../../contexts';
 
 export const FormCreateUser: FC<FormCreateUserProps> = ({
   buttonTitle = 'Cadastrar Usuario',
@@ -22,6 +23,7 @@ export const FormCreateUser: FC<FormCreateUserProps> = ({
 }) => {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const { appId } = useAppIdContext();
 
   const {
     handleSubmit,
@@ -44,10 +46,16 @@ export const FormCreateUser: FC<FormCreateUserProps> = ({
       return result;
     } catch (error) {
       console.error((error as { message: string }).message);
+      console.error(error);
       if (axios.isAxiosError(error)) {
         const axiosError = error as AxiosError<ErrorResponse>;
         if (axiosError.response?.data.error.name === 'EntityAlreadyExists') {
           const message = EntityExist(request.nickname, 'nickname');
+          showAlert?.(message);
+        }
+
+        if (axiosError.response?.data.error.name === 'EntityNotExists') {
+          const message = EntityNotExist(request.appId, 'PT-BR');
           showAlert?.(message);
         }
       }
@@ -58,8 +66,8 @@ export const FormCreateUser: FC<FormCreateUserProps> = ({
   const handleData = async (data: CreateUserDto) => {
     setSuccess(false);
     setLoading(true);
+    data.appId = appId;
     const createdUserId = await createUser(data);
-    console.log(createdUserId);
     if (createdUserId !== undefined) {
       setItemLocalStorage(createdUserId, 'ui');
       onData?.(1);

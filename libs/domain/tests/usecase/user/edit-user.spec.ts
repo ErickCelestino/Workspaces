@@ -6,6 +6,7 @@ import {
   EntityNotExists,
   FindUserByIdRepository,
   InsufficientCharacters,
+  StatusUser,
   UserList,
 } from '../../../src';
 import { userMock } from '../../entity';
@@ -56,11 +57,29 @@ describe('EditUser', () => {
   it('should return EntityNotEmpty if this id is empty', async () => {
     const { sut } = makeSut();
 
+    const teste = {} as string;
+
     const editUserDto: EditUserDto = {
-      id: '',
+      id: teste,
       birthDate: new Date(),
       name: userMock.name,
       status: 'ACTIVE',
+    };
+
+    const result = await sut.execute(editUserDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.value).toBeInstanceOf(EntityNotEmpty);
+  });
+
+  it('should return EntityNotEmpty if this status is empty', async () => {
+    const { sut } = makeSut();
+    const statusEmpty = {} as StatusUser;
+    const editUserDto: EditUserDto = {
+      id: userMock.userId,
+      birthDate: new Date(),
+      name: userMock.name,
+      status: statusEmpty,
     };
 
     const result = await sut.execute(editUserDto);

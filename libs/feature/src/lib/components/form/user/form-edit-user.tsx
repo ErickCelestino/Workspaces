@@ -50,7 +50,6 @@ export const FormEditUser: FC<FormEditUserProps> = ({
     defaultValues: {
       name: '',
       id: '',
-      status: '',
       birthDate: new Date(),
     },
   });

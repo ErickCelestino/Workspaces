@@ -9,6 +9,7 @@ export const listUserMock: UserList[] = [
     birthDate: faker.date.birthdate(),
     email: faker.internet.email(),
     status: 'ACTIVE',
+    type: 'DEFAULT',
   },
   {
     userId: faker.string.uuid(),
@@ -17,5 +18,6 @@ export const listUserMock: UserList[] = [
     birthDate: faker.date.birthdate(),
     email: faker.internet.email(),
     status: 'ACTIVE',
+    type: 'DEFAULT',
   },
 ];

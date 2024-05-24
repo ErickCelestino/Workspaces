@@ -3,9 +3,11 @@ import { CreateUserDto } from '../../dto';
 import {
   CreateError,
   EntityAlreadyExists,
+  EntityNotEmpty,
+  EntityNotExists,
   InsufficientCharacters,
 } from '../../error';
-import { CreateUserRepository } from '../../repository';
+import { CreateUserRepository, FindAppByIdRepository } from '../../repository';
 import { FilterByEmailOrNicknameRepository } from '../../repository/user/filter-by-email-or-nickname';
 import { Either, left, right } from '../../shared/either';
 import { Inject } from '@nestjs/common';
@@ -14,37 +16,65 @@ export class CreateUser
   implements
     UseCase<
       CreateUserDto,
-      Either<InsufficientCharacters | EntityAlreadyExists, string>
+      Either<
+        | InsufficientCharacters
+        | EntityAlreadyExists
+        | EntityNotEmpty
+        | EntityNotExists,
+        string
+      >
     >
 {
   constructor(
     @Inject('CreateUserRepository')
     private createUserRepository: CreateUserRepository,
     @Inject('FilterByEmailOrNicknameRepository')
-    private filterNicknameRepository: FilterByEmailOrNicknameRepository
+    private filterNicknameRepository: FilterByEmailOrNicknameRepository,
+    @Inject('FindAppByIdRepository')
+    private findAppByIdRepository: FindAppByIdRepository
   ) {}
 
   async execute(
     input: CreateUserDto
-  ): Promise<Either<InsufficientCharacters | EntityAlreadyExists, string>> {
-    const { name, nickname } = input;
+  ): Promise<
+    Either<
+      | InsufficientCharacters
+      | EntityAlreadyExists
+      | EntityNotEmpty
+      | EntityNotExists,
+      string
+    >
+  > {
+    const { name, nickname, appId } = input;
 
-    if (name.length < 3) {
+    if (Object.keys(appId).length < 1) {
+      return left(new EntityNotEmpty('app id'));
+    }
+
+    if (Object.keys(name).length < 1 || name.length < 3) {
       return left(new InsufficientCharacters('name'));
     }
-    if (nickname.length < 3) {
+    if (Object.keys(nickname).length < 1 || nickname.length < 3) {
       return left(new InsufficientCharacters('nickName'));
+    }
+
+    const filteredAppId = await this.findAppByIdRepository.find(appId);
+    if (
+      Object.keys(filteredAppId).length < 1 ||
+      Object.keys(filteredAppId?.id).length < 1
+    ) {
+      return left(new EntityNotExists('app id'));
     }
 
     const filterResult = await this.filterNicknameRepository.filter(nickname);
 
-    if (filterResult.userId.length > 0) {
+    if (Object.keys(filterResult?.userId).length > 0) {
       return left(new EntityAlreadyExists(nickname));
     }
 
     const fiterUser = await this.createUserRepository.create(input);
 
-    if (fiterUser.length < 1) {
+    if (Object.keys(fiterUser).length < 1) {
       return left(new CreateError('User'));
     }
 

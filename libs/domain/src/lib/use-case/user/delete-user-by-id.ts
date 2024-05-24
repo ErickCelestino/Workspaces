@@ -37,15 +37,15 @@ export class DeleteUserById
     const idString = 'id';
     const loggedUserString = 'Usuário';
 
-    if (id.length < 1) {
+    if (Object.keys(id).length < 1) {
       return left(new EntityNotEmpty(idString));
     }
 
-    if (loggedUser.length < 1) {
+    if (Object.keys(loggedUser).length < 1) {
       return left(new EntityNotEmpty(loggedUserString));
     }
 
-    if (description.length < 1) {
+    if (Object.keys(description).length < 1) {
       return left(new EntityNotEmpty('descrição'));
     }
 

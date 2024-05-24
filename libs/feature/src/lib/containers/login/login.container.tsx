@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import { FormAuthCard, FormButton } from '../../components';
 import { useAuth } from '../../hooks';
-import { ValidateUserDto } from '@workspaces/domain';
+import { LoggedUser, ValidateUserDto } from '@workspaces/domain';
 import React, { ReactNode, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSnackbarAlert } from '../../hooks';
@@ -19,6 +19,7 @@ import { useForm } from 'react-hook-form';
 import { LoginSchema } from '../../shared';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ListUserRequest, setItemLocalStorage } from '../../services';
+import { useLoggedUser } from '../../contexts';
 
 interface LoginContainerProps {
   cardImage: string;
@@ -49,6 +50,7 @@ export const LoginContainer: React.FC<LoginContainerProps> = ({
   const history = useNavigate();
   const theme = useTheme();
   const { showSnackbarAlert, SnackbarAlert } = useSnackbarAlert();
+  const { setLoggedUser } = useLoggedUser();
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
 
@@ -69,7 +71,13 @@ export const LoginContainer: React.FC<LoginContainerProps> = ({
   const setLocalUserId = async (email: string) => {
     const user = await ListUserRequest({ input: email });
     if (Object.keys(user).length > 0) {
-      setItemLocalStorage(user.users[0].userId, 'ui');
+      const loggedUser: LoggedUser = {
+        id: user.users[0].userId,
+        email: user.users[0].email,
+        name: user.users[0].name,
+        type: user.users[0].type,
+      };
+      setLoggedUser(loggedUser);
     }
     history('/');
   };

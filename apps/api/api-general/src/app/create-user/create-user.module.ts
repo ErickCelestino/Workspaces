@@ -4,6 +4,7 @@ import { CreateUserController } from './create-user.controller';
 import {
   CreateUserRepositoryImpl,
   FilterByEmailOrNicknameRepositoryImpl,
+  FindAppByIdRepositoryImpl,
   PrismaService,
 } from '@workspaces/data-access';
 import { CreateUser } from '@workspaces/domain';
@@ -20,6 +21,10 @@ import { CreateUser } from '@workspaces/domain';
     {
       provide: 'FilterByEmailOrNicknameRepository',
       useClass: FilterByEmailOrNicknameRepositoryImpl,
+    },
+    {
+      provide: 'FindAppByIdRepository',
+      useClass: FindAppByIdRepositoryImpl,
     },
     {
       provide: 'PrismaService',
