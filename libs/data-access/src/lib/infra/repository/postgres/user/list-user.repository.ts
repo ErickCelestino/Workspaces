@@ -40,6 +40,7 @@ export class ListUserRepositoryImpl implements ListUserRepository {
           nick_name: true,
           birth_date: true,
           status: true,
+          type: true,
           auth: {
             select: {
               auth_id: false,
@@ -64,6 +65,7 @@ export class ListUserRepositoryImpl implements ListUserRepository {
         userId: user.user_id ?? '',
         email: user.auth[0]?.email ?? '',
         status: user?.status ?? '',
+        type: user?.type ?? '',
       };
     });
     return {

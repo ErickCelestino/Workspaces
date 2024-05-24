@@ -5,4 +5,5 @@ export interface UserList {
   birthDate: Date | null;
   email: string;
   status: string;
+  type: string;
 }

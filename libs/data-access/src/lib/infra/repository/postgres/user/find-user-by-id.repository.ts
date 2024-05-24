@@ -16,6 +16,7 @@ export class FindUserByIdRepositoryImpl implements FindUserByIdRepository {
         nick_name: true,
         birth_date: true,
         status: true,
+        type: true,
         auth: {
           select: {
             auth_id: true,
@@ -34,6 +35,7 @@ export class FindUserByIdRepositoryImpl implements FindUserByIdRepository {
       userId: userResult?.user_id == null ? '' : userResult.user_id,
       email: userResult?.auth[0]?.email ?? '',
       status: userResult?.status ?? '',
+      type: userResult?.type ?? '',
     };
 
     return mappedUser;

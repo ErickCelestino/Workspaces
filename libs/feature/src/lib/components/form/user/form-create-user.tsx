@@ -46,6 +46,7 @@ export const FormCreateUser: FC<FormCreateUserProps> = ({
       return result;
     } catch (error) {
       console.error((error as { message: string }).message);
+      console.error(error);
       if (axios.isAxiosError(error)) {
         const axiosError = error as AxiosError<ErrorResponse>;
         if (axiosError.response?.data.error.name === 'EntityAlreadyExists') {

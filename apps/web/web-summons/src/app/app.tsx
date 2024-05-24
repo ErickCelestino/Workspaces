@@ -2,8 +2,8 @@ import './app.scss';
 import { AppRouters, AuthRouters } from './routes';
 import {
   AppThemeProvider,
-  AuthProvider,
   DrawerProvider,
+  LoggedUserProvider,
   MiniDrawer,
   useAuth,
 } from '@workspaces/feature';
@@ -11,7 +11,9 @@ import {
 const App = () => {
   return (
     <AppThemeProvider>
-      <Content />
+      <LoggedUserProvider>
+        <Content />
+      </LoggedUserProvider>
     </AppThemeProvider>
   );
 };
