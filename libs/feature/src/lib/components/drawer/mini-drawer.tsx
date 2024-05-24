@@ -10,8 +10,14 @@ import {
   Divider,
   useMediaQuery,
   Avatar,
+  Button,
+  Icon,
+  Typography,
+  IconButton,
 } from '@mui/material';
 import MuiDrawer from '@mui/material/Drawer';
+import { removeItemLocalStorage } from '../../services';
+import { useNavigate } from 'react-router-dom';
 
 const drawerWidth = 200;
 
@@ -56,12 +62,22 @@ const Drawer = styled(MuiDrawer)(({ theme, open }) => ({
 interface MiniDrawerProps {
   children: ReactNode;
   image: string;
+  logoutTitle?: string;
 }
 
-export const MiniDrawer: FC<MiniDrawerProps> = ({ children, image }) => {
+export const MiniDrawer: FC<MiniDrawerProps> = ({
+  children,
+  image,
+  logoutTitle = 'Fazer Logout',
+}) => {
   const theme = useTheme();
   const { isDrawerOpen, toggleDrawerOpen, drawerOptions } = useDrawerContext();
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
+
+  const logout = () => {
+    removeItemLocalStorage('u');
+    window.location.reload();
+  };
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -98,6 +114,41 @@ export const MiniDrawer: FC<MiniDrawerProps> = ({ children, image }) => {
             onClick={smDown ? toggleDrawerOpen : undefined}
           />
         </List>
+        <Box
+          sx={{
+            marginTop: 'auto',
+          }}
+        >
+          <Divider />
+          {isDrawerOpen && (
+            <Box
+              sx={{
+                padding: theme.spacing(2),
+              }}
+            >
+              <Button
+                onClick={logout}
+                color="inherit"
+                startIcon={<Icon>logout</Icon>}
+              >
+                <Typography>{logoutTitle}</Typography>
+              </Button>
+            </Box>
+          )}
+          {!isDrawerOpen && (
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                padding: theme.spacing(1),
+              }}
+            >
+              <IconButton onClick={toggleDrawerOpen}>
+                <Icon>logout</Icon>
+              </IconButton>
+            </Box>
+          )}
+        </Box>
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: theme.spacing(1) }}>
         {children}

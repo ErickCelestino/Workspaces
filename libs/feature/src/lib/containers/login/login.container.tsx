@@ -18,7 +18,7 @@ import { useSnackbarAlert } from '../../hooks';
 import { useForm } from 'react-hook-form';
 import { LoginSchema } from '../../shared';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ListUserRequest, setItemLocalStorage } from '../../services';
+import { ListUserRequest } from '../../services';
 import { useLoggedUser } from '../../contexts';
 
 interface LoginContainerProps {
