@@ -67,7 +67,6 @@ export const FormCreateUser: FC<FormCreateUserProps> = ({
     setLoading(true);
     data.appId = appId;
     const createdUserId = await createUser(data);
-    console.log(createdUserId);
     if (createdUserId !== undefined) {
       setItemLocalStorage(createdUserId, 'ui');
       onData?.(1);
