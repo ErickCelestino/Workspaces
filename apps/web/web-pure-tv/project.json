@@ -51,7 +51,8 @@
       "defaultConfiguration": "development",
       "options": {
         "buildTarget": "web-pure-tv:build",
-        "hmr": true
+        "hmr": true,
+        "proxyConfig": "apps/web/web-pure-tv/proxy.conf.json"
       },
       "configurations": {
         "development": {
