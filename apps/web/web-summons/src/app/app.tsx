@@ -9,7 +9,7 @@ import {
   getItemLocalStorage,
   useAuth,
 } from '@workspaces/feature';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const App = () => {
   return (
@@ -24,13 +24,19 @@ const App = () => {
 const Content = () => {
   const auth = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const token = getItemLocalStorage('u');
-    if (!token) {
+
+    if (
+      !token &&
+      location.pathname !== '/register' &&
+      location.pathname !== '/login'
+    ) {
       navigate('/login');
     }
-  }, []);
+  }, [location, navigate]);
 
   return (
     <>
