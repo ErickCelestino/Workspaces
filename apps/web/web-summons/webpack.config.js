@@ -13,6 +13,7 @@ module.exports = composePlugins(
     config.devServer = {
       host: process.env['DEFAULT_HOST'] || 'localhost',
       port: process.env['PORT_FRONT_SUMMONS'] || 4201,
+      historyApiFallback: true,
     };
     return config;
   }
