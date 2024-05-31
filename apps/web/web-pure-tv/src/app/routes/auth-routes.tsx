@@ -1,5 +1,5 @@
 import { CreateUser, LoginContainer } from '@workspaces/feature';
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 
 export const AuthRouters = () => {
   return (

@@ -8,7 +8,7 @@ import { AppIdProvider, AuthProvider } from '@workspaces/feature';
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
-const appId = process.env['NX_APP_ID'] || '';
+const appId = process.env['NX_APP_SUMMONS_ID'] || '';
 root.render(
   <StrictMode>
     <BrowserRouter>
