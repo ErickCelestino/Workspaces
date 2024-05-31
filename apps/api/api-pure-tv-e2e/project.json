@@ -1,7 +1,7 @@
 {
-  "name": "api-api-pure-tv-e2e",
+  "name": "api-pure-tv-e2e",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
-  "implicitDependencies": ["api-api-pure-tv"],
+  "implicitDependencies": ["api-pure-tv"],
   "projectType": "application",
   "targets": {
     "e2e": {

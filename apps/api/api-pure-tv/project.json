@@ -1,5 +1,5 @@
 {
-  "name": "api-api-pure-tv",
+  "name": "api-pure-tv",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/api/api-pure-tv/src",
   "projectType": "application",
@@ -26,14 +26,14 @@
       "executor": "@nx/js:node",
       "defaultConfiguration": "development",
       "options": {
-        "buildTarget": "api-api-pure-tv:build"
+        "buildTarget": "api-pure-tv:build"
       },
       "configurations": {
         "development": {
-          "buildTarget": "api-api-pure-tv:build:development"
+          "buildTarget": "api-pure-tv:build:development"
         },
         "production": {
-          "buildTarget": "api-api-pure-tv:build:production"
+          "buildTarget": "api-pure-tv:build:production"
         }
       }
     },
