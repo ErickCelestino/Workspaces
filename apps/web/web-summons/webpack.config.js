@@ -10,8 +10,10 @@ module.exports = composePlugins(
     // svgr: false
   }),
   (config) => {
-    // Update the webpack config as needed here.
-    // e.g. `config.plugins.push(new MyPlugin())`
+    config.devServer = {
+      host: process.env['DEFAULT_HOST'] || 'localhost',
+      port: process.env['PORT_FRONT_SUMMONS'] || 4201,
+    };
     return config;
   }
 );
