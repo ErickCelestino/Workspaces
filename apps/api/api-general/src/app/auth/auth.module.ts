@@ -10,6 +10,7 @@ import {
   LocalStrategy,
   JwtStrategy,
   PrismaService,
+  JwtRefreshStrategy,
 } from '@workspaces/data-access';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
@@ -19,7 +20,7 @@ import { PassportModule } from '@nestjs/passport';
     PassportModule,
     JwtModule.register({
       secret: process.env['JWT_SECRET'],
-      signOptions: { expiresIn: '2h' },
+      // signOptions: { expiresIn: '10s' }, não ta expirando
     }),
   ],
   controllers: [AuthController],
@@ -29,6 +30,7 @@ import { PassportModule } from '@nestjs/passport';
     LocalAuthGuard,
     LocalStrategy,
     JwtStrategy,
+    JwtRefreshStrategy,
     Login,
     {
       provide: 'SignInRepository',
@@ -51,5 +53,6 @@ import { PassportModule } from '@nestjs/passport';
       useClass: JwtService,
     },
   ],
+  exports: [JwtModule, AuthService],
 })
 export class AuthModule {}

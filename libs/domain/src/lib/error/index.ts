@@ -6,3 +6,4 @@ export * from './incorrect-password-or-email.error';
 export * from './insufficient-characters.error';
 export * from './not-permission.error';
 export * from './syntax.error';
+export * from './token-expired';

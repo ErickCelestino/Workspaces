@@ -9,6 +9,8 @@ import { EditUserModule } from './edit-user/edit-user.module';
 import { ListUserModule } from './list-user/list-user.module';
 import { FindUserByIdModule } from './find-user-by-id/find-user-by-id.module';
 import { DeleteUserByIdModule } from './delete-user-by-id/delete-user-by-id.module';
+import { HellowWordmodule } from './hellow-word/hellow-word.module';
+import { RefreshModule } from './refresh/refresh.module';
 
 @Module({
   imports: [
@@ -19,6 +21,8 @@ import { DeleteUserByIdModule } from './delete-user-by-id/delete-user-by-id.modu
     EditUserModule,
     FindUserByIdModule,
     DeleteUserByIdModule,
+    HellowWordmodule,
+    RefreshModule,
   ],
   controllers: [AppController],
   providers: [AppService],
