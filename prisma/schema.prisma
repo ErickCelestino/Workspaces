@@ -311,6 +311,7 @@ model Directory {
   updated_at DateTime @default(now())
   deleted_at DateTime?
 
+  content_video Content_Video[]
   user User @relation(fields: [user_id], references: [user_id])
 
   @@schema("pure_tv")
@@ -320,6 +321,7 @@ model Content_Video {
   content_video_id String @id @default(uuid())
   name String
   user_id String
+  directory_id String
   video_url String
   size String
   duration String
@@ -331,6 +333,7 @@ model Content_Video {
   deleted_at DateTime?
   playlist_content_video Playlist_X_Content_Video[]
   user User @relation(fields: [user_id], references: [user_id])
+  directory Directory @relation(fields: [directory_id], references: [directory_id])
 
   @@schema("pure_tv")
 }
