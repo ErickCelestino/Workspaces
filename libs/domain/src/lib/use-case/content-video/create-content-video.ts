@@ -1,7 +1,7 @@
 import { Inject } from '@nestjs/common';
 import { UseCase } from '../../base/use-case';
 import { CreateContentVideoDto } from '../../dto';
-import { EntityNotEmpty, EntityNotExists } from '../../error';
+import { EntityNotCreated, EntityNotEmpty, EntityNotExists } from '../../error';
 import {
   CreateContentVideoRepository,
   FindDirectoryByIdRepository,
@@ -13,7 +13,7 @@ export class CreateContentVideo
   implements
     UseCase<
       CreateContentVideoDto,
-      Either<EntityNotEmpty | EntityNotExists, string>
+      Either<EntityNotEmpty | EntityNotExists | EntityNotCreated, string>
     >
 {
   constructor(
@@ -26,7 +26,9 @@ export class CreateContentVideo
   ) {}
   async execute(
     input: CreateContentVideoDto
-  ): Promise<Either<EntityNotEmpty | EntityNotExists, string>> {
+  ): Promise<
+    Either<EntityNotEmpty | EntityNotExists | EntityNotCreated, string>
+  > {
     const {
       loggedUserId,
       directoryId,
@@ -82,6 +84,10 @@ export class CreateContentVideo
     const filteredContentVideo = await this.createContentVideoRepository.create(
       input
     );
+
+    if (Object.keys(filteredContentVideo).length < 1) {
+      return left(new EntityNotCreated('Content Video'));
+    }
 
     return right(filteredContentVideo);
   }

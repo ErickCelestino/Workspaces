@@ -8,6 +8,7 @@ import {
   UserList,
   EntityNotExists,
   Directory,
+  EntityNotCreated,
 } from '../../../src';
 import { ContentVideoMock, DirectoryMock, userMock } from '../../entity';
 import {
@@ -183,5 +184,30 @@ describe('CreateContentVideo', () => {
 
     expect(result.isLeft()).toBe(true);
     expect(result.value).toBeInstanceOf(EntityNotExists);
+  });
+
+  it('should return EntityNotCreated if there is no content video created in the database', async () => {
+    const {
+      findDirectoryByIdRepository,
+      findUserByIdRepository,
+      createContentVideoDto,
+    } = makeSut();
+
+    const mockEmptyItem = {} as Directory;
+
+    const mockEmptyRepository: CreateContentVideoRepository = {
+      create: jest.fn(async () => ''),
+    };
+
+    const sut = new CreateContentVideo(
+      mockEmptyRepository,
+      findUserByIdRepository,
+      findDirectoryByIdRepository
+    );
+
+    const result = await sut.execute(createContentVideoDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.value).toBeInstanceOf(EntityNotCreated);
   });
 });
