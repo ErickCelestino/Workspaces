@@ -6,7 +6,7 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-  schemas  = ["summons", "general"]
+  schemas  = ["summons", "general", "pure_tv"]
 }
 
 model Auth {
@@ -68,6 +68,10 @@ model User {
   user_x_company User_X_Company[]
   confirmDeleteUser Confirm_Delete_User[]
   user_x_application User_X_Application[]
+  directory Directory[]
+  content_video Content_Video[]
+  playlist Playlist[]
+  scheduling Scheduling[]
 
   @@schema("general")
 }
@@ -298,6 +302,112 @@ enum Status {
 
   @@schema("general")
 }
+
+model Directory {
+  directory_id String @id @default(uuid())
+  name String
+  user_id String
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+  deleted_at DateTime?
+
+  user User @relation(fields: [user_id], references: [user_id])
+
+  @@schema("pure_tv")
+}
+
+model Content_Video {
+  content_video_id String @id @default(uuid())
+  name String
+  user_id String
+  video_url String
+  size String
+  duration String
+  resolution String
+  format String
+  upload_date DateTime @default(now())
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+  deleted_at DateTime?
+  playlist_content_video Playlist_X_Content_Video[]
+  user User @relation(fields: [user_id], references: [user_id])
+
+  @@schema("pure_tv")
+}
+
+model Playlist_X_Content_Video {
+  content_video_id String
+  playlist_id String
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+  deleted_at DateTime?
+
+  playlist Playlist @relation(fields: [playlist_id], references: [playlist_id])
+  content_video Content_Video @relation(fields: [content_video_id], references: [content_video_id])
+  @@id([playlist_id, content_video_id])
+  @@schema("pure_tv")
+}
+
+model Playlist {
+  playlist_id String @id @default(uuid())
+  name String
+  user_id String
+  category String
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+  deleted_at DateTime?
+
+  user User @relation(fields: [user_id], references: [user_id])
+  playlist_scheduling Playlist_X_Scheduling[]
+  playlist_content_video Playlist_X_Content_Video[]
+
+  @@schema("pure_tv")
+}
+
+model Playlist_X_Scheduling {
+  scheduling_id String
+  playlist_id String
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+  deleted_at DateTime?
+
+  scheduling Scheduling @relation(fields: [scheduling_id], references: [scheduling_id])
+  playlist Playlist @relation(fields: [playlist_id], references: [playlist_id])
+
+  @@id([playlist_id, scheduling_id])
+  @@schema("pure_tv")
+}
+
+model Scheduling {
+  scheduling_id String @id @default(uuid())
+  user_id String
+  device_id String
+  name String
+  start_time DateTime
+  end_time DateTime
+  looping Boolean
+  priority Int
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+  deleted_at DateTime?
+
+  user User @relation(fields: [user_id], references: [user_id])
+  device Device @relation(fields: [device_id], references: [device_id])
+  playlist_scheduling Playlist_X_Scheduling[]
+  @@schema("pure_tv")
+}
+
+model Device {
+  device_id String @id @default(uuid())
+  name String
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+  deleted_at DateTime?
+  scheduling Scheduling[]
+
+  @@schema("pure_tv")
+}
+
 
 model Summons {
   summons_id String @id @default(uuid())
