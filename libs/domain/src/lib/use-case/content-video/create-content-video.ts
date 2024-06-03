@@ -10,7 +10,11 @@ import {
 import { Either, left, right } from '../../shared/either';
 
 export class CreateContentVideo
-  implements UseCase<CreateContentVideoDto, Either<EntityNotEmpty, void>>
+  implements
+    UseCase<
+      CreateContentVideoDto,
+      Either<EntityNotEmpty | EntityNotExists, void>
+    >
 {
   constructor(
     @Inject('CreateContentVideoRepository')
@@ -22,7 +26,7 @@ export class CreateContentVideo
   ) {}
   async execute(
     input: CreateContentVideoDto
-  ): Promise<Either<EntityNotEmpty, void>> {
+  ): Promise<Either<EntityNotEmpty | EntityNotExists, void>> {
     const {
       loggedUserId,
       directoryId,
@@ -61,7 +65,7 @@ export class CreateContentVideo
       return left(new EntityNotEmpty('Size'));
     }
 
-    const filteredUser = this.findUserByIdRepository.find(loggedUserId);
+    const filteredUser = await this.findUserByIdRepository.find(loggedUserId);
 
     if (Object.keys(filteredUser).length < 1) {
       return left(new EntityNotExists('User'));
