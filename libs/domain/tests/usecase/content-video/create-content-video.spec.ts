@@ -9,7 +9,7 @@ import {
   EntityNotExists,
   Directory,
 } from '../../../src';
-import { DirectoryMock, userMock } from '../../entity';
+import { ContentVideoMock, DirectoryMock, userMock } from '../../entity';
 import {
   CreateContentVideoRepositoryMock,
   FindDirectoryByIdRespositoryMock,
@@ -62,7 +62,7 @@ describe('CreateContentVideo', () => {
 
     expect(result.isLeft()).toBe(false);
     expect(result.isRight()).toBe(true);
-    expect(result.value).toBe(undefined);
+    expect(result.value).toBe(ContentVideoMock.id);
   });
 
   it('should return EntityNotEmpty when a pass incorrect logged user id', async () => {

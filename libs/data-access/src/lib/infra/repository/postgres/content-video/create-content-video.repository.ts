@@ -9,7 +9,7 @@ export class CreateContentVideoRepositoryImpl
   implements CreateContentVideoRepository
 {
   constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
-  async create(input: CreateContentVideoDto): Promise<void> {
+  async create(input: CreateContentVideoDto): Promise<string> {
     const createdContentVideo = await this.prismaService.content_Video.create({
       data: {
         name: input.name,
@@ -22,5 +22,7 @@ export class CreateContentVideoRepositoryImpl
         directory_id: input.directoryId,
       },
     });
+
+    return createdContentVideo.content_video_id;
   }
 }

@@ -13,7 +13,7 @@ export class CreateContentVideo
   implements
     UseCase<
       CreateContentVideoDto,
-      Either<EntityNotEmpty | EntityNotExists, void>
+      Either<EntityNotEmpty | EntityNotExists, string>
     >
 {
   constructor(
@@ -26,7 +26,7 @@ export class CreateContentVideo
   ) {}
   async execute(
     input: CreateContentVideoDto
-  ): Promise<Either<EntityNotEmpty | EntityNotExists, void>> {
+  ): Promise<Either<EntityNotEmpty | EntityNotExists, string>> {
     const {
       loggedUserId,
       directoryId,
@@ -79,8 +79,10 @@ export class CreateContentVideo
       return left(new EntityNotExists('Directory'));
     }
 
-    await this.createContentVideoRepository.create(input);
+    const filteredContentVideo = await this.createContentVideoRepository.create(
+      input
+    );
 
-    return right(undefined);
+    return right(filteredContentVideo);
   }
 }
