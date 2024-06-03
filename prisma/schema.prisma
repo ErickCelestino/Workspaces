@@ -6,7 +6,7 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-  schemas  = ["summons", "general", "pure-tv"]
+  schemas  = ["summons", "general", "pure_tv"]
 }
 
 model Auth {
@@ -313,7 +313,7 @@ model Directory {
 
   user User @relation(fields: [user_id], references: [user_id])
 
-  @@schema("pure-tv")
+  @@schema("pure_tv")
 }
 
 model Content_Video {
@@ -332,7 +332,7 @@ model Content_Video {
   playlist_content_video Playlist_X_Content_Video[]
   user User @relation(fields: [user_id], references: [user_id])
 
-  @@schema("pure-tv")
+  @@schema("pure_tv")
 }
 
 model Playlist_X_Content_Video {
@@ -345,13 +345,14 @@ model Playlist_X_Content_Video {
   playlist Playlist @relation(fields: [playlist_id], references: [playlist_id])
   content_video Content_Video @relation(fields: [content_video_id], references: [content_video_id])
   @@id([playlist_id, content_video_id])
-  @@schema("pure-tv")
+  @@schema("pure_tv")
 }
 
 model Playlist {
   playlist_id String @id @default(uuid())
   name String
   user_id String
+  category String
   created_at DateTime @default(now())
   updated_at DateTime @default(now())
   deleted_at DateTime?
@@ -360,7 +361,7 @@ model Playlist {
   playlist_scheduling Playlist_X_Scheduling[]
   playlist_content_video Playlist_X_Content_Video[]
 
-  @@schema("pure-tv")
+  @@schema("pure_tv")
 }
 
 model Playlist_X_Scheduling {
@@ -374,13 +375,18 @@ model Playlist_X_Scheduling {
   playlist Playlist @relation(fields: [playlist_id], references: [playlist_id])
 
   @@id([playlist_id, scheduling_id])
-  @@schema("pure-tv")
+  @@schema("pure_tv")
 }
 
 model Scheduling {
   scheduling_id String @id @default(uuid())
   user_id String
   device_id String
+  name String
+  start_time DateTime
+  end_time DateTime
+  looping Boolean
+  priority Int
   created_at DateTime @default(now())
   updated_at DateTime @default(now())
   deleted_at DateTime?
@@ -388,7 +394,7 @@ model Scheduling {
   user User @relation(fields: [user_id], references: [user_id])
   device Device @relation(fields: [device_id], references: [device_id])
   playlist_scheduling Playlist_X_Scheduling[]
-  @@schema("pure-tv")
+  @@schema("pure_tv")
 }
 
 model Device {
@@ -399,7 +405,7 @@ model Device {
   deleted_at DateTime?
   scheduling Scheduling[]
 
-  @@schema("pure-tv")
+  @@schema("pure_tv")
 }
 
 

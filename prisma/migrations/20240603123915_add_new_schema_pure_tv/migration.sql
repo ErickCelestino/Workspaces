@@ -1,8 +1,8 @@
 -- CreateSchema
-CREATE SCHEMA IF NOT EXISTS "pure-tv";
+CREATE SCHEMA IF NOT EXISTS "pure_tv";
 
 -- CreateTable
-CREATE TABLE "pure-tv"."Directory" (
+CREATE TABLE "pure_tv"."Directory" (
     "directory_id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "user_id" TEXT NOT NULL,
@@ -14,7 +14,7 @@ CREATE TABLE "pure-tv"."Directory" (
 );
 
 -- CreateTable
-CREATE TABLE "pure-tv"."Content_Video" (
+CREATE TABLE "pure_tv"."Content_Video" (
     "content_video_id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "user_id" TEXT NOT NULL,
@@ -32,7 +32,7 @@ CREATE TABLE "pure-tv"."Content_Video" (
 );
 
 -- CreateTable
-CREATE TABLE "pure-tv"."Playlist_X_Content_Video" (
+CREATE TABLE "pure_tv"."Playlist_X_Content_Video" (
     "content_video_id" TEXT NOT NULL,
     "playlist_id" TEXT NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -43,10 +43,11 @@ CREATE TABLE "pure-tv"."Playlist_X_Content_Video" (
 );
 
 -- CreateTable
-CREATE TABLE "pure-tv"."Playlist" (
+CREATE TABLE "pure_tv"."Playlist" (
     "playlist_id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "user_id" TEXT NOT NULL,
+    "category" TEXT NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "deleted_at" TIMESTAMP(3),
@@ -55,7 +56,7 @@ CREATE TABLE "pure-tv"."Playlist" (
 );
 
 -- CreateTable
-CREATE TABLE "pure-tv"."Playlist_X_Scheduling" (
+CREATE TABLE "pure_tv"."Playlist_X_Scheduling" (
     "scheduling_id" TEXT NOT NULL,
     "playlist_id" TEXT NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -66,10 +67,15 @@ CREATE TABLE "pure-tv"."Playlist_X_Scheduling" (
 );
 
 -- CreateTable
-CREATE TABLE "pure-tv"."Scheduling" (
+CREATE TABLE "pure_tv"."Scheduling" (
     "scheduling_id" TEXT NOT NULL,
     "user_id" TEXT NOT NULL,
     "device_id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "start_time" TIMESTAMP(3) NOT NULL,
+    "end_time" TIMESTAMP(3) NOT NULL,
+    "looping" BOOLEAN NOT NULL,
+    "priority" INTEGER NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "deleted_at" TIMESTAMP(3),
@@ -78,7 +84,7 @@ CREATE TABLE "pure-tv"."Scheduling" (
 );
 
 -- CreateTable
-CREATE TABLE "pure-tv"."Device" (
+CREATE TABLE "pure_tv"."Device" (
     "device_id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -89,28 +95,28 @@ CREATE TABLE "pure-tv"."Device" (
 );
 
 -- AddForeignKey
-ALTER TABLE "pure-tv"."Directory" ADD CONSTRAINT "Directory_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "general"."User"("user_id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "pure_tv"."Directory" ADD CONSTRAINT "Directory_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "general"."User"("user_id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "pure-tv"."Content_Video" ADD CONSTRAINT "Content_Video_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "general"."User"("user_id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "pure_tv"."Content_Video" ADD CONSTRAINT "Content_Video_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "general"."User"("user_id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "pure-tv"."Playlist_X_Content_Video" ADD CONSTRAINT "Playlist_X_Content_Video_playlist_id_fkey" FOREIGN KEY ("playlist_id") REFERENCES "pure-tv"."Playlist"("playlist_id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "pure_tv"."Playlist_X_Content_Video" ADD CONSTRAINT "Playlist_X_Content_Video_playlist_id_fkey" FOREIGN KEY ("playlist_id") REFERENCES "pure_tv"."Playlist"("playlist_id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "pure-tv"."Playlist_X_Content_Video" ADD CONSTRAINT "Playlist_X_Content_Video_content_video_id_fkey" FOREIGN KEY ("content_video_id") REFERENCES "pure-tv"."Content_Video"("content_video_id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "pure_tv"."Playlist_X_Content_Video" ADD CONSTRAINT "Playlist_X_Content_Video_content_video_id_fkey" FOREIGN KEY ("content_video_id") REFERENCES "pure_tv"."Content_Video"("content_video_id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "pure-tv"."Playlist" ADD CONSTRAINT "Playlist_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "general"."User"("user_id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "pure_tv"."Playlist" ADD CONSTRAINT "Playlist_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "general"."User"("user_id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "pure-tv"."Playlist_X_Scheduling" ADD CONSTRAINT "Playlist_X_Scheduling_scheduling_id_fkey" FOREIGN KEY ("scheduling_id") REFERENCES "pure-tv"."Scheduling"("scheduling_id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "pure_tv"."Playlist_X_Scheduling" ADD CONSTRAINT "Playlist_X_Scheduling_scheduling_id_fkey" FOREIGN KEY ("scheduling_id") REFERENCES "pure_tv"."Scheduling"("scheduling_id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "pure-tv"."Playlist_X_Scheduling" ADD CONSTRAINT "Playlist_X_Scheduling_playlist_id_fkey" FOREIGN KEY ("playlist_id") REFERENCES "pure-tv"."Playlist"("playlist_id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "pure_tv"."Playlist_X_Scheduling" ADD CONSTRAINT "Playlist_X_Scheduling_playlist_id_fkey" FOREIGN KEY ("playlist_id") REFERENCES "pure_tv"."Playlist"("playlist_id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "pure-tv"."Scheduling" ADD CONSTRAINT "Scheduling_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "general"."User"("user_id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "pure_tv"."Scheduling" ADD CONSTRAINT "Scheduling_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "general"."User"("user_id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "pure-tv"."Scheduling" ADD CONSTRAINT "Scheduling_device_id_fkey" FOREIGN KEY ("device_id") REFERENCES "pure-tv"."Device"("device_id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "pure_tv"."Scheduling" ADD CONSTRAINT "Scheduling_device_id_fkey" FOREIGN KEY ("device_id") REFERENCES "pure_tv"."Device"("device_id") ON DELETE RESTRICT ON UPDATE CASCADE;
