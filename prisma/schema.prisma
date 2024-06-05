@@ -69,7 +69,7 @@ model User {
   confirmDeleteUser Confirm_Delete_User[]
   user_x_application User_X_Application[]
   directory Directory[]
-  content_video Content_Video[]
+  Content_Files Content_Files[]
   playlist Playlist[]
   scheduling Scheduling[]
 
@@ -311,43 +311,43 @@ model Directory {
   updated_at DateTime @default(now())
   deleted_at DateTime?
 
-  content_video Content_Video[]
+  Content_Files Content_Files[]
   user User @relation(fields: [user_id], references: [user_id])
 
   @@schema("pure_tv")
 }
 
-model Content_Video {
-  content_video_id String @id @default(uuid())
+model Content_Files {
+  Content_Files_id String @id @default(uuid())
   name String
   user_id String
   directory_id String
-  video_url String
+  file_url String
   size String
-  duration String
-  resolution String
+  duration String?
+  resolution String?
   format String
   upload_date DateTime @default(now())
   created_at DateTime @default(now())
   updated_at DateTime @default(now())
   deleted_at DateTime?
-  playlist_content_video Playlist_X_Content_Video[]
+  playlist_content_files Playlist_X_Content_Files[]
   user User @relation(fields: [user_id], references: [user_id])
   directory Directory @relation(fields: [directory_id], references: [directory_id])
 
   @@schema("pure_tv")
 }
 
-model Playlist_X_Content_Video {
-  content_video_id String
+model Playlist_X_Content_Files {
+  Content_Files_id String
   playlist_id String
   created_at DateTime @default(now())
   updated_at DateTime @default(now())
   deleted_at DateTime?
 
   playlist Playlist @relation(fields: [playlist_id], references: [playlist_id])
-  content_video Content_Video @relation(fields: [content_video_id], references: [content_video_id])
-  @@id([playlist_id, content_video_id])
+  Content_Files Content_Files @relation(fields: [Content_Files_id], references: [Content_Files_id])
+  @@id([playlist_id, Content_Files_id])
   @@schema("pure_tv")
 }
 
@@ -362,7 +362,7 @@ model Playlist {
 
   user User @relation(fields: [user_id], references: [user_id])
   playlist_scheduling Playlist_X_Scheduling[]
-  playlist_content_video Playlist_X_Content_Video[]
+  playlist_content_files Playlist_X_Content_Files[]
 
   @@schema("pure_tv")
 }

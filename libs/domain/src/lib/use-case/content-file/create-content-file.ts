@@ -1,33 +1,34 @@
 import { Inject } from '@nestjs/common';
 import { UseCase } from '../../base/use-case';
-import { CreateContentVideoDto } from '../../dto';
+import { CreateContentFileDto as CreateContentFileDto } from '../../dto';
 import { EntityNotCreated, EntityNotEmpty, EntityNotExists } from '../../error';
 import {
-  CreateContentVideoRepository,
+  CreateContentFileRepository,
   FindDirectoryByIdRepository,
   FindUserByIdRepository,
 } from '../../repository';
 import { Either, left, right } from '../../shared/either';
+import { Console } from 'console';
 
-export class CreateContentVideo
+export class CreateContentFile
   implements
     UseCase<
-      CreateContentVideoDto,
-      Either<EntityNotEmpty | EntityNotExists | EntityNotCreated, string>
+      CreateContentFileDto,
+      Either<EntityNotEmpty | EntityNotExists | EntityNotCreated, string[]>
     >
 {
   constructor(
     @Inject('CreateContentVideoRepository')
-    private createContentVideoRepository: CreateContentVideoRepository,
+    private createContentVideoRepository: CreateContentFileRepository,
     @Inject('FindUserByIdRepository')
     private findUserByIdRepository: FindUserByIdRepository,
     @Inject('FindDirectoryByIdRepository')
     private findDirectoryByIdRepository: FindDirectoryByIdRepository
   ) {}
   async execute(
-    input: CreateContentVideoDto
+    input: CreateContentFileDto
   ): Promise<
-    Either<EntityNotEmpty | EntityNotExists | EntityNotCreated, string>
+    Either<EntityNotEmpty | EntityNotExists | EntityNotCreated, string[]>
   > {
     const { loggedUserId, directoryId, file } = input;
 
@@ -39,8 +40,8 @@ export class CreateContentVideo
       return left(new EntityNotEmpty('Directory ID'));
     }
 
-    if (Object.keys(file).length < 1) {
-      return left(new EntityNotEmpty('Arquivo'));
+    if (Object.keys(file[0]).length < 1) {
+      return left(new EntityNotEmpty('File'));
     }
 
     const filteredUser = await this.findUserByIdRepository.find(loggedUserId);

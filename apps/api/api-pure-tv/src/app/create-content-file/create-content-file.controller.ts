@@ -4,30 +4,35 @@ import {
   Controller,
   Post,
   Query,
-  UsePipes,
+  UploadedFiles,
+  UseInterceptors,
 } from '@nestjs/common';
-import { CreateContentVideoService } from './create-content-video.service';
-import { ZodValidationPipe } from '../pipes/zod-validation-pipe';
-import { CreateContentVideoDto } from '@workspaces/domain';
+import {
+  FileInterceptor,
+  AnyFilesInterceptor,
+  FilesInterceptor,
+} from '@nestjs/platform-express';
+import { CreateContentFileService } from './create-content-file.service';
+import { CreateContentFileDto, UploadedFile } from '@workspaces/domain';
 
 @Controller('create-content-video')
-export class CreateContentVideoController {
+export class CreateContentFileController {
   constructor(
-    private readonly createContentVideoService: CreateContentVideoService
+    private readonly createContentVideoService: CreateContentFileService
   ) {}
 
   @Post()
+  @UseInterceptors(FilesInterceptor('files'))
   async create(
-    @Body() input: { file: string },
+    @UploadedFiles() files: UploadedFile[],
     @Query('loggedUserId') loggedUserId: string,
     @Query('directoryId') directoryId: string
   ) {
-    const dtoRequest: CreateContentVideoDto = {
+    const dtoRequest: CreateContentFileDto = {
       directoryId: directoryId,
-      file: input.file,
+      file: files,
       loggedUserId,
     };
-    console.log(dtoRequest);
     const result = await this.createContentVideoService.create(dtoRequest);
 
     if (result.isRight()) return result.value;
