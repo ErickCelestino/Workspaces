@@ -12,13 +12,13 @@ export class CreateContentVideoRepositoryImpl
   async create(input: CreateContentVideoDto): Promise<string> {
     const createdContentVideo = await this.prismaService.content_Video.create({
       data: {
-        name: input.name,
-        duration: input.duration,
-        format: input.format,
-        resolution: input.resolution,
-        size: input.size,
+        name: 'a criar',
+        duration: 'a criar',
+        format: 'a criar',
+        resolution: 'a criar',
+        size: 'a criar',
         user_id: input.loggedUserId,
-        video_url: 'aa',
+        video_url: 'a criar',
         directory_id: input.directoryId,
       },
     });

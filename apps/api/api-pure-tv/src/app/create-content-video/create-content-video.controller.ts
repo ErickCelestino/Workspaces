@@ -8,12 +8,7 @@ import {
 } from '@nestjs/common';
 import { CreateContentVideoService } from './create-content-video.service';
 import { ZodValidationPipe } from '../pipes/zod-validation-pipe';
-import {
-  CreateContentVideo,
-  CreateContentVideoDto,
-  CreateContentVideoRequestDto,
-  createContentVideoSchema,
-} from '@workspaces/domain';
+import { CreateContentVideoDto } from '@workspaces/domain';
 
 @Controller('create-content-video')
 export class CreateContentVideoController {
@@ -22,16 +17,17 @@ export class CreateContentVideoController {
   ) {}
 
   @Post()
-  @UsePipes(new ZodValidationPipe(createContentVideoSchema))
   async create(
-    @Body() input: CreateContentVideoRequestDto,
-    @Query('loggedUserId') loggedUserId: string
+    @Body() input: { file: string },
+    @Query('loggedUserId') loggedUserId: string,
+    @Query('directoryId') directoryId: string
   ) {
     const dtoRequest: CreateContentVideoDto = {
-      directoryId: input.directoryId,
+      directoryId: directoryId,
       file: input.file,
       loggedUserId,
     };
+    console.log(dtoRequest);
     const result = await this.createContentVideoService.create(dtoRequest);
 
     if (result.isRight()) return result.value;
