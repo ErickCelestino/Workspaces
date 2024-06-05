@@ -1,13 +1,17 @@
 import { z } from 'zod';
 
-export const createContentVideoSchema = z
+const querySchema = z.object({
+  loggedUserId: z.string().min(2),
+});
+
+const bodySchema = z
   .object({
-    loggedUserId: z.string().min(2),
     directoryId: z.string().min(3),
-    name: z.string().min(3).max(50),
-    size: z.string().min(3).max(50),
-    duration: z.string().min(3).max(50),
-    resolution: z.string().min(3).max(50),
-    format: z.string().min(3).max(50),
+    file: z.string(),
   })
   .required();
+
+export const createContentVideoSchema = z.object({
+  query: querySchema,
+  body: bodySchema,
+});
