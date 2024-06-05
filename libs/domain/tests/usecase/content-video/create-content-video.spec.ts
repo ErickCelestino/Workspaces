@@ -33,11 +33,7 @@ const makeSut = (): SutTypes => {
   const createContentVideoDto: CreateContentVideoDto = {
     directoryId: DirectoryMock.id,
     loggedUserId: userMock.userId,
-    duration: 'any_duration',
-    format: 'any_format',
-    name: 'any_name',
-    resolution: 'any_resolution',
-    size: 'any_size',
+    file: 'any_file',
   };
 
   const sut = new CreateContentVideo(
@@ -86,49 +82,9 @@ describe('CreateContentVideo', () => {
     expect(result.value).toBeInstanceOf(EntityNotEmpty);
   });
 
-  it('should return EntityNotEmpty when a pass incorrect name', async () => {
+  it('should return EntityNotEmpty when a pass incorrect file', async () => {
     const { createContentVideoDto, sut } = makeSut();
-    createContentVideoDto.name = '';
-    const result = await sut.execute(createContentVideoDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.isRight()).toBe(false);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
-  it('should return EntityNotEmpty when a pass incorrect duration', async () => {
-    const { createContentVideoDto, sut } = makeSut();
-    createContentVideoDto.duration = '';
-    const result = await sut.execute(createContentVideoDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.isRight()).toBe(false);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
-  it('should return EntityNotEmpty when a pass incorrect format', async () => {
-    const { createContentVideoDto, sut } = makeSut();
-    createContentVideoDto.format = '';
-    const result = await sut.execute(createContentVideoDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.isRight()).toBe(false);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
-  it('should return EntityNotEmpty when a pass incorrect resolution', async () => {
-    const { createContentVideoDto, sut } = makeSut();
-    createContentVideoDto.resolution = '';
-    const result = await sut.execute(createContentVideoDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.isRight()).toBe(false);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
-  it('should return EntityNotEmpty when a pass incorrect size', async () => {
-    const { createContentVideoDto, sut } = makeSut();
-    createContentVideoDto.size = '';
+    createContentVideoDto.file = '';
     const result = await sut.execute(createContentVideoDto);
 
     expect(result.isLeft()).toBe(true);

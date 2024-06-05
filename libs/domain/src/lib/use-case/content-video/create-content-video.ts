@@ -29,15 +29,7 @@ export class CreateContentVideo
   ): Promise<
     Either<EntityNotEmpty | EntityNotExists | EntityNotCreated, string>
   > {
-    const {
-      loggedUserId,
-      directoryId,
-      name,
-      duration,
-      format,
-      resolution,
-      size,
-    } = input;
+    const { loggedUserId, directoryId, file } = input;
 
     if (Object.keys(loggedUserId).length < 1) {
       return left(new EntityNotEmpty('logged User ID'));
@@ -47,24 +39,8 @@ export class CreateContentVideo
       return left(new EntityNotEmpty('Directory ID'));
     }
 
-    if (Object.keys(duration).length < 1) {
-      return left(new EntityNotEmpty('Duration'));
-    }
-
-    if (Object.keys(name).length < 1) {
-      return left(new EntityNotEmpty('Name'));
-    }
-
-    if (Object.keys(format).length < 1) {
-      return left(new EntityNotEmpty('Format'));
-    }
-
-    if (Object.keys(resolution).length < 1) {
-      return left(new EntityNotEmpty('Resolution'));
-    }
-
-    if (Object.keys(size).length < 1) {
-      return left(new EntityNotEmpty('Size'));
+    if (Object.keys(file).length < 1) {
+      return left(new EntityNotEmpty('Arquivo'));
     }
 
     const filteredUser = await this.findUserByIdRepository.find(loggedUserId);
