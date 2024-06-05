@@ -58,14 +58,14 @@ export class CreateContentFile
       return left(new EntityNotExists('Directory'));
     }
 
-    const filteredContentVideo = await this.createContentVideoRepository.create(
+    const filteredContentFile = await this.createContentVideoRepository.create(
       input
     );
 
-    if (Object.keys(filteredContentVideo).length < 1) {
-      return left(new EntityNotCreated('Content Video'));
+    if (Object.keys(filteredContentFile).length < 1) {
+      return left(new EntityNotCreated('Content File'));
     }
 
-    return right(filteredContentVideo);
+    return right(filteredContentFile);
   }
 }
