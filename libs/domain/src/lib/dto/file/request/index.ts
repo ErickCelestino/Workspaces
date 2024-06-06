@@ -1,1 +1,1 @@
-export * from './create-content-video.dto';
+export * from './create-content-file.dto';

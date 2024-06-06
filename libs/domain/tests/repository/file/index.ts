@@ -1,1 +1,1 @@
-export * from './create-content-video.mock';
+export * from './create-content-file.mock';

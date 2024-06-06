@@ -1,1 +1,1 @@
-export * from './content-video';
+export * from './create-content-file.repository';
