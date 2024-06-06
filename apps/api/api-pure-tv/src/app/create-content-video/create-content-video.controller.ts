@@ -29,8 +29,7 @@ export class CreateContentVideoController {
       file: files,
       loggedUserId,
     };
-    console.log(dtoRequest);
-    console.log(`usario logado: ${loggedUserId}, diretorioid: ${directoryId}`);
+
     const result = await this.createContentVideoService.create(dtoRequest);
 
     if (result.isRight()) return result.value;

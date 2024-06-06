@@ -18,20 +18,22 @@ import {
 } from '@mui/icons-material';
 import { FileWithProgress } from '@workspaces/domain';
 import { useLoggedUser } from '../../contexts';
+import { CreateContenVideoRequest, getItemLocalStorage } from '../../services';
 
 interface FilesUploadProps {
   height: string;
   width: string;
+  directoryId: string;
 }
 
-export const FilesUpload: React.FC<FilesUploadProps> = ({ height, width }) => {
+export const FilesUpload: React.FC<FilesUploadProps> = ({
+  height,
+  width,
+  directoryId,
+}) => {
   const [selectedFiles, setSelectedFiles] = useState<FileWithProgress[]>([]);
-  const [directoryId, setDirectoryId] = useState<string>('');
-  const { loggedUser } = useLoggedUser();
 
-  useEffect(() => {
-    setDirectoryId('1');
-  }, []);
+  const { loggedUser } = useLoggedUser();
 
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
@@ -48,11 +50,10 @@ export const FilesUpload: React.FC<FilesUploadProps> = ({ height, width }) => {
   const uploadFiles = async (filesWithProgress: FileWithProgress[]) => {
     try {
       const loggedUserId = loggedUser?.id ?? '';
-      console.log(`loggedUser: ${loggedUserId}, diretorioId ${directoryId}`);
-      //  await CreateContenVideoRequest(filesWithProgress, {
-      //   directoryId,
-      //   loggedUserId
-      //  });
+      await CreateContenVideoRequest(filesWithProgress, {
+        directoryId: directoryId,
+        loggedUserId,
+      });
     } catch (err) {
       console.error(err);
     }

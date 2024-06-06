@@ -8,27 +8,47 @@ export async function CreateContenVideoRequest(
     loggedUserId: string;
   }
 ) {
-  filesWithProgress.forEach((fileWithProgress) => {
+  const uploadPromises = filesWithProgress.map((fileWithProgress) => {
     const formData = new FormData();
-    filesWithProgress.forEach((fileWithProgress) => {
-      formData.append('files', fileWithProgress.file);
-    });
-    console.log(config);
-    formData.append('loggedUserId', config.loggedUserId);
-    formData.append('directoryId', config.directoryId);
+    formData.append('files', fileWithProgress.file);
 
-    pureTvApi.post('/create-content-video', formData, {
-      onUploadProgress: (progressEvent) => {
-        if (progressEvent.total) {
-          const progress = Math.round(
-            (progressEvent.loaded * 100) / progressEvent.total
-          );
-          // You can implement a callback here to update the progress in the component
-          console.log(
-            `Progress for ${fileWithProgress.file.name}: ${progress}%`
-          );
-        }
-      },
-    });
+    return pureTvApi
+      .post('/create-content-video', formData, {
+        params: {
+          loggedUserId: config.loggedUserId,
+          directoryId: config.directoryId,
+        },
+        onUploadProgress: (progressEvent) => {
+          if (progressEvent.total) {
+            const progress = Math.round(
+              (progressEvent.loaded * 100) / progressEvent.total
+            );
+            console.log(
+              `Progress for ${fileWithProgress.file.name}: ${progress}%`
+            );
+          }
+        },
+      })
+      .then((response) => {
+        console.log('Upload successful:', response.data);
+        return response.data;
+      })
+      .catch((error) => {
+        console.error(
+          'Error uploading file:',
+          fileWithProgress.file.name,
+          error
+        );
+        throw error;
+      });
   });
+
+  try {
+    const results = await Promise.all(uploadPromises);
+    console.log('All uploads successful:', results);
+    return results;
+  } catch (error) {
+    console.error('Some uploads failed:', error);
+    throw error;
+  }
 }
