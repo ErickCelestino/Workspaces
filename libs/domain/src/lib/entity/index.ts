@@ -5,5 +5,6 @@ export * from './config';
 export * from './content-video';
 export * from './directory';
 export * from './drawer';
+export * from './file';
 export * from './form';
 export * from './user';

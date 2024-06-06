@@ -1,5 +1,13 @@
 import { LoggedUser } from '@workspaces/domain';
-import { FC, ReactNode, createContext, useContext, useState } from 'react';
+import {
+  FC,
+  ReactNode,
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
+import { getItemLocalStorage } from '../../services';
 
 interface LoggedUserContextProps {
   loggedUser: LoggedUser | null;
@@ -15,6 +23,13 @@ export const LoggedUserProvider: FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [loggedUser, setLoggedUser] = useState<LoggedUser | null>(null);
+
+  useEffect(() => {
+    const storedUser = getItemLocalStorage('lu');
+    if (storedUser) {
+      setLoggedUser(JSON.parse(storedUser));
+    }
+  }, []);
 
   return (
     <LoggedUserContext.Provider value={{ loggedUser, setLoggedUser }}>

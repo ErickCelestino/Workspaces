@@ -10,6 +10,11 @@ import { AppModule } from './app/app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.enableCors({
+    origin: '*',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    allowedHeaders: '*',
+  });
   const globalPrefix = 'api-pure-tv';
   app.setGlobalPrefix(globalPrefix);
   const port = process.env['PORT_BACK_PURE_TV'] || 3000;

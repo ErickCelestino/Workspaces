@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { useDropzone } from 'react-dropzone';
 import {
   Box,
@@ -10,39 +10,61 @@ import {
   ListItemText,
   ListItemSecondaryAction,
   Paper,
+  LinearProgress,
 } from '@mui/material';
 import {
   CloudUpload as CloudUploadIcon,
   Delete as DeleteIcon,
 } from '@mui/icons-material';
+import { FileWithProgress } from '@workspaces/domain';
+import { useLoggedUser } from '../../contexts';
 
 interface FilesUploadProps {
-  onFileUpload: (files: File[]) => void;
   height: string;
   width: string;
 }
 
-export const FilesUpload: React.FC<FilesUploadProps> = ({
-  onFileUpload,
-  height,
-  width,
-}) => {
-  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+export const FilesUpload: React.FC<FilesUploadProps> = ({ height, width }) => {
+  const [selectedFiles, setSelectedFiles] = useState<FileWithProgress[]>([]);
+  const [directoryId, setDirectoryId] = useState<string>('');
+  const { loggedUser } = useLoggedUser();
+
+  useEffect(() => {
+    setDirectoryId('1');
+  }, []);
 
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
-      setSelectedFiles((prevFiles) => [...prevFiles, ...acceptedFiles]);
-      onFileUpload([...selectedFiles, ...acceptedFiles]);
+      const filesWithProgress = acceptedFiles.map((file) => ({
+        file,
+        progress: 0,
+      }));
+      setSelectedFiles((prevFiles) => [...prevFiles, ...filesWithProgress]);
+      uploadFiles(filesWithProgress);
     },
-    [selectedFiles, onFileUpload]
+    [selectedFiles]
   );
+
+  const uploadFiles = async (filesWithProgress: FileWithProgress[]) => {
+    try {
+      const loggedUserId = loggedUser?.id ?? '';
+      console.log(`loggedUser: ${loggedUserId}, diretorioId ${directoryId}`);
+      //  await CreateContenVideoRequest(filesWithProgress, {
+      //   directoryId,
+      //   loggedUserId
+      //  });
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
   const handleDeleteFile = (fileName: string) => {
-    const updatedFiles = selectedFiles.filter((file) => file.name !== fileName);
+    const updatedFiles = selectedFiles.filter(
+      (file) => file.file.name !== fileName
+    );
     setSelectedFiles(updatedFiles);
-    onFileUpload(updatedFiles);
   };
 
   return (
@@ -102,11 +124,15 @@ export const FilesUpload: React.FC<FilesUploadProps> = ({
                 onChange={(event) => {
                   if (event.target.files) {
                     const filesArray = Array.from(event.target.files);
+                    const filesWithProgress = filesArray.map((file) => ({
+                      file,
+                      progress: 0,
+                    }));
                     setSelectedFiles((prevFiles) => [
                       ...prevFiles,
-                      ...filesArray,
+                      ...filesWithProgress,
                     ]);
-                    onFileUpload([...selectedFiles, ...filesArray]);
+                    uploadFiles(filesWithProgress);
                   }
                 }}
               />
@@ -120,9 +146,12 @@ export const FilesUpload: React.FC<FilesUploadProps> = ({
             Arquivos Selecionados:
           </Typography>
           <List>
-            {selectedFiles.map((file) => (
+            {selectedFiles.map(({ file, progress }) => (
               <ListItem key={file.name}>
                 <ListItemText primary={file.name} />
+                <Box width="100%" mx={2}>
+                  <LinearProgress variant="determinate" value={progress} />
+                </Box>
                 <ListItemSecondaryAction>
                   <IconButton
                     edge="end"

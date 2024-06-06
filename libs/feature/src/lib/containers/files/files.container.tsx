@@ -5,10 +5,6 @@ import { FilesUpload } from '../../components';
 export const FilesContainer = () => {
   const theme = useTheme();
 
-  const handleFileUpload = (files: File[]) => {
-    console.log('Files uploaded:', files);
-  };
-
   return (
     <LayoutBase title="Arquivos">
       <Box display="flex" justifyContent="center">
@@ -19,11 +15,7 @@ export const FilesContainer = () => {
             width: theme.spacing(100),
           }}
         >
-          <FilesUpload
-            onFileUpload={handleFileUpload}
-            width={theme.spacing(100)}
-            height={theme.spacing(30)}
-          />
+          <FilesUpload width={theme.spacing(100)} height={theme.spacing(30)} />
         </Card>
       </Box>
     </LayoutBase>
