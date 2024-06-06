@@ -2,12 +2,12 @@ import { Module } from '@nestjs/common';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { CreateContentFileModule } from './create-content-video/create-content-video.module';
+import { CreateContentVideoModule } from './create-content-video/create-content-video.module';
 import { MulterModule } from '@nestjs/platform-express';
 
 @Module({
   imports: [
-    CreateContentFileModule,
+    CreateContentVideoModule,
     MulterModule.register({
       dest: './uploads',
     }),
