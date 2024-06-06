@@ -1,5 +1,6 @@
 export * from './alert';
 export * from './drawer';
+export * from './file';
 export * from './form';
 export * from './list';
 export * from './modal';
