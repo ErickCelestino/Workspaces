@@ -1,15 +1,15 @@
 import { Inject } from '@nestjs/common';
 import {
-  CreateContentFileDto,
-  CreateContentFileRepository,
+  CreateContentVideoDto,
+  CreateContentVideoRepository,
 } from '@workspaces/domain';
 import { PrismaService } from 'nestjs-prisma';
 
-export class CreateContentFileRepositoryImpl
-  implements CreateContentFileRepository
+export class CreateContentVideoRepositoryImpl
+  implements CreateContentVideoRepository
 {
   constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
-  async create(input: CreateContentFileDto): Promise<string[]> {
+  async create(input: CreateContentVideoDto): Promise<string[]> {
     let idList = [];
     for (let i = 0; i < input.file.length; i++) {
       const createdContentVideo = await this.prismaService.content_Files.create(

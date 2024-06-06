@@ -1,32 +1,35 @@
 import { Inject } from '@nestjs/common';
-import { UseCase } from '../../base/use-case';
-import { CreateContentFileDto as CreateContentFileDto } from '../../dto';
-import { EntityNotCreated, EntityNotEmpty, EntityNotExists } from '../../error';
+import { UseCase } from '../../../base/use-case';
+import { CreateContentVideoDto } from '../../../dto';
 import {
-  CreateContentFileRepository,
+  EntityNotCreated,
+  EntityNotEmpty,
+  EntityNotExists,
+} from '../../../error';
+import {
+  CreateContentVideoRepository,
   FindDirectoryByIdRepository,
   FindUserByIdRepository,
-} from '../../repository';
-import { Either, left, right } from '../../shared/either';
-import { Console } from 'console';
+} from '../../../repository';
+import { Either, left, right } from '../../../shared/either';
 
-export class CreateContentFile
+export class CreateContentVideo
   implements
     UseCase<
-      CreateContentFileDto,
+      CreateContentVideoDto,
       Either<EntityNotEmpty | EntityNotExists | EntityNotCreated, string[]>
     >
 {
   constructor(
     @Inject('CreateContentVideoRepository')
-    private createContentVideoRepository: CreateContentFileRepository,
+    private createContentVideoRepository: CreateContentVideoRepository,
     @Inject('FindUserByIdRepository')
     private findUserByIdRepository: FindUserByIdRepository,
     @Inject('FindDirectoryByIdRepository')
     private findDirectoryByIdRepository: FindDirectoryByIdRepository
   ) {}
   async execute(
-    input: CreateContentFileDto
+    input: CreateContentVideoDto
   ): Promise<
     Either<EntityNotEmpty | EntityNotExists | EntityNotCreated, string[]>
   > {

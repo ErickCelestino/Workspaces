@@ -1,4 +1,4 @@
 export * from './app';
 export * from './auth';
-export * from './content-file';
+export * from './file';
 export * from './user';

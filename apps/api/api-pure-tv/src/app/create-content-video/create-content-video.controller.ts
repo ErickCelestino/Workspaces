@@ -7,18 +7,14 @@ import {
   UploadedFiles,
   UseInterceptors,
 } from '@nestjs/common';
-import {
-  FileInterceptor,
-  AnyFilesInterceptor,
-  FilesInterceptor,
-} from '@nestjs/platform-express';
-import { CreateContentFileService } from './create-content-file.service';
-import { CreateContentFileDto, UploadedFile } from '@workspaces/domain';
+import { FilesInterceptor } from '@nestjs/platform-express';
+import { CreateContentVideoService } from './create-content-video.service';
+import { CreateContentVideoDto, UploadedFile } from '@workspaces/domain';
 
 @Controller('create-content-video')
-export class CreateContentFileController {
+export class CreateContentVideoController {
   constructor(
-    private readonly createContentVideoService: CreateContentFileService
+    private readonly createContentVideoService: CreateContentVideoService
   ) {}
 
   @Post()
@@ -28,7 +24,7 @@ export class CreateContentFileController {
     @Query('loggedUserId') loggedUserId: string,
     @Query('directoryId') directoryId: string
   ) {
-    const dtoRequest: CreateContentFileDto = {
+    const dtoRequest: CreateContentVideoDto = {
       directoryId: directoryId,
       file: files,
       loggedUserId,

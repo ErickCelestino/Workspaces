@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { CreateContentFileModule } from './create-content-file/create-content-file.module';
+import { CreateContentFileModule } from './create-content-video/create-content-video.module';
 import { MulterModule } from '@nestjs/platform-express';
 
 @Module({

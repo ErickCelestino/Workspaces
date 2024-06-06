@@ -1,6 +1,6 @@
 import { UploadedFile } from '../../../entity';
 
-export interface CreateContentFileDto {
+export interface CreateContentVideoDto {
   loggedUserId: string;
   directoryId: string;
   file: UploadedFile[];

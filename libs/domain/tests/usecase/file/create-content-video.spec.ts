@@ -1,8 +1,8 @@
 import {
-  CreateContentFileDto,
-  CreateContentFile,
+  CreateContentVideoDto,
+  CreateContentVideo,
   FindUserByIdRepository,
-  CreateContentFileRepository,
+  CreateContentVideoRepository,
   FindDirectoryByIdRepository,
   EntityNotEmpty,
   UserList,
@@ -13,25 +13,25 @@ import {
 } from '../../../src';
 import { ContentFileMock, DirectoryMock, userMock } from '../../entity';
 import {
-  CreateContentFileRepositoryMock,
+  CreateContentVideoRepositoryMock,
   FindDirectoryByIdRespositoryMock,
   FindUserByIdRepositoryMock,
 } from '../../repository';
 
 interface SutTypes {
-  sut: CreateContentFile;
-  CreateContentFileDto: CreateContentFileDto;
+  sut: CreateContentVideo;
+  CreateContentVideoDto: CreateContentVideoDto;
   findUserByIdRepository: FindUserByIdRepository;
   findDirectoryByIdRepository: FindDirectoryByIdRepository;
-  CreateContentFileRepository: CreateContentFileRepository;
+  CreateContentVideoRepository: CreateContentVideoRepository;
 }
 
 const makeSut = (): SutTypes => {
-  const CreateContentFileRepository = new CreateContentFileRepositoryMock();
+  const CreateContentVideoRepository = new CreateContentVideoRepositoryMock();
   const findUserByIdRepository = new FindUserByIdRepositoryMock();
   const findDirectoryByIdRepository = new FindDirectoryByIdRespositoryMock();
   const mockBuffer = {} as Buffer;
-  const CreateContentFileDto: CreateContentFileDto = {
+  const CreateContentVideoDto: CreateContentVideoDto = {
     directoryId: DirectoryMock.id,
     loggedUserId: userMock.userId,
     file: [
@@ -46,26 +46,26 @@ const makeSut = (): SutTypes => {
     ],
   };
 
-  const sut = new CreateContentFile(
-    CreateContentFileRepository,
+  const sut = new CreateContentVideo(
+    CreateContentVideoRepository,
     findUserByIdRepository,
     findDirectoryByIdRepository
   );
 
   return {
-    CreateContentFileRepository,
+    CreateContentVideoRepository,
     findUserByIdRepository,
     findDirectoryByIdRepository,
-    CreateContentFileDto,
+    CreateContentVideoDto,
     sut,
   };
 };
 
-describe('CreateContentFile', () => {
+describe('CreateContentVideo', () => {
   it('should return void when a correct content video is created', async () => {
-    const { CreateContentFileDto, sut } = makeSut();
+    const { CreateContentVideoDto, sut } = makeSut();
 
-    const result = await sut.execute(CreateContentFileDto);
+    const result = await sut.execute(CreateContentVideoDto);
     const resultResponse = [ContentFileMock.id];
     expect(result.isLeft()).toBe(false);
     expect(result.isRight()).toBe(true);
@@ -73,9 +73,9 @@ describe('CreateContentFile', () => {
   });
 
   it('should return EntityNotEmpty when a pass incorrect logged user id', async () => {
-    const { CreateContentFileDto, sut } = makeSut();
-    CreateContentFileDto.loggedUserId = '';
-    const result = await sut.execute(CreateContentFileDto);
+    const { CreateContentVideoDto, sut } = makeSut();
+    CreateContentVideoDto.loggedUserId = '';
+    const result = await sut.execute(CreateContentVideoDto);
 
     expect(result.isLeft()).toBe(true);
     expect(result.isRight()).toBe(false);
@@ -83,9 +83,9 @@ describe('CreateContentFile', () => {
   });
 
   it('should return EntityNotEmpty when a pass incorrect directory id', async () => {
-    const { CreateContentFileDto, sut } = makeSut();
-    CreateContentFileDto.directoryId = '';
-    const result = await sut.execute(CreateContentFileDto);
+    const { CreateContentVideoDto, sut } = makeSut();
+    CreateContentVideoDto.directoryId = '';
+    const result = await sut.execute(CreateContentVideoDto);
 
     expect(result.isLeft()).toBe(true);
     expect(result.isRight()).toBe(false);
@@ -93,12 +93,12 @@ describe('CreateContentFile', () => {
   });
 
   it('should return EntityNotEmpty when a pass incorrect file', async () => {
-    const { CreateContentFileDto, sut } = makeSut();
+    const { CreateContentVideoDto, sut } = makeSut();
     const arrayEmpty = {} as UploadedFile;
-    for (let i = 0; i < CreateContentFileDto.file.length; i++) {
-      CreateContentFileDto.file[i] = arrayEmpty;
+    for (let i = 0; i < CreateContentVideoDto.file.length; i++) {
+      CreateContentVideoDto.file[i] = arrayEmpty;
     }
-    const result = await sut.execute(CreateContentFileDto);
+    const result = await sut.execute(CreateContentVideoDto);
 
     expect(result.isLeft()).toBe(true);
     expect(result.isRight()).toBe(false);
@@ -107,9 +107,9 @@ describe('CreateContentFile', () => {
 
   it('should return EntityNotExists if there is no user created in the database', async () => {
     const {
-      CreateContentFileDto,
+      CreateContentVideoDto,
       findDirectoryByIdRepository,
-      CreateContentFileRepository,
+      CreateContentVideoRepository,
     } = makeSut();
 
     const mockEmptyItem = {} as UserList;
@@ -118,13 +118,13 @@ describe('CreateContentFile', () => {
       find: jest.fn(async () => mockEmptyItem),
     };
 
-    const sut = new CreateContentFile(
-      CreateContentFileRepository,
+    const sut = new CreateContentVideo(
+      CreateContentVideoRepository,
       mockEmptyRepository,
       findDirectoryByIdRepository
     );
 
-    const result = await sut.execute(CreateContentFileDto);
+    const result = await sut.execute(CreateContentVideoDto);
 
     expect(result.isLeft()).toBe(true);
     expect(result.value).toBeInstanceOf(EntityNotExists);
@@ -132,9 +132,9 @@ describe('CreateContentFile', () => {
 
   it('should return EntityNotExists if there is no directory created in the database', async () => {
     const {
-      CreateContentFileDto,
+      CreateContentVideoDto,
       findUserByIdRepository,
-      CreateContentFileRepository,
+      CreateContentVideoRepository,
     } = makeSut();
 
     const mockEmptyItem = {} as Directory;
@@ -143,13 +143,13 @@ describe('CreateContentFile', () => {
       find: jest.fn(async () => mockEmptyItem),
     };
 
-    const sut = new CreateContentFile(
-      CreateContentFileRepository,
+    const sut = new CreateContentVideo(
+      CreateContentVideoRepository,
       findUserByIdRepository,
       mockEmptyRepository
     );
 
-    const result = await sut.execute(CreateContentFileDto);
+    const result = await sut.execute(CreateContentVideoDto);
 
     expect(result.isLeft()).toBe(true);
     expect(result.value).toBeInstanceOf(EntityNotExists);
@@ -159,22 +159,22 @@ describe('CreateContentFile', () => {
     const {
       findDirectoryByIdRepository,
       findUserByIdRepository,
-      CreateContentFileDto,
+      CreateContentVideoDto,
     } = makeSut();
 
     const mockEmptyItem = {} as Directory;
 
-    const mockEmptyRepository: CreateContentFileRepository = {
+    const mockEmptyRepository: CreateContentVideoRepository = {
       create: jest.fn(async () => []),
     };
 
-    const sut = new CreateContentFile(
+    const sut = new CreateContentVideo(
       mockEmptyRepository,
       findUserByIdRepository,
       findDirectoryByIdRepository
     );
 
-    const result = await sut.execute(CreateContentFileDto);
+    const result = await sut.execute(CreateContentVideoDto);
 
     expect(result.isLeft()).toBe(true);
     expect(result.value).toBeInstanceOf(EntityNotCreated);
