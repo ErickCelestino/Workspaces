@@ -1,4 +1,11 @@
-import { Box, Button, Card, CardActions, useTheme } from '@mui/material';
+import {
+  Box,
+  Button,
+  Card,
+  CardActions,
+  useMediaQuery,
+  useTheme,
+} from '@mui/material';
 import { LayoutBase } from '../../layout';
 import { FilesUpload } from '../../components';
 import { CreateContenVideoRequest, getItemLocalStorage } from '../../services';
@@ -8,6 +15,8 @@ import { FileWithProgress } from '@workspaces/domain';
 
 export const FilesContainer = () => {
   const theme = useTheme();
+  const smDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const mdDown = useMediaQuery(theme.breakpoints.down('md'));
   const { loggedUser } = useLoggedUser();
   const [filesToUpload, setFilesToUpload] = useState<FileWithProgress[]>([]);
 
@@ -40,13 +49,23 @@ export const FilesContainer = () => {
         <Card
           component="span"
           sx={{
-            height: theme.spacing(90),
-            width: theme.spacing(100),
+            height: theme.spacing(65),
+            width: smDown
+              ? theme.spacing(45)
+              : mdDown
+              ? theme.spacing(65)
+              : theme.spacing(100),
           }}
         >
           <FilesUpload
             onFileUpload={handleFileUpload}
-            width={theme.spacing(100)}
+            width={
+              smDown
+                ? theme.spacing(45)
+                : mdDown
+                ? theme.spacing(65)
+                : theme.spacing(100)
+            }
             height={theme.spacing(30)}
           />
           <CardActions disableSpacing>

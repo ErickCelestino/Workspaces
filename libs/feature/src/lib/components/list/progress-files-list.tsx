@@ -2,7 +2,6 @@ import {
   Box,
   CircularProgress,
   IconButton,
-  LinearProgress,
   List,
   ListItem,
   ListItemSecondaryAction,
@@ -22,7 +21,7 @@ interface ProgressFilesListProps {
 }
 
 const ScrollBox = styled(Box)({
-  maxHeight: '23rem',
+  maxHeight: '11rem',
   overflow: 'auto',
   '&::-webkit-scrollbar': {
     width: '12px',
@@ -64,7 +63,7 @@ export const ProgressFilesList: FC<ProgressFilesListProps> = ({
               />
               <Box display="flex" width="50%" justifyContent="end" mx={2}>
                 <Box sx={{ position: 'relative', display: 'inline-flex' }}>
-                  <CircularProgress variant="determinate" value={100} />
+                  <CircularProgress variant="determinate" value={progress} />
                   <Box
                     sx={{
                       top: 0,
