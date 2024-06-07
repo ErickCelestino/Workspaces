@@ -8,7 +8,11 @@ import {
 } from '@mui/material';
 import { LayoutBase } from '../../layout';
 import { FilesUpload } from '../../components';
-import { CreateContenVideoRequest, getItemLocalStorage } from '../../services';
+import {
+  CreateContenVideoRequest,
+  getItemLocalStorage,
+  removeItemLocalStorage,
+} from '../../services';
 import { useLoggedUser } from '../../contexts';
 import { useCallback, useState } from 'react';
 import { FileWithProgress } from '@workspaces/domain';
@@ -22,7 +26,6 @@ export const FilesContainer = () => {
 
   const handleFileUpload = (files: FileWithProgress[]) => {
     setFilesToUpload((prevFile) => [...prevFile, ...files]);
-    console.log('Files uploaded:', files);
   };
 
   const uploadFiles = useCallback(async () => {
@@ -34,6 +37,7 @@ export const FilesContainer = () => {
         loggedUserId,
       });
       setFilesToUpload([]);
+      removeItemLocalStorage('files');
     } catch (err) {
       console.error(err);
     }
@@ -70,7 +74,9 @@ export const FilesContainer = () => {
           />
           <CardActions disableSpacing>
             <Box sx={{ flexGrow: 1 }} />
-            <Button variant="contained">Enviar</Button>
+            <Button onClick={handleUploadClick} variant="contained">
+              Enviar
+            </Button>
           </CardActions>
         </Card>
       </Box>

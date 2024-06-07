@@ -43,7 +43,7 @@ export const ProgressFilesList: FC<ProgressFilesListProps> = ({
   handleDelete,
   title = 'Arquivos Selecionados:',
 }) => {
-  const theme = useTheme();
+  console.log(filesList);
   return (
     <Box maxHeight="80%" mt={2}>
       <Typography marginLeft="1rem" variant="h6">

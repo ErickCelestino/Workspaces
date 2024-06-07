@@ -1,22 +1,37 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { Box, Button, Typography, Paper } from '@mui/material';
 import { CloudUpload as CloudUploadIcon } from '@mui/icons-material';
 import { FileWithProgress } from '@workspaces/domain';
 import { ProgressFilesList } from '../list';
+import { getItemLocalStorage, setItemLocalStorage } from '../../services';
 
 interface FilesUploadProps {
   height: string;
   width: string;
+  listUpdateFiles?: FileWithProgress[];
   onFileUpload: (files: FileWithProgress[]) => void;
 }
 
 export const FilesUpload: React.FC<FilesUploadProps> = ({
   height,
   width,
+  listUpdateFiles,
   onFileUpload,
 }) => {
   const [selectedFiles, setSelectedFiles] = useState<FileWithProgress[]>([]);
+
+  useEffect(() => {
+    if (Object.keys(selectedFiles).length < 1) {
+      const files = getItemLocalStorage('files');
+      if (files) {
+        const mappedFiles: FileWithProgress[] = JSON.parse(files);
+        console.log(mappedFiles);
+        setSelectedFiles([]);
+        setSelectedFiles(mappedFiles);
+      }
+    }
+  }, [selectedFiles]);
 
   const filterDuplicateFiles = (newFiles: File[]) => {
     return newFiles.filter(
@@ -116,6 +131,10 @@ export const FilesUpload: React.FC<FilesUploadProps> = ({
                       ...prevFiles,
                       ...filesWithProgress,
                     ]);
+                    setItemLocalStorage(
+                      JSON.stringify(filesWithProgress),
+                      'files'
+                    );
                     onFileUpload(filesWithProgress);
                   }
                 }}
