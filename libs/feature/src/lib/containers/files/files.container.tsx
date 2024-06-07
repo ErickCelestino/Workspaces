@@ -49,8 +49,9 @@ export const FilesContainer = () => {
             width={theme.spacing(100)}
             height={theme.spacing(30)}
           />
-          <CardActions>
-            <Button>Enviar</Button>
+          <CardActions disableSpacing>
+            <Box sx={{ flexGrow: 1 }} />
+            <Button variant="contained">Enviar</Button>
           </CardActions>
         </Card>
       </Box>

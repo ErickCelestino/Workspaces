@@ -1,5 +1,6 @@
 import {
   Box,
+  CircularProgress,
   IconButton,
   LinearProgress,
   List,
@@ -7,11 +8,11 @@ import {
   ListItemSecondaryAction,
   ListItemText,
   Typography,
-  makeStyles,
   useTheme,
 } from '@mui/material';
 import { Delete as DeleteIcon } from '@mui/icons-material';
 import { FC } from 'react';
+import { styled } from '@mui/system';
 import { FileWithProgress } from '@workspaces/domain';
 
 interface ProgressFilesListProps {
@@ -19,6 +20,24 @@ interface ProgressFilesListProps {
   handleDelete: (fileName: string) => void;
   title?: string;
 }
+
+const ScrollBox = styled(Box)({
+  maxHeight: '23rem',
+  overflow: 'auto',
+  '&::-webkit-scrollbar': {
+    width: '12px',
+  },
+  '&::-webkit-scrollbar-track': {
+    background: '#f1f1f1',
+  },
+  '&::-webkit-scrollbar-thumb': {
+    background: '#888',
+    borderRadius: '10px',
+  },
+  '&::-webkit-scrollbar-thumb:hover': {
+    background: '#555',
+  },
+});
 
 export const ProgressFilesList: FC<ProgressFilesListProps> = ({
   filesList,
@@ -31,13 +50,42 @@ export const ProgressFilesList: FC<ProgressFilesListProps> = ({
       <Typography marginLeft="1rem" variant="h6">
         {title}
       </Typography>
-      <Box maxHeight={theme.spacing(45)} overflow="auto">
+      <ScrollBox>
         <List>
           {filesList.map(({ file, progress }) => (
             <ListItem key={file.name}>
-              <ListItemText primary={file.name} />
-              <Box width="100%" mx={2}>
-                <LinearProgress variant="determinate" value={progress} />
+              <ListItemText
+                sx={{
+                  textOverflow: 'ellipsis',
+                  overflow: 'hidden',
+                  textWrap: 'nowrap',
+                }}
+                primary={file.name}
+              />
+              <Box display="flex" width="50%" justifyContent="end" mx={2}>
+                <Box sx={{ position: 'relative', display: 'inline-flex' }}>
+                  <CircularProgress variant="determinate" value={100} />
+                  <Box
+                    sx={{
+                      top: 0,
+                      left: 0,
+                      bottom: 0,
+                      right: 0,
+                      position: 'absolute',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <Typography
+                      variant="caption"
+                      component="div"
+                      color="text.secondary"
+                    >
+                      {`${Math.round(progress)}%`}
+                    </Typography>
+                  </Box>
+                </Box>
               </Box>
               <ListItemSecondaryAction>
                 <IconButton edge="end" onClick={() => handleDelete(file.name)}>
@@ -47,7 +95,7 @@ export const ProgressFilesList: FC<ProgressFilesListProps> = ({
             </ListItem>
           ))}
         </List>
-      </Box>
+      </ScrollBox>
     </Box>
   );
 };
