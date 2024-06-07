@@ -17,37 +17,19 @@ import {
   Delete as DeleteIcon,
 } from '@mui/icons-material';
 import { FileWithProgress } from '@workspaces/domain';
-import { useLoggedUser } from '../../contexts';
-import { CreateContenVideoRequest } from '../../services';
 
 interface FilesUploadProps {
   height: string;
   width: string;
-  directoryId: string;
+  onFileUpload: (files: FileWithProgress[]) => void;
 }
 
 export const FilesUpload: React.FC<FilesUploadProps> = ({
   height,
   width,
-  directoryId,
+  onFileUpload,
 }) => {
   const [selectedFiles, setSelectedFiles] = useState<FileWithProgress[]>([]);
-  const { loggedUser } = useLoggedUser();
-
-  const uploadFiles = useCallback(
-    async (filesWithProgress: FileWithProgress[]) => {
-      try {
-        const loggedUserId = loggedUser?.id ?? '';
-        await CreateContenVideoRequest(filesWithProgress, {
-          directoryId: directoryId,
-          loggedUserId,
-        });
-      } catch (err) {
-        console.error(err);
-      }
-    },
-    [directoryId, loggedUser]
-  );
 
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
@@ -56,9 +38,9 @@ export const FilesUpload: React.FC<FilesUploadProps> = ({
         progress: 0,
       }));
       setSelectedFiles((prevFiles) => [...prevFiles, ...filesWithProgress]);
-      uploadFiles(filesWithProgress);
+      onFileUpload(filesWithProgress);
     },
-    [uploadFiles]
+    [onFileUpload]
   );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
@@ -103,14 +85,12 @@ export const FilesUpload: React.FC<FilesUploadProps> = ({
               maxWidth: '60%',
             }}
           >
-            {isDragActive ? (
-              <Typography>Solte os arquivos aqui ...</Typography>
-            ) : (
-              <Typography>
-                Arraste e solte arquivos aqui, ou clique para selecionar
-                arquivos
-              </Typography>
-            )}
+            <Typography>
+              {isDragActive
+                ? 'Solte os arquivos aqui ...'
+                : 'Arraste e solte arquivos aqui, ou clique para selecionar arquivos'}
+            </Typography>
+
             <Button
               variant="contained"
               component="label"
@@ -138,7 +118,7 @@ export const FilesUpload: React.FC<FilesUploadProps> = ({
                       ...prevFiles,
                       ...filesWithProgress,
                     ]);
-                    uploadFiles(filesWithProgress);
+                    onFileUpload(filesWithProgress);
                   }
                 }}
               />
