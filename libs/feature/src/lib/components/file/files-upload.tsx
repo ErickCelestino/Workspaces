@@ -1,22 +1,9 @@
 import React, { useState, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
-import {
-  Box,
-  Button,
-  Typography,
-  IconButton,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemSecondaryAction,
-  Paper,
-  LinearProgress,
-} from '@mui/material';
-import {
-  CloudUpload as CloudUploadIcon,
-  Delete as DeleteIcon,
-} from '@mui/icons-material';
+import { Box, Button, Typography, Paper } from '@mui/material';
+import { CloudUpload as CloudUploadIcon } from '@mui/icons-material';
 import { FileWithProgress } from '@workspaces/domain';
+import { ProgressFilesList } from '../list';
 
 interface FilesUploadProps {
   height: string;
@@ -31,9 +18,19 @@ export const FilesUpload: React.FC<FilesUploadProps> = ({
 }) => {
   const [selectedFiles, setSelectedFiles] = useState<FileWithProgress[]>([]);
 
+  const filterDuplicateFiles = (newFiles: File[]) => {
+    return newFiles.filter(
+      (newFile) =>
+        !selectedFiles.some(
+          (selectedFile) => selectedFile.file.name === newFile.name
+        )
+    );
+  };
+
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
-      const filesWithProgress = acceptedFiles.map((file) => ({
+      const uniqueFiles = filterDuplicateFiles(acceptedFiles);
+      const filesWithProgress = uniqueFiles.map((file) => ({
         file,
         progress: 0,
       }));
@@ -110,7 +107,8 @@ export const FilesUpload: React.FC<FilesUploadProps> = ({
                 onChange={(event) => {
                   if (event.target.files) {
                     const filesArray = Array.from(event.target.files);
-                    const filesWithProgress = filesArray.map((file) => ({
+                    const uniqueFiles = filterDuplicateFiles(filesArray);
+                    const filesWithProgress = uniqueFiles.map((file) => ({
                       file,
                       progress: 0,
                     }));
@@ -127,29 +125,10 @@ export const FilesUpload: React.FC<FilesUploadProps> = ({
         </Box>
       </Paper>
       {selectedFiles.length > 0 && (
-        <Box mt={2}>
-          <Typography marginLeft="1rem" variant="h6">
-            Arquivos Selecionados:
-          </Typography>
-          <List>
-            {selectedFiles.map(({ file, progress }) => (
-              <ListItem key={file.name}>
-                <ListItemText primary={file.name} />
-                <Box width="100%" mx={2}>
-                  <LinearProgress variant="determinate" value={progress} />
-                </Box>
-                <ListItemSecondaryAction>
-                  <IconButton
-                    edge="end"
-                    onClick={() => handleDeleteFile(file.name)}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
-                </ListItemSecondaryAction>
-              </ListItem>
-            ))}
-          </List>
-        </Box>
+        <ProgressFilesList
+          filesList={selectedFiles}
+          handleDelete={handleDeleteFile}
+        />
       )}
     </Box>
   );
