@@ -33,14 +33,17 @@ export const FilesUpload: React.FC<FilesUploadProps> = ({
     }
   }, [selectedFiles]);
 
-  const filterDuplicateFiles = (newFiles: File[]) => {
-    return newFiles.filter(
-      (newFile) =>
-        !selectedFiles.some(
-          (selectedFile) => selectedFile.file.name === newFile.name
-        )
-    );
-  };
+  const filterDuplicateFiles = useCallback(
+    (newFiles: File[]) => {
+      return newFiles.filter(
+        (newFile) =>
+          !selectedFiles.some(
+            (selectedFile) => selectedFile.file.name === newFile.name
+          )
+      );
+    },
+    [selectedFiles]
+  );
 
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
@@ -49,18 +52,40 @@ export const FilesUpload: React.FC<FilesUploadProps> = ({
         file,
         progress: 0,
       }));
+      const mappedFiles = JSON.stringify(
+        filesWithProgress.map((item) => {
+          return {
+            file: { name: item.file?.name },
+            progress: item.progress,
+          };
+        })
+      );
+
+      setItemLocalStorage(mappedFiles, 'files');
       setSelectedFiles((prevFiles) => [...prevFiles, ...filesWithProgress]);
       onFileUpload(filesWithProgress);
     },
-    [onFileUpload]
+    [filterDuplicateFiles, onFileUpload]
   );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
   const handleDeleteFile = (fileName: string) => {
+    const fileList = getItemLocalStorage('files');
+    const stringWithoutBrackets = fileList.slice(1, -1);
+    const list = stringWithoutBrackets.split(',');
+
     const updatedFiles = selectedFiles.filter(
       (file) => file.file.name !== fileName
     );
+    console.log(typeof fileList);
+    console.log(list);
+    console.log(fileList);
+    // const mappedFiles = JSON.stringify(
+    //   fileList.filter((item) => item.file.name !== fileName)
+    // );
+
+    //setItemLocalStorage(mappedFiles, 'files');
     setSelectedFiles(updatedFiles);
   };
 
@@ -131,10 +156,12 @@ export const FilesUpload: React.FC<FilesUploadProps> = ({
                       ...prevFiles,
                       ...filesWithProgress,
                     ]);
-                    setItemLocalStorage(
-                      JSON.stringify(filesWithProgress),
-                      'files'
-                    );
+                    console.log('No onChange');
+                    console.log(JSON.stringify(filesWithProgress));
+                    // setItemLocalStorage(
+                    //   JSON.stringify(filesWithProgress),
+                    //   'files'
+                    // );
                     onFileUpload(filesWithProgress);
                   }
                 }}
