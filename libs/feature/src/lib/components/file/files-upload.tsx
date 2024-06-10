@@ -55,7 +55,9 @@ export const FilesUpload: React.FC<FilesUploadProps> = ({
       const mappedFiles = JSON.stringify(
         filesWithProgress.map((item) => {
           return {
-            file: { name: item.file?.name },
+            file: {
+              name: item.file?.name,
+            },
             progress: item.progress,
           };
         })
