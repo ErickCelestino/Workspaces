@@ -23,6 +23,7 @@ export const FilesContainer = () => {
   const mdDown = useMediaQuery(theme.breakpoints.down('md'));
   const { loggedUser } = useLoggedUser();
   const [filesToUpload, setFilesToUpload] = useState<FileWithProgress[]>([]);
+  const [uploadProgress, setUploadProgress] = useState<number[]>([]);
 
   const handleFileUpload = (files: FileWithProgress[]) => {
     setFilesToUpload((prevFile) => [...prevFile, ...files]);
@@ -32,10 +33,21 @@ export const FilesContainer = () => {
     try {
       const loggedUserId = loggedUser?.id ?? '';
       const directoryId = getItemLocalStorage('di');
-      await CreateContenVideoRequest(filesToUpload, {
+
+      const config = {
         directoryId: directoryId,
         loggedUserId,
-      });
+      };
+
+      const onUploadProgress = (fileIndex: number, progress: number) => {
+        setUploadProgress((prevProgress) => {
+          const newProgress = [...prevProgress];
+          newProgress[fileIndex] = progress;
+          return newProgress;
+        });
+      };
+
+      await CreateContenVideoRequest(filesToUpload, config, onUploadProgress);
       setFilesToUpload([]);
       removeItemLocalStorage('files');
     } catch (err) {
