@@ -5,4 +5,5 @@ export interface UploadedFile {
   mimetype: string;
   buffer: Buffer;
   size: number;
+  path: string;
 }
