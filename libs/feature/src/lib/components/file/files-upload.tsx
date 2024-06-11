@@ -81,25 +81,23 @@ export const FilesUpload: React.FC<FilesUploadProps> = ({
     const updatedFiles = selectedFiles.filter(
       (file) => file.file.name !== fileName
     );
-    const mappedFiles = JSON.stringify(
-      updatedFiles.map((item) => {
-        return {
-          file: {
-            name: item.file?.name,
-          },
-          progress: item.progress,
-        };
-      })
-    );
+    const mappedFiles = updatedFiles.map((item) => {
+      return {
+        file: {
+          name: item.file?.name,
+        },
+        progress: item.progress,
+      };
+    });
     removeItemLocalStorage('files');
-    console.log(mappedFiles.length);
+    setSelectedFiles(updatedFiles);
+    updateProgress(
+      selectedFiles.findIndex((file) => file.file.name === fileName),
+      0
+    );
+
     if (Object.keys(mappedFiles).length > 0) {
-      setItemLocalStorage(mappedFiles, 'files');
-      setSelectedFiles(updatedFiles);
-      updateProgress(
-        selectedFiles.findIndex((file) => file.file.name === fileName),
-        0
-      );
+      setItemLocalStorage(JSON.stringify(mappedFiles), 'files');
     }
   };
 
