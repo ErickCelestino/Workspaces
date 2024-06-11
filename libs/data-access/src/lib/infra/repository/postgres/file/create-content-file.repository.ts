@@ -15,12 +15,13 @@ export class CreateContentFileRepositoryImpl
       const createdContentVideo = await this.prismaService.content_Files.create(
         {
           data: {
-            name: file.originalname,
+            original_name: file.originalname.split('.')[0],
             format: file.mimetype,
             size: file.size.toString(),
             user_id: input.loggedUserId,
-            file_url: file.path,
+            path: file.path,
             directory_id: input.directoryId,
+            file_name: file.filename,
           },
         }
       );

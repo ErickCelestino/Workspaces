@@ -42,6 +42,8 @@ const makeSut = (): SutTypes => {
         mimetype: 'mimetype',
         buffer: mockBuffer,
         size: 1,
+        filename: 'any_filename',
+        path: 'any_path',
       },
     ],
   };

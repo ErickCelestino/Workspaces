@@ -6,4 +6,5 @@ export interface UploadedFile {
   buffer: Buffer;
   size: number;
   path: string;
+  filename: string;
 }

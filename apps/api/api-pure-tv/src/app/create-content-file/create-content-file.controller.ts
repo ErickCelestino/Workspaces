@@ -8,9 +8,11 @@ import {
 } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { CreateContentFileService } from './create-content-file.service';
-import { CreateContentFileDto, UploadedFile } from '@workspaces/domain';
-import { diskStorage } from 'multer';
-import { globalFileDestination } from '../configs';
+import {
+  CreateContentFileDto,
+  FileLocalStorage,
+  UploadedFile,
+} from '@workspaces/domain';
 
 @Controller('create-content-video')
 export class CreateContentFileController {
@@ -19,17 +21,7 @@ export class CreateContentFileController {
   ) {}
 
   @Post()
-  @UseInterceptors(
-    FilesInterceptor('files', undefined, {
-      storage: diskStorage({
-        destination: globalFileDestination,
-        filename: (req, file, cb) => {
-          const now = new Date();
-          cb(null, `${now.getTime()}_${file.originalname}`);
-        },
-      }),
-    })
-  )
+  @UseInterceptors(FilesInterceptor('files', undefined, FileLocalStorage))
   async create(
     @UploadedFiles() files: UploadedFile[],
     @Query('loggedUserId') loggedUserId: string,
@@ -40,7 +32,6 @@ export class CreateContentFileController {
       file: files,
       loggedUserId,
     };
-
     const result = await this.createContentVideoService.create(dtoRequest);
 
     if (result.isRight()) return result.value;

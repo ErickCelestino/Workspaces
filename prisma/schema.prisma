@@ -319,10 +319,11 @@ model Directory {
 
 model Content_Files {
   Content_Files_id String @id @default(uuid())
-  name String
+  file_name String
+  original_name String
   user_id String
   directory_id String
-  file_url String
+  path String
   size String
   duration String?
   resolution String?
