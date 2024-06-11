@@ -14,10 +14,9 @@ export async function CreateContenVideoRequest(
     (sum, fileWithProgress) => sum + fileWithProgress.file.size,
     0
   );
-  const progressArray = filesWithProgress.map(() => 0);
 
-  filesWithProgress.forEach((files) => {
-    formData.append('files', files.file);
+  filesWithProgress.forEach((file, index) => {
+    formData.append(`file${index}`, file.file);
   });
 
   try {
@@ -27,7 +26,7 @@ export async function CreateContenVideoRequest(
         directoryId: config.directoryId,
       },
       onUploadProgress: (progressEvent) => {
-        if (progressEvent.total) {
+        if (progressEvent && totalSize) {
           const loaded = progressEvent.loaded;
           let totalLoaded = 0;
 
@@ -37,10 +36,7 @@ export async function CreateContenVideoRequest(
               100,
               Math.round((loaded * fileSize) / totalSize)
             );
-            progressArray[index] = fileProgress;
             onUploadProgress(index, fileProgress);
-
-            totalLoaded += fileProgress;
           });
         }
       },

@@ -23,11 +23,24 @@ export const FilesContainer = () => {
   const mdDown = useMediaQuery(theme.breakpoints.down('md'));
   const { loggedUser } = useLoggedUser();
   const [filesToUpload, setFilesToUpload] = useState<FileWithProgress[]>([]);
-  const [uploadProgress, setUploadProgress] = useState<number[]>([]);
 
   const handleFileUpload = (files: FileWithProgress[]) => {
-    setFilesToUpload((prevFile) => [...prevFile, ...files]);
+    setFilesToUpload((prevFiles) => {
+      const updatedFiles = prevFiles.concat(files);
+      return updatedFiles;
+    });
   };
+
+  const updateProgress = useCallback((fileIndex: number, progress: number) => {
+    setFilesToUpload((prevFiles) => {
+      const newFiles = [...prevFiles];
+      newFiles[fileIndex] = {
+        ...newFiles[fileIndex],
+        progress,
+      };
+      return newFiles;
+    });
+  }, []);
 
   const uploadFiles = useCallback(async () => {
     try {
@@ -39,15 +52,7 @@ export const FilesContainer = () => {
         loggedUserId,
       };
 
-      const onUploadProgress = (fileIndex: number, progress: number) => {
-        setUploadProgress((prevProgress) => {
-          const newProgress = [...prevProgress];
-          newProgress[fileIndex] = progress;
-          return newProgress;
-        });
-      };
-
-      await CreateContenVideoRequest(filesToUpload, config, onUploadProgress);
+      await CreateContenVideoRequest(filesToUpload, config, updateProgress);
       setFilesToUpload([]);
       removeItemLocalStorage('files');
     } catch (err) {
@@ -74,6 +79,7 @@ export const FilesContainer = () => {
           }}
         >
           <FilesUpload
+            updateProgress={updateProgress}
             onFileUpload={handleFileUpload}
             width={
               smDown

@@ -17,6 +17,7 @@ interface ProgressFilesListProps {
   filesList: FileWithProgress[];
   handleDelete: (fileName: string) => void;
   title?: string;
+  updateProgress: (fileIndex: number, progress: number) => void;
 }
 
 const ScrollBox = styled(Box)({
@@ -36,13 +37,13 @@ const ScrollBox = styled(Box)({
     background: '#555',
   },
 });
-
+// No componente ProgressFilesList
 export const ProgressFilesList: FC<ProgressFilesListProps> = ({
   filesList,
   handleDelete,
   title = 'Arquivos Selecionados:',
+  updateProgress,
 }) => {
-  console.log(filesList);
   return (
     <Box maxHeight="80%" mt={2}>
       <Typography marginLeft="1rem" variant="h6">
@@ -50,7 +51,7 @@ export const ProgressFilesList: FC<ProgressFilesListProps> = ({
       </Typography>
       <ScrollBox>
         <List>
-          {filesList.map(({ file, progress }) => (
+          {filesList.map(({ file, progress }, index) => (
             <ListItem key={file.name}>
               <ListItemText
                 sx={{

@@ -4,20 +4,24 @@ import { Box, Button, Typography, Paper } from '@mui/material';
 import { CloudUpload as CloudUploadIcon } from '@mui/icons-material';
 import { FileWithProgress } from '@workspaces/domain';
 import { ProgressFilesList } from '../list';
-import { getItemLocalStorage, setItemLocalStorage } from '../../services';
+import {
+  getItemLocalStorage,
+  removeItemLocalStorage,
+  setItemLocalStorage,
+} from '../../services';
 
 interface FilesUploadProps {
   height: string;
   width: string;
-  listUpdateFiles?: FileWithProgress[];
   onFileUpload: (files: FileWithProgress[]) => void;
+  updateProgress: (fileIndex: number, progress: number) => void;
 }
 
 export const FilesUpload: React.FC<FilesUploadProps> = ({
   height,
   width,
-  listUpdateFiles,
   onFileUpload,
+  updateProgress,
 }) => {
   const [selectedFiles, setSelectedFiles] = useState<FileWithProgress[]>([]);
 
@@ -26,7 +30,6 @@ export const FilesUpload: React.FC<FilesUploadProps> = ({
       const files = getItemLocalStorage('files');
       if (files) {
         const mappedFiles: FileWithProgress[] = JSON.parse(files);
-        console.log(mappedFiles);
         setSelectedFiles([]);
         setSelectedFiles(mappedFiles);
       }
@@ -63,9 +66,11 @@ export const FilesUpload: React.FC<FilesUploadProps> = ({
         })
       );
 
-      setItemLocalStorage(mappedFiles, 'files');
-      setSelectedFiles((prevFiles) => [...prevFiles, ...filesWithProgress]);
-      onFileUpload(filesWithProgress);
+      if (Object.keys(mappedFiles).length > 0) {
+        setItemLocalStorage(mappedFiles, 'files');
+        setSelectedFiles((prevFiles) => [...prevFiles, ...filesWithProgress]);
+        onFileUpload(filesWithProgress);
+      }
     },
     [filterDuplicateFiles, onFileUpload]
   );
@@ -73,22 +78,29 @@ export const FilesUpload: React.FC<FilesUploadProps> = ({
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
   const handleDeleteFile = (fileName: string) => {
-    const fileList = getItemLocalStorage('files');
-    const stringWithoutBrackets = fileList.slice(1, -1);
-    const list = stringWithoutBrackets.split(',');
-
     const updatedFiles = selectedFiles.filter(
       (file) => file.file.name !== fileName
     );
-    console.log(typeof fileList);
-    console.log(list);
-    console.log(fileList);
-    // const mappedFiles = JSON.stringify(
-    //   fileList.filter((item) => item.file.name !== fileName)
-    // );
-
-    //setItemLocalStorage(mappedFiles, 'files');
-    setSelectedFiles(updatedFiles);
+    const mappedFiles = JSON.stringify(
+      updatedFiles.map((item) => {
+        return {
+          file: {
+            name: item.file?.name,
+          },
+          progress: item.progress,
+        };
+      })
+    );
+    removeItemLocalStorage('files');
+    console.log(mappedFiles.length);
+    if (Object.keys(mappedFiles).length > 0) {
+      setItemLocalStorage(mappedFiles, 'files');
+      setSelectedFiles(updatedFiles);
+      updateProgress(
+        selectedFiles.findIndex((file) => file.file.name === fileName),
+        0
+      );
+    }
   };
 
   return (
@@ -158,12 +170,6 @@ export const FilesUpload: React.FC<FilesUploadProps> = ({
                       ...prevFiles,
                       ...filesWithProgress,
                     ]);
-                    console.log('No onChange');
-                    console.log(JSON.stringify(filesWithProgress));
-                    // setItemLocalStorage(
-                    //   JSON.stringify(filesWithProgress),
-                    //   'files'
-                    // );
                     onFileUpload(filesWithProgress);
                   }
                 }}
@@ -174,6 +180,7 @@ export const FilesUpload: React.FC<FilesUploadProps> = ({
       </Paper>
       {selectedFiles.length > 0 && (
         <ProgressFilesList
+          updateProgress={updateProgress}
           filesList={selectedFiles}
           handleDelete={handleDeleteFile}
         />
