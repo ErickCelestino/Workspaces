@@ -23,6 +23,7 @@ export const FilesContainer = () => {
   const mdDown = useMediaQuery(theme.breakpoints.down('md'));
   const { loggedUser } = useLoggedUser();
   const [filesToUpload, setFilesToUpload] = useState<FileWithProgress[]>([]);
+  const [progress, setProgress] = useState<number>(0);
 
   const handleFileUpload = (files: FileWithProgress[]) => {
     setFilesToUpload((prevFiles) => {
@@ -31,15 +32,8 @@ export const FilesContainer = () => {
     });
   };
 
-  const updateProgress = useCallback((fileIndex: number, progress: number) => {
-    setFilesToUpload((prevFiles) => {
-      const newFiles = [...prevFiles];
-      newFiles[fileIndex] = {
-        ...newFiles[fileIndex],
-        progress,
-      };
-      return newFiles;
-    });
+  const updateProgress = useCallback((progress: number) => {
+    setProgress(progress);
   }, []);
 
   const uploadFiles = useCallback(async () => {
@@ -79,7 +73,7 @@ export const FilesContainer = () => {
           }}
         >
           <FilesUpload
-            updateProgress={updateProgress}
+            progress={progress}
             onFileUpload={handleFileUpload}
             width={
               smDown

@@ -1,7 +1,7 @@
 import {
   Box,
-  CircularProgress,
   IconButton,
+  LinearProgress,
   List,
   ListItem,
   ListItemSecondaryAction,
@@ -17,7 +17,7 @@ interface ProgressFilesListProps {
   filesList: FileWithProgress[];
   handleDelete: (fileName: string) => void;
   title?: string;
-  updateProgress: (fileIndex: number, progress: number) => void;
+  progress: number;
 }
 
 const ScrollBox = styled(Box)({
@@ -37,21 +37,31 @@ const ScrollBox = styled(Box)({
     background: '#555',
   },
 });
-// No componente ProgressFilesList
+
 export const ProgressFilesList: FC<ProgressFilesListProps> = ({
   filesList,
   handleDelete,
   title = 'Arquivos Selecionados:',
-  updateProgress,
+  progress,
 }) => {
   return (
     <Box maxHeight="80%" mt={2}>
+      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+        <Box sx={{ width: '100%', mr: 1, ml: 1 }}>
+          <LinearProgress variant="determinate" value={progress} />
+        </Box>
+        <Box sx={{ minWidth: 35 }}>
+          <Typography variant="body2" color="text.secondary">{`${Math.round(
+            progress
+          )}%`}</Typography>
+        </Box>
+      </Box>
       <Typography marginLeft="1rem" variant="h6">
         {title}
       </Typography>
       <ScrollBox>
         <List>
-          {filesList.map(({ file, progress }, index) => (
+          {filesList.map(({ file }) => (
             <ListItem key={file.name}>
               <ListItemText
                 sx={{
@@ -61,31 +71,6 @@ export const ProgressFilesList: FC<ProgressFilesListProps> = ({
                 }}
                 primary={file.name}
               />
-              <Box display="flex" width="50%" justifyContent="end" mx={2}>
-                <Box sx={{ position: 'relative', display: 'inline-flex' }}>
-                  <CircularProgress variant="determinate" value={progress} />
-                  <Box
-                    sx={{
-                      top: 0,
-                      left: 0,
-                      bottom: 0,
-                      right: 0,
-                      position: 'absolute',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}
-                  >
-                    <Typography
-                      variant="caption"
-                      component="div"
-                      color="text.secondary"
-                    >
-                      {`${Math.round(progress)}%`}
-                    </Typography>
-                  </Box>
-                </Box>
-              </Box>
               <ListItemSecondaryAction>
                 <IconButton edge="end" onClick={() => handleDelete(file.name)}>
                   <DeleteIcon />

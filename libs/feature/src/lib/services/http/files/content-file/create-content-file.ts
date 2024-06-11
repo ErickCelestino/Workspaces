@@ -7,17 +7,17 @@ export async function CreateContenVideoRequest(
     directoryId: string;
     loggedUserId: string;
   },
-  onUploadProgress: (fileIndex: number, progress: number) => void
+  onUploadProgress: (progress: number) => void
 ) {
   const formData = new FormData();
-  const totalSize = filesWithProgress.reduce(
-    (sum, fileWithProgress) => sum + fileWithProgress.file.size,
-    0
-  );
 
-  filesWithProgress.forEach((file, index) => {
-    formData.append(`file${index}`, file.file);
+  let totalSize = 0;
+  filesWithProgress.forEach((file) => {
+    formData.append('files', file.file);
+    totalSize += file.file.size;
   });
+
+  let totalLoaded = 0;
 
   try {
     const response = await pureTvApi.post('/create-content-video', formData, {
@@ -26,18 +26,10 @@ export async function CreateContenVideoRequest(
         directoryId: config.directoryId,
       },
       onUploadProgress: (progressEvent) => {
-        if (progressEvent && totalSize) {
-          const loaded = progressEvent.loaded;
-          let totalLoaded = 0;
-
-          filesWithProgress.forEach((fileWithProgress, index) => {
-            const fileSize = fileWithProgress.file.size;
-            const fileProgress = Math.min(
-              100,
-              Math.round((loaded * fileSize) / totalSize)
-            );
-            onUploadProgress(index, fileProgress);
-          });
+        if (progressEvent) {
+          totalLoaded += progressEvent.loaded;
+          const progress = Math.round((totalLoaded * 100) / totalSize);
+          onUploadProgress(progress);
         }
       },
     });
