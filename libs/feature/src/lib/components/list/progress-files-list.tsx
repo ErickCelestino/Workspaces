@@ -48,11 +48,14 @@ export const ProgressFilesList: FC<ProgressFilesListProps> = ({
     <Box maxHeight="80%" mt={2}>
       <Box sx={{ display: 'flex', alignItems: 'center' }}>
         <Box sx={{ width: '100%', mr: 1, ml: 1 }}>
-          <LinearProgress variant="determinate" value={progress} />
+          <LinearProgress
+            variant="determinate"
+            value={progress == Infinity ? 0 : progress}
+          />
         </Box>
         <Box sx={{ minWidth: 35 }}>
           <Typography variant="body2" color="text.secondary">{`${Math.round(
-            progress
+            progress == Infinity ? 0 : progress
           )}%`}</Typography>
         </Box>
       </Box>

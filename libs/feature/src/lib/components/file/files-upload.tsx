@@ -27,17 +27,6 @@ export const FilesUpload: React.FC<FilesUploadProps> = ({
 }) => {
   const [selectedFiles, setSelectedFiles] = useState<FileWithProgress[]>([]);
 
-  useEffect(() => {
-    if (Object.keys(selectedFiles).length < 1) {
-      const files = getItemLocalStorage('files');
-      if (files) {
-        const mappedFiles: FileWithProgress[] = JSON.parse(files);
-        setSelectedFiles([]);
-        setSelectedFiles(mappedFiles);
-      }
-    }
-  }, [selectedFiles]);
-
   const filterDuplicateFiles = useCallback(
     (newFiles: File[]) => {
       return newFiles.filter(
@@ -62,6 +51,11 @@ export const FilesUpload: React.FC<FilesUploadProps> = ({
           return {
             file: {
               name: item.file?.name,
+              lastModified: item.file.lastModified,
+              size: item.file.size,
+              type: item.file.type,
+              webkitRelativePath: item.file.webkitRelativePath,
+              lastModifiedDate: new Date(item.file.lastModified),
             },
             progress: item.progress,
           };
@@ -69,7 +63,6 @@ export const FilesUpload: React.FC<FilesUploadProps> = ({
       );
 
       if (Object.keys(mappedFiles).length > 0) {
-        setItemLocalStorage(mappedFiles, 'files');
         setSelectedFiles((prevFiles) => [...prevFiles, ...filesWithProgress]);
         onFileUpload(filesWithProgress);
       }
@@ -83,22 +76,9 @@ export const FilesUpload: React.FC<FilesUploadProps> = ({
     const updatedFiles = selectedFiles.filter(
       (file) => file.file.name !== fileName
     );
-    const mappedFiles = updatedFiles.map((item) => {
-      return {
-        file: {
-          name: item.file?.name,
-        },
-        progress: item.progress,
-      };
-    });
-    removeItemLocalStorage('files');
     setSelectedFiles(updatedFiles);
     onFileUpload(updatedFiles);
     onFileDelete(fileName);
-
-    if (Object.keys(mappedFiles).length > 0) {
-      setItemLocalStorage(JSON.stringify(mappedFiles), 'files');
-    }
   };
 
   return (
