@@ -8,11 +8,8 @@ import {
 } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { CreateContentFileService } from './create-content-file.service';
-import {
-  CreateContentFileDto,
-  FileLocalStorage,
-  UploadedFile,
-} from '@workspaces/domain';
+import { CreateContentFileDto, UploadedFile } from '@workspaces/domain';
+import { FileLocalStorage } from '@workspaces/data-access';
 
 @Controller('create-content-video')
 export class CreateContentFileController {

@@ -39,7 +39,7 @@ export class CreateContentFile
       return left(new EntityNotEmpty('Directory ID'));
     }
 
-    if (Object.keys(file[0]).length < 1) {
+    if (Object.keys(file).length < 1) {
       return left(new EntityNotEmpty('File'));
     }
 

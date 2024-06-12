@@ -1,18 +1,14 @@
-import { FileWithProgress } from '@workspaces/domain';
+import { FileConfigs, FileWithProgress } from '@workspaces/domain';
 import { pureTvApi } from '../../axios-config';
 
 export async function CreateContenVideoRequest(
-  filesWithProgress: FileWithProgress[],
-  config: {
-    directoryId: string;
-    loggedUserId: string;
-  },
+  data: FileConfigs,
   onUploadProgress: (progress: number) => void
 ) {
   const formData = new FormData();
 
   let totalSize = 0;
-  filesWithProgress.forEach((file) => {
+  data.filesToUpload.forEach((file) => {
     formData.append('files', file.file);
     totalSize += file.file.size;
   });
@@ -21,8 +17,8 @@ export async function CreateContenVideoRequest(
 
   const response = await pureTvApi.post('/create-content-video', formData, {
     params: {
-      loggedUserId: config.loggedUserId,
-      directoryId: config.directoryId,
+      loggedUserId: data.loggedUserId,
+      directoryId: data.directoryId,
     },
     onUploadProgress: (progressEvent) => {
       if (progressEvent) {

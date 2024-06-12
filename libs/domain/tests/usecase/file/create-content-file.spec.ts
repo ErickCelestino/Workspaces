@@ -96,9 +96,8 @@ describe('CreateContentFile', () => {
 
   it('should return EntityNotEmpty when a pass incorrect file', async () => {
     const { CreateContentFileDto, sut } = makeSut();
-    const arrayEmpty = {} as UploadedFile;
     for (let i = 0; i < CreateContentFileDto.file.length; i++) {
-      CreateContentFileDto.file[i] = arrayEmpty;
+      CreateContentFileDto.file = [];
     }
     const result = await sut.execute(CreateContentFileDto);
 

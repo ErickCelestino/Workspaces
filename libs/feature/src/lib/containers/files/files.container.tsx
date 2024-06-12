@@ -15,13 +15,25 @@ import {
 } from '../../services';
 import { useLoggedUser } from '../../contexts';
 import { useCallback, useState } from 'react';
-import { FileWithProgress } from '@workspaces/domain';
+import {
+  ErrorResponse,
+  FileConfigs,
+  FileWithProgress,
+} from '@workspaces/domain';
+import { useSnackbarAlert } from '../../hooks';
+import axios, { AxiosError } from 'axios';
+import {
+  ConnectionError,
+  EntityNotCreated,
+  EntityNotEmpty,
+} from '../../shared';
 
 export const FilesContainer = () => {
   const theme = useTheme();
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
   const mdDown = useMediaQuery(theme.breakpoints.down('md'));
   const { loggedUser } = useLoggedUser();
+  const { showSnackbarAlert, SnackbarAlert } = useSnackbarAlert();
   const [filesToUpload, setFilesToUpload] = useState<FileWithProgress[]>([]);
   const [progress, setProgress] = useState<number>(0);
 
@@ -36,62 +48,99 @@ export const FilesContainer = () => {
     setProgress(progress);
   }, []);
 
-  const uploadFiles = useCallback(async () => {
+  const onFinish = async (
+    data: FileConfigs,
+    updateProgress: (progress: number) => void
+  ) => {
     try {
-      const loggedUserId = loggedUser?.id ?? '';
-      const directoryId = getItemLocalStorage('di');
-
-      const config = {
-        directoryId: directoryId,
-        loggedUserId,
-      };
-
-      await CreateContenVideoRequest(filesToUpload, config, updateProgress);
+      const result = await CreateContenVideoRequest(data, updateProgress);
       setFilesToUpload([]);
       removeItemLocalStorage('files');
-    } catch (err) {
-      console.error(err);
+
+      return result;
+    } catch (error) {
+      console.error((error as { message: string }).message);
+      if (axios.isAxiosError(error)) {
+        const axiosError = error as AxiosError<ErrorResponse>;
+        switch (axiosError.response?.data.error.name) {
+          case 'EntityNotEmpty':
+            showErrorAlert(EntityNotEmpty('Arquivos', 'PT-BR'));
+            break;
+
+          case 'EntityNotCreated':
+            showErrorAlert(EntityNotCreated('Arquivos', 'PT-BR'));
+            break;
+
+          default:
+            showErrorAlert(ConnectionError('PT-BR'));
+            break;
+        }
+      }
     }
-  }, [loggedUser, filesToUpload]);
+  };
+
+  const showErrorAlert = (message: string) => {
+    showSnackbarAlert({
+      message: message,
+      severity: 'error',
+    });
+  };
+
+  const uploadFiles = useCallback(async () => {
+    const loggedUserId = loggedUser?.id ?? '';
+    const directoryId = getItemLocalStorage('di');
+
+    await onFinish(
+      {
+        directoryId: directoryId,
+        loggedUserId: loggedUserId,
+        filesToUpload: filesToUpload,
+      },
+      updateProgress
+    );
+  }, [onFinish]);
 
   const handleUploadClick = () => {
     uploadFiles();
   };
 
   return (
-    <LayoutBase title="Arquivos">
-      <Box display="flex" justifyContent="center">
-        <Card
-          component="span"
-          sx={{
-            height: theme.spacing(65),
-            width: smDown
-              ? theme.spacing(45)
-              : mdDown
-              ? theme.spacing(65)
-              : theme.spacing(100),
-          }}
-        >
-          <FilesUpload
-            progress={progress}
-            onFileUpload={handleFileUpload}
-            width={
-              smDown
+    <>
+      <LayoutBase title="Arquivos">
+        <Box display="flex" justifyContent="center">
+          <Card
+            component="span"
+            sx={{
+              height: theme.spacing(65),
+              width: smDown
                 ? theme.spacing(45)
                 : mdDown
                 ? theme.spacing(65)
-                : theme.spacing(100)
-            }
-            height={theme.spacing(28)}
-          />
-          <CardActions disableSpacing>
-            <Box sx={{ flexGrow: 1 }} />
-            <Button onClick={handleUploadClick} variant="contained">
-              Enviar
-            </Button>
-          </CardActions>
-        </Card>
-      </Box>
-    </LayoutBase>
+                : theme.spacing(100),
+            }}
+          >
+            <FilesUpload
+              progress={progress}
+              onFileUpload={handleFileUpload}
+              width={
+                smDown
+                  ? theme.spacing(45)
+                  : mdDown
+                  ? theme.spacing(65)
+                  : theme.spacing(100)
+              }
+              height={theme.spacing(28)}
+            />
+            <CardActions disableSpacing>
+              <Box sx={{ flexGrow: 1 }} />
+              <Button onClick={handleUploadClick} variant="contained">
+                Enviar
+              </Button>
+            </CardActions>
+          </Card>
+        </Box>
+      </LayoutBase>
+      {SnackbarAlert}
+    </>
   );
 };
