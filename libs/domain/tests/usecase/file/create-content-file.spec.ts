@@ -10,6 +10,7 @@ import {
   Directory,
   EntityNotCreated,
   UploadedFile,
+  FileNotAllowed,
 } from '../../../src';
 import { ContentFileMock, DirectoryMock, userMock } from '../../entity';
 import {
@@ -39,7 +40,7 @@ const makeSut = (): SutTypes => {
         fieldname: 'any_fieldname',
         originalname: 'any_originalname',
         encoding: 'any_encoding',
-        mimetype: 'mimetype',
+        mimetype: 'image/png',
         buffer: mockBuffer,
         size: 1,
         filename: 'any_filename',
@@ -163,8 +164,6 @@ describe('CreateContentFile', () => {
       CreateContentFileDto,
     } = makeSut();
 
-    const mockEmptyItem = {} as Directory;
-
     const mockEmptyRepository: CreateContentFileRepository = {
       create: jest.fn(async () => []),
     };
@@ -179,5 +178,15 @@ describe('CreateContentFile', () => {
 
     expect(result.isLeft()).toBe(true);
     expect(result.value).toBeInstanceOf(EntityNotCreated);
+  });
+
+  it('should return FileNotAllowed when a pass incorrect file', async () => {
+    const { CreateContentFileDto, sut } = makeSut();
+    CreateContentFileDto.file[0].mimetype = '';
+    const result = await sut.execute(CreateContentFileDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
+    expect(result.value).toBeInstanceOf(FileNotAllowed);
   });
 });

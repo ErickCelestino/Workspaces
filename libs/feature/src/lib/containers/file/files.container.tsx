@@ -24,6 +24,7 @@ import { useSnackbarAlert } from '../../hooks';
 import axios, { AxiosError } from 'axios';
 import {
   ConnectionError,
+  EntityNotAllowed,
   EntityNotCreated,
   EntityNotEmpty,
 } from '../../shared';
@@ -74,6 +75,7 @@ export const FilesContainer = () => {
 
       return result;
     } catch (error) {
+      console.error(error);
       console.error((error as { message: string }).message);
       if (axios.isAxiosError(error)) {
         const axiosError = error as AxiosError<ErrorResponse>;
@@ -84,6 +86,10 @@ export const FilesContainer = () => {
 
           case 'EntityNotCreated':
             showErrorAlert(EntityNotCreated('Arquivos', 'PT-BR'));
+            break;
+
+          case 'FileNotAllowed':
+            showErrorAlert(EntityNotAllowed('Arquivos', 'PT-BR'));
             break;
 
           default:

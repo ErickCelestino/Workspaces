@@ -1,13 +1,19 @@
 import { Inject } from '@nestjs/common';
 import { UseCase } from '../../base/use-case';
 import { CreateContentFileDto } from '../../dto';
-import { EntityNotCreated, EntityNotEmpty, EntityNotExists } from '../../error';
+import {
+  EntityNotCreated,
+  EntityNotEmpty,
+  EntityNotExists,
+  FileNotAllowed,
+} from '../../error';
 import {
   CreateContentFileRepository,
   FindDirectoryByIdRepository,
   FindUserByIdRepository,
 } from '../../repository';
 import { Either, left, right } from '../../shared/either';
+import { FileTypes } from '../../type';
 
 export class CreateContentFile
   implements
@@ -55,6 +61,17 @@ export class CreateContentFile
 
     if (Object.keys(fiteredDirectory).length < 1) {
       return left(new EntityNotExists('Directory'));
+    }
+
+    let error = false;
+    for (const item of file) {
+      if (!FileTypes.includes(item.mimetype)) {
+        error = true;
+      }
+    }
+
+    if (error === true) {
+      return left(new FileNotAllowed());
     }
 
     const filteredContentFile = await this.createContentFileRepository.create(
