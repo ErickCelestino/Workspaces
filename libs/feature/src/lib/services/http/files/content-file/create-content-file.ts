@@ -15,7 +15,7 @@ export async function CreateContenVideoRequest(
 
   let totalLoaded = 0;
 
-  const response = await pureTvApi.post('/create-content-video', formData, {
+  const response = await pureTvApi.post('/create-content-file', formData, {
     params: {
       loggedUserId: data.loggedUserId,
       directoryId: data.directoryId,

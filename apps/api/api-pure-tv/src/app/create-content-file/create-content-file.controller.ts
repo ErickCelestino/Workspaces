@@ -11,7 +11,7 @@ import { CreateContentFileService } from './create-content-file.service';
 import { CreateContentFileDto, UploadedFile } from '@workspaces/domain';
 import { FileLocalStorage } from '@workspaces/data-access';
 
-@Controller('create-content-video')
+@Controller('create-content-file')
 export class CreateContentFileController {
   constructor(
     private readonly createContentVideoService: CreateContentFileService
