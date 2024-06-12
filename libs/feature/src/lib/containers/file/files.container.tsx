@@ -39,7 +39,20 @@ export const FilesContainer = () => {
 
   const handleFileUpload = (files: FileWithProgress[]) => {
     setFilesToUpload((prevFiles) => {
-      const updatedFiles = prevFiles.concat(files);
+      const newFiles = files.filter(
+        (file) =>
+          !prevFiles.some((prevFile) => prevFile.file.name === file.file.name)
+      );
+      const updatedFiles = [...prevFiles, ...newFiles];
+      return updatedFiles;
+    });
+  };
+
+  const handleFileToDelete = (fileToRemove: string) => {
+    setFilesToUpload((prevFiles) => {
+      const updatedFiles = prevFiles.filter(
+        (file) => file.file.name !== fileToRemove
+      );
       return updatedFiles;
     });
   };
@@ -120,6 +133,7 @@ export const FilesContainer = () => {
             }}
           >
             <FilesUpload
+              onFileDelete={handleFileToDelete}
               progress={progress}
               onFileUpload={handleFileUpload}
               width={

@@ -15,12 +15,14 @@ interface FilesUploadProps {
   width: string;
   progress: number;
   onFileUpload: (files: FileWithProgress[]) => void;
+  onFileDelete: (file: string) => void;
 }
 
 export const FilesUpload: React.FC<FilesUploadProps> = ({
   height,
   width,
   onFileUpload,
+  onFileDelete,
   progress,
 }) => {
   const [selectedFiles, setSelectedFiles] = useState<FileWithProgress[]>([]);
@@ -91,6 +93,8 @@ export const FilesUpload: React.FC<FilesUploadProps> = ({
     });
     removeItemLocalStorage('files');
     setSelectedFiles(updatedFiles);
+    onFileUpload(updatedFiles);
+    onFileDelete(fileName);
 
     if (Object.keys(mappedFiles).length > 0) {
       setItemLocalStorage(JSON.stringify(mappedFiles), 'files');
