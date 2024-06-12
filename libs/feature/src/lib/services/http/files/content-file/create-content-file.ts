@@ -19,23 +19,18 @@ export async function CreateContenVideoRequest(
 
   let totalLoaded = 0;
 
-  try {
-    const response = await pureTvApi.post('/create-content-video', formData, {
-      params: {
-        loggedUserId: config.loggedUserId,
-        directoryId: config.directoryId,
-      },
-      onUploadProgress: (progressEvent) => {
-        if (progressEvent) {
-          totalLoaded += progressEvent.loaded;
-          const progress = Math.round((totalLoaded * 100) / totalSize);
-          onUploadProgress(progress);
-        }
-      },
-    });
-    return response.data;
-  } catch (error) {
-    console.error('Error uploading file:', error);
-    throw error;
-  }
+  const response = await pureTvApi.post('/create-content-video', formData, {
+    params: {
+      loggedUserId: config.loggedUserId,
+      directoryId: config.directoryId,
+    },
+    onUploadProgress: (progressEvent) => {
+      if (progressEvent) {
+        totalLoaded = progressEvent.loaded;
+        const progress = Math.round((totalLoaded * 100) / totalSize);
+        onUploadProgress(progress);
+      }
+    },
+  });
+  return response.data;
 }

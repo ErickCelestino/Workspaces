@@ -82,7 +82,7 @@ export const FilesContainer = () => {
                 ? theme.spacing(65)
                 : theme.spacing(100)
             }
-            height={theme.spacing(30)}
+            height={theme.spacing(28)}
           />
           <CardActions disableSpacing>
             <Box sx={{ flexGrow: 1 }} />
