@@ -4,11 +4,6 @@ import { Box, Button, Typography, Paper } from '@mui/material';
 import { CloudUpload as CloudUploadIcon } from '@mui/icons-material';
 import { FileWithProgress } from '@workspaces/domain';
 import { ProgressFilesList } from '../list';
-import {
-  getItemLocalStorage,
-  removeItemLocalStorage,
-  setItemLocalStorage,
-} from '../../services';
 
 interface FilesUploadProps {
   height: string;

@@ -105,7 +105,7 @@ export const FilesContainer = () => {
     const loggedUserId = loggedUser?.id ?? '';
     const directoryId = getItemLocalStorage('di');
 
-    await onFinish(
+    const result = await onFinish(
       {
         directoryId: directoryId,
         loggedUserId: loggedUserId,
@@ -113,6 +113,12 @@ export const FilesContainer = () => {
       },
       updateProgress
     );
+    if (result) {
+      showSnackbarAlert({
+        message: 'Arquivos Salvos com sucesso',
+        severity: 'success',
+      });
+    }
   }, [onFinish]);
 
   const handleUploadClick = () => {
