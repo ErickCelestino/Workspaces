@@ -1,26 +1,26 @@
 import { Module } from '@nestjs/common';
-import { CreateContentFileService, CreateContentFileController } from '.';
-import { CreateContentFile } from '@workspaces/domain';
+import { ListContentFileService } from './list-content-file.service';
+import { ListContentFileController } from './list-content-file.controller';
+import { ListContentFile } from '@workspaces/domain';
 import {
-  ConvertBytesToMbRepositoryImpl,
-  CreateContentFileRepositoryImpl,
   FindDirectoryByIdRespositoryImpl,
   FindUserByIdRepositoryImpl,
+  ListContentFileRepositoryImpl,
   PrismaService,
 } from '@workspaces/data-access';
 
 @Module({
-  controllers: [CreateContentFileController],
+  controllers: [ListContentFileController],
   providers: [
-    CreateContentFileService,
-    CreateContentFile,
+    ListContentFileService,
+    ListContentFile,
     {
       provide: 'PrismaService',
       useClass: PrismaService,
     },
     {
-      provide: 'CreateContentFileRepository',
-      useClass: CreateContentFileRepositoryImpl,
+      provide: 'ListContentFileRepository',
+      useClass: ListContentFileRepositoryImpl,
     },
     {
       provide: 'FindUserByIdRepository',
@@ -32,4 +32,4 @@ import {
     },
   ],
 })
-export class CreateContentFileModule {}
+export class ListContentFileModule {}
