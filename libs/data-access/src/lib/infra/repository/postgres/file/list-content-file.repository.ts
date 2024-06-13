@@ -11,8 +11,12 @@ export class ListContentFileRepositoryImpl
 {
   constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
   async list(input: ListContentFileDto): Promise<ContentFile[]> {
+    const skip = input?.skip || 6;
+    const take = input?.take || 0;
     const resultList = await this.prismaService.content_Files.findMany({
       where: {
+        user_id: input.loggedUserId,
+        directory_id: input.directoryId,
         ...(input.userInput !== null
           ? {
               original_name: { contains: input.userInput, mode: 'insensitive' },
@@ -28,6 +32,8 @@ export class ListContentFileRepositoryImpl
         path: true,
         original_name: true,
       },
+      skip: skip,
+      take: take,
     });
 
     const mappedContentFiles: ContentFile[] = resultList.map((item) => {
