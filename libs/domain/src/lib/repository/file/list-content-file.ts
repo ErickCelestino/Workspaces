@@ -1,6 +1,6 @@
 import { ListContentFileDto } from '../../dto';
-import { File } from '../../entity';
+import { ContentFile } from '../../entity';
 
 export interface ListContentFileRepository {
-  list(input: ListContentFileDto): Promise<File[]>;
+  list(input: ListContentFileDto): Promise<ContentFile[]>;
 }
