@@ -51,7 +51,7 @@ export class CreateContentFile
 
     const filteredUser = await this.findUserByIdRepository.find(loggedUserId);
 
-    if (Object.keys(filteredUser).length < 1) {
+    if (Object.keys(filteredUser?.userId ?? filteredUser).length < 1) {
       return left(new EntityNotExists('User'));
     }
 
@@ -59,7 +59,7 @@ export class CreateContentFile
       directoryId
     );
 
-    if (Object.keys(fiteredDirectory).length < 1) {
+    if (Object.keys(fiteredDirectory?.id ?? fiteredDirectory).length < 1) {
       return left(new EntityNotExists('Directory'));
     }
 

@@ -29,7 +29,7 @@ export class ListContentFile
   async execute(
     input: ListContentFileDto
   ): Promise<Either<EntityNotEmpty | EntityNotExists, ContentFile[]>> {
-    const { directoryId, loggedUserId, take, skip } = input;
+    const { directoryId, loggedUserId } = input;
     const loggedUserString = 'logged user';
     const directoryString = 'directory';
 

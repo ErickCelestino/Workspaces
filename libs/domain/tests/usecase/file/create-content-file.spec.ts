@@ -9,7 +9,6 @@ import {
   EntityNotExists,
   Directory,
   EntityNotCreated,
-  UploadedFile,
   FileNotAllowed,
 } from '../../../src';
 import { ContentFileMock, DirectoryMock, userMock } from '../../entity';
@@ -97,9 +96,7 @@ describe('CreateContentFile', () => {
 
   it('should return EntityNotEmpty when a pass incorrect file', async () => {
     const { CreateContentFileDto, sut } = makeSut();
-    for (let i = 0; i < CreateContentFileDto.file.length; i++) {
-      CreateContentFileDto.file = [];
-    }
+    CreateContentFileDto.file = [];
     const result = await sut.execute(CreateContentFileDto);
 
     expect(result.isLeft()).toBe(true);
