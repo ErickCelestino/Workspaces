@@ -3,6 +3,7 @@ import {
   ContentFile,
   ListContentFileDto,
   ListContentFileRepository,
+  ListContentFileResponseDto,
 } from '@workspaces/domain';
 import { PrismaService } from 'nestjs-prisma';
 
@@ -10,44 +11,68 @@ export class ListContentFileRepositoryImpl
   implements ListContentFileRepository
 {
   constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
-  async list(input: ListContentFileDto): Promise<ContentFile[]> {
-    const skip = input?.skip || 6;
-    const take = input?.take || 0;
-    const resultList = await this.prismaService.content_Files.findMany({
-      where: {
-        user_id: input.loggedUserId,
-        directory_id: input.directoryId,
-        ...(input.userInput !== null
-          ? {
-              original_name: { contains: input.userInput, mode: 'insensitive' },
-            }
-          : {}),
-      },
-      select: {
-        Content_Files_id: true,
-        size: true,
-        format: true,
-        upload_date: true,
-        file_name: true,
-        path: true,
-        original_name: true,
-      },
-      skip: skip,
-      take: take,
-    });
+  async list(input: ListContentFileDto): Promise<ListContentFileResponseDto> {
+    const skip = input?.skip || 0;
+    const take = input?.take || 6;
 
-    const mappedContentFiles: ContentFile[] = resultList.map((item) => {
+    const [files, total] = await this.prismaService.$transaction([
+      this.prismaService.content_Files.findMany({
+        where: {
+          user_id: input.loggedUserId,
+          directory_id: input.directoryId,
+          ...(input.userInput !== ''
+            ? {
+                original_name: {
+                  contains: input.userInput,
+                  mode: 'insensitive',
+                },
+              }
+            : {}),
+        },
+        orderBy: {
+          directory: {
+            name: 'asc',
+          },
+        },
+        select: {
+          Content_Files_id: true,
+          size: true,
+          format: true,
+          upload_date: true,
+          file_name: true,
+          path: true,
+          original_name: true,
+          user: {
+            select: {
+              nick_name: true,
+            },
+          },
+        },
+        skip: parseInt(skip.toString()),
+        take: parseInt(take.toString()),
+      }),
+      this.prismaService.content_Files.count(),
+    ]);
+
+    const totalPages = Math.ceil(total / take);
+
+    const mappedContentFiles: ContentFile[] = files.map((file) => {
       return {
-        id: item.Content_Files_id,
-        fileName: item.file_name,
-        format: item.format,
-        originalName: item.original_name,
-        path: item.path,
-        size: item.size,
-        uploadDate: item.upload_date,
+        id: file.Content_Files_id,
+        fileName: file.file_name,
+        format: file.format,
+        originalName: file.original_name,
+        path: file.path,
+        size: file.size,
+        uploadDate: file.upload_date,
+        created_by: file.user.nick_name,
       };
     });
 
-    return mappedContentFiles;
+    return {
+      total,
+      totalPages,
+      files: mappedContentFiles,
+    };
   }
 }

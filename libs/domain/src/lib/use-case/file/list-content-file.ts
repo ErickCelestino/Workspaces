@@ -1,7 +1,6 @@
 import { Inject } from '@nestjs/common';
 import { UseCase } from '../../base/use-case';
-import { ListContentFileDto } from '../../dto';
-import { ContentFile } from '../../entity';
+import { ListContentFileDto, ListContentFileResponseDto } from '../../dto';
 import { EntityNotEmpty, EntityNotExists } from '../../error';
 import {
   FindDirectoryByIdRepository,
@@ -14,7 +13,7 @@ export class ListContentFile
   implements
     UseCase<
       ListContentFileDto,
-      Either<EntityNotEmpty | EntityNotExists, ContentFile[]>
+      Either<EntityNotEmpty | EntityNotExists, ListContentFileResponseDto>
     >
 {
   constructor(
@@ -28,7 +27,9 @@ export class ListContentFile
 
   async execute(
     input: ListContentFileDto
-  ): Promise<Either<EntityNotEmpty | EntityNotExists, ContentFile[]>> {
+  ): Promise<
+    Either<EntityNotEmpty | EntityNotExists, ListContentFileResponseDto>
+  > {
     const { directoryId, loggedUserId } = input;
     const loggedUserString = 'logged user';
     const directoryString = 'directory';
@@ -43,7 +44,7 @@ export class ListContentFile
 
     const userResult = await this.findUserByIdRepository.find(loggedUserId);
 
-    if (Object.keys(userResult).length < 1) {
+    if (Object.keys(userResult?.userId ?? userResult).length < 1) {
       return left(new EntityNotExists(loggedUserString));
     }
 
@@ -51,7 +52,7 @@ export class ListContentFile
       directoryId
     );
 
-    if (Object.keys(directoryResult).length < 1) {
+    if (Object.keys(directoryResult?.id ?? directoryResult).length < 1) {
       return left(new EntityNotExists(directoryString));
     }
 

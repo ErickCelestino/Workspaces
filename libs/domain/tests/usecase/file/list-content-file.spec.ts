@@ -1,23 +1,21 @@
 import { faker } from '@faker-js/faker';
 import {
-  CreateContentFileDto,
-  CreateContentFile,
   FindUserByIdRepository,
-  CreateContentFileRepository,
   FindDirectoryByIdRepository,
   EntityNotEmpty,
   UserList,
   EntityNotExists,
   Directory,
-  EntityNotCreated,
-  FileNotAllowed,
   ListContentFile,
   ListContentFileDto,
   ListContentFileRepository,
 } from '../../../src';
-import { ContentFileMock, DirectoryMock, userMock } from '../../entity';
 import {
-  CreateContentFileRepositoryMock,
+  DirectoryMock,
+  ListContentFileReponseMock,
+  userMock,
+} from '../../entity';
+import {
   FindDirectoryByIdRespositoryMock,
   FindUserByIdRepositoryMock,
   ListContentFileRepositoryMock,
@@ -61,10 +59,9 @@ describe('CreateContentFile', () => {
     const { listContentFileDto, sut } = makeSut();
 
     const result = await sut.execute(listContentFileDto);
-    const resultResponse = [ContentFileMock];
     expect(result.isLeft()).toBe(false);
     expect(result.isRight()).toBe(true);
-    expect(result.value).toStrictEqual(resultResponse);
+    expect(result.value).toStrictEqual(ListContentFileReponseMock);
   });
 
   it('should return EntityNotEmpty when a pass incorrect logged user id', async () => {

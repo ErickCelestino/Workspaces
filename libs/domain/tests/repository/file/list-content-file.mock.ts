@@ -1,14 +1,16 @@
 import {
   ListContentFileRepository,
-  ContentFile,
   ListContentFileDto,
+  ListContentFileResponseDto,
 } from '../../../src';
-import { ContentFileMock } from '../../entity';
+import { ListContentFileReponseMock } from '../../entity';
 
 export class ListContentFileRepositoryMock
   implements ListContentFileRepository
 {
-  async list(input: ListContentFileDto): Promise<ContentFile[]> {
-    return [ContentFileMock];
+  listMock = {} as ListContentFileDto;
+  async list(input: ListContentFileDto): Promise<ListContentFileResponseDto> {
+    this.listMock = input;
+    return ListContentFileReponseMock;
   }
 }

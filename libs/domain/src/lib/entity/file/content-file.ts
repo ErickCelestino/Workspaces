@@ -6,4 +6,5 @@ export interface ContentFile {
   fileName: string;
   path: string;
   originalName: string;
+  created_by: string;
 }

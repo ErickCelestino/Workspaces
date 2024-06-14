@@ -9,4 +9,5 @@ export const ContentFileMock: ContentFile = {
   path: faker.string.alpha(3),
   size: faker.string.alpha(3),
   uploadDate: new Date(faker.date.weekday()),
+  created_by: faker.string.alpha(3),
 };
