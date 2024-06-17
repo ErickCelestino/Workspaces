@@ -39,7 +39,6 @@ export const FilesContainer = () => {
   const [progress, setProgress] = useState<number>(0);
 
   const handleFileUpload = (files: FileWithProgress[]) => {
-    console.log(files);
     setFilesToUpload((prevFiles) => {
       const newFiles = files.filter(
         (file) =>

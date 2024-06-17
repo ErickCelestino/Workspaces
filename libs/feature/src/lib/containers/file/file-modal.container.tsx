@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useFileModal } from '../../contexts';
+import { useCallback, useState } from 'react';
+import { useFileModal, useLoggedUser } from '../../contexts';
 import {
   Box,
   Button,
@@ -12,6 +12,24 @@ import {
 } from '@mui/material';
 import { Close } from '@mui/icons-material';
 import { FilesUpload } from '../../components';
+import {
+  ErrorResponse,
+  FileConfigs,
+  FileWithProgress,
+} from '@workspaces/domain';
+import { useSnackbarAlert } from '../../hooks';
+import axios, { AxiosError } from 'axios';
+import {
+  ConnectionError,
+  EntityNotAllowed,
+  EntityNotCreated,
+  EntityNotEmpty,
+} from '../../shared';
+import {
+  CreateContenVideoRequest,
+  getItemLocalStorage,
+  removeItemLocalStorage,
+} from '../../services';
 
 const progressStyle = {
   position: 'fixed' as 'fixed',
@@ -29,7 +47,9 @@ export const FileModalContainer = () => {
   const { open, handleClose } = useFileModal();
   const [uploading, setUploading] = useState(false);
   const [progress, setProgress] = useState(0);
-
+  const [filesToUpload, setFilesToUpload] = useState<FileWithProgress[]>([]);
+  const { loggedUser } = useLoggedUser();
+  const { showSnackbarAlert, SnackbarAlert } = useSnackbarAlert();
   const theme = useTheme();
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
   const mdDown = useMediaQuery(theme.breakpoints.down('md'));
@@ -37,12 +57,96 @@ export const FileModalContainer = () => {
   const handleUpload = () => {
     setUploading(true);
     handleClose();
-    //Implemente aqui o upload
+    uploadFiles();
   };
 
-  const handleFileUpload = () => {};
+  const handleFileUpload = (files: FileWithProgress[]) => {
+    setFilesToUpload((prevFiles) => {
+      const newFiles = files.filter(
+        (file) =>
+          !prevFiles.some((prevFile) => prevFile.file.name === file.file.name)
+      );
+      const updatedFiles = [...prevFiles, ...newFiles];
 
-  const handleFileToDelete = (fileToRemove: string) => {};
+      return updatedFiles;
+    });
+  };
+
+  const handleFileToDelete = (fileToRemove: string) => {
+    setFilesToUpload((prevFiles) => {
+      const updatedFiles = prevFiles.filter(
+        (file) => file.file.name !== fileToRemove
+      );
+      return updatedFiles;
+    });
+  };
+
+  const updateProgress = useCallback((progress: number) => {
+    setProgress(progress);
+  }, []);
+
+  const onFinish = async (
+    data: FileConfigs,
+    updateProgress: (progress: number) => void
+  ) => {
+    try {
+      const result = await CreateContenVideoRequest(data, updateProgress);
+      setFilesToUpload([]);
+      removeItemLocalStorage('files');
+
+      return result;
+    } catch (error) {
+      console.error(error);
+      console.error((error as { message: string }).message);
+      if (axios.isAxiosError(error)) {
+        const axiosError = error as AxiosError<ErrorResponse>;
+        switch (axiosError.response?.data.error.name) {
+          case 'EntityNotEmpty':
+            showErrorAlert(EntityNotEmpty('Arquivos', 'PT-BR'));
+            break;
+
+          case 'EntityNotCreated':
+            showErrorAlert(EntityNotCreated('Arquivos', 'PT-BR'));
+            break;
+
+          case 'FileNotAllowed':
+            showErrorAlert(EntityNotAllowed('Arquivos', 'PT-BR'));
+            break;
+
+          default:
+            showErrorAlert(ConnectionError('PT-BR'));
+            break;
+        }
+      }
+    }
+  };
+
+  const showErrorAlert = (message: string) => {
+    showSnackbarAlert({
+      message: message,
+      severity: 'error',
+    });
+  };
+
+  const uploadFiles = useCallback(async () => {
+    const loggedUserId = loggedUser?.id ?? '';
+    const directoryId = getItemLocalStorage('di');
+
+    const result = await onFinish(
+      {
+        directoryId: directoryId,
+        loggedUserId: loggedUserId,
+        filesToUpload: filesToUpload,
+      },
+      updateProgress
+    );
+    if (result) {
+      showSnackbarAlert({
+        message: 'Arquivos Salvos com sucesso',
+        severity: 'success',
+      });
+    }
+  }, [onFinish]);
 
   return (
     <>
@@ -107,6 +211,8 @@ export const FileModalContainer = () => {
           </Box>
         </Box>
       )}
+
+      {SnackbarAlert}
     </>
   );
 };
