@@ -4,6 +4,8 @@ import { AppRouters, AuthRouters } from './routes';
 import {
   AppThemeProvider,
   DrawerProvider,
+  FileModalContainer,
+  FileModalProvider,
   LoggedUserProvider,
   MiniDrawer,
   getItemLocalStorage,
@@ -43,9 +45,12 @@ const Content = () => {
       {!auth.isAuthenticated && <AuthRouters />}
       {auth.isAuthenticated && (
         <DrawerProvider>
-          <MiniDrawer image="https://github.com/ErickCelestino.png">
-            <AppRouters />
-          </MiniDrawer>
+          <FileModalProvider>
+            <MiniDrawer image="https://github.com/ErickCelestino.png">
+              <AppRouters />
+              <FileModalContainer />
+            </MiniDrawer>
+          </FileModalProvider>
         </DrawerProvider>
       )}
     </>
