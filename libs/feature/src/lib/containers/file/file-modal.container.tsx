@@ -1,10 +1,9 @@
-import { useCallback, useState } from 'react';
+import { FC, useCallback, useState } from 'react';
 import { useFileModal, useLoggedUser } from '../../contexts';
 import {
   Box,
   Button,
   IconButton,
-  LinearProgress,
   Modal,
   Typography,
   useMediaQuery,
@@ -30,20 +29,19 @@ import {
   getItemLocalStorage,
   removeItemLocalStorage,
 } from '../../services';
+import { ProgressFilePopUp } from '../../components/popup';
 
-const progressStyle = {
-  position: 'fixed' as 'fixed',
-  bottom: 16,
-  right: 16,
-  width: 300,
-  bgcolor: 'background.paper',
-  boxShadow: 24,
-  p: 2,
-  display: 'flex',
-  alignItems: 'center',
-};
+interface FileModalContainerProps {
+  modalTitle?: string;
+  sucessAlertMessage?: string;
+  uploadTitleButton?: string;
+}
 
-export const FileModalContainer = () => {
+export const FileModalContainer: FC<FileModalContainerProps> = ({
+  modalTitle = 'Fazer Upload',
+  sucessAlertMessage = 'Arquivos Salvos com sucesso',
+  uploadTitleButton = 'Subir Arquivos',
+}) => {
   const { open, handleClose } = useFileModal();
   const [uploading, setUploading] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -128,6 +126,10 @@ export const FileModalContainer = () => {
     });
   };
 
+  const onCloseProgressFile = () => {
+    setUploading(false);
+  };
+
   const uploadFiles = useCallback(async () => {
     const loggedUserId = loggedUser?.id ?? '';
     const directoryId = getItemLocalStorage('di');
@@ -142,7 +144,7 @@ export const FileModalContainer = () => {
     );
     if (result) {
       showSnackbarAlert({
-        message: 'Arquivos Salvos com sucesso',
+        message: sucessAlertMessage,
         severity: 'success',
       });
     }
@@ -172,7 +174,7 @@ export const FileModalContainer = () => {
             justifyContent="space-between"
             alignItems="center"
           >
-            <Typography variant="h6">Upload File</Typography>
+            <Typography variant="h6">{modalTitle}</Typography>
             <IconButton onClick={handleClose}>
               <Close />
             </IconButton>
@@ -192,26 +194,25 @@ export const FileModalContainer = () => {
               height={theme.spacing(28)}
             />
           </Box>
-          <Box mt={2}>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'end',
+            }}
+            mt={2}
+          >
             <Button onClick={handleUpload} variant="contained">
-              Subir Arquivos
+              {uploadTitleButton}
             </Button>
           </Box>
         </Box>
       </Modal>
       {uploading && (
-        <Box sx={progressStyle}>
-          <LinearProgress
-            variant="determinate"
-            value={progress}
-            sx={{ width: '100%' }}
-          />
-          <Box ml={2}>
-            <Typography variant="body2">{progress}%</Typography>
-          </Box>
-        </Box>
+        <ProgressFilePopUp
+          handleClose={onCloseProgressFile}
+          progress={progress}
+        />
       )}
-
       {SnackbarAlert}
     </>
   );
