@@ -7,3 +7,4 @@ export * from './modal';
 export * from './notification-card';
 export * from './search';
 export * from './stepper';
+export * from './toolbar';
