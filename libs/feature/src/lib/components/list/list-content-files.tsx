@@ -4,6 +4,7 @@ import {
   CardContent,
   CardMedia,
   Typography,
+  useMediaQuery,
   useTheme,
 } from '@mui/material';
 import { FC } from 'react';
@@ -20,13 +21,29 @@ export const ListContentFiles: FC<ListContentFilesProps> = ({
   fileImageName,
 }) => {
   const theme = useTheme();
+  const mdDown = useMediaQuery(theme.breakpoints.down('md'));
+  const xlDown = useMediaQuery(theme.breakpoints.down('xl'));
+
   return (
     <Card
       sx={{
-        width: theme.spacing(40),
+        width: mdDown
+          ? theme.spacing(30)
+          : xlDown
+          ? theme.spacing(32)
+          : theme.spacing(40),
+        height: theme.spacing(25),
+        margin: theme.spacing(2),
       }}
     >
-      <CardMedia component="img" image={fileImage} title={fileImageName} />
+      <CardMedia
+        component="img"
+        image={fileImage}
+        title={fileImageName}
+        sx={{
+          height: theme.spacing(15),
+        }}
+      />
       <CardContent>
         <Typography variant="h5">{name}</Typography>
       </CardContent>

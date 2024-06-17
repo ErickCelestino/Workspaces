@@ -1,5 +1,6 @@
 import {
   Box,
+  Grid,
   Pagination,
   Typography,
   useMediaQuery,
@@ -53,18 +54,22 @@ export const ListContanteFilesContainer = () => {
   return (
     <LayoutBase title="Listagem de Usuários">
       <Box display="flex" justifyContent="center">
-        <Box width="60%">
+        <Box width={mdDown ? '100%' : '90%'}>
           <Box width="95%">
             <Box>
               {fileList.length > 0 ? (
-                fileList.map((file) => (
-                  <ListContentFiles
-                    fileImage={`http://localhost:3000/${file.fileName}`}
-                    fileImageName={file.fileName}
-                    name={file.originalName}
-                    key={file.id}
-                  />
-                ))
+                <Grid container spacing={2}>
+                  {fileList.map((file, index) => (
+                    <Grid item md={4} lg={3} key={index}>
+                      <ListContentFiles
+                        fileImage={`http://localhost:3000/${file.fileName}`}
+                        fileImageName={file.fileName}
+                        name={file.originalName}
+                        key={file.id}
+                      />
+                    </Grid>
+                  ))}
+                </Grid>
               ) : (
                 <Box
                   marginTop={theme.spacing(2)}
