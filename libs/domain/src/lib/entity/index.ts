@@ -7,3 +7,4 @@ export * from './drawer';
 export * from './file';
 export * from './form';
 export * from './user';
+export * from './utils';

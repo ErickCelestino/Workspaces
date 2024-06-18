@@ -20,7 +20,6 @@ export const ListContanteFilesContainer = () => {
 
   const theme = useTheme();
   const { loggedUser } = useLoggedUser();
-  const smDown = useMediaQuery(theme.breakpoints.down('sm'));
   const mdDown = useMediaQuery(theme.breakpoints.down('md'));
 
   useEffect(() => {
@@ -36,7 +35,7 @@ export const ListContanteFilesContainer = () => {
       setTotalPage(result.totalPages);
     };
     getData();
-  }, []);
+  }, [loggedUser]);
 
   const handleChange = async (
     event: React.ChangeEvent<unknown>,
