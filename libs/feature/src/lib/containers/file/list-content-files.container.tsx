@@ -133,6 +133,8 @@ export const ListContanteFilesContainer = () => {
                     {fileList.map((file, index) => (
                       <Grid item md={4} lg={3} key={index}>
                         <ListContentFiles
+                          id={file.id}
+                          directoryId={directoryId}
                           fileImage={`http://localhost:3000/${file.fileName}`}
                           fileImageName={file.fileName}
                           name={file.originalName}

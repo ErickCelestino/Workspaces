@@ -12,21 +12,27 @@ import InfoIcon from '@mui/icons-material/Info';
 import DownloadIcon from '@mui/icons-material/Download';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { FC } from 'react';
-import { IconMenuItem } from '@workspaces/domain';
+import { DeleteContentFileByIdDto, IconMenuItem } from '@workspaces/domain';
 import { ButtonFileMenu } from '../menu';
+import { useLoggedUser } from '../../contexts';
 
 interface ListContentFilesProps {
+  id: string;
+  directoryId: string;
   fileImage: string;
   name: string;
   fileImageName: string;
 }
 
 export const ListContentFiles: FC<ListContentFilesProps> = ({
+  id,
+  directoryId,
   fileImage,
   name,
   fileImageName,
 }) => {
   const theme = useTheme();
+  const { loggedUser } = useLoggedUser();
   const mdDown = useMediaQuery(theme.breakpoints.down('md'));
   const xlDown = useMediaQuery(theme.breakpoints.down('xl'));
 
@@ -34,8 +40,19 @@ export const ListContentFiles: FC<ListContentFilesProps> = ({
     //more implamentation funcion details file
   };
 
-  const handleDelete = () => {
-    //more implamentation funcion delete file
+  const handleDelete = async () => {
+    try {
+      const deleteDto: DeleteContentFileByIdDto = {
+        directoryId,
+        idToDelete: id,
+        loggedUserId: loggedUser?.id ?? '',
+      };
+      console.log(deleteDto);
+
+      //await DeleteContentFileByIdRequest(deleteDto);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const handleDownload = () => {
