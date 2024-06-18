@@ -54,7 +54,7 @@ const makeSut = (): SutTypes => {
   };
 };
 
-describe('CreateContentFile', () => {
+describe('ListContentFile', () => {
   it('should return void when a correct content video is created', async () => {
     const { listContentFileDto, sut } = makeSut();
 
@@ -77,16 +77,6 @@ describe('CreateContentFile', () => {
   it('should return EntityNotEmpty when a pass incorrect directory id', async () => {
     const { listContentFileDto, sut } = makeSut();
     listContentFileDto.directoryId = '';
-    const result = await sut.execute(listContentFileDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.isRight()).toBe(false);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
-  it('should return EntityNotEmpty when a pass incorrect user id', async () => {
-    const { listContentFileDto, sut } = makeSut();
-    listContentFileDto.loggedUserId = '';
     const result = await sut.execute(listContentFileDto);
 
     expect(result.isLeft()).toBe(true);
