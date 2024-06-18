@@ -15,7 +15,12 @@ import {
 } from '@workspaces/domain';
 import { ListContentFilesRequest, getItemLocalStorage } from '../../services';
 import { useLoggedUser } from '../../contexts';
-import { ListContentFiles, SearchBar, ToolbarPureTV } from '../../components';
+import {
+  DeleteFileModal,
+  ListContentFiles,
+  SearchBar,
+  ToolbarPureTV,
+} from '../../components';
 import axios, { AxiosError } from 'axios';
 import { useSnackbarAlert } from '../../hooks';
 import {
@@ -29,6 +34,8 @@ export const ListContanteFilesContainer = () => {
   const [fileList, setFileList] = useState<ContentFile[]>([]);
   const [totalPage, setTotalPage] = useState<number>(1);
   const [directoryId, setDirectoryId] = useState('');
+  const [deletePopUp, setDeletePopUp] = useState(false);
+  const [fileId, setFileId] = useState('');
 
   const theme = useTheme();
   const { loggedUser } = useLoggedUser();
@@ -36,17 +43,6 @@ export const ListContanteFilesContainer = () => {
   const mdDown = useMediaQuery(theme.breakpoints.down('md'));
 
   useEffect(() => {
-    const getData = async () => {
-      const directoryId = getItemLocalStorage('di');
-      const result = await handleData({
-        directoryId,
-        loggedUserId: loggedUser?.id ?? '',
-        userInput: '',
-      });
-      setFileList(result?.files ?? []);
-      setDirectoryId(directoryId);
-      setTotalPage(result?.totalPages ?? 0);
-    };
     getData();
   }, [loggedUser]);
 
@@ -55,6 +51,17 @@ export const ListContanteFilesContainer = () => {
       message: message,
       severity: 'error',
     });
+  };
+  const getData = async () => {
+    const directoryId = getItemLocalStorage('di');
+    const result = await handleData({
+      directoryId,
+      loggedUserId: loggedUser?.id ?? '',
+      userInput: '',
+    });
+    setFileList(result?.files ?? []);
+    setDirectoryId(directoryId);
+    setTotalPage(result?.totalPages ?? 0);
   };
 
   const handleData = async (data: ListContentFileDto) => {
@@ -93,6 +100,23 @@ export const ListContanteFilesContainer = () => {
     }
   };
 
+  const handlePopUpClose = () => {
+    setDeletePopUp(false);
+  };
+
+  const handleDeleteFile = async (id: string) => {
+    setFileId(id);
+    setDeletePopUp(true);
+  };
+
+  const handleDetailsFile = async (id: string) => {
+    /// More details implementation
+  };
+
+  const handleDownloadFile = async (id: string) => {
+    /// More details implementation
+  };
+
   const handleChange = async (
     event: React.ChangeEvent<unknown>,
     value: number
@@ -112,13 +136,21 @@ export const ListContanteFilesContainer = () => {
       loggedUserId: loggedUser?.id ?? '',
       userInput: input,
     });
-    console.log(result?.totalPages);
     setFileList(result?.files ?? []);
     setTotalPage(result?.totalPages ?? 0);
   };
 
   return (
     <>
+      <DeleteFileModal
+        deletePopUp={deletePopUp}
+        directoryId={directoryId}
+        handlePopUpClose={handlePopUpClose}
+        idToDelete={fileId}
+        loggedUserId={loggedUser?.id ?? ''}
+        showErrorAlert={showErrorAlert}
+        onDeleteSuccess={getData}
+      />
       <LayoutBase title="Listagem de Usuários" toolBar={<ToolbarPureTV />}>
         <Box display="flex" justifyContent="center">
           <Box width={mdDown ? '100%' : '90%'}>
@@ -133,8 +165,9 @@ export const ListContanteFilesContainer = () => {
                     {fileList.map((file, index) => (
                       <Grid item md={4} lg={3} key={index}>
                         <ListContentFiles
-                          id={file.id}
-                          directoryId={directoryId}
+                          deleteFile={() => handleDeleteFile(file.id)}
+                          detailsFile={() => handleDetailsFile(file.id)}
+                          downloadFile={() => handleDownloadFile(file.id)}
                           fileImage={`http://localhost:3000/${file.fileName}`}
                           fileImageName={file.fileName}
                           name={file.originalName}

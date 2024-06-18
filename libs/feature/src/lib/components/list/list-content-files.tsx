@@ -12,68 +12,45 @@ import InfoIcon from '@mui/icons-material/Info';
 import DownloadIcon from '@mui/icons-material/Download';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { FC } from 'react';
-import { DeleteContentFileByIdDto, IconMenuItem } from '@workspaces/domain';
+import { IconMenuItem } from '@workspaces/domain';
 import { ButtonFileMenu } from '../menu';
-import { useLoggedUser } from '../../contexts';
 
 interface ListContentFilesProps {
-  id: string;
-  directoryId: string;
   fileImage: string;
   name: string;
   fileImageName: string;
+  deleteFile: () => Promise<void>;
+  downloadFile: () => Promise<void>;
+  detailsFile: () => Promise<void>;
 }
 
 export const ListContentFiles: FC<ListContentFilesProps> = ({
-  id,
-  directoryId,
   fileImage,
   name,
   fileImageName,
+  deleteFile,
+  downloadFile,
+  detailsFile,
 }) => {
   const theme = useTheme();
-  const { loggedUser } = useLoggedUser();
   const mdDown = useMediaQuery(theme.breakpoints.down('md'));
   const xlDown = useMediaQuery(theme.breakpoints.down('xl'));
-
-  const handleDetails = () => {
-    //more implamentation funcion details file
-  };
-
-  const handleDelete = async () => {
-    try {
-      const deleteDto: DeleteContentFileByIdDto = {
-        directoryId,
-        idToDelete: id,
-        loggedUserId: loggedUser?.id ?? '',
-      };
-      console.log(deleteDto);
-
-      //await DeleteContentFileByIdRequest(deleteDto);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const handleDownload = () => {
-    //more implamentation funcion delete file
-  };
 
   const iconMenuList: IconMenuItem[] = [
     {
       icon: <InfoIcon />,
       title: 'Detalhes',
-      handleClick: handleDetails,
+      handleClick: detailsFile,
     },
     {
       icon: <DeleteIcon />,
       title: 'Deletar',
-      handleClick: handleDelete,
+      handleClick: deleteFile,
     },
     {
       icon: <DownloadIcon />,
       title: 'Download',
-      handleClick: handleDownload,
+      handleClick: downloadFile,
     },
   ];
 
@@ -110,7 +87,7 @@ export const ListContentFiles: FC<ListContentFilesProps> = ({
             variant="body2"
             overflow="hidden"
             noWrap
-            width={theme.spacing(30)}
+            width={theme.spacing(20)}
             textOverflow="ellipsis"
             fontSize={14}
           >
