@@ -21,7 +21,7 @@ export class FindContentFileByIdRepositoryImpl
         original_name: true,
         user: {
           select: {
-            name: true,
+            nick_name: true,
           },
         },
       },
@@ -29,7 +29,7 @@ export class FindContentFileByIdRepositoryImpl
 
     const mappedContentFile: ContentFile = {
       id: contentFileResult?.Content_Files_id ?? '',
-      created_by: contentFileResult?.user.name ?? '',
+      created_by: contentFileResult?.user.nick_name ?? '',
       fileName: contentFileResult?.file_name ?? '',
       format: contentFileResult?.format ?? '',
       originalName: contentFileResult?.original_name ?? '',
