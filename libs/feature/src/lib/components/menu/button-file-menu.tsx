@@ -35,8 +35,9 @@ export const ButtonFileMenu: FC<ButtonFileMenuProps> = ({
         <MoreHorizIcon />
       </IconButton>
       <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
-        {iconMenuItemList.map((item) => (
+        {iconMenuItemList.map((item, index) => (
           <MenuItem
+            key={index}
             sx={{
               width: theme.spacing(20),
             }}

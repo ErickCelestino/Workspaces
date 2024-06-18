@@ -13,7 +13,7 @@ export class ListContentFileRepositoryImpl
   constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
   async list(input: ListContentFileDto): Promise<ListContentFileResponseDto> {
     const skip = input?.skip || 0;
-    const take = input?.take || 6;
+    const take = input?.take || 8;
 
     const [files, total] = await this.prismaService.$transaction([
       this.prismaService.content_Files.findMany({

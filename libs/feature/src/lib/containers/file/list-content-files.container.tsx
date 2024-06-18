@@ -15,7 +15,7 @@ import {
 } from '@workspaces/domain';
 import { ListContentFilesRequest, getItemLocalStorage } from '../../services';
 import { useLoggedUser } from '../../contexts';
-import { ListContentFiles, ToolbarPureTV } from '../../components';
+import { ListContentFiles, SearchBar, ToolbarPureTV } from '../../components';
 import axios, { AxiosError } from 'axios';
 import { useSnackbarAlert } from '../../hooks';
 import {
@@ -106,12 +106,27 @@ export const ListContanteFilesContainer = () => {
     setFileList(result.files);
   };
 
+  const searchData = async (input: string) => {
+    const result = await handleData({
+      directoryId,
+      loggedUserId: loggedUser?.id ?? '',
+      userInput: input,
+    });
+    console.log(result?.totalPages);
+    setFileList(result?.files ?? []);
+    setTotalPage(result?.totalPages ?? 0);
+  };
+
   return (
     <>
       <LayoutBase title="Listagem de Usuários" toolBar={<ToolbarPureTV />}>
         <Box display="flex" justifyContent="center">
           <Box width={mdDown ? '100%' : '90%'}>
             <Box width="95%">
+              <SearchBar
+                onSearch={searchData}
+                placeholder="Pesquisar Arquivo"
+              />
               <Box>
                 {fileList.length > 0 ? (
                   <Grid container spacing={2}>

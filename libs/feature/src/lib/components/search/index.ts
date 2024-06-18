@@ -1,1 +1,1 @@
-export * from './search-user';
+export * from './search-bar';
