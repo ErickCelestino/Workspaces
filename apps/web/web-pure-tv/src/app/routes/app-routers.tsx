@@ -4,7 +4,6 @@ import {
   ListUserContainer,
   TestContainer,
   useDrawerContext,
-  FilesContainer,
   ListContanteFilesContainer,
 } from '@workspaces/feature';
 import { useEffect } from 'react';

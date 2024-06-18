@@ -38,9 +38,14 @@ const AppBar = styled(MuiAppBar, {
 interface ILayoutBasePros {
   children: ReactNode;
   title: string;
+  toolBar?: ReactNode;
 }
 
-export const LayoutBase: FC<ILayoutBasePros> = ({ children, title }) => {
+export const LayoutBase: FC<ILayoutBasePros> = ({
+  children,
+  title,
+  toolBar,
+}) => {
   const theme = useTheme();
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -82,9 +87,11 @@ export const LayoutBase: FC<ILayoutBasePros> = ({ children, title }) => {
                 overflow="hidden"
                 noWrap
                 component="div"
+                sx={{ flexGrow: 1 }}
               >
                 {title}
               </Typography>
+              {toolBar && <Box>{toolBar}</Box>}
             </Toolbar>
           </AppBar>
         )}
