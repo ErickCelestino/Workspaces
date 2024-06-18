@@ -93,7 +93,7 @@ export const ListContentFiles: FC<ListContentFilesProps> = ({
             variant="body2"
             overflow="hidden"
             noWrap
-            width={theme.spacing(30)}
+            width={theme.spacing(20)}
             textOverflow="ellipsis"
             fontSize={14}
           >
