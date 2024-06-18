@@ -3,6 +3,8 @@ export * from './connection-error';
 export * from './entity-exist';
 export * from './entity-max-length';
 export * from './entity-min-length';
+export * from './entity-not-allowed';
+export * from './entity-not-created';
 export * from './entity-not-empty';
 export * from './entity-not-exist';
 export * from './invalid-email';

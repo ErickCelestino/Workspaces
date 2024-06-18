@@ -10,6 +10,7 @@ import {
   ListUser,
   SearchUser,
   SimpleModal,
+  ToolbarPureTV,
 } from '../../components';
 import { LayoutBase } from '../../layout';
 import { useEffect, useState } from 'react';
@@ -103,7 +104,7 @@ export const ListUserContainer = () => {
           cancelAction={handlePopUpClose}
         />
       </SimpleModal>
-      <LayoutBase title="Listagem de Usuários">
+      <LayoutBase title="Listagem de Usuários" toolBar={<ToolbarPureTV />}>
         <Box display="flex" justifyContent="center">
           <Box width="60%">
             <SearchUser onSearch={handleData} placeholder="Pesquisar Usuário" />

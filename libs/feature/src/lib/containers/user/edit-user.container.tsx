@@ -1,5 +1,5 @@
 import { useMediaQuery, useTheme } from '@mui/material';
-import { FormCard, FormEditUser } from '../../components';
+import { FormCard, FormEditUser, ToolbarPureTV } from '../../components';
 import { LayoutBase } from '../../layout';
 import { useSnackbarAlert } from '../../hooks';
 
@@ -18,7 +18,7 @@ export const EditUserContainer = () => {
 
   return (
     <>
-      <LayoutBase title="Editar Usuário">
+      <LayoutBase title="Editar Usuário" toolBar={<ToolbarPureTV />}>
         {!smDown && (
           <FormCard
             title="Editar os dados do Usuário"

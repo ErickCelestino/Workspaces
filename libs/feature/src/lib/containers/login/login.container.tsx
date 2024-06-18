@@ -18,7 +18,7 @@ import { useSnackbarAlert } from '../../hooks';
 import { useForm } from 'react-hook-form';
 import { LoginSchema } from '../../shared';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ListUserRequest } from '../../services';
+import { ListUserRequest, setItemLocalStorage } from '../../services';
 import { useLoggedUser } from '../../contexts';
 
 interface LoginContainerProps {
@@ -77,6 +77,7 @@ export const LoginContainer: React.FC<LoginContainerProps> = ({
         name: user.users[0].name,
         type: user.users[0].type,
       };
+      setItemLocalStorage(JSON.stringify(loggedUser), 'lu');
       setLoggedUser(loggedUser);
     }
     history('/');
