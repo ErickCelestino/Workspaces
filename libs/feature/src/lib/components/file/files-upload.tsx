@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { Box, Button, Typography, Paper } from '@mui/material';
 import { CloudUpload as CloudUploadIcon } from '@mui/icons-material';

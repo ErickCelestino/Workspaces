@@ -10,8 +10,8 @@ export class ListUserRepositoryImpl implements ListUserRepository {
   constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
 
   async list(input: ListUserDto): Promise<ListUserResponseDto> {
-    const skip = input?.skip || 6;
-    const take = input?.take || 0;
+    const skip = input?.skip || 0;
+    const take = input?.take || 6;
 
     const [users, total] = await this.prismaService.$transaction([
       this.prismaService.user.findMany({

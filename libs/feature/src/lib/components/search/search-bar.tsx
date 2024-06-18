@@ -13,7 +13,7 @@ interface SearchUserProps {
   onSearch: (text: string) => void;
 }
 
-export const SearchUser: FC<SearchUserProps> = ({ placeholder, onSearch }) => {
+export const SearchBar: FC<SearchUserProps> = ({ placeholder, onSearch }) => {
   const [inputText, setInputText] = useState<string>('');
   const theme = useTheme();
 

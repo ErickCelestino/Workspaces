@@ -1,5 +1,5 @@
-import { Box, Button, IconButton, Typography } from '@mui/material';
-import { useAppIdContext, useFileModal, useLoggedUser } from '../../contexts';
+import { Button } from '@mui/material';
+import { useAppIdContext, useLoggedUser } from '../../contexts';
 import { LayoutBase } from '../../layout';
 import { setItemLocalStorage } from '../../services';
 import { ToolbarPureTV } from '../../components';

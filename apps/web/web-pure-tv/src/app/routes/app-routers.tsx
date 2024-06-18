@@ -4,7 +4,7 @@ import {
   ListUserContainer,
   TestContainer,
   useDrawerContext,
-  FilesContainer,
+  ListContanteFilesContainer,
 } from '@workspaces/feature';
 import { useEffect } from 'react';
 
@@ -25,7 +25,7 @@ export const AppRouters = () => {
       },
       {
         label: 'Arquivos',
-        icon: 'cloud_upload',
+        icon: 'folder',
         path: '/files',
       },
     ]);
@@ -36,7 +36,7 @@ export const AppRouters = () => {
       <Route path="/home" element={<TestContainer />} />
       <Route path="/edit-user" element={<EditUserContainer />} />
       <Route path="list-user" element={<ListUserContainer />} />
-      <Route path="files" element={<FilesContainer />} />
+      <Route path="files" element={<ListContanteFilesContainer />} />
 
       <Route path="*" element={<Navigate to="/home" />} />
     </Routes>

@@ -8,7 +8,7 @@ import {
 import {
   FormDeleteUser,
   ListUser,
-  SearchUser,
+  SearchBar,
   SimpleModal,
   ToolbarPureTV,
 } from '../../components';
@@ -107,7 +107,7 @@ export const ListUserContainer = () => {
       <LayoutBase title="Listagem de Usuários" toolBar={<ToolbarPureTV />}>
         <Box display="flex" justifyContent="center">
           <Box width="60%">
-            <SearchUser onSearch={handleData} placeholder="Pesquisar Usuário" />
+            <SearchBar onSearch={handleData} placeholder="Pesquisar Usuário" />
             <Box width="95%">
               {userList.length > 0 ? (
                 userList.map((user) => (
