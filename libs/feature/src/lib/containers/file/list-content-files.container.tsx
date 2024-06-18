@@ -127,7 +127,7 @@ export const ListContanteFilesContainer = () => {
                 onSearch={searchData}
                 placeholder="Pesquisar Arquivo"
               />
-              <Box>
+              <Box mt={theme.spacing(4)}>
                 {fileList.length > 0 ? (
                   <Grid container spacing={2}>
                     {fileList.map((file, index) => (

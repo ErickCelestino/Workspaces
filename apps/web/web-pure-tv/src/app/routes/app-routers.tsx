@@ -25,7 +25,7 @@ export const AppRouters = () => {
       },
       {
         label: 'Arquivos',
-        icon: 'cloud_upload',
+        icon: 'folder',
         path: '/files',
       },
     ]);
