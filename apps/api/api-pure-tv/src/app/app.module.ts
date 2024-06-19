@@ -6,7 +6,6 @@ import { CreateContentFileModule } from './create-content-file/create-content-fi
 import { MulterModule } from '@nestjs/platform-express';
 import { ListContentFileModule } from './list-content-file/list-content-file.module';
 import { DeleteContentFileByIdModule } from './delete-content-file-by-id/delete-content-file-by-id.module';
-
 @Module({
   imports: [
     CreateContentFileModule,

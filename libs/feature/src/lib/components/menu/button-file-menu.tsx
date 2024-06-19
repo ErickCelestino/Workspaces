@@ -38,10 +38,6 @@ export const ButtonFileMenu: FC<ButtonFileMenuProps> = ({
         {iconMenuItemList.map((item, index) => (
           <MenuItem
             key={index}
-            onClick={() => {
-              handleClose();
-              item.handleClick();
-            }}
             sx={{
               width: theme.spacing(20),
             }}
@@ -55,7 +51,7 @@ export const ButtonFileMenu: FC<ButtonFileMenuProps> = ({
                 marginLeft: -1,
               }}
             >
-              <IconButton>{item.icon}</IconButton>
+              <IconButton onClick={item.handleClick}>{item.icon}</IconButton>
               <Typography>{item.title}</Typography>
             </Box>
           </MenuItem>

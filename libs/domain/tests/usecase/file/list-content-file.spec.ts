@@ -84,6 +84,16 @@ describe('ListContentFile', () => {
     expect(result.value).toBeInstanceOf(EntityNotEmpty);
   });
 
+  it('should return EntityNotEmpty when a pass incorrect user id', async () => {
+    const { listContentFileDto, sut } = makeSut();
+    listContentFileDto.loggedUserId = '';
+    const result = await sut.execute(listContentFileDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
+    expect(result.value).toBeInstanceOf(EntityNotEmpty);
+  });
+
   it('should return EntityNotExists if there is no user created in the database', async () => {
     const {
       listContentFileDto,
