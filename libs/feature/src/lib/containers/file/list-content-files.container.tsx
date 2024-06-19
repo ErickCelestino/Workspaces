@@ -17,6 +17,7 @@ import { ListContentFilesRequest, getItemLocalStorage } from '../../services';
 import { useLoggedUser } from '../../contexts';
 import {
   DeleteFileModal,
+  DetailsFileModal,
   ListContentFiles,
   SearchBar,
   ToolbarPureTV,
@@ -35,6 +36,7 @@ export const ListContanteFilesContainer = () => {
   const [totalPage, setTotalPage] = useState<number>(1);
   const [directoryId, setDirectoryId] = useState('');
   const [deletePopUp, setDeletePopUp] = useState(false);
+  const [detailsPopUp, setDetailsPopUp] = useState(false);
   const [fileId, setFileId] = useState('');
 
   const theme = useTheme();
@@ -110,7 +112,8 @@ export const ListContanteFilesContainer = () => {
   };
 
   const handleDetailsFile = async (id: string) => {
-    /// More details implementation
+    setFileId(id);
+    setDetailsPopUp(true);
   };
 
   const handleDownloadFile = async (id: string) => {
@@ -151,6 +154,7 @@ export const ListContanteFilesContainer = () => {
         showErrorAlert={showErrorAlert}
         onDeleteSuccess={getData}
       />
+
       <LayoutBase title="Listagem de Usuários" toolBar={<ToolbarPureTV />}>
         <Box display="flex" justifyContent="center">
           <Box width={mdDown ? '100%' : '90%'}>
@@ -208,3 +212,14 @@ export const ListContanteFilesContainer = () => {
     </>
   );
 };
+
+/*
+      <DetailsFileModal
+        directoryId={directoryId}
+        open={detailsPopUp}
+        idDetails={fileId}
+        loggedUserId={loggedUser?.id ?? ''}
+        showErrorAlert={showErrorAlert}
+        handlePopUpClose={handlePopUpClose}
+      />
+*/
