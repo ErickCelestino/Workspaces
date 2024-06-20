@@ -143,9 +143,9 @@ export const ListContanteFilesContainer = () => {
   return (
     <>
       <DeleteFileModal
-        deletePopUp={deletePopUp}
+        open={deletePopUp}
         directoryId={directoryId}
-        handlePopUpClose={handlePopUpClose}
+        onClose={handlePopUpClose}
         idToDelete={fileId}
         loggedUserId={loggedUser?.id ?? ''}
         showErrorAlert={showErrorAlert}
