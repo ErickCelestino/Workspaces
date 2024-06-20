@@ -54,7 +54,7 @@ const makeSut = (): SutTypes => {
   };
 };
 
-describe('CreateContentFile', () => {
+describe('ListContentFile', () => {
   it('should return void when a correct content video is created', async () => {
     const { listContentFileDto, sut } = makeSut();
 

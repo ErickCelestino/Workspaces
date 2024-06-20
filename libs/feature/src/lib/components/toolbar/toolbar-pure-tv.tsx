@@ -7,7 +7,7 @@ export const ToolbarPureTV = () => {
 
   return (
     <IconButton onClick={handleOpen}>
-      <CloudUploadIcon fontSize="large" />
+      <CloudUploadIcon fontSize="large" color="secondary" />
     </IconButton>
   );
 };

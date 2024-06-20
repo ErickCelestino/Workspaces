@@ -19,44 +19,38 @@ interface ListContentFilesProps {
   fileImage: string;
   name: string;
   fileImageName: string;
+  deleteFile: () => Promise<void>;
+  downloadFile: () => Promise<void>;
+  detailsFile: () => Promise<void>;
 }
 
 export const ListContentFiles: FC<ListContentFilesProps> = ({
   fileImage,
   name,
   fileImageName,
+  deleteFile,
+  downloadFile,
+  detailsFile,
 }) => {
   const theme = useTheme();
   const mdDown = useMediaQuery(theme.breakpoints.down('md'));
   const xlDown = useMediaQuery(theme.breakpoints.down('xl'));
 
-  const handleDetails = () => {
-    //more implamentation funcion details file
-  };
-
-  const handleDelete = () => {
-    //more implamentation funcion delete file
-  };
-
-  const handleDownload = () => {
-    //more implamentation funcion delete file
-  };
-
   const iconMenuList: IconMenuItem[] = [
     {
       icon: <InfoIcon />,
       title: 'Detalhes',
-      handleClick: handleDetails,
+      handleClick: detailsFile,
     },
     {
       icon: <DeleteIcon />,
       title: 'Deletar',
-      handleClick: handleDelete,
+      handleClick: deleteFile,
     },
     {
       icon: <DownloadIcon />,
       title: 'Download',
-      handleClick: handleDownload,
+      handleClick: downloadFile,
     },
   ];
 

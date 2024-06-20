@@ -1,5 +1,5 @@
 import { createTheme } from '@mui/material';
-import { cyan, purple } from '@mui/material/colors';
+import { green, purple } from '@mui/material/colors';
 
 export const LighTheme = createTheme({
   palette: {
@@ -10,9 +10,9 @@ export const LighTheme = createTheme({
       contrastText: '#ffffff',
     },
     secondary: {
-      main: cyan[500],
-      dark: cyan[400],
-      light: cyan[300],
+      main: green[900],
+      dark: green[400],
+      light: green[300],
       contrastText: '#ffffff',
     },
     background: {

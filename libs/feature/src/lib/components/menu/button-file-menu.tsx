@@ -41,6 +41,10 @@ export const ButtonFileMenu: FC<ButtonFileMenuProps> = ({
             sx={{
               width: theme.spacing(20),
             }}
+            onClick={() => {
+              item.handleClick();
+              handleClose();
+            }}
           >
             <Box
               sx={{

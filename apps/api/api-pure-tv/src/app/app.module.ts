@@ -5,7 +5,7 @@ import { AppService } from './app.service';
 import { CreateContentFileModule } from './create-content-file/create-content-file.module';
 import { MulterModule } from '@nestjs/platform-express';
 import { ListContentFileModule } from './list-content-file/list-content-file.module';
-
+import { DeleteContentFileByIdModule } from './delete-content-file-by-id/delete-content-file-by-id.module';
 @Module({
   imports: [
     CreateContentFileModule,
@@ -13,6 +13,7 @@ import { ListContentFileModule } from './list-content-file/list-content-file.mod
       dest: './uploads',
     }),
     ListContentFileModule,
+    DeleteContentFileByIdModule,
   ],
   controllers: [AppController],
   providers: [AppService],
