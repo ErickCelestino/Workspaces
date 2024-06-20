@@ -46,7 +46,7 @@ export const ListContanteFilesContainer = () => {
 
   useEffect(() => {
     getData();
-  }, [loggedUser]);
+  }, []);
 
   const showErrorAlert = (message: string) => {
     showSnackbarAlert({
@@ -102,8 +102,12 @@ export const ListContanteFilesContainer = () => {
     }
   };
 
-  const handlePopUpClose = () => {
+  const handleDeletePopUpClose = () => {
     setDeletePopUp(false);
+  };
+
+  const handleDetailsPopUpClose = () => {
+    setDetailsPopUp(false);
   };
 
   const handleDeleteFile = async (id: string) => {
@@ -148,11 +152,19 @@ export const ListContanteFilesContainer = () => {
       <DeleteFileModal
         deletePopUp={deletePopUp}
         directoryId={directoryId}
-        handlePopUpClose={handlePopUpClose}
+        handlePopUpClose={handleDeletePopUpClose}
         idToDelete={fileId}
         loggedUserId={loggedUser?.id ?? ''}
         showErrorAlert={showErrorAlert}
         onDeleteSuccess={getData}
+      />
+      <DetailsFileModal
+        directoryId={directoryId}
+        open={detailsPopUp}
+        idDetails={fileId}
+        loggedUserId={loggedUser?.id ?? ''}
+        showErrorAlert={showErrorAlert}
+        handlePopUpClose={handleDetailsPopUpClose}
       />
 
       <LayoutBase title="Listagem de Usuários" toolBar={<ToolbarPureTV />}>
@@ -214,12 +226,5 @@ export const ListContanteFilesContainer = () => {
 };
 
 /*
-      <DetailsFileModal
-        directoryId={directoryId}
-        open={detailsPopUp}
-        idDetails={fileId}
-        loggedUserId={loggedUser?.id ?? ''}
-        showErrorAlert={showErrorAlert}
-        handlePopUpClose={handlePopUpClose}
-      />
+
 */
