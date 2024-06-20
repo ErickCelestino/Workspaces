@@ -2,7 +2,6 @@ import {
   Box,
   Divider,
   Fade,
-  Grid,
   IconButton,
   Modal,
   TextField,
@@ -30,7 +29,6 @@ import {
   EntityNotExist,
 } from '../../../shared';
 import EditIcon from '@mui/icons-material/Edit';
-import { useForm } from 'react-hook-form';
 
 interface DetailsFileModalPros {
   showErrorAlert: (message: string) => void;
@@ -39,6 +37,11 @@ interface DetailsFileModalPros {
   directoryId: string;
   idDetails: string;
   loggedUserId: string;
+  title?: string;
+  fileNameTitle?: string;
+  formatFileTitle?: string;
+  sizeFileTitle?: string;
+  uploadDateTitle?: string;
 }
 
 export const DetailsFileModal: FC<DetailsFileModalPros> = ({
@@ -48,11 +51,15 @@ export const DetailsFileModal: FC<DetailsFileModalPros> = ({
   directoryId,
   idDetails,
   loggedUserId,
+  title = 'Detalhes do Arquivo',
+  fileNameTitle = 'Nome do Arquivo',
+  formatFileTitle = 'Formato do Arquivo',
+  sizeFileTitle = 'Tamanho do Arquivo',
+  uploadDateTitle = 'Data de Upload',
 }) => {
   const [detailsFile, setDetailsFile] = useState<ContentFile>();
-  const [editFileName, setEditFileName] = useState<Boolean>(false);
+  const [editFileName, setEditFileName] = useState<boolean>(false);
   const theme = useTheme();
-  const mdDown = useMediaQuery(theme.breakpoints.down('md'));
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
 
   const handleEditFileName = () => {
@@ -97,7 +104,7 @@ export const DetailsFileModal: FC<DetailsFileModalPros> = ({
     if (open) {
       getContentFile();
     }
-  }, [directoryId, idDetails, loggedUserId, open]);
+  }, [directoryId, idDetails, loggedUserId, open, showErrorAlert]);
 
   return (
     <Modal open={open} onClose={handlePopUpClose} closeAfterTransition>
@@ -122,7 +129,6 @@ export const DetailsFileModal: FC<DetailsFileModalPros> = ({
               justifyContent: 'space-between',
               alignItems: 'center',
               mb: 2,
-              color: 'white',
               p: 2,
               borderRadius: 1,
             }}
@@ -133,9 +139,9 @@ export const DetailsFileModal: FC<DetailsFileModalPros> = ({
               overflow="hidden"
               variant="h5"
             >
-              Detalhes do Arquivo
+              <strong>{title}</strong>
             </Typography>
-            <IconButton onClick={handlePopUpClose} sx={{ color: 'white' }}>
+            <IconButton onClick={handlePopUpClose}>
               <CloseIcon />
             </IconButton>
           </Box>
@@ -166,7 +172,7 @@ export const DetailsFileModal: FC<DetailsFileModalPros> = ({
                     marginLeft={theme.spacing(2)}
                     variant={smDown ? 'body1' : 'h6'}
                   >
-                    <strong>Nome do Arquivo:</strong>{' '}
+                    <strong>{fileNameTitle}:</strong>{' '}
                     {detailsFile?.originalName}
                   </Typography>
                 </Box>
@@ -224,7 +230,7 @@ export const DetailsFileModal: FC<DetailsFileModalPros> = ({
                 marginLeft={theme.spacing(2)}
                 variant={smDown ? 'body1' : 'h6'}
               >
-                <strong>Formato do Arquivo:</strong> {detailsFile?.format}
+                <strong>{formatFileTitle}:</strong> {detailsFile?.format}
               </Typography>
             </Box>
 
@@ -246,7 +252,7 @@ export const DetailsFileModal: FC<DetailsFileModalPros> = ({
                 marginLeft={theme.spacing(2)}
                 variant={smDown ? 'body1' : 'h6'}
               >
-                <strong>Tamanho do Arquivo:</strong> {detailsFile?.size}
+                <strong>{sizeFileTitle}:</strong> {detailsFile?.size}
               </Typography>
             </Box>
 
@@ -268,7 +274,7 @@ export const DetailsFileModal: FC<DetailsFileModalPros> = ({
                 marginLeft={theme.spacing(2)}
                 variant={smDown ? 'body1' : 'h6'}
               >
-                <strong>Data de Upload:</strong>{' '}
+                <strong>{uploadDateTitle}:</strong>{' '}
                 {detailsFile?.uploadDate.toString()}
               </Typography>
             </Box>
