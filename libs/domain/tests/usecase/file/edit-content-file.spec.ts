@@ -97,6 +97,16 @@ describe('EditContentFile', () => {
     expect(result.value).toBeInstanceOf(EntityNotEmpty);
   });
 
+  it('should return EntityNotEmpty when a pass empty file name', async () => {
+    const { editContentFileDto, sut } = makeSut();
+    editContentFileDto.originalName = '';
+    const result = await sut.execute(editContentFileDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
+    expect(result.value).toBeInstanceOf(EntityNotEmpty);
+  });
+
   it('should return EntityNotExists if there is no user created in the database', async () => {
     const {
       editContentFileDto,
