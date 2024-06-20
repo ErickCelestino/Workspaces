@@ -5,19 +5,13 @@ import {
   UserList,
   EntityNotExists,
   Directory,
-  ListContentFile,
   DeleteContentFileById,
   DeleteContentFileByIdDto,
   DeleteContentFileByIdRepository,
   FindContentFileByIdRepository,
   ContentFile,
 } from '../../../src';
-import {
-  ContentFileMock,
-  DirectoryMock,
-  ListContentFileReponseMock,
-  userMock,
-} from '../../entity';
+import { ContentFileMock, DirectoryMock, userMock } from '../../entity';
 import {
   DeleteContentFileByIdRepositoryMock,
   FindContentFileByIdRepositoryMock,
