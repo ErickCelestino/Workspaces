@@ -103,7 +103,7 @@ export const FormEditContentFile: FC<FormEditContentFileProps> = ({
       >
         <TextField
           sx={{
-            width: smDown ? theme.spacing(35) : theme.spacing(60),
+            width: smDown ? theme.spacing(32) : theme.spacing(60),
           }}
           InputProps={{
             startAdornment: <DescriptionIcon />,
