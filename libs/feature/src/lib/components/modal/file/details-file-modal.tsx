@@ -4,7 +4,6 @@ import {
   Fade,
   IconButton,
   Modal,
-  TextField,
   Typography,
   useMediaQuery,
   useTheme,
@@ -28,11 +27,12 @@ import {
   EntityNotExist,
 } from '../../../shared';
 import EditIcon from '@mui/icons-material/Edit';
-import { FormButton, FormEditContentFile } from '../../form';
+import { FormEditContentFile } from '../../form';
 
 interface DetailsFileModalPros {
   showErrorAlert: (message: string) => void;
   handlePopUpClose: () => void;
+  onEditSuccess: () => void;
   open: boolean;
   directoryId: string;
   idDetails: string;
@@ -47,6 +47,7 @@ interface DetailsFileModalPros {
 export const DetailsFileModal: FC<DetailsFileModalPros> = ({
   showErrorAlert,
   handlePopUpClose,
+  onEditSuccess,
   open,
   directoryId,
   idDetails,
@@ -64,6 +65,11 @@ export const DetailsFileModal: FC<DetailsFileModalPros> = ({
 
   const handleEditFileName = () => {
     setEditFileName(!editFileName);
+  };
+
+  const editSuccess = () => {
+    setEditFileName(false);
+    onEditSuccess();
   };
 
   useEffect(() => {
@@ -115,14 +121,13 @@ export const DetailsFileModal: FC<DetailsFileModalPros> = ({
             top: '50%',
             left: '50%',
             transform: 'translate(-50%, -50%)',
-            height: theme.spacing(52),
+            height: theme.spacing(45),
             width: smDown ? '90%' : theme.spacing(80),
             bgcolor: 'background.paper',
             boxShadow: 24,
             p: 4,
             borderRadius: 2,
           }}
-          component="form"
         >
           <Box
             sx={{
@@ -183,6 +188,7 @@ export const DetailsFileModal: FC<DetailsFileModalPros> = ({
               </Box>
             ) : (
               <FormEditContentFile
+                onEditSuccess={editSuccess}
                 directoryId={directoryId}
                 idToEdit={idDetails}
                 loggedUserId={loggedUserId}

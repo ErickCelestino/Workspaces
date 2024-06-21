@@ -7,7 +7,8 @@ import {
 } from '@mui/material';
 import CancelIcon from '@mui/icons-material/Cancel';
 import DescriptionIcon from '@mui/icons-material/Description';
-import { FC, useState } from 'react';
+import SendIcon from '@mui/icons-material/Send';
+import { FC } from 'react';
 import { EditContentFileRequest } from '../../../services';
 import {
   EntityNotEmpty,
@@ -19,11 +20,11 @@ import { EditContentFileDto, ErrorResponse } from '@workspaces/domain';
 import { useForm } from 'react-hook-form';
 import axios, { AxiosError } from 'axios';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { FormButton } from '../form-button.component';
 
 interface FormEditContentFileProps {
   handleEditFileName: () => void;
   showErrorAlert: (message: string) => void;
+  onEditSuccess: () => void;
   directoryId: string;
   idToEdit: string;
   loggedUserId: string;
@@ -32,12 +33,11 @@ interface FormEditContentFileProps {
 export const FormEditContentFile: FC<FormEditContentFileProps> = ({
   handleEditFileName,
   showErrorAlert,
+  onEditSuccess,
   directoryId,
   idToEdit,
   loggedUserId,
 }) => {
-  const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
   const theme = useTheme();
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -63,6 +63,7 @@ export const FormEditContentFile: FC<FormEditContentFileProps> = ({
         newFileName: data.newFileName,
       };
       const result = await EditContentFileRequest(dto);
+      onEditSuccess();
       return result;
     } catch (error) {
       console.error(error);
@@ -122,33 +123,13 @@ export const FormEditContentFile: FC<FormEditContentFileProps> = ({
       <Box
         sx={{
           display: 'flex',
-          justifyContent: 'end',
           position: 'relative',
+          flexDirection: 'column',
         }}
       >
-        <Box
-          sx={{
-            display: 'flex',
-            position: 'absolute',
-            flexDirection: 'column',
-            height: theme.spacing(300),
-          }}
-          width={theme.spacing(20)}
-        >
-          <Box
-            sx={{
-              flexDirection: 'column',
-              display: 'flex',
-              justifyContent: 'end',
-            }}
-          >
-            <FormButton
-              buttonTitle={loading ? 'Alterando...' : 'Alterar'}
-              loading={loading}
-              success={success}
-            />
-          </Box>
-        </Box>
+        <IconButton onClick={handleSubmit(editFileName)}>
+          <SendIcon />
+        </IconButton>
       </Box>
     </Box>
   );

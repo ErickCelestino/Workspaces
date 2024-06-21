@@ -17,7 +17,7 @@ export class EditContentFileRepositoryImpl
         directory_id: directoryId,
       },
       data: {
-        file_name: originalName,
+        original_name: originalName,
       },
     });
   }
