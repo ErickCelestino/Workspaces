@@ -4,7 +4,6 @@ import {
   Fade,
   IconButton,
   Modal,
-  TextField,
   Typography,
   useMediaQuery,
   useTheme,
@@ -20,7 +19,6 @@ import DescriptionIcon from '@mui/icons-material/Description';
 import FormatSizeIcon from '@mui/icons-material/FormatSize';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import AttachmentIcon from '@mui/icons-material/Attachment';
-import CancelIcon from '@mui/icons-material/Cancel';
 import { DetailsContentFileRequest } from '../../../services';
 import axios, { AxiosError } from 'axios';
 import {
@@ -29,10 +27,12 @@ import {
   EntityNotExist,
 } from '../../../shared';
 import EditIcon from '@mui/icons-material/Edit';
+import { FormEditContentFile } from '../../form';
 
 interface DetailsFileModalPros {
   showErrorAlert: (message: string) => void;
   handlePopUpClose: () => void;
+  onEditSuccess: () => void;
   open: boolean;
   directoryId: string;
   idDetails: string;
@@ -47,6 +47,7 @@ interface DetailsFileModalPros {
 export const DetailsFileModal: FC<DetailsFileModalPros> = ({
   showErrorAlert,
   handlePopUpClose,
+  onEditSuccess,
   open,
   directoryId,
   idDetails,
@@ -64,6 +65,11 @@ export const DetailsFileModal: FC<DetailsFileModalPros> = ({
 
   const handleEditFileName = () => {
     setEditFileName(!editFileName);
+  };
+
+  const editSuccess = () => {
+    setEditFileName(false);
+    onEditSuccess();
   };
 
   useEffect(() => {
@@ -181,36 +187,14 @@ export const DetailsFileModal: FC<DetailsFileModalPros> = ({
                 </IconButton>
               </Box>
             ) : (
-              <Box
-                sx={{
-                  display: 'flex',
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                }}
-              >
-                <Box
-                  component="form"
-                  sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    flexDirection: 'row',
-                  }}
-                >
-                  <TextField
-                    sx={{
-                      width: smDown ? theme.spacing(35) : theme.spacing(60),
-                    }}
-                    InputProps={{
-                      startAdornment: <DescriptionIcon />,
-                    }}
-                    size="small"
-                    label="Nome do Arquivo"
-                  />
-                </Box>
-                <IconButton onClick={handleEditFileName}>
-                  <CancelIcon />
-                </IconButton>
-              </Box>
+              <FormEditContentFile
+                onEditSuccess={editSuccess}
+                directoryId={directoryId}
+                idToEdit={idDetails}
+                loggedUserId={loggedUserId}
+                showErrorAlert={showErrorAlert}
+                handleEditFileName={handleEditFileName}
+              />
             )}
             <Box
               component="div"

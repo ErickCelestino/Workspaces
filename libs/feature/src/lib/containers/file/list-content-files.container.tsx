@@ -159,6 +159,7 @@ export const ListContanteFilesContainer = () => {
         onDeleteSuccess={getData}
       />
       <DetailsFileModal
+        onEditSuccess={getData}
         directoryId={directoryId}
         open={detailsPopUp}
         idDetails={fileId}

@@ -7,6 +7,7 @@ import { MulterModule } from '@nestjs/platform-express';
 import { ListContentFileModule } from './list-content-file/list-content-file.module';
 import { DeleteContentFileByIdModule } from './delete-content-file-by-id/delete-content-file-by-id.module';
 import { DetailsContentFileModule } from './details-content-file/details-content-file.module';
+import { EditContentFileModule } from './edit-content-file/edit-content-file.module';
 @Module({
   imports: [
     CreateContentFileModule,
@@ -16,6 +17,7 @@ import { DetailsContentFileModule } from './details-content-file/details-content
     ListContentFileModule,
     DeleteContentFileByIdModule,
     DetailsContentFileModule,
+    EditContentFileModule,
   ],
   controllers: [AppController],
   providers: [AppService],
