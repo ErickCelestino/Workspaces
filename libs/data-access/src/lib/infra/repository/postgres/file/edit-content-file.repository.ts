@@ -1,0 +1,24 @@
+import { Inject } from '@nestjs/common';
+import {
+  EditContentFileDto,
+  EditContentFileRepository,
+} from '@workspaces/domain';
+import { PrismaService } from 'nestjs-prisma';
+
+export class EditContentFileRepositoryImpl
+  implements EditContentFileRepository
+{
+  constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
+  async edit(input: EditContentFileDto): Promise<void> {
+    const { directoryId, idToEdit, originalName } = input;
+    await this.prismaService.content_Files.update({
+      where: {
+        Content_Files_id: idToEdit,
+        directory_id: directoryId,
+      },
+      data: {
+        file_name: originalName,
+      },
+    });
+  }
+}
