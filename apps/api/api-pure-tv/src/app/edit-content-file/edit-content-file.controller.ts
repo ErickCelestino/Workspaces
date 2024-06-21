@@ -5,10 +5,11 @@ import {
   Param,
   Put,
   Query,
+  UsePipes,
 } from '@nestjs/common';
 import { EditContentFileService } from './edit-content-file.service';
-import { EditContentFileDto } from '@workspaces/domain';
-import { z } from 'zod';
+import { ZodValidationPipe } from '../pipes/zod-validation-pipe';
+import { EditContentFileDto, editFileSchema } from '@workspaces/domain';
 
 @Controller('edit-content-file')
 export class EditContentFileController {
@@ -16,10 +17,14 @@ export class EditContentFileController {
     private readonly editContentFileService: EditContentFileService
   ) {}
 
-  private createStringSchema() {
-    return z.string().min(1);
-  }
-
+  @UsePipes(
+    new ZodValidationPipe({
+      id: editFileSchema.id,
+      loggedUserId: editFileSchema.loggedUserId,
+      directoryId: editFileSchema.directoryId,
+      newFileName: editFileSchema.newFileName,
+    })
+  )
   @Put(':id')
   async edit(
     @Param('id') idToEdit: string,
