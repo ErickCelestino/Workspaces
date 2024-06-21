@@ -17,6 +17,7 @@ import { ListContentFilesRequest, getItemLocalStorage } from '../../services';
 import { useLoggedUser } from '../../contexts';
 import {
   DeleteFileModal,
+  DetailsFileModal,
   ListContentFiles,
   SearchBar,
   ToolbarPureTV,
@@ -35,6 +36,7 @@ export const ListContanteFilesContainer = () => {
   const [totalPage, setTotalPage] = useState<number>(1);
   const [directoryId, setDirectoryId] = useState('');
   const [deletePopUp, setDeletePopUp] = useState(false);
+  const [detailsPopUp, setDetailsPopUp] = useState(false);
   const [fileId, setFileId] = useState('');
 
   const theme = useTheme();
@@ -44,7 +46,7 @@ export const ListContanteFilesContainer = () => {
 
   useEffect(() => {
     getData();
-  }, [loggedUser]);
+  }, []);
 
   const showErrorAlert = (message: string) => {
     showSnackbarAlert({
@@ -100,8 +102,12 @@ export const ListContanteFilesContainer = () => {
     }
   };
 
-  const handlePopUpClose = () => {
+  const handleDeletePopUpClose = () => {
     setDeletePopUp(false);
+  };
+
+  const handleDetailsPopUpClose = () => {
+    setDetailsPopUp(false);
   };
 
   const handleDeleteFile = async (id: string) => {
@@ -110,7 +116,8 @@ export const ListContanteFilesContainer = () => {
   };
 
   const handleDetailsFile = async (id: string) => {
-    /// More details implementation
+    setFileId(id);
+    setDetailsPopUp(true);
   };
 
   const handleDownloadFile = async (id: string) => {
@@ -145,12 +152,21 @@ export const ListContanteFilesContainer = () => {
       <DeleteFileModal
         open={deletePopUp}
         directoryId={directoryId}
-        onClose={handlePopUpClose}
+        onClose={handleDeletePopUpClose}
         idToDelete={fileId}
         loggedUserId={loggedUser?.id ?? ''}
         showErrorAlert={showErrorAlert}
         onDeleteSuccess={getData}
       />
+      <DetailsFileModal
+        directoryId={directoryId}
+        open={detailsPopUp}
+        idDetails={fileId}
+        loggedUserId={loggedUser?.id ?? ''}
+        showErrorAlert={showErrorAlert}
+        handlePopUpClose={handleDetailsPopUpClose}
+      />
+
       <LayoutBase title="Listagem de Usuários" toolBar={<ToolbarPureTV />}>
         <Box display="flex" justifyContent="center">
           <Box width={mdDown ? '100%' : '90%'}>
