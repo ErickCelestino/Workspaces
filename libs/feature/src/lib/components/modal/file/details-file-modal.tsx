@@ -20,7 +20,6 @@ import DescriptionIcon from '@mui/icons-material/Description';
 import FormatSizeIcon from '@mui/icons-material/FormatSize';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import AttachmentIcon from '@mui/icons-material/Attachment';
-import CancelIcon from '@mui/icons-material/Cancel';
 import { DetailsContentFileRequest } from '../../../services';
 import axios, { AxiosError } from 'axios';
 import {
@@ -29,6 +28,7 @@ import {
   EntityNotExist,
 } from '../../../shared';
 import EditIcon from '@mui/icons-material/Edit';
+import { FormButton, FormEditContentFile } from '../../form';
 
 interface DetailsFileModalPros {
   showErrorAlert: (message: string) => void;
@@ -115,13 +115,14 @@ export const DetailsFileModal: FC<DetailsFileModalPros> = ({
             top: '50%',
             left: '50%',
             transform: 'translate(-50%, -50%)',
-            height: theme.spacing(45),
+            height: theme.spacing(52),
             width: smDown ? '90%' : theme.spacing(80),
             bgcolor: 'background.paper',
             boxShadow: 24,
             p: 4,
             borderRadius: 2,
           }}
+          component="form"
         >
           <Box
             sx={{
@@ -181,36 +182,13 @@ export const DetailsFileModal: FC<DetailsFileModalPros> = ({
                 </IconButton>
               </Box>
             ) : (
-              <Box
-                sx={{
-                  display: 'flex',
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                }}
-              >
-                <Box
-                  component="form"
-                  sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    flexDirection: 'row',
-                  }}
-                >
-                  <TextField
-                    sx={{
-                      width: smDown ? theme.spacing(35) : theme.spacing(60),
-                    }}
-                    InputProps={{
-                      startAdornment: <DescriptionIcon />,
-                    }}
-                    size="small"
-                    label="Nome do Arquivo"
-                  />
-                </Box>
-                <IconButton onClick={handleEditFileName}>
-                  <CancelIcon />
-                </IconButton>
-              </Box>
+              <FormEditContentFile
+                directoryId={directoryId}
+                idToEdit={idDetails}
+                loggedUserId={loggedUserId}
+                showErrorAlert={showErrorAlert}
+                handleEditFileName={handleEditFileName}
+              />
             )}
             <Box
               component="div"
