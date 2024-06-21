@@ -4,9 +4,14 @@ import {
   Get,
   Param,
   Query,
+  UsePipes,
 } from '@nestjs/common';
 import { DetailsContentFileService } from './details-content-file.service';
-import { DetailsContentFileDto } from '@workspaces/domain';
+import {
+  DetailsContentFileDto,
+  detailsContentFileSchema,
+} from '@workspaces/domain';
+import { ZodValidationPipe } from '../pipes/zod-validation-pipe';
 
 @Controller('details-content-file')
 export class DetailsContentFileController {
@@ -14,6 +19,13 @@ export class DetailsContentFileController {
     private readonly detailsContentFileService: DetailsContentFileService
   ) {}
 
+  @UsePipes(
+    new ZodValidationPipe({
+      id: detailsContentFileSchema.id,
+      loggedUserId: detailsContentFileSchema.loggedUserId,
+      directoryId: detailsContentFileSchema.directoryId,
+    })
+  )
   @Get(':id')
   async details(
     @Param('id') id: string,
