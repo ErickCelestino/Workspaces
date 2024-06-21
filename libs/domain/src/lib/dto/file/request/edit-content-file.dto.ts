@@ -1,6 +1,6 @@
 export interface EditContentFileDto {
   idToEdit: string;
-  originalName: string;
+  newFileName: string;
   loggedUserId: string;
   directoryId: string;
 }

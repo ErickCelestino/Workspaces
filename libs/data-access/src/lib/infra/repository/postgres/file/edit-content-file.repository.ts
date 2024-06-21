@@ -10,7 +10,7 @@ export class EditContentFileRepositoryImpl
 {
   constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
   async edit(input: EditContentFileDto): Promise<void> {
-    const { directoryId, idToEdit, originalName } = input;
+    const { directoryId, idToEdit, newFileName: originalName } = input;
     await this.prismaService.content_Files.update({
       where: {
         Content_Files_id: idToEdit,

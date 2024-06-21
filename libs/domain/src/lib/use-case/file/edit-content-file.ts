@@ -28,7 +28,7 @@ export class EditContentFile
   async execute(
     input: EditContentFileDto
   ): Promise<Either<EntityNotEmpty | EntityNotExists, void>> {
-    const { idToEdit, directoryId, loggedUserId, originalName } = input;
+    const { idToEdit, directoryId, loggedUserId, newFileName } = input;
 
     if (Object.keys(idToEdit).length < 1) {
       return left(new EntityNotEmpty('ID'));
@@ -42,7 +42,7 @@ export class EditContentFile
       return left(new EntityNotEmpty('Directory ID'));
     }
 
-    if (Object.keys(originalName).length < 1) {
+    if (Object.keys(newFileName).length < 1) {
       return left(new EntityNotEmpty('name'));
     }
 

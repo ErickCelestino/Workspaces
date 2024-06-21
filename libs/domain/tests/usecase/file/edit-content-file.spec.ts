@@ -37,7 +37,7 @@ const makeSut = (): SutTypes => {
     directoryId: DirectoryMock.id,
     loggedUserId: userMock.userId,
     idToEdit: ContentFileMock.id,
-    originalName: 'any_original_name',
+    newFileName: 'any_original_name',
   };
 
   const sut = new EditContentFile(
@@ -99,7 +99,7 @@ describe('EditContentFile', () => {
 
   it('should return EntityNotEmpty when a pass empty file name', async () => {
     const { editContentFileDto, sut } = makeSut();
-    editContentFileDto.originalName = '';
+    editContentFileDto.newFileName = '';
     const result = await sut.execute(editContentFileDto);
 
     expect(result.isLeft()).toBe(true);
