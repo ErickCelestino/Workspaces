@@ -1,7 +1,5 @@
 import { z } from 'zod';
 
-export const deleteUserByIdSchema = z
-  .object({
-    id: z.string().min(2),
-  })
-  .required();
+export const deleteUserByIdSchema = {
+  id: z.string().min(1),
+};
