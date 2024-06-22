@@ -4,9 +4,14 @@ import {
   Delete,
   Param,
   Query,
+  UsePipes,
 } from '@nestjs/common';
 import { DeleteContentFileByIdService } from './delete-content-file-by-id.service';
-import { DeleteContentFileByIdDto } from '@workspaces/domain';
+import {
+  DeleteContentFileByIdDto,
+  deleteContentFileByIdSchema,
+} from '@workspaces/domain';
+import { ZodValidationPipe } from '../pipes/zod-validation-pipe';
 
 @Controller('delete-content-file-by-id')
 export class DeleteContentFileByIdController {
@@ -14,6 +19,13 @@ export class DeleteContentFileByIdController {
     private readonly deleteContentFileByIdService: DeleteContentFileByIdService
   ) {}
 
+  @UsePipes(
+    new ZodValidationPipe({
+      id: deleteContentFileByIdSchema.id,
+      loggedUserId: deleteContentFileByIdSchema.loggedUserId,
+      directoryId: deleteContentFileByIdSchema.directoryId,
+    })
+  )
   @Delete(':id')
   async delete(
     @Param('id') idToDelete: string,
