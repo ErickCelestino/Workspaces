@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
-import { CreateContentFileService, CreateContentFileController } from '.';
+import { CreateContentFileService } from './create-content-file.service';
+import { CreateContentFileController } from './create-content-file.controller';
 import { CreateContentFile } from '@workspaces/domain';
 import {
-  ConvertBytesToMbRepositoryImpl,
   CreateContentFileRepositoryImpl,
   FindDirectoryByIdRespositoryImpl,
   FindUserByIdRepositoryImpl,

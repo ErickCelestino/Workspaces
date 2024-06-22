@@ -8,7 +8,7 @@ import {
   UsePipes,
 } from '@nestjs/common';
 import { EditContentFileService } from './edit-content-file.service';
-import { ZodValidationPipe } from '../pipes/zod-validation-pipe';
+import { ZodValidationPipe } from '../../pipes/zod-validation-pipe';
 import { EditContentFileDto, editFileSchema } from '@workspaces/domain';
 
 @Controller('edit-content-file')

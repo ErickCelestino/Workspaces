@@ -15,7 +15,7 @@ import {
   createContentFileSchema,
 } from '@workspaces/domain';
 import { FileLocalStorage } from '@workspaces/data-access';
-import { ZodValidationPipe } from '../pipes/zod-validation-pipe';
+import { ZodValidationPipe } from '../../pipes/zod-validation-pipe';
 
 @Controller('create-content-file')
 export class CreateContentFileController {

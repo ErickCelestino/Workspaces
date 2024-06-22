@@ -11,7 +11,7 @@ import {
   DetailsContentFileDto,
   detailsContentFileSchema,
 } from '@workspaces/domain';
-import { ZodValidationPipe } from '../pipes/zod-validation-pipe';
+import { ZodValidationPipe } from '../../pipes/zod-validation-pipe';
 
 @Controller('details-content-file')
 export class DetailsContentFileController {

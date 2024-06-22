@@ -11,7 +11,7 @@ import {
   DeleteContentFileByIdDto,
   deleteContentFileByIdSchema,
 } from '@workspaces/domain';
-import { ZodValidationPipe } from '../pipes/zod-validation-pipe';
+import { ZodValidationPipe } from '../../pipes/zod-validation-pipe';
 
 @Controller('delete-content-file-by-id')
 export class DeleteContentFileByIdController {
