@@ -23,13 +23,7 @@ export class CreateContentFileController {
     private readonly createContentVideoService: CreateContentFileService
   ) {}
 
-  @UsePipes(
-    new ZodValidationPipe({
-      files: createContentFileSchema.files,
-      loggedUserId: createContentFileSchema.loggedUserId,
-      directoryId: createContentFileSchema.directoryId,
-    })
-  )
+  @UsePipes(new ZodValidationPipe(createContentFileSchema))
   @Post()
   @UseInterceptors(FilesInterceptor('files', undefined, FileLocalStorage))
   async create(

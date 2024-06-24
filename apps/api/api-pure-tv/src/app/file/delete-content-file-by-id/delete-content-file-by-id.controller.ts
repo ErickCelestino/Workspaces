@@ -19,13 +19,7 @@ export class DeleteContentFileByIdController {
     private readonly deleteContentFileByIdService: DeleteContentFileByIdService
   ) {}
 
-  @UsePipes(
-    new ZodValidationPipe({
-      id: deleteContentFileByIdSchema.id,
-      loggedUserId: deleteContentFileByIdSchema.loggedUserId,
-      directoryId: deleteContentFileByIdSchema.directoryId,
-    })
-  )
+  @UsePipes(new ZodValidationPipe(deleteContentFileByIdSchema))
   @Delete(':id')
   async delete(
     @Param('id') idToDelete: string,

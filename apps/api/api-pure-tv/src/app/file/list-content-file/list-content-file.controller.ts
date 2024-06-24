@@ -15,15 +15,7 @@ export class ListContentFileController {
     private readonly listContentFileService: ListContentFileService
   ) {}
 
-  @UsePipes(
-    new ZodValidationPipe({
-      loggedUserId: listContentFileSchema.loggedUserId,
-      directoryId: listContentFileSchema.directoryId,
-      filter: listContentFileSchema.filter,
-      take: listContentFileSchema.take,
-      skip: listContentFileSchema.skip,
-    })
-  )
+  @UsePipes(new ZodValidationPipe(listContentFileSchema))
   @Get()
   async list(
     @Query('filter') filter: string,

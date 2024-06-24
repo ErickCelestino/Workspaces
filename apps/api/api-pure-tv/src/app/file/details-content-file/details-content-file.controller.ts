@@ -19,13 +19,7 @@ export class DetailsContentFileController {
     private readonly detailsContentFileService: DetailsContentFileService
   ) {}
 
-  @UsePipes(
-    new ZodValidationPipe({
-      id: detailsContentFileSchema.id,
-      loggedUserId: detailsContentFileSchema.loggedUserId,
-      directoryId: detailsContentFileSchema.directoryId,
-    })
-  )
+  @UsePipes(new ZodValidationPipe(detailsContentFileSchema))
   @Get(':id')
   async details(
     @Param('id') id: string,
