@@ -6,7 +6,7 @@ import {
   UsePipes,
 } from '@nestjs/common';
 import { CreateAuthService } from './create-auth.service';
-import { ZodValidationPipe } from '../pipes/zod-validation-pipe';
+import { ZodValidationPipe } from '../../pipes/zod-validation-pipe';
 import { CreateAuthDto, createAuthSchema } from '@workspaces/domain';
 
 @Controller('create-auth')

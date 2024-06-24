@@ -5,11 +5,17 @@ import {
   Query,
   UploadedFiles,
   UseInterceptors,
+  UsePipes,
 } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { CreateContentFileService } from './create-content-file.service';
-import { CreateContentFileDto, UploadedFile } from '@workspaces/domain';
+import {
+  CreateContentFileDto,
+  UploadedFile,
+  createContentFileSchema,
+} from '@workspaces/domain';
 import { FileLocalStorage } from '@workspaces/data-access';
+import { ZodValidationPipe } from '../../pipes/zod-validation-pipe';
 
 @Controller('create-content-file')
 export class CreateContentFileController {
@@ -17,6 +23,7 @@ export class CreateContentFileController {
     private readonly createContentVideoService: CreateContentFileService
   ) {}
 
+  @UsePipes(new ZodValidationPipe(createContentFileSchema))
   @Post()
   @UseInterceptors(FilesInterceptor('files', undefined, FileLocalStorage))
   async create(

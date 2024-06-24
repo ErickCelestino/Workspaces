@@ -11,7 +11,7 @@ import {
   DetailsContentFileDto,
   detailsContentFileSchema,
 } from '@workspaces/domain';
-import { ZodValidationPipe } from '../pipes/zod-validation-pipe';
+import { ZodValidationPipe } from '../../pipes/zod-validation-pipe';
 
 @Controller('details-content-file')
 export class DetailsContentFileController {
@@ -19,13 +19,7 @@ export class DetailsContentFileController {
     private readonly detailsContentFileService: DetailsContentFileService
   ) {}
 
-  @UsePipes(
-    new ZodValidationPipe({
-      id: detailsContentFileSchema.id,
-      loggedUserId: detailsContentFileSchema.loggedUserId,
-      directoryId: detailsContentFileSchema.directoryId,
-    })
-  )
+  @UsePipes(new ZodValidationPipe(detailsContentFileSchema))
   @Get(':id')
   async details(
     @Param('id') id: string,

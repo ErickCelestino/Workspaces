@@ -1,12 +1,21 @@
-import { BadRequestException, Controller, Get, Query } from '@nestjs/common';
+import {
+  BadRequestException,
+  Controller,
+  Get,
+  Query,
+  UsePipes,
+} from '@nestjs/common';
 import { ListContentFileService } from './list-content-file.service';
-import { ListContentFileDto } from '@workspaces/domain';
+import { ListContentFileDto, listContentFileSchema } from '@workspaces/domain';
+import { ZodValidationPipe } from '../../pipes/zod-validation-pipe';
 
 @Controller('list-content-file')
 export class ListContentFileController {
   constructor(
     private readonly listContentFileService: ListContentFileService
   ) {}
+
+  @UsePipes(new ZodValidationPipe(listContentFileSchema))
   @Get()
   async list(
     @Query('filter') filter: string,

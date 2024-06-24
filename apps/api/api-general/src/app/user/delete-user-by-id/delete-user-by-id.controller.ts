@@ -5,19 +5,22 @@ import {
   Delete,
   Param,
   Query,
+  UsePipes,
 } from '@nestjs/common';
 import { DeleteUserByIdService } from './delete-user-by-id.service';
-import { DeleteUserByIdDto } from '@workspaces/domain';
+import { DeleteUserByIdDto, deleteUserByIdSchema } from '@workspaces/domain';
+import { ZodValidationPipe } from '../../pipes/zod-validation-pipe';
 
 @Controller('delete-user-by-id')
 export class DeleteUserByIdController {
   constructor(private readonly deleteUserByIdService: DeleteUserByIdService) {}
 
+  @UsePipes(new ZodValidationPipe(deleteUserByIdSchema))
   @Delete(':id')
   async edit(
     @Body() input: { description: string },
     @Param('id') idToDelete: string,
-    @Query('logged_user') loggedUser: string
+    @Query('loggedUserId') loggedUser: string
   ) {
     const dto: DeleteUserByIdDto = {
       description: input.description,
