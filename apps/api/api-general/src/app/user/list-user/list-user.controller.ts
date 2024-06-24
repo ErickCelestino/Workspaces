@@ -6,7 +6,7 @@ import {
   UsePipes,
 } from '@nestjs/common';
 import { ListUserService } from './list-user.service';
-import { ZodValidationPipe } from '../pipes/zod-validation-pipe';
+import { ZodValidationPipe } from '../../pipes/zod-validation-pipe';
 import { listUserSchema } from '@workspaces/domain';
 
 @Controller('list-user')

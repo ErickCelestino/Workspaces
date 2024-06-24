@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { DeleteUserByIdService } from './delete-user-by-id.service';
 import { DeleteUserByIdDto, deleteUserByIdSchema } from '@workspaces/domain';
-import { ZodValidationPipe } from '../pipes/zod-validation-pipe';
+import { ZodValidationPipe } from '../../pipes/zod-validation-pipe';
 
 @Controller('delete-user-by-id')
 export class DeleteUserByIdController {

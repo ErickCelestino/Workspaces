@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { EditUserService } from './edit-user.service';
 import { EditUserDto, editUserSchema } from '@workspaces/domain';
-import { ZodValidationPipe } from '../pipes/zod-validation-pipe';
+import { ZodValidationPipe } from '../../pipes/zod-validation-pipe';
 
 @Controller('edit-user')
 export class EditUserController {

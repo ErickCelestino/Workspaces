@@ -6,7 +6,7 @@ import {
   UsePipes,
 } from '@nestjs/common';
 import { FindUserByIdService } from './find-user-by-id.service';
-import { ZodValidationPipe } from '../pipes/zod-validation-pipe';
+import { ZodValidationPipe } from '../../pipes/zod-validation-pipe';
 import { findUserByIdSchema } from '@workspaces/domain';
 
 @Controller('find-user-by-id')
