@@ -6,7 +6,7 @@ import {
   UsePipes,
 } from '@nestjs/common';
 import { CreateUserService } from './create-user.service';
-import { ZodValidationPipe } from '../pipes/zod-validation-pipe';
+import { ZodValidationPipe } from '../../pipes/zod-validation-pipe';
 import {
   CreateUserDto,
   CreateUserResponseDto,

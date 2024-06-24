@@ -2,8 +2,7 @@ import { Module } from '@nestjs/common';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { CreateAuthModule } from './create-auth/create-auth.module';
-import { AuthModule } from './auth/auth.module';
+import { CreateAuthModule, AuthModule } from './authentication';
 import {
   ListUserModule,
   FindUserByIdModule,
