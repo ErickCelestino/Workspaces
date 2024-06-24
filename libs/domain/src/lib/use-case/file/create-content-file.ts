@@ -11,6 +11,7 @@ import {
   CreateContentFileRepository,
   FindDirectoryByIdRepository,
   FindUserByIdRepository,
+  UploadFileRepository,
 } from '../../repository';
 import { Either, left, right } from '../../shared/either';
 import { FileTypes } from '../../type';
@@ -28,7 +29,9 @@ export class CreateContentFile
     @Inject('FindUserByIdRepository')
     private findUserByIdRepository: FindUserByIdRepository,
     @Inject('FindDirectoryByIdRepository')
-    private findDirectoryByIdRepository: FindDirectoryByIdRepository
+    private findDirectoryByIdRepository: FindDirectoryByIdRepository,
+    @Inject('UploadFileRepository')
+    private uploadFileRepositoy: UploadFileRepository
   ) {}
   async execute(
     input: CreateContentFileDto
@@ -73,6 +76,9 @@ export class CreateContentFile
     if (error === true) {
       return left(new FileNotAllowed());
     }
+    await this.uploadFileRepositoy.upload({
+      file,
+    });
 
     const filteredContentFile = await this.createContentFileRepository.create(
       input

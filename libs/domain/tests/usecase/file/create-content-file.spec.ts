@@ -10,12 +10,14 @@ import {
   Directory,
   EntityNotCreated,
   FileNotAllowed,
+  UploadFileRepository,
 } from '../../../src';
 import { ContentFileMock, DirectoryMock, userMock } from '../../entity';
 import {
   CreateContentFileRepositoryMock,
   FindDirectoryByIdRespositoryMock,
   FindUserByIdRepositoryMock,
+  UploadFileRespositoryMock,
 } from '../../repository';
 
 interface SutTypes {
@@ -24,12 +26,14 @@ interface SutTypes {
   findUserByIdRepository: FindUserByIdRepository;
   findDirectoryByIdRepository: FindDirectoryByIdRepository;
   CreateContentFileRepository: CreateContentFileRepository;
+  uploadFileRespository: UploadFileRepository;
 }
 
 const makeSut = (): SutTypes => {
   const CreateContentFileRepository = new CreateContentFileRepositoryMock();
   const findUserByIdRepository = new FindUserByIdRepositoryMock();
   const findDirectoryByIdRepository = new FindDirectoryByIdRespositoryMock();
+  const uploadFileRespository = new UploadFileRespositoryMock();
   const mockBuffer = {} as Buffer;
   const CreateContentFileDto: CreateContentFileDto = {
     directoryId: DirectoryMock.id,
@@ -51,13 +55,15 @@ const makeSut = (): SutTypes => {
   const sut = new CreateContentFile(
     CreateContentFileRepository,
     findUserByIdRepository,
-    findDirectoryByIdRepository
+    findDirectoryByIdRepository,
+    uploadFileRespository
   );
 
   return {
     CreateContentFileRepository,
     findUserByIdRepository,
     findDirectoryByIdRepository,
+    uploadFileRespository,
     CreateContentFileDto,
     sut,
   };
@@ -109,6 +115,7 @@ describe('CreateContentFile', () => {
       CreateContentFileDto,
       findDirectoryByIdRepository,
       CreateContentFileRepository,
+      uploadFileRespository,
     } = makeSut();
 
     const mockEmptyItem = {} as UserList;
@@ -120,7 +127,8 @@ describe('CreateContentFile', () => {
     const sut = new CreateContentFile(
       CreateContentFileRepository,
       mockEmptyRepository,
-      findDirectoryByIdRepository
+      findDirectoryByIdRepository,
+      uploadFileRespository
     );
 
     const result = await sut.execute(CreateContentFileDto);
@@ -134,6 +142,7 @@ describe('CreateContentFile', () => {
       CreateContentFileDto,
       findUserByIdRepository,
       CreateContentFileRepository,
+      uploadFileRespository,
     } = makeSut();
 
     const mockEmptyItem = {} as Directory;
@@ -145,7 +154,8 @@ describe('CreateContentFile', () => {
     const sut = new CreateContentFile(
       CreateContentFileRepository,
       findUserByIdRepository,
-      mockEmptyRepository
+      mockEmptyRepository,
+      uploadFileRespository
     );
 
     const result = await sut.execute(CreateContentFileDto);
@@ -159,6 +169,7 @@ describe('CreateContentFile', () => {
       findDirectoryByIdRepository,
       findUserByIdRepository,
       CreateContentFileDto,
+      uploadFileRespository,
     } = makeSut();
 
     const mockEmptyRepository: CreateContentFileRepository = {
@@ -168,7 +179,8 @@ describe('CreateContentFile', () => {
     const sut = new CreateContentFile(
       mockEmptyRepository,
       findUserByIdRepository,
-      findDirectoryByIdRepository
+      findDirectoryByIdRepository,
+      uploadFileRespository
     );
 
     const result = await sut.execute(CreateContentFileDto);

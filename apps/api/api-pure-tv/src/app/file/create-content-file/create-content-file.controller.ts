@@ -14,7 +14,7 @@ import {
   UploadedFile,
   createContentFileSchema,
 } from '@workspaces/domain';
-import { FileLocalStorage } from '@workspaces/data-access';
+import { FileLocalStorage, FileS3Storage } from '@workspaces/data-access';
 import { ZodValidationPipe } from '../../pipes/zod-validation-pipe';
 
 @Controller('create-content-file')
@@ -25,7 +25,11 @@ export class CreateContentFileController {
 
   @UsePipes(new ZodValidationPipe(createContentFileSchema))
   @Post()
-  @UseInterceptors(FilesInterceptor('files', undefined, FileLocalStorage))
+  @UseInterceptors(
+    FilesInterceptor('files', undefined, {
+      storage: FileS3Storage.Storage,
+    })
+  )
   async create(
     @UploadedFiles() files: UploadedFile[],
     @Query('loggedUserId') loggedUserId: string,

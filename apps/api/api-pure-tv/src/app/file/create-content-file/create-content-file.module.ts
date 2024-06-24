@@ -7,6 +7,7 @@ import {
   FindDirectoryByIdRespositoryImpl,
   FindUserByIdRepositoryImpl,
   PrismaService,
+  UploadFileRepositoryImpl,
 } from '@workspaces/data-access';
 
 @Module({
@@ -29,6 +30,10 @@ import {
     {
       provide: 'FindDirectoryByIdRepository',
       useClass: FindDirectoryByIdRespositoryImpl,
+    },
+    {
+      provide: 'UploadFileRepository',
+      useClass: UploadFileRepositoryImpl,
     },
   ],
 })
