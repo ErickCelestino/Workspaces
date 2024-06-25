@@ -185,7 +185,7 @@ export const ListContanteFilesContainer = () => {
                           deleteFile={() => handleDeleteFile(file.id)}
                           detailsFile={() => handleDetailsFile(file.id)}
                           downloadFile={() => handleDownloadFile(file.id)}
-                          fileImage={`http://localhost:3000/${file.fileName}`}
+                          fileImage={file.path}
                           fileImageName={file.fileName}
                           name={file.originalName}
                           key={file.id}
