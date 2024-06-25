@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { DeleteContentFileByIdService } from './delete-content-file-by-id.service';
 import { DeleteContentFileByIdController } from './delete-content-file-by-id.controller';
 import {
+  DeleleteFileByNameRepositoryImpl,
   DeleteContentFileByIdRepositoryImpl,
   FindContentFileByIdRepositoryImpl,
   FindDirectoryByIdRespositoryImpl,
@@ -34,6 +35,10 @@ import { DeleteContentFileById } from '@workspaces/domain';
     {
       provide: 'DeleteContentFileByIdRepository',
       useClass: DeleteContentFileByIdRepositoryImpl,
+    },
+    {
+      provide: 'DeleteFileByNameRepository',
+      useClass: DeleleteFileByNameRepositoryImpl,
     },
   ],
 })

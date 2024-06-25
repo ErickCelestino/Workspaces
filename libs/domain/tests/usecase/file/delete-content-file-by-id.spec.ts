@@ -10,10 +10,12 @@ import {
   DeleteContentFileByIdRepository,
   FindContentFileByIdRepository,
   ContentFile,
+  DeleteFileByNameRepository,
 } from '../../../src';
 import { ContentFileMock, DirectoryMock, userMock } from '../../entity';
 import {
   DeleteContentFileByIdRepositoryMock,
+  DeleteFileByNameRepositoryMock,
   FindContentFileByIdRepositoryMock,
   FindDirectoryByIdRespositoryMock,
   FindUserByIdRepositoryMock,
@@ -26,6 +28,7 @@ interface SutTypes {
   findDirectoryByIdRepository: FindDirectoryByIdRepository;
   deleteContentFileByIdRepository: DeleteContentFileByIdRepository;
   findContentFileByIdRepository: FindContentFileByIdRepository;
+  deleteFileByNameRepository: DeleteFileByNameRepository;
 }
 
 const makeSut = (): SutTypes => {
@@ -34,6 +37,7 @@ const makeSut = (): SutTypes => {
   const findUserByIdRepository = new FindUserByIdRepositoryMock();
   const findDirectoryByIdRepository = new FindDirectoryByIdRespositoryMock();
   const findContentFileByIdRepository = new FindContentFileByIdRepositoryMock();
+  const deleteFileByNameRepository = new DeleteFileByNameRepositoryMock();
   const deleteContentFileByIdDto: DeleteContentFileByIdDto = {
     directoryId: DirectoryMock.id,
     loggedUserId: userMock.userId,
@@ -44,11 +48,13 @@ const makeSut = (): SutTypes => {
     deleteContentFileByIdRepository,
     findUserByIdRepository,
     findDirectoryByIdRepository,
-    findContentFileByIdRepository
+    findContentFileByIdRepository,
+    deleteFileByNameRepository
   );
 
   return {
     deleteContentFileByIdRepository,
+    deleteFileByNameRepository,
     findUserByIdRepository,
     findDirectoryByIdRepository,
     findContentFileByIdRepository,
@@ -103,6 +109,7 @@ describe('DeleteContentFileById', () => {
       findDirectoryByIdRepository,
       deleteContentFileByIdRepository,
       findContentFileByIdRepository,
+      deleteFileByNameRepository,
     } = makeSut();
 
     const mockEmptyItem = {} as UserList;
@@ -115,7 +122,8 @@ describe('DeleteContentFileById', () => {
       deleteContentFileByIdRepository,
       mockEmptyRepository,
       findDirectoryByIdRepository,
-      findContentFileByIdRepository
+      findContentFileByIdRepository,
+      deleteFileByNameRepository
     );
 
     const result = await sut.execute(deleteContentFileByIdDto);
@@ -130,6 +138,7 @@ describe('DeleteContentFileById', () => {
       findUserByIdRepository,
       deleteContentFileByIdRepository,
       findContentFileByIdRepository,
+      deleteFileByNameRepository,
     } = makeSut();
 
     const mockEmptyItem = {} as Directory;
@@ -142,7 +151,8 @@ describe('DeleteContentFileById', () => {
       deleteContentFileByIdRepository,
       findUserByIdRepository,
       mockEmptyRepository,
-      findContentFileByIdRepository
+      findContentFileByIdRepository,
+      deleteFileByNameRepository
     );
 
     const result = await sut.execute(deleteContentFileByIdDto);
@@ -157,6 +167,7 @@ describe('DeleteContentFileById', () => {
       findUserByIdRepository,
       deleteContentFileByIdRepository,
       findDirectoryByIdRepository,
+      deleteFileByNameRepository,
     } = makeSut();
 
     const mockEmptyItem = {} as ContentFile;
@@ -169,7 +180,8 @@ describe('DeleteContentFileById', () => {
       deleteContentFileByIdRepository,
       findUserByIdRepository,
       findDirectoryByIdRepository,
-      mockEmptyRepository
+      mockEmptyRepository,
+      deleteFileByNameRepository
     );
 
     const result = await sut.execute(deleteContentFileByIdDto);
