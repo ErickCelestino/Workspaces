@@ -46,13 +46,13 @@ const makeSut = (): SutTypes => {
 };
 
 describe('CreateDirectory', () => {
-  it('garantir que vai retornar uma string quando todos os dados estiverem corretos', async () => {
+  it('ensure it will return a string when all data is correct', async () => {
     const { sut, CreateDirectoryDto } = makeSut();
     const result = await sut.execute(CreateDirectoryDto);
     expect(result.isRight()).toBe(true);
   });
 
-  it('garantir que vai retornar erro EntityNotEmpty se o campo name estiver vazio', async () => {
+  it('ensure it will return EntityNotEmpty error if the name field is empty', async () => {
     const { sut, CreateDirectoryDto } = makeSut();
     CreateDirectoryDto.name = '';
     const result = await sut.execute(CreateDirectoryDto);
@@ -60,7 +60,7 @@ describe('CreateDirectory', () => {
     expect(result.value).toBeInstanceOf(EntityNotEmpty);
   });
 
-  it('garantir que vai retornar erro EntityNotEmpty se o campo loggedUserId estiver vazio', async () => {
+  it('ensure it will return EntityNotEmpty error if the loggedUserId field is empty', async () => {
     const { sut, CreateDirectoryDto } = makeSut();
     CreateDirectoryDto.loggedUserId = '';
     const result = await sut.execute(CreateDirectoryDto);
@@ -68,7 +68,7 @@ describe('CreateDirectory', () => {
     expect(result.value).toBeInstanceOf(EntityNotEmpty);
   });
 
-  it('garantir que vai retornar erro EntityNotExists se o usuário não existir', async () => {
+  it('ensure it will return EntityNotExists error if the user does not exist', async () => {
     const { sut, CreateDirectoryDto, FindUserByIdRepository } = makeSut();
     jest
       .spyOn(FindUserByIdRepository, 'find')
@@ -77,7 +77,7 @@ describe('CreateDirectory', () => {
     expect(result.isLeft()).toBe(true);
   });
 
-  it('garantir que vai retornar erro EntityAlreadyExists se o diretório já existir', async () => {
+  it('ensure it will return EntityAlreadyExists error if the directory already exists', async () => {
     const { sut, CreateDirectoryDto, FindDirectoryByNameRepository } =
       makeSut();
     jest
@@ -87,7 +87,7 @@ describe('CreateDirectory', () => {
     expect(result.isLeft()).toBe(true);
   });
 
-  it('garantir que vai retornar erro EntityNotCreated se o diretório não for criado', async () => {
+  it('ensure it will return EntityNotCreated error if the directory is not created', async () => {
     const { sut, CreateDirectoryDto, CreateDirectoryRepository } = makeSut();
     jest.spyOn(CreateDirectoryRepository, 'create').mockResolvedValueOnce('');
     const result = await sut.execute(CreateDirectoryDto);
