@@ -15,12 +15,17 @@ const storage = multerS3({
       /\s+/g,
       '-'
     )}`;
-    uploadedFileNames.push(fileName); // Armazena o nome do arquivo no array
+
+    uploadedFileNames.push(fileName);
     cb(null, fileName);
   },
 });
 
 export const FileS3Storage = {
   Storage: storage,
-  getUploadedFileNames: () => uploadedFileNames,
+  getUploadedFileNames: () => {
+    const names = [...uploadedFileNames];
+    uploadedFileNames.length = 0;
+    return names;
+  },
 };
