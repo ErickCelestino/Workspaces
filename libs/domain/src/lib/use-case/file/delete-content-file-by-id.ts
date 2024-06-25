@@ -4,6 +4,7 @@ import { DeleteContentFileByIdDto } from '../../dto/file/request/delete-content-
 import { EntityNotEmpty, EntityNotExists } from '../../error';
 import {
   DeleteContentFileByIdRepository,
+  DeleteFileByNameRepository,
   FindContentFileByIdRepository,
   FindDirectoryByIdRepository,
   FindUserByIdRepository,
@@ -25,7 +26,9 @@ export class DeleteContentFileById
     @Inject('FindDirectoryByIdRepository')
     private findDirectoryByIdRepository: FindDirectoryByIdRepository,
     @Inject('FindContentFileByIdRepository')
-    private findContentFileByIdRepository: FindContentFileByIdRepository
+    private findContentFileByIdRepository: FindContentFileByIdRepository,
+    @Inject('DeleteFileByNameRepository')
+    private deleteFileByNameRepository: DeleteFileByNameRepository
   ) {}
 
   async execute(
@@ -70,6 +73,7 @@ export class DeleteContentFileById
     }
 
     await this.deleteCotentFileByIdRepository.delete(input);
+    await this.deleteFileByNameRepository.delete(filteredContentFile.fileName);
     return right(undefined);
   }
 }

@@ -11,6 +11,7 @@ import {
   CreateContentFileRepository,
   FindDirectoryByIdRepository,
   FindUserByIdRepository,
+  FindUrlFileRepository,
 } from '../../repository';
 import { Either, left, right } from '../../shared/either';
 import { FileTypes } from '../../type';
@@ -28,13 +29,16 @@ export class CreateContentFile
     @Inject('FindUserByIdRepository')
     private findUserByIdRepository: FindUserByIdRepository,
     @Inject('FindDirectoryByIdRepository')
-    private findDirectoryByIdRepository: FindDirectoryByIdRepository
+    private findDirectoryByIdRepository: FindDirectoryByIdRepository,
+    @Inject('FindUrlFileRepository')
+    private findUrlFileRepository: FindUrlFileRepository
   ) {}
   async execute(
     input: CreateContentFileDto
   ): Promise<
     Either<EntityNotEmpty | EntityNotExists | EntityNotCreated, string[]>
   > {
+    const listId = [];
     const { loggedUserId, directoryId, file } = input;
 
     if (Object.keys(loggedUserId).length < 1) {
@@ -74,14 +78,26 @@ export class CreateContentFile
       return left(new FileNotAllowed());
     }
 
-    const filteredContentFile = await this.createContentFileRepository.create(
-      input
-    );
+    for (const item of file) {
+      const resultUrl = await this.findUrlFileRepository.find({
+        fileName: item.filename,
+      });
 
-    if (Object.keys(filteredContentFile).length < 1) {
-      return left(new EntityNotCreated('Content File'));
+      const filteredContentFileId =
+        await this.createContentFileRepository.create({
+          file: {
+            ...item,
+            path: resultUrl,
+          },
+          directoryId,
+          loggedUserId,
+        });
+      if (Object.keys(filteredContentFileId).length < 1) {
+        return left(new EntityNotCreated('Content File'));
+      }
+      listId.push(filteredContentFileId);
     }
 
-    return right(filteredContentFile);
+    return right(listId);
   }
 }
