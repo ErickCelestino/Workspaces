@@ -1,6 +1,7 @@
 import {
   CreateDirectoryDto,
   CreateDirectoryRepository,
+  EntityNotEmpty,
   FindDirectoryByNameRepository,
   FindUserByIdRepository,
 } from '../../../src';
@@ -48,5 +49,13 @@ describe('CreateDirectory', () => {
     const { sut, CreateDirectoryDto } = makeSut();
     const result = await sut.execute(CreateDirectoryDto);
     expect(result.isRight()).toBe(true);
+  });
+
+  it('garantir que vai retornar erro EntityNotEmpty se o campo name estiver vazio', async () => {
+    const { sut, CreateDirectoryDto } = makeSut();
+    CreateDirectoryDto.name = '';
+    const result = await sut.execute(CreateDirectoryDto);
+    expect(result.isLeft()).toBe(true);
+    expect(result.value).toBeInstanceOf(EntityNotEmpty);
   });
 });
