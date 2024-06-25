@@ -7,9 +7,8 @@ import {
   FindDirectoryByIdRespositoryImpl,
   FindUserByIdRepositoryImpl,
   PrismaService,
-  UploadFileRepositoryImpl,
+  FindUrlFileRepositoryImpl,
 } from '@workspaces/data-access';
-
 @Module({
   controllers: [CreateContentFileController],
   providers: [
@@ -32,8 +31,8 @@ import {
       useClass: FindDirectoryByIdRespositoryImpl,
     },
     {
-      provide: 'UploadFileRepository',
-      useClass: UploadFileRepositoryImpl,
+      provide: 'FindUrlFileRepository',
+      useClass: FindUrlFileRepositoryImpl,
     },
   ],
 })

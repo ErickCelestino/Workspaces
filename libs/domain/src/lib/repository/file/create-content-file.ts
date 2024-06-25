@@ -1,5 +1,5 @@
-import { CreateContentFileDto } from '../../dto';
+import { RegisterContentFileDto } from '../../dto';
 
 export interface CreateContentFileRepository {
-  create(input: CreateContentFileDto): Promise<string[]>;
+  create(input: RegisterContentFileDto): Promise<string>;
 }

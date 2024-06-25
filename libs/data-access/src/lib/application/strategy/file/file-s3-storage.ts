@@ -1,5 +1,6 @@
 import multerS3 from 'multer-s3';
 import { s3Service } from '../../services';
+const uploadedFileNames: string[] = [];
 
 const storage = multerS3({
   s3: s3Service,
@@ -10,10 +11,16 @@ const storage = multerS3({
     cb: (error: unknown, key?: string) => void
   ) => {
     const now = new Date();
-    cb(null, `${now.getTime()}_${file.originalname.replace(/\s+/g, '-')}`);
+    const fileName = `${now.getTime()}_${file.originalname.replace(
+      /\s+/g,
+      '-'
+    )}`;
+    uploadedFileNames.push(fileName); // Armazena o nome do arquivo no array
+    cb(null, fileName);
   },
 });
 
 export const FileS3Storage = {
   Storage: storage,
+  getUploadedFileNames: () => uploadedFileNames,
 };

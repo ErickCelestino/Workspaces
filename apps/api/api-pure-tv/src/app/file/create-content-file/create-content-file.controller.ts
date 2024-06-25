@@ -14,7 +14,7 @@ import {
   UploadedFile,
   createContentFileSchema,
 } from '@workspaces/domain';
-import { FileLocalStorage, FileS3Storage } from '@workspaces/data-access';
+import { FileS3Storage } from '@workspaces/data-access';
 import { ZodValidationPipe } from '../../pipes/zod-validation-pipe';
 
 @Controller('create-content-file')
@@ -35,9 +35,14 @@ export class CreateContentFileController {
     @Query('loggedUserId') loggedUserId: string,
     @Query('directoryId') directoryId: string
   ) {
+    const uploadedFileNames = FileS3Storage.getUploadedFileNames();
+    const updatedFiles = files.map((file, index) => ({
+      ...file,
+      filename: uploadedFileNames[index],
+    }));
     const dtoRequest: CreateContentFileDto = {
       directoryId: directoryId,
-      file: files,
+      file: updatedFiles,
       loggedUserId,
     };
     const result = await this.createContentVideoService.create(dtoRequest);
