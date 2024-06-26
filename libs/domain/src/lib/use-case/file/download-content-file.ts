@@ -14,7 +14,7 @@ export class DownloadContentFile
   implements
     UseCase<
       DownloadContentFileDto,
-      Either<EntityNotEmpty | EntityNotExists, void>
+      Either<EntityNotEmpty | EntityNotExists, string>
     >
 {
   constructor(
@@ -29,7 +29,7 @@ export class DownloadContentFile
   ) {}
   async execute(
     input: DownloadContentFileDto
-  ): Promise<Either<EntityNotEmpty | EntityNotExists, void>> {
+  ): Promise<Either<EntityNotEmpty | EntityNotExists, string>> {
     const { directoryId, idToDownload, loggedUserId } = input;
 
     if (Object.keys(directoryId).length < 1) {
@@ -68,8 +68,14 @@ export class DownloadContentFile
       return left(new EntityNotExists('Content File'));
     }
 
-    await this.downloadContentFileRepository.download(input);
+    const filteredUrl = await this.downloadContentFileRepository.download(
+      filteredContentFile.fileName
+    );
 
-    return right(undefined);
+    if (Object.keys(filteredUrl).length < 1) {
+      return left(new EntityNotExists('File'));
+    }
+
+    return right(filteredUrl);
   }
 }

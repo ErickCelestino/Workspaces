@@ -63,7 +63,7 @@ describe('DownloadContentFile', () => {
     const result = await sut.execute(downloadContentFileDto);
     expect(result.isLeft()).toBe(false);
     expect(result.isRight()).toBe(true);
-    expect(result.value).toStrictEqual(undefined);
+    expect(result.value).toStrictEqual('any_url');
   });
   it('should return EntityNotEmpty when a pass incorrect logged user id', async () => {
     const { downloadContentFileDto, sut } = makeSut();

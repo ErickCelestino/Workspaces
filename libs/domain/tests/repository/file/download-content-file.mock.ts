@@ -1,15 +1,11 @@
-import {
-  DeleteContentFileByIdDto,
-  DeleteContentFileByIdRepository,
-  DownloadContentFileDto,
-  DownloadContentFileRepository,
-} from '../../../src';
+import { DownloadContentFileRepository } from '../../../src';
 
 export class DownloadContentFileRepositoryMock
   implements DownloadContentFileRepository
 {
-  mockInput: DownloadContentFileDto = {} as DownloadContentFileDto;
-  async download(input: DownloadContentFileDto): Promise<void> {
-    this.mockInput = input;
+  mockInput = '';
+  async download(name: string): Promise<string> {
+    this.mockInput = name;
+    return 'any_url';
   }
 }

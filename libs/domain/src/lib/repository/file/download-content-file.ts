@@ -1,5 +1,3 @@
-import { DownloadContentFileDto } from '../../dto';
-
 export interface DownloadContentFileRepository {
-  download(input: DownloadContentFileDto): Promise<void>;
+  download(name: string): Promise<string>;
 }
