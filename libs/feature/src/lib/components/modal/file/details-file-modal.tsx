@@ -32,7 +32,6 @@ import { FormEditContentFile } from '../../form';
 interface DetailsFileModalPros {
   showErrorAlert: (message: string) => void;
   handlePopUpClose: () => void;
-  onEditSuccess: () => void;
   open: boolean;
   directoryId: string;
   idDetails: string;
@@ -47,7 +46,6 @@ interface DetailsFileModalPros {
 export const DetailsFileModal: FC<DetailsFileModalPros> = ({
   showErrorAlert,
   handlePopUpClose,
-  onEditSuccess,
   open,
   directoryId,
   idDetails,
@@ -69,7 +67,6 @@ export const DetailsFileModal: FC<DetailsFileModalPros> = ({
 
   const editSuccess = () => {
     setEditFileName(false);
-    onEditSuccess();
   };
 
   useEffect(() => {

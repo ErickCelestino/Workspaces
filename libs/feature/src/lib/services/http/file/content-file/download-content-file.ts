@@ -1,4 +1,7 @@
-import { DownloadContentFileDto } from '@workspaces/domain';
+import {
+  DownloadContentFileDto,
+  DownloadContentFileResponseDto,
+} from '@workspaces/domain';
 import { pureTvApi } from '../../axios-config';
 
 export async function DownloadContentFileRequest(
@@ -6,11 +9,14 @@ export async function DownloadContentFileRequest(
 ) {
   const { idToDownload, loggedUserId, directoryId } = input;
 
-  const result = await pureTvApi.get(`download-content-file/${idToDownload}`, {
-    params: {
-      loggedUserId,
-      directoryId,
-    },
-  });
+  const result = await pureTvApi.get<DownloadContentFileResponseDto>(
+    `download-content-file/${idToDownload}`,
+    {
+      params: {
+        loggedUserId,
+        directoryId,
+      },
+    }
+  );
   return result.data;
 }

@@ -11,6 +11,7 @@ import { useCallback, useEffect, useState } from 'react';
 import {
   ContentFile,
   DownloadContentFileDto,
+  DownloadContentFileResponseDto,
   ErrorResponse,
   ListContentFileDto,
 } from '@workspaces/domain';
@@ -29,16 +30,12 @@ import {
 } from '../../components';
 import axios, { AxiosError } from 'axios';
 import { useSnackbarAlert } from '../../hooks';
-import {
-  ConnectionError,
-  EntityNotAllowed,
-  EntityNotCreated,
-  EntityNotEmpty,
-} from '../../shared';
+import { DownloadError } from '../../shared';
+import { ValidationsError } from '../../shared/validations/utils';
 
-const onDownloadFile = async (url: string) => {
+const onDownloadFile = async (input: DownloadContentFileResponseDto) => {
   try {
-    const response = await fetch(url);
+    const response = await fetch(input.url);
     if (!response.ok) {
       throw new Error('Failed to download file');
     }
@@ -47,7 +44,7 @@ const onDownloadFile = async (url: string) => {
     const downloadUrl = window.URL.createObjectURL(blob);
     const anchor = document.createElement('a');
     anchor.href = downloadUrl;
-    //anchor.download = 'filename.ext';
+    anchor.download = input.fileName;
     document.body.appendChild(anchor);
     anchor.click();
     document.body.removeChild(anchor);
@@ -96,22 +93,9 @@ export const ListContanteFilesContainer = () => {
         console.error(error);
         if (axios.isAxiosError(error)) {
           const axiosError = error as AxiosError<ErrorResponse>;
-          switch (axiosError.response?.data.error.name) {
-            case 'EntityNotEmpty':
-              showErrorAlert(EntityNotEmpty('Arquivos', 'PT-BR'));
-              break;
-
-            case 'EntityNotCreated':
-              showErrorAlert(EntityNotCreated('Arquivos', 'PT-BR'));
-              break;
-
-            case 'FileNotAllowed':
-              showErrorAlert(EntityNotAllowed('Arquivos', 'PT-BR'));
-              break;
-
-            default:
-              showErrorAlert(ConnectionError('PT-BR'));
-              break;
+          const errors = ValidationsError(axiosError, 'Arquivos');
+          if (errors) {
+            showErrorAlert(errors);
           }
         }
       }
@@ -135,17 +119,34 @@ export const ListContanteFilesContainer = () => {
     getData();
   }, [getData]);
 
-  const handleDeletePopUpClose = () => setDeletePopUp(false);
-  const handleDetailsPopUpClose = () => setDetailsPopUp(false);
-
-  const handleDeleteFile = async (id: string) => {
-    setFileId(id);
-    setDeletePopUp(true);
+  const handlePopUpClose = (types: 'delete' | 'details') => {
+    switch (types) {
+      case 'delete':
+        setDeletePopUp(false);
+        break;
+      case 'details':
+        setDetailsPopUp(false);
+        break;
+    }
   };
 
-  const handleDetailsFile = async (id: string) => {
-    setFileId(id);
-    setDetailsPopUp(true);
+  const handleFile = async (
+    id: string,
+    types: 'delete' | 'details' | 'download'
+  ) => {
+    switch (types) {
+      case 'delete':
+        setFileId(id);
+        setDeletePopUp(true);
+        break;
+      case 'details':
+        setFileId(id);
+        setDetailsPopUp(true);
+        break;
+      case 'download':
+        downloadFile(id);
+        break;
+    }
   };
 
   const getDownloadFile = async (
@@ -160,7 +161,7 @@ export const ListContanteFilesContainer = () => {
     }
   };
 
-  const handleDownloadFile = async (id: string) => {
+  const downloadFile = async (id: string) => {
     const dto: DownloadContentFileDto = {
       directoryId,
       idToDownload: id,
@@ -171,6 +172,8 @@ export const ListContanteFilesContainer = () => {
 
     if (url) {
       onDownloadFile(url);
+    } else {
+      showErrorAlert(DownloadError('PT-BR'));
     }
   };
 
@@ -202,20 +205,18 @@ export const ListContanteFilesContainer = () => {
       <DeleteFileModal
         open={deletePopUp}
         directoryId={directoryId}
-        onClose={handleDeletePopUpClose}
+        onClose={() => handlePopUpClose('delete')}
         idToDelete={fileId}
         loggedUserId={loggedUser?.id ?? ''}
         showErrorAlert={showErrorAlert}
-        onDeleteSuccess={getData}
       />
       <DetailsFileModal
-        onEditSuccess={getData}
         directoryId={directoryId}
         open={detailsPopUp}
         idDetails={fileId}
         loggedUserId={loggedUser?.id ?? ''}
         showErrorAlert={showErrorAlert}
-        handlePopUpClose={handleDetailsPopUpClose}
+        handlePopUpClose={() => handlePopUpClose('details')}
       />
 
       <LayoutBase title="Listagem de Usuários" toolBar={<ToolbarPureTV />}>
@@ -232,9 +233,9 @@ export const ListContanteFilesContainer = () => {
                     {fileList.map((file, index) => (
                       <Grid item md={4} lg={3} key={index}>
                         <ListContentFiles
-                          deleteFile={() => handleDeleteFile(file.id)}
-                          detailsFile={() => handleDetailsFile(file.id)}
-                          downloadFile={() => handleDownloadFile(file.id)}
+                          deleteFile={() => handleFile(file.id, 'delete')}
+                          detailsFile={() => handleFile(file.id, 'details')}
+                          downloadFile={() => handleFile(file.id, 'download')}
                           fileImage={file.path}
                           fileImageName={file.fileName}
                           name={file.originalName}

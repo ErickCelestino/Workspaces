@@ -1,6 +1,9 @@
 import { Inject } from '@nestjs/common';
 import { UseCase } from '../../base/use-case';
-import { DownloadContentFileDto } from '../../dto';
+import {
+  DownloadContentFileDto,
+  DownloadContentFileResponseDto,
+} from '../../dto';
 import { EntityNotEmpty, EntityNotExists } from '../../error';
 import { Either, left, right } from '../../shared/either';
 import {
@@ -14,7 +17,7 @@ export class DownloadContentFile
   implements
     UseCase<
       DownloadContentFileDto,
-      Either<EntityNotEmpty | EntityNotExists, string>
+      Either<EntityNotEmpty | EntityNotExists, DownloadContentFileResponseDto>
     >
 {
   constructor(
@@ -29,7 +32,9 @@ export class DownloadContentFile
   ) {}
   async execute(
     input: DownloadContentFileDto
-  ): Promise<Either<EntityNotEmpty | EntityNotExists, string>> {
+  ): Promise<
+    Either<EntityNotEmpty | EntityNotExists, DownloadContentFileResponseDto>
+  > {
     const { directoryId, idToDownload, loggedUserId } = input;
 
     if (Object.keys(directoryId).length < 1) {
@@ -76,6 +81,9 @@ export class DownloadContentFile
       return left(new EntityNotExists('File'));
     }
 
-    return right(filteredUrl);
+    return right({
+      url: filteredUrl,
+      fileName: filteredContentFile.fileName,
+    });
   }
 }
