@@ -16,13 +16,11 @@ interface DeleteFileModalProps {
   idToDelete: string;
   loggedUserId: string;
   open: boolean;
-  onDeleteSuccess: () => void;
 }
 
 export const DeleteFileModal: FC<DeleteFileModalProps> = ({
   showErrorAlert,
   onClose,
-  onDeleteSuccess,
   directoryId,
   idToDelete,
   loggedUserId,
@@ -37,7 +35,6 @@ export const DeleteFileModal: FC<DeleteFileModalProps> = ({
       };
       await DeleteContentFileByIdRequest(dto);
       onClose();
-      onDeleteSuccess();
     } catch (error) {
       console.error(error);
       if (axios.isAxiosError(error)) {

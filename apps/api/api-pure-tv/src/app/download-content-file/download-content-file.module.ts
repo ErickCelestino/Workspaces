@@ -1,8 +1,9 @@
 import { Module } from '@nestjs/common';
-import { DetailsContentFileService } from './details-content-file.service';
-import { DetailsContentFileController } from './details-content-file.controller';
-import { DetailsContentFile } from '@workspaces/domain';
+import { DownloadContentFileService } from './download-content-file.service';
+import { DownloadContentFileController } from './download-content-file.controller';
+import { DownloadContentFile } from '@workspaces/domain';
 import {
+  DownloadContentFileRepositoryImpl,
   FindContentFileByIdRepositoryImpl,
   FindDirectoryByIdRepositoryImpl,
   FindUserByIdRepositoryImpl,
@@ -10,10 +11,10 @@ import {
 } from '@workspaces/data-access';
 
 @Module({
-  controllers: [DetailsContentFileController],
+  controllers: [DownloadContentFileController],
   providers: [
-    DetailsContentFileService,
-    DetailsContentFile,
+    DownloadContentFileService,
+    DownloadContentFile,
     {
       provide: 'PrismaService',
       useClass: PrismaService,
@@ -30,6 +31,10 @@ import {
       provide: 'FindContentFileByIdRepository',
       useClass: FindContentFileByIdRepositoryImpl,
     },
+    {
+      provide: 'DownloadContentFileRepository',
+      useClass: DownloadContentFileRepositoryImpl,
+    },
   ],
 })
-export class DetailsContentFileModule {}
+export class DownloadContentFileModule {}
