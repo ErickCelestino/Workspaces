@@ -154,10 +154,16 @@ export const ListContanteFilesContainer = () => {
   ) => {
     try {
       const result = await DownloadContentFileRequest(downloadContentFileDto);
-      console.log(`teste: ${result}`);
       return result;
     } catch (error) {
       console.error(error);
+      if (axios.isAxiosError(error)) {
+        const axiosError = error as AxiosError<ErrorResponse>;
+        const errors = ValidationsError(axiosError, 'Download');
+        if (errors) {
+          showErrorAlert(errors);
+        }
+      }
     }
   };
 
