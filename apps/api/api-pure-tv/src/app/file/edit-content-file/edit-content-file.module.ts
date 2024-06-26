@@ -4,7 +4,7 @@ import { EditContentFileController } from './edit-content-file.controller';
 import {
   EditContentFileRepositoryImpl,
   FindContentFileByIdRepositoryImpl,
-  FindDirectoryByIdRespositoryImpl,
+  FindDirectoryByIdRepositoryImpl,
   FindUserByIdRepositoryImpl,
   PrismaService,
 } from '@workspaces/data-access';
@@ -25,7 +25,7 @@ import { EditContentFile } from '@workspaces/domain';
     },
     {
       provide: 'FindDirectoryByIdRepository',
-      useClass: FindDirectoryByIdRespositoryImpl,
+      useClass: FindDirectoryByIdRepositoryImpl,
     },
     {
       provide: 'FindContentFileByIdRepository',

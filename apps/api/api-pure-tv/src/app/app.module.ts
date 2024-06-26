@@ -11,6 +11,7 @@ import {
   CreateContentFileModule,
 } from './file';
 import { FileS3Storage } from '@workspaces/data-access';
+import { DownloadContentFileModule } from './download-content-file/download-content-file.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { FileS3Storage } from '@workspaces/data-access';
     DeleteContentFileByIdModule,
     DetailsContentFileModule,
     EditContentFileModule,
+    DownloadContentFileModule,
   ],
   controllers: [AppController],
   providers: [AppService],

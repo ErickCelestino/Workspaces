@@ -2,7 +2,7 @@ import { Inject } from '@nestjs/common';
 import { Directory, FindDirectoryByIdRepository } from '@workspaces/domain';
 import { PrismaService } from 'nestjs-prisma';
 
-export class FindDirectoryByIdRespositoryImpl
+export class FindDirectoryByIdRepositoryImpl
   implements FindDirectoryByIdRepository
 {
   constructor(@Inject('PrismaService') private prismaService: PrismaService) {}

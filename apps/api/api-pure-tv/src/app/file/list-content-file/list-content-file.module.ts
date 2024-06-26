@@ -3,7 +3,7 @@ import { ListContentFileService } from './list-content-file.service';
 import { ListContentFileController } from './list-content-file.controller';
 import { ListContentFile } from '@workspaces/domain';
 import {
-  FindDirectoryByIdRespositoryImpl,
+  FindDirectoryByIdRepositoryImpl,
   FindUserByIdRepositoryImpl,
   ListContentFileRepositoryImpl,
   PrismaService,
@@ -28,7 +28,7 @@ import {
     },
     {
       provide: 'FindDirectoryByIdRepository',
-      useClass: FindDirectoryByIdRespositoryImpl,
+      useClass: FindDirectoryByIdRepositoryImpl,
     },
   ],
 })

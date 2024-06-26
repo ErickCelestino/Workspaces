@@ -5,7 +5,7 @@ import {
   DeleleteFileByNameRepositoryImpl,
   DeleteContentFileByIdRepositoryImpl,
   FindContentFileByIdRepositoryImpl,
-  FindDirectoryByIdRespositoryImpl,
+  FindDirectoryByIdRepositoryImpl,
   FindUserByIdRepositoryImpl,
   PrismaService,
 } from '@workspaces/data-access';
@@ -26,7 +26,7 @@ import { DeleteContentFileById } from '@workspaces/domain';
     },
     {
       provide: 'FindDirectoryByIdRepository',
-      useClass: FindDirectoryByIdRespositoryImpl,
+      useClass: FindDirectoryByIdRepositoryImpl,
     },
     {
       provide: 'FindContentFileByIdRepository',

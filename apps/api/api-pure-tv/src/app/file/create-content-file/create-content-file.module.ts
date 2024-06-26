@@ -4,7 +4,7 @@ import { CreateContentFileController } from './create-content-file.controller';
 import { CreateContentFile } from '@workspaces/domain';
 import {
   CreateContentFileRepositoryImpl,
-  FindDirectoryByIdRespositoryImpl,
+  FindDirectoryByIdRepositoryImpl,
   FindUserByIdRepositoryImpl,
   PrismaService,
   FindUrlFileRepositoryImpl,
@@ -28,7 +28,7 @@ import {
     },
     {
       provide: 'FindDirectoryByIdRepository',
-      useClass: FindDirectoryByIdRespositoryImpl,
+      useClass: FindDirectoryByIdRepositoryImpl,
     },
     {
       provide: 'FindUrlFileRepository',
