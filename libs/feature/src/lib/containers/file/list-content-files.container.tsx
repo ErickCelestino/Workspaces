@@ -7,7 +7,7 @@ import {
   useTheme,
 } from '@mui/material';
 import { LayoutBase } from '../../layout';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import {
   ContentFile,
   DownloadContentFileDto,
@@ -36,6 +36,27 @@ import {
   EntityNotEmpty,
 } from '../../shared';
 
+const onDownloadFile = async (url: string) => {
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error('Failed to download file');
+    }
+
+    const blob = await response.blob();
+    const downloadUrl = window.URL.createObjectURL(blob);
+    const anchor = document.createElement('a');
+    anchor.href = downloadUrl;
+    //anchor.download = 'filename.ext';
+    document.body.appendChild(anchor);
+    anchor.click();
+    document.body.removeChild(anchor);
+    window.URL.revokeObjectURL(downloadUrl);
+  } catch (error) {
+    console.error('Erro ao baixar o arquivo:', error);
+  }
+};
+
 export const ListContanteFilesContainer = () => {
   const [fileList, setFileList] = useState<ContentFile[]>([]);
   const [totalPage, setTotalPage] = useState<number>(1);
@@ -49,17 +70,56 @@ export const ListContanteFilesContainer = () => {
   const { showSnackbarAlert, SnackbarAlert } = useSnackbarAlert();
   const mdDown = useMediaQuery(theme.breakpoints.down('md'));
 
-  useEffect(() => {
-    getData();
-  }, []);
+  const showErrorAlert = useCallback(
+    (message: string) => {
+      showSnackbarAlert({
+        message: message,
+        severity: 'error',
+      });
+    },
+    [showSnackbarAlert]
+  );
 
-  const showErrorAlert = (message: string) => {
-    showSnackbarAlert({
-      message: message,
-      severity: 'error',
-    });
-  };
-  const getData = async () => {
+  const handleData = useCallback(
+    async (data: ListContentFileDto) => {
+      try {
+        const result = await ListContentFilesRequest({
+          userInput: data.userInput ?? '',
+          loggedUserId: data.loggedUserId,
+          directoryId: data.directoryId,
+          take: data.take,
+          skip: data.skip,
+        });
+
+        return result;
+      } catch (error) {
+        console.error(error);
+        if (axios.isAxiosError(error)) {
+          const axiosError = error as AxiosError<ErrorResponse>;
+          switch (axiosError.response?.data.error.name) {
+            case 'EntityNotEmpty':
+              showErrorAlert(EntityNotEmpty('Arquivos', 'PT-BR'));
+              break;
+
+            case 'EntityNotCreated':
+              showErrorAlert(EntityNotCreated('Arquivos', 'PT-BR'));
+              break;
+
+            case 'FileNotAllowed':
+              showErrorAlert(EntityNotAllowed('Arquivos', 'PT-BR'));
+              break;
+
+            default:
+              showErrorAlert(ConnectionError('PT-BR'));
+              break;
+          }
+        }
+      }
+    },
+    [showErrorAlert]
+  );
+
+  const getData = useCallback(async () => {
     const directoryId = getItemLocalStorage('di');
     const result = await handleData({
       directoryId,
@@ -69,51 +129,14 @@ export const ListContanteFilesContainer = () => {
     setFileList(result?.files ?? []);
     setDirectoryId(directoryId);
     setTotalPage(result?.totalPages ?? 0);
-  };
+  }, [loggedUser, handleData]);
 
-  const handleData = async (data: ListContentFileDto) => {
-    try {
-      const result = await ListContentFilesRequest({
-        userInput: data.userInput ?? '',
-        loggedUserId: data.loggedUserId,
-        directoryId: data.directoryId,
-        take: data.take,
-        skip: data.skip,
-      });
+  useEffect(() => {
+    getData();
+  }, [getData]);
 
-      return result;
-    } catch (error) {
-      console.error(error);
-      if (axios.isAxiosError(error)) {
-        const axiosError = error as AxiosError<ErrorResponse>;
-        switch (axiosError.response?.data.error.name) {
-          case 'EntityNotEmpty':
-            showErrorAlert(EntityNotEmpty('Arquivos', 'PT-BR'));
-            break;
-
-          case 'EntityNotCreated':
-            showErrorAlert(EntityNotCreated('Arquivos', 'PT-BR'));
-            break;
-
-          case 'FileNotAllowed':
-            showErrorAlert(EntityNotAllowed('Arquivos', 'PT-BR'));
-            break;
-
-          default:
-            showErrorAlert(ConnectionError('PT-BR'));
-            break;
-        }
-      }
-    }
-  };
-
-  const handleDeletePopUpClose = () => {
-    setDeletePopUp(false);
-  };
-
-  const handleDetailsPopUpClose = () => {
-    setDetailsPopUp(false);
-  };
+  const handleDeletePopUpClose = () => setDeletePopUp(false);
+  const handleDetailsPopUpClose = () => setDetailsPopUp(false);
 
   const handleDeleteFile = async (id: string) => {
     setFileId(id);
@@ -134,27 +157,6 @@ export const ListContanteFilesContainer = () => {
       return result;
     } catch (error) {
       console.error(error);
-    }
-  };
-
-  const onDownloadFile = async (url: string) => {
-    try {
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error('Failed to download file');
-      }
-
-      const blob = await response.blob();
-      const downloadUrl = window.URL.createObjectURL(blob);
-      const anchor = document.createElement('a');
-      anchor.href = downloadUrl;
-      //anchor.download = 'filename.ext';
-      document.body.appendChild(anchor);
-      anchor.click();
-      document.body.removeChild(anchor);
-      window.URL.revokeObjectURL(downloadUrl);
-    } catch (error) {
-      console.error('Erro ao baixar o arquivo:', error);
     }
   };
 
