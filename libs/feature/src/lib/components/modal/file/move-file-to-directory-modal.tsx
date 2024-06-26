@@ -63,7 +63,11 @@ export const MoveFileToDirectoryModal: FC<MoveFileToDirectoryModalProps> = ({
 
   const handleMoveFileData = async (data: ListDirectoryNameDto) => {
     console.log(data);
-    console.log(selectedDirectory);
+    console.log(`teste: ${selectedDirectory}`);
+  };
+
+  const handleChangeMoveFile = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSelectedDirectory(event.target.value);
   };
 
   return (
@@ -91,6 +95,8 @@ export const MoveFileToDirectoryModal: FC<MoveFileToDirectoryModalProps> = ({
               alignItems: 'center',
               height: '100%',
             }}
+            component="form"
+            onSubmit={handleSubmit(handleMoveFileData)}
           >
             <Box
               sx={{
@@ -125,15 +131,16 @@ export const MoveFileToDirectoryModal: FC<MoveFileToDirectoryModalProps> = ({
                 height: '80%',
                 width: '100%',
               }}
-              component="form"
-              onSubmit={handleSubmit(handleMoveFileData)}
             >
               <TextField
                 fullWidth
                 select
                 label={fieldLabel}
                 value={selectedDirectory}
-                onChange={(e) => setSelectedDirectory(e.target.value)}
+                id="id"
+                error={!!errors.id}
+                helperText={errors.id?.message}
+                {...register('id', { onChange: handleChangeMoveFile })}
               >
                 {directoryList.map((item) => (
                   <MenuItem key={item.id} value={item.id}>
