@@ -10,10 +10,15 @@ import { LayoutBase } from '../../layout';
 import { useEffect, useState } from 'react';
 import {
   ContentFile,
+  DownloadContentFileDto,
   ErrorResponse,
   ListContentFileDto,
 } from '@workspaces/domain';
-import { ListContentFilesRequest, getItemLocalStorage } from '../../services';
+import {
+  DownloadContentFileRequest,
+  ListContentFilesRequest,
+  getItemLocalStorage,
+} from '../../services';
 import { useLoggedUser } from '../../contexts';
 import {
   DeleteFileModal,
@@ -120,8 +125,51 @@ export const ListContanteFilesContainer = () => {
     setDetailsPopUp(true);
   };
 
+  const getDownloadFile = async (
+    downloadContentFileDto: DownloadContentFileDto
+  ) => {
+    try {
+      const result = await DownloadContentFileRequest(downloadContentFileDto);
+      console.log(`teste: ${result}`);
+      return result;
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const onDownloadFile = async (url: string) => {
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error('Failed to download file');
+      }
+
+      const blob = await response.blob();
+      const downloadUrl = window.URL.createObjectURL(blob);
+      const anchor = document.createElement('a');
+      anchor.href = downloadUrl;
+      //anchor.download = 'filename.ext';
+      document.body.appendChild(anchor);
+      anchor.click();
+      document.body.removeChild(anchor);
+      window.URL.revokeObjectURL(downloadUrl);
+    } catch (error) {
+      console.error('Erro ao baixar o arquivo:', error);
+    }
+  };
+
   const handleDownloadFile = async (id: string) => {
-    /// More details implementation
+    const dto: DownloadContentFileDto = {
+      directoryId,
+      idToDownload: id,
+      loggedUserId: loggedUser?.id ?? '',
+    };
+
+    const url = await getDownloadFile(dto);
+
+    if (url) {
+      onDownloadFile(url);
+    }
   };
 
   const handleChange = async (
