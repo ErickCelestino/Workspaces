@@ -13,10 +13,10 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { FC, useState } from 'react';
-import { ListDirectoryNameDto } from '@workspaces/domain';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { DirectoryNameSchema } from '../../../shared';
+import { ErrorResponse, ListDirectoryNameDto } from '@workspaces/domain';
+import { MoveFileToDirectoryRequest } from '../../../services';
+import axios, { AxiosError } from 'axios';
+import { ValidationsError } from '../../../shared';
 
 interface MoveFileToDirectoryModalProps {
   open: boolean;
@@ -41,33 +41,39 @@ export const MoveFileToDirectoryModal: FC<MoveFileToDirectoryModalProps> = ({
 }) => {
   const [directoryList, setDirectoryList] = useState<ListDirectoryNameDto[]>([
     {
-      id: '1',
+      id: '2',
       name: 'teste',
     },
   ]);
-  const [selectedDirectory, setSelectedDirectory] = useState<string>('');
-  const {
-    handleSubmit,
-    register,
-    formState: { errors },
-  } = useForm<ListDirectoryNameDto>({
-    mode: 'all',
-    criteriaMode: 'all',
-    resolver: zodResolver(DirectoryNameSchema),
-    defaultValues: {
-      name: '',
-    },
-  });
+  // Get Directory List Implementation
+
+  const [selectedDirectoryId, setSelectedDirectoryId] = useState<string>('');
+
   const theme = useTheme();
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const handleMoveFileData = async (data: ListDirectoryNameDto) => {
-    console.log(data);
-    console.log(`teste: ${selectedDirectory}`);
+  const handleMoveFileData = async () => {
+    try {
+      await MoveFileToDirectoryRequest({
+        idToMove,
+        idToMoveDirectory: selectedDirectoryId,
+        loggedUserId,
+      });
+      onClose();
+    } catch (error) {
+      console.error(error);
+      if (axios.isAxiosError(error)) {
+        const axiosError = error as AxiosError<ErrorResponse>;
+        const errors = ValidationsError(axiosError, 'arquivo ou diretório');
+        if (errors) {
+          showErrorAlert(errors);
+        }
+      }
+    }
   };
 
   const handleChangeMoveFile = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedDirectory(event.target.value);
+    setSelectedDirectoryId(event.target.value);
   };
 
   return (
@@ -96,7 +102,6 @@ export const MoveFileToDirectoryModal: FC<MoveFileToDirectoryModalProps> = ({
               height: '100%',
             }}
             component="form"
-            onSubmit={handleSubmit(handleMoveFileData)}
           >
             <Box
               sx={{
@@ -120,9 +125,8 @@ export const MoveFileToDirectoryModal: FC<MoveFileToDirectoryModalProps> = ({
               <IconButton onClick={onClose}>
                 <CloseIcon />
               </IconButton>
-              <Divider />
             </Box>
-
+            <Divider />
             <Box
               sx={{
                 display: 'flex',
@@ -136,11 +140,9 @@ export const MoveFileToDirectoryModal: FC<MoveFileToDirectoryModalProps> = ({
                 fullWidth
                 select
                 label={fieldLabel}
-                value={selectedDirectory}
+                value={selectedDirectoryId}
                 id="id"
-                error={!!errors.id}
-                helperText={errors.id?.message}
-                {...register('id', { onChange: handleChangeMoveFile })}
+                onChange={handleChangeMoveFile}
               >
                 {directoryList.map((item) => (
                   <MenuItem key={item.id} value={item.id}>
@@ -154,7 +156,7 @@ export const MoveFileToDirectoryModal: FC<MoveFileToDirectoryModalProps> = ({
                 marginTop: 'auto',
               }}
             >
-              <Button type="submit" variant="contained">
+              <Button onClick={handleMoveFileData} variant="contained">
                 {buttonTitle}
               </Button>
             </Box>

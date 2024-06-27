@@ -31,7 +31,6 @@ export class MoveFileToDirectoryController {
       idToMoveDirectory,
       loggedUserId,
     };
-
     const result = await this.moveFileToDirectoryService.move(dto);
 
     if (result.isRight()) return result.value;
