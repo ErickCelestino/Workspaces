@@ -5,4 +5,5 @@ export * from './download-content-file.dto';
 export * from './edit-content-file.dto';
 export * from './find-url-file.dto';
 export * from './list-content-file.dto';
+export * from './move-file-to-directory.dto';
 export * from './register-content-file.dto';

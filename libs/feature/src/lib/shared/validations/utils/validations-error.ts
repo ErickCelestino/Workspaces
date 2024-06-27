@@ -2,7 +2,6 @@ import { ErrorResponse } from '@workspaces/domain';
 import { AxiosError } from 'axios';
 import {
   ConnectionError,
-  EntityExist,
   EntityNotAllowed,
   EntityNotCreated,
   EntityNotEmpty,

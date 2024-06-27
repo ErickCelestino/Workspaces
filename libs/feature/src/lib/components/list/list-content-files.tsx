@@ -11,6 +11,7 @@ import {
 import InfoIcon from '@mui/icons-material/Info';
 import DownloadIcon from '@mui/icons-material/Download';
 import DeleteIcon from '@mui/icons-material/Delete';
+import DriveFileMoveIcon from '@mui/icons-material/DriveFileMove';
 import { FC } from 'react';
 import { IconMenuItem } from '@workspaces/domain';
 import { ButtonFileMenu } from '../menu';
@@ -22,6 +23,7 @@ interface ListContentFilesProps {
   deleteFile: () => Promise<void>;
   downloadFile: () => Promise<void>;
   detailsFile: () => Promise<void>;
+  moveFile: () => Promise<void>;
 }
 
 export const ListContentFiles: FC<ListContentFilesProps> = ({
@@ -31,6 +33,7 @@ export const ListContentFiles: FC<ListContentFilesProps> = ({
   deleteFile,
   downloadFile,
   detailsFile,
+  moveFile,
 }) => {
   const theme = useTheme();
   const mdDown = useMediaQuery(theme.breakpoints.down('md'));
@@ -51,6 +54,11 @@ export const ListContentFiles: FC<ListContentFilesProps> = ({
       icon: <DownloadIcon />,
       title: 'Download',
       handleClick: downloadFile,
+    },
+    {
+      icon: <DriveFileMoveIcon />,
+      title: 'Mover para',
+      handleClick: moveFile,
     },
   ];
 

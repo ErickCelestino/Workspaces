@@ -3,3 +3,4 @@ export * from './delete-content-file-by-id.repository';
 export * from './edit-content-file.repository';
 export * from './find-content-file-by-id.repository';
 export * from './list-content-file.repository';
+export * from './move-file-to-directory.repository';

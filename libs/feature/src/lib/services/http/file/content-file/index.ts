@@ -4,3 +4,4 @@ export * from './details-content-file';
 export * from './download-content-file';
 export * from './edit-content-file';
 export * from './list-content-files';
+export * from './move-file-to-directory';

@@ -4,9 +4,14 @@ import {
   Get,
   Param,
   Query,
+  UsePipes,
 } from '@nestjs/common';
 import { DownloadContentFileService } from './download-content-file.service';
-import { DownloadContentFileDto } from '@workspaces/domain';
+import {
+  DownloadContentFileDto,
+  downloadContentFileSchema,
+} from '@workspaces/domain';
+import { ZodValidationPipe } from '../../pipes/zod-validation-pipe';
 
 @Controller('download-content-file')
 export class DownloadContentFileController {
@@ -14,6 +19,7 @@ export class DownloadContentFileController {
     private readonly downloadContentFileService: DownloadContentFileService
   ) {}
 
+  @UsePipes(new ZodValidationPipe(downloadContentFileSchema))
   @Get(':id')
   async download(
     @Param('id') idToDownload: string,

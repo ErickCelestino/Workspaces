@@ -1,8 +1,4 @@
-import {
-  ContentFile,
-  DeleteContentFileByIdDto,
-  DetailsContentFileDto,
-} from '@workspaces/domain';
+import { ContentFile, DetailsContentFileDto } from '@workspaces/domain';
 import { pureTvApi } from '../../axios-config';
 
 export async function DetailsContentFileRequest(input: DetailsContentFileDto) {

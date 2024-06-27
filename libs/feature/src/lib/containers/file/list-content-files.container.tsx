@@ -13,6 +13,7 @@ import {
   DownloadContentFileDto,
   DownloadContentFileResponseDto,
   ErrorResponse,
+  FileContentType,
   ListContentFileDto,
 } from '@workspaces/domain';
 import {
@@ -25,6 +26,7 @@ import {
   DeleteFileModal,
   DetailsFileModal,
   ListContentFiles,
+  MoveFileToDirectoryModal,
   SearchBar,
   ToolbarPureTV,
 } from '../../components';
@@ -60,6 +62,7 @@ export const ListContanteFilesContainer = () => {
   const [directoryId, setDirectoryId] = useState('');
   const [deletePopUp, setDeletePopUp] = useState(false);
   const [detailsPopUp, setDetailsPopUp] = useState(false);
+  const [movePopUp, setMovePopUp] = useState(false);
   const [fileId, setFileId] = useState('');
 
   const theme = useTheme();
@@ -119,7 +122,7 @@ export const ListContanteFilesContainer = () => {
     getData();
   }, [getData]);
 
-  const handlePopUpClose = (types: 'delete' | 'details') => {
+  const handlePopUpClose = (types: FileContentType) => {
     switch (types) {
       case 'delete':
         setDeletePopUp(false);
@@ -127,13 +130,13 @@ export const ListContanteFilesContainer = () => {
       case 'details':
         setDetailsPopUp(false);
         break;
+      case 'moveFile':
+        setMovePopUp(false);
+        break;
     }
   };
 
-  const handleFile = async (
-    id: string,
-    types: 'delete' | 'details' | 'download'
-  ) => {
+  const handleFile = async (id: string, types: FileContentType) => {
     switch (types) {
       case 'delete':
         setFileId(id);
@@ -145,6 +148,10 @@ export const ListContanteFilesContainer = () => {
         break;
       case 'download':
         downloadFile(id);
+        break;
+      case 'moveFile':
+        setFileId(id);
+        setMovePopUp(true);
         break;
     }
   };
@@ -224,6 +231,15 @@ export const ListContanteFilesContainer = () => {
         showErrorAlert={showErrorAlert}
         handlePopUpClose={() => handlePopUpClose('details')}
       />
+      <MoveFileToDirectoryModal
+        open={movePopUp}
+        loggedUserId={loggedUser?.id ?? ''}
+        showErrorAlert={showErrorAlert}
+        onClose={() => handlePopUpClose('moveFile')}
+        idToMove={fileId}
+        title="Mover Arquivo para"
+        buttonTitle="Mover Arquivo"
+      />
 
       <LayoutBase title="Listagem de Usuários" toolBar={<ToolbarPureTV />}>
         <Box display="flex" justifyContent="center">
@@ -242,6 +258,7 @@ export const ListContanteFilesContainer = () => {
                           deleteFile={() => handleFile(file.id, 'delete')}
                           detailsFile={() => handleFile(file.id, 'details')}
                           downloadFile={() => handleFile(file.id, 'download')}
+                          moveFile={() => handleFile(file.id, 'moveFile')}
                           fileImage={file.path}
                           fileImageName={file.fileName}
                           name={file.originalName}

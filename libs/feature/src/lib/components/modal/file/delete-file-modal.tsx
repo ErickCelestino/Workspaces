@@ -2,11 +2,7 @@ import { FC } from 'react';
 import axios, { AxiosError } from 'axios';
 import { DeleteContentFileByIdDto, ErrorResponse } from '@workspaces/domain';
 import { DeleteContentFileByIdRequest } from '../../../services';
-import {
-  EntityNotEmpty,
-  EntityNotExist,
-  ConnectionError,
-} from '../../../shared';
+import { ValidationsError } from '../../../shared';
 import { SimpleConfimationModal } from '../simple';
 
 interface DeleteFileModalProps {
@@ -39,18 +35,9 @@ export const DeleteFileModal: FC<DeleteFileModalProps> = ({
       console.error(error);
       if (axios.isAxiosError(error)) {
         const axiosError = error as AxiosError<ErrorResponse>;
-        switch (axiosError.response?.data.error.name) {
-          case 'EntityNotEmpty':
-            showErrorAlert(EntityNotEmpty('Arquivos', 'PT-BR'));
-            break;
-
-          case 'EntityNotExists':
-            showErrorAlert(EntityNotExist('Diretorio', 'PT-BR'));
-            break;
-
-          default:
-            showErrorAlert(ConnectionError('PT-BR'));
-            break;
+        const errors = ValidationsError(axiosError, 'Download');
+        if (errors) {
+          showErrorAlert(errors);
         }
       }
     }

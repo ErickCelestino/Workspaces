@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { MulterModule } from '@nestjs/platform-express';
@@ -9,9 +8,10 @@ import {
   DetailsContentFileModule,
   DeleteContentFileByIdModule,
   CreateContentFileModule,
+  DownloadContentFileModule,
+  MoveFileToDirectoryModule,
 } from './file';
 import { FileS3Storage } from '@workspaces/data-access';
-import { DownloadContentFileModule } from './download-content-file/download-content-file.module';
 
 @Module({
   imports: [
@@ -26,6 +26,7 @@ import { DownloadContentFileModule } from './download-content-file/download-cont
     DetailsContentFileModule,
     EditContentFileModule,
     DownloadContentFileModule,
+    MoveFileToDirectoryModule,
   ],
   controllers: [AppController],
   providers: [AppService],

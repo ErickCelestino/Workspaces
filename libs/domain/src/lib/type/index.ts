@@ -1,3 +1,4 @@
+export * from './file-content-type';
 export * from './file-types';
 export * from './langue';
 export * from './status-color';
