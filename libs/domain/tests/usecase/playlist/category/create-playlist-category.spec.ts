@@ -2,15 +2,19 @@ import {
   CreatePlaylistCategory,
   CreatePlaylistCategoryDto,
   CreatePlaylistCategoryRepository,
+  EntityAlreadyExists,
   EntityNotCreated,
   EntityNotEmpty,
   EntityNotExists,
+  FindPlaylistCategoryByNameRepository,
   FindUserByIdRepository,
+  PlaylistCategory,
   UserList,
 } from '../../../../src';
 import { PlaylistCategoryMock, userMock } from '../../../entity';
 import {
   CreatePlaylistCategoryRepositoryMock,
+  FindPlaylistCategoryByNameRepositoryMock,
   FindUserByIdRepositoryMock,
 } from '../../../repository';
 
@@ -19,11 +23,14 @@ interface SutTypes {
   creatPlaylistCategoryDto: CreatePlaylistCategoryDto;
   findUserByIdRepository: FindUserByIdRepository;
   createPlaylistCategoryRepository: CreatePlaylistCategoryRepository;
+  findPlaylistCategoryByNameRepository: FindPlaylistCategoryByNameRepository;
 }
 const makeSut = (): SutTypes => {
   const findUserByIdRepository = new FindUserByIdRepositoryMock();
   const createPlaylistCategoryRepository =
     new CreatePlaylistCategoryRepositoryMock();
+  const findPlaylistCategoryByNameRepository =
+    new FindPlaylistCategoryByNameRepositoryMock();
 
   const creatPlaylistCategoryDto: CreatePlaylistCategoryDto = {
     loggedUserId: userMock.userId,
@@ -33,12 +40,14 @@ const makeSut = (): SutTypes => {
 
   const sut = new CreatePlaylistCategory(
     findUserByIdRepository,
-    createPlaylistCategoryRepository
+    createPlaylistCategoryRepository,
+    findPlaylistCategoryByNameRepository
   );
 
   return {
     findUserByIdRepository,
     createPlaylistCategoryRepository,
+    findPlaylistCategoryByNameRepository,
     creatPlaylistCategoryDto,
     sut,
   };
@@ -86,8 +95,11 @@ describe('CreatePlaylistCategory', () => {
   });
 
   it('should return EntityNotExists if there is no user created in the database', async () => {
-    const { creatPlaylistCategoryDto, createPlaylistCategoryRepository } =
-      makeSut();
+    const {
+      creatPlaylistCategoryDto,
+      createPlaylistCategoryRepository,
+      findPlaylistCategoryByNameRepository,
+    } = makeSut();
 
     const mockEmptyItem = {} as UserList;
 
@@ -97,7 +109,8 @@ describe('CreatePlaylistCategory', () => {
 
     const sut = new CreatePlaylistCategory(
       mockEmptyRepository,
-      createPlaylistCategoryRepository
+      createPlaylistCategoryRepository,
+      findPlaylistCategoryByNameRepository
     );
 
     const result = await sut.execute(creatPlaylistCategoryDto);
@@ -107,7 +120,11 @@ describe('CreatePlaylistCategory', () => {
   });
 
   it('should return EntityNotCreated if there is no playlist category created in the database', async () => {
-    const { creatPlaylistCategoryDto, findUserByIdRepository } = makeSut();
+    const {
+      creatPlaylistCategoryDto,
+      findUserByIdRepository,
+      findPlaylistCategoryByNameRepository,
+    } = makeSut();
 
     const mockEmptyRepository: CreatePlaylistCategoryRepository = {
       create: jest.fn(async () => ''),
@@ -115,12 +132,36 @@ describe('CreatePlaylistCategory', () => {
 
     const sut = new CreatePlaylistCategory(
       findUserByIdRepository,
-      mockEmptyRepository
+      mockEmptyRepository,
+      findPlaylistCategoryByNameRepository
     );
 
     const result = await sut.execute(creatPlaylistCategoryDto);
 
     expect(result.isLeft()).toBe(true);
     expect(result.value).toBeInstanceOf(EntityNotCreated);
+  });
+
+  it('should return EntityAlreadyExists if there is playlist category created in the database', async () => {
+    const {
+      creatPlaylistCategoryDto,
+      findUserByIdRepository,
+      createPlaylistCategoryRepository,
+    } = makeSut();
+
+    const mockEmptyRepository: FindPlaylistCategoryByNameRepository = {
+      find: jest.fn(async () => PlaylistCategoryMock),
+    };
+
+    const sut = new CreatePlaylistCategory(
+      findUserByIdRepository,
+      createPlaylistCategoryRepository,
+      mockEmptyRepository
+    );
+
+    const result = await sut.execute(creatPlaylistCategoryDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.value).toBeInstanceOf(EntityAlreadyExists);
   });
 });

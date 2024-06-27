@@ -2,6 +2,7 @@ import { Inject } from '@nestjs/common';
 import { UseCase } from '../../../base/use-case';
 import { CreatePlaylistCategoryDto } from '../../../dto';
 import {
+  EntityAlreadyExists,
   EntityNotCreated,
   EntityNotEmpty,
   EntityNotExists,
@@ -9,6 +10,7 @@ import {
 import { Either, left, right } from '../../../shared/either';
 import {
   CreatePlaylistCategoryRepository,
+  FindPlaylistCategoryByNameRepository,
   FindUserByIdRepository,
 } from '../../../repository';
 
@@ -16,19 +18,30 @@ export class CreatePlaylistCategory
   implements
     UseCase<
       CreatePlaylistCategoryDto,
-      Either<EntityNotEmpty | EntityNotExists | EntityNotCreated, string>
+      Either<
+        | EntityNotEmpty
+        | EntityNotExists
+        | EntityNotCreated
+        | EntityAlreadyExists,
+        string
+      >
     >
 {
   constructor(
     @Inject('FindUserByIdRepository')
     private findUserByIdRepository: FindUserByIdRepository,
     @Inject('CreatePlaylistCategoryRepository')
-    private createPlaylistCategoryRepository: CreatePlaylistCategoryRepository
+    private createPlaylistCategoryRepository: CreatePlaylistCategoryRepository,
+    @Inject('FindPlaylistCategoryByNameRepository')
+    private findPlaylistCategoryRepository: FindPlaylistCategoryByNameRepository
   ) {}
   async execute(
     input: CreatePlaylistCategoryDto
   ): Promise<
-    Either<EntityNotEmpty | EntityNotExists | EntityNotCreated, string>
+    Either<
+      EntityNotEmpty | EntityNotExists | EntityNotCreated | EntityAlreadyExists,
+      string
+    >
   > {
     const { loggedUserId, name, description } = input;
 
@@ -48,6 +61,19 @@ export class CreatePlaylistCategory
 
     if (Object.keys(filteredUser?.userId ?? filteredUser).length < 1) {
       return left(new EntityNotExists('User'));
+    }
+
+    const filteredPlaylistCategory =
+      await this.findPlaylistCategoryRepository.find({
+        loggedUserId,
+        name,
+      });
+
+    if (
+      Object.keys(filteredPlaylistCategory?.id ?? filteredPlaylistCategory)
+        .length > 0
+    ) {
+      return left(new EntityAlreadyExists('Category'));
     }
 
     const createdCategory = await this.createPlaylistCategoryRepository.create(
