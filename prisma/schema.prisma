@@ -72,6 +72,7 @@ model User {
   Content_Files Content_Files[]
   playlist Playlist[]
   scheduling Scheduling[]
+  playlistCategory Playlist_Category[]
 
   @@schema("general")
 }
@@ -356,17 +357,34 @@ model Playlist {
   playlist_id String @id @default(uuid())
   name String
   user_id String
-  category String
+  category_id String
   created_at DateTime @default(now())
   updated_at DateTime @default(now())
   deleted_at DateTime?
 
   user User @relation(fields: [user_id], references: [user_id])
+  category Playlist_Category @relation(fields: [category_id], references: [playlist_category_id])
   playlist_scheduling Playlist_X_Scheduling[]
   playlist_content_files Playlist_X_Content_Files[]
 
   @@schema("pure_tv")
 }
+
+model Playlist_Category {
+  playlist_category_id String @id @default(uuid())
+  user_id String
+  name String
+  description String
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+  deleted_at DateTime?
+
+  user User @relation(fields: [user_id], references: [user_id])
+  playlist Playlist[]
+
+  @@schema("pure_tv")
+}
+
 
 model Playlist_X_Scheduling {
   scheduling_id String
