@@ -34,8 +34,10 @@ const makeSut = (): SutTypes => {
 
   const creatPlaylistCategoryDto: CreatePlaylistCategoryDto = {
     loggedUserId: userMock.userId,
-    description: PlaylistCategoryMock.description,
-    name: PlaylistCategoryMock.name,
+    body: {
+      description: PlaylistCategoryMock.description,
+      name: PlaylistCategoryMock.name,
+    },
   };
 
   const sut = new CreatePlaylistCategory(
@@ -76,7 +78,7 @@ describe('CreatePlaylistCategory', () => {
 
   it('should return EntityNotEmpty when a pass incorrect name', async () => {
     const { creatPlaylistCategoryDto, sut } = makeSut();
-    creatPlaylistCategoryDto.name = '';
+    creatPlaylistCategoryDto.body.name = '';
     const result = await sut.execute(creatPlaylistCategoryDto);
 
     expect(result.isLeft()).toBe(true);
@@ -86,7 +88,7 @@ describe('CreatePlaylistCategory', () => {
 
   it('should return EntityNotEmpty when a pass incorrect description', async () => {
     const { creatPlaylistCategoryDto, sut } = makeSut();
-    creatPlaylistCategoryDto.description = '';
+    creatPlaylistCategoryDto.body.description = '';
     const result = await sut.execute(creatPlaylistCategoryDto);
 
     expect(result.isLeft()).toBe(true);

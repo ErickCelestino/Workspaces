@@ -1,7 +1,5 @@
 import { Inject } from '@nestjs/common';
 import {
-  CreatePlaylistCategoryDto,
-  CreatePlaylistCategoryRepository,
   FindPlaylistCategoryByNameDto,
   FindPlaylistCategoryByNameRepository,
   PlaylistCategory,

@@ -43,17 +43,17 @@ export class CreatePlaylistCategory
       string
     >
   > {
-    const { loggedUserId, name, description } = input;
+    const { loggedUserId, body } = input;
 
     if (Object.keys(loggedUserId).length < 1) {
       return left(new EntityNotEmpty('logged user ID'));
     }
 
-    if (Object.keys(name).length < 1) {
+    if (Object.keys(body.name).length < 1) {
       return left(new EntityNotEmpty('name'));
     }
 
-    if (Object.keys(description).length < 1) {
+    if (Object.keys(body.description).length < 1) {
       return left(new EntityNotEmpty('description'));
     }
 
@@ -66,7 +66,7 @@ export class CreatePlaylistCategory
     const filteredPlaylistCategory =
       await this.findPlaylistCategoryRepository.find({
         loggedUserId,
-        name,
+        name: body.name,
       });
 
     if (
