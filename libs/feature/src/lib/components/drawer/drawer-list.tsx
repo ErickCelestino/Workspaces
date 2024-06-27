@@ -43,7 +43,7 @@ export const DrawerListItem = ({
       });
       setButtonsDrawer(listItem);
     }
-  }, [buttonsDrawer]);
+  }, [isDrawerOpen, items]);
 
   const navigate = useNavigate();
 
@@ -80,13 +80,12 @@ export const DrawerListItem = ({
                       sx={{
                         minHeight: 48,
                         justifyContent: open ? 'initial' : 'center',
-                        px: 2.5,
                       }}
                     >
                       <ListItemIcon
                         sx={{
                           minWidth: 0,
-                          mr: open ? 3 : 'auto',
+                          mr: open ? 2 : 'auto',
                           justifyContent: 'center',
                         }}
                       >

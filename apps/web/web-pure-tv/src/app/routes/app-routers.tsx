@@ -5,7 +5,7 @@ import {
   TestContainer,
   useDrawerContext,
   ListContanteFilesContainer,
-  CreatePlaylistCategoryContainer,
+  ListPlaylistContainer,
 } from '@workspaces/feature';
 import { useEffect } from 'react';
 
@@ -51,7 +51,7 @@ export const AppRouters = () => {
       <Route path="/edit-user" element={<EditUserContainer />} />
       <Route path="list-user" element={<ListUserContainer />} />
       <Route path="files" element={<ListContanteFilesContainer />} />
-      <Route path="playlist" element={<CreatePlaylistCategoryContainer />} />
+      <Route path="playlist" element={<ListPlaylistContainer />} />
 
       <Route path="*" element={<Navigate to="/home" />} />
     </Routes>
