@@ -13,28 +13,36 @@ export const AppRouters = () => {
   const { setDrawerOptions } = useDrawerContext();
 
   useEffect(() => {
-    setDrawerOptions([
-      {
-        label: 'Página Inicial',
-        icon: 'home',
-        path: '/home',
-      },
-      {
-        label: 'Usuários',
-        icon: 'list',
-        path: '/list-user',
-      },
-      {
-        label: 'Arquivos',
-        icon: 'folder',
-        path: '/files',
-      },
-      {
-        label: 'Playlists',
-        icon: 'playlist_add',
-        path: '/playlist',
-      },
-    ]);
+    setDrawerOptions({
+      'Página Inicial': [
+        {
+          label: 'Página Inicial',
+          icon: 'home',
+          path: '/home',
+        },
+      ],
+      Usuários: [
+        {
+          label: 'Usuários',
+          icon: 'list',
+          path: '/list-user',
+        },
+      ],
+      Arquivos: [
+        {
+          label: 'Arquivos',
+          icon: 'folder',
+          path: '/files',
+        },
+      ],
+      Playlists: [
+        {
+          label: 'Playlists',
+          icon: 'playlist_add',
+          path: '/playlist',
+        },
+      ],
+    });
   }, [setDrawerOptions]);
 
   return (
