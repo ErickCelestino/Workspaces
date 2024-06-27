@@ -2,6 +2,8 @@ import { ErrorResponse } from '@workspaces/domain';
 import { AxiosError } from 'axios';
 import {
   ConnectionError,
+  EntityAlreadyExists,
+  EntityExist,
   EntityNotAllowed,
   EntityNotCreated,
   EntityNotEmpty,
@@ -20,6 +22,9 @@ export function ValidationsError(
 
     case 'FileNotAllowed':
       return EntityNotAllowed(entitie, 'PT-BR');
+
+    case 'EntityAlreadyExists':
+      return EntityAlreadyExists(entitie, 'PT-BR');
 
     default:
       return ConnectionError('PT-BR');

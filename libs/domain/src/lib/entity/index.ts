@@ -6,5 +6,6 @@ export * from './directory';
 export * from './drawer';
 export * from './file';
 export * from './form';
+export * from './playlist';
 export * from './user';
 export * from './utils';

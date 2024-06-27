@@ -6,7 +6,7 @@ import {
   useContext,
   useState,
 } from 'react';
-import { DrawerOption } from '@workspaces/domain';
+import { DrawerTopic } from '@workspaces/domain';
 
 interface DrawerContextData {
   isDrawerOpen: boolean;
@@ -21,8 +21,8 @@ export const useDrawerContext = () => {
 interface DrawerContextData {
   isDrawerOpen: boolean;
   toggleDrawerOpen: () => void;
-  drawerOptions: DrawerOption[];
-  setDrawerOptions: (newDrawerOptions: DrawerOption[]) => void;
+  drawerOptions: DrawerTopic;
+  setDrawerOptions: (newDrawerOptions: DrawerTopic) => void;
 }
 
 interface DrawerProviderProps {
@@ -31,10 +31,10 @@ interface DrawerProviderProps {
 
 export const DrawerProvider: FC<DrawerProviderProps> = ({ children }) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [drawerOptions, setDrawerOptions] = useState<DrawerOption[]>([]);
+  const [drawerOptions, setDrawerOptions] = useState<DrawerTopic>({});
 
   const handleSetDrawerOptions = useCallback(
-    (newDrawerOptions: DrawerOption[]) => {
+    (newDrawerOptions: DrawerTopic) => {
       setDrawerOptions(newDrawerOptions);
     },
     []
