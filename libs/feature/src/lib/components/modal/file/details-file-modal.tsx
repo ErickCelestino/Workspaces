@@ -21,13 +21,9 @@ import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import AttachmentIcon from '@mui/icons-material/Attachment';
 import { DetailsContentFileRequest } from '../../../services';
 import axios, { AxiosError } from 'axios';
-import {
-  ConnectionError,
-  EntityNotEmpty,
-  EntityNotExist,
-} from '../../../shared';
 import EditIcon from '@mui/icons-material/Edit';
 import { FormEditContentFile } from '../../form';
+import { ValidationsError } from '../../../shared';
 
 interface DetailsFileModalPros {
   showErrorAlert: (message: string) => void;
@@ -89,16 +85,9 @@ export const DetailsFileModal: FC<DetailsFileModalPros> = ({
         console.error(error);
         if (axios.isAxiosError(error)) {
           const axiosError = error as AxiosError<ErrorResponse>;
-          switch (axiosError.response?.data.error.name) {
-            case 'EntityNotEmpty':
-              showErrorAlert(EntityNotEmpty('Arquivos', 'PT-BR'));
-              break;
-            case 'EntityNotExists':
-              showErrorAlert(EntityNotExist('Diretorio', 'PT-BR'));
-              break;
-            default:
-              showErrorAlert(ConnectionError('PT-BR'));
-              break;
+          const errors = ValidationsError(axiosError, 'arquivo ou diretório');
+          if (errors) {
+            showErrorAlert(errors);
           }
         }
       }
@@ -214,7 +203,6 @@ export const DetailsFileModal: FC<DetailsFileModalPros> = ({
                 <strong>{formatFileTitle}:</strong> {detailsFile?.format}
               </Typography>
             </Box>
-
             <Box
               component="div"
               sx={{
@@ -236,7 +224,6 @@ export const DetailsFileModal: FC<DetailsFileModalPros> = ({
                 <strong>{sizeFileTitle}:</strong> {detailsFile?.size}
               </Typography>
             </Box>
-
             <Box
               component="div"
               sx={{
