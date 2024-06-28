@@ -4,7 +4,6 @@ import {
   FindAppById,
   FindAppByIdDto,
   FindAppByIdRepository,
-  FindUserById,
   InsufficientCharacters,
 } from '../../../src';
 import { appMock } from '../../entity/app/app.mock';

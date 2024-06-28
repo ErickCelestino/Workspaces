@@ -8,7 +8,6 @@ import {
   EntityNotExists,
   FindPlaylistCategoryByNameRepository,
   FindUserByIdRepository,
-  PlaylistCategory,
   UserList,
 } from '../../../../src';
 import { PlaylistCategoryMock, userMock } from '../../../entity';

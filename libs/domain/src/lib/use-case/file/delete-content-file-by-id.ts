@@ -1,6 +1,6 @@
 import { Inject } from '@nestjs/common';
 import { UseCase } from '../../base/use-case';
-import { DeleteContentFileByIdDto } from '../../dto/file/request/delete-content-file-by-id.dto';
+import { DeleteContentFileByIdDto } from '../../dto';
 import { EntityNotEmpty, EntityNotExists } from '../../error';
 import {
   DeleteContentFileByIdRepository,
