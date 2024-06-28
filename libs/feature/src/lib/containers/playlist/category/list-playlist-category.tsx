@@ -1,6 +1,7 @@
-import { Button } from '@mui/material';
+import { Box } from '@mui/material';
 import {
   CreatePlaylistCategoryModal,
+  ListPlaylistCategory,
   ToolbarPureTV,
 } from '../../../components';
 import { LayoutBase } from '../../../layout';
@@ -9,6 +10,7 @@ import { useSnackbarAlert } from '../../../hooks';
 import {
   ErrorResponse,
   ListPlaylistCategoryReponseDto,
+  PlaylistCategory,
   PlaylistCategoryType,
 } from '@workspaces/domain';
 import { ListPlaylistCategoryRequest } from '../../../services';
@@ -18,8 +20,9 @@ import { ValidationsError } from '../../../shared';
 
 export const ListPlaylistCategoryContainer = () => {
   const { loggedUser } = useLoggedUser();
-  const [listPlaylistCategory, setListPlaylistCategory] =
-    useState<ListPlaylistCategoryReponseDto>();
+  const [listPlaylistCategory, setListPlaylistCategory] = useState<
+    PlaylistCategory[]
+  >([]);
   const [createCategoryPopUp, setCreateCategoryPopUp] = useState(false);
   const { showSnackbarAlert, SnackbarAlert } = useSnackbarAlert();
 
@@ -39,6 +42,7 @@ export const ListPlaylistCategoryContainer = () => {
         loggedUserId: loggedUser?.id ?? '',
         userInput: '',
       });
+      setListPlaylistCategory(result.categories);
       return result;
     } catch (error) {
       console.error(error);
@@ -80,7 +84,9 @@ export const ListPlaylistCategoryContainer = () => {
         title="Registrar Nova Categoria"
       />
       <LayoutBase title="Listagem Playlist" toolBar={<ToolbarPureTV />}>
-        <Button onClick={() => handlePopUpOpen('create')}>teste</Button>
+        <Box>
+          <ListPlaylistCategory list={listPlaylistCategory} />
+        </Box>
       </LayoutBase>
       {SnackbarAlert}
     </>
