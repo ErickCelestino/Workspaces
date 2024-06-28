@@ -6,4 +6,5 @@ export const ListPlaylistCategoryReponseMock: ListPlaylistCategoryReponseDto = {
   categories: [PlaylistCategoryMock],
   filteredTotal: parseInt(`${faker.number.bigInt}`),
   total: parseInt(`${faker.number.bigInt}`),
+  totalPages: parseInt(`${faker.number.bigInt}`),
 };

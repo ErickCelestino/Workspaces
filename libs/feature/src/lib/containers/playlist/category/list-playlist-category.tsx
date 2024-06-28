@@ -1,14 +1,16 @@
-import { Box } from '@mui/material';
+import { Box, Pagination, useTheme } from '@mui/material';
 import {
   CreatePlaylistCategoryModal,
   ListPlaylistCategory,
+  SearchBar,
   ToolbarPureTV,
 } from '../../../components';
 import { LayoutBase } from '../../../layout';
-import { useCallback, useEffect, useState } from 'react';
+import { FormEvent, useCallback, useEffect, useState } from 'react';
 import { useSnackbarAlert } from '../../../hooks';
 import {
   ErrorResponse,
+  ListPlaylistCategoryDto,
   ListPlaylistCategoryReponseDto,
   PlaylistCategory,
   PlaylistCategoryType,
@@ -23,8 +25,10 @@ export const ListPlaylistCategoryContainer = () => {
   const [listPlaylistCategory, setListPlaylistCategory] = useState<
     PlaylistCategory[]
   >([]);
+  const [totalPage, setTotalPage] = useState<number>(1);
   const [createCategoryPopUp, setCreateCategoryPopUp] = useState(false);
   const { showSnackbarAlert, SnackbarAlert } = useSnackbarAlert();
+  const theme = useTheme();
 
   const showAlert = useCallback(
     (message: string, success: boolean) => {
@@ -36,29 +40,52 @@ export const ListPlaylistCategoryContainer = () => {
     [showSnackbarAlert]
   );
 
-  const getListPlaylistCategory = useCallback(async () => {
-    try {
-      const result = await ListPlaylistCategoryRequest({
-        loggedUserId: loggedUser?.id ?? '',
-        userInput: '',
-      });
-      setListPlaylistCategory(result.categories);
-      return result;
-    } catch (error) {
-      console.error(error);
-      if (axios.isAxiosError(error)) {
-        const axiosError = error as AxiosError<ErrorResponse>;
-        const errors = ValidationsError(axiosError, 'Categorias');
-        if (errors) {
-          showAlert(errors, false);
+  const handleData = useCallback(
+    async (data: ListPlaylistCategoryDto) => {
+      try {
+        const result = await ListPlaylistCategoryRequest({
+          loggedUserId: data.loggedUserId,
+          userInput: data.userInput,
+          skip: data.skip,
+          take: data.take,
+        });
+        return result;
+      } catch (error) {
+        console.error(error);
+        if (axios.isAxiosError(error)) {
+          const axiosError = error as AxiosError<ErrorResponse>;
+          const errors = ValidationsError(axiosError, 'Categorias');
+          if (errors) {
+            showAlert(errors, false);
+          }
         }
       }
-    }
-  }, [showAlert]);
+    },
+    [showAlert]
+  );
+
+  const getData = useCallback(async () => {
+    const result = await handleData({
+      loggedUserId: loggedUser?.id ?? '',
+      userInput: '',
+    });
+    setTotalPage(result?.totalPages ?? 1);
+    setListPlaylistCategory(result?.categories ?? []);
+  }, [loggedUser, handleData]);
 
   useEffect(() => {
-    getListPlaylistCategory();
-  }, [getListPlaylistCategory]);
+    getData();
+  }, [getData]);
+
+  const searchData = async (input: string) => {
+    const result = await handleData({
+      loggedUserId: loggedUser?.id ?? '',
+      userInput: input,
+    });
+
+    setTotalPage(result?.totalPages ?? 1);
+    setListPlaylistCategory(result?.categories ?? []);
+  };
 
   const handlePopUpClose = (types: PlaylistCategoryType) => {
     switch (types) {
@@ -68,13 +95,19 @@ export const ListPlaylistCategoryContainer = () => {
     }
   };
 
-  const handlePopUpOpen = (types: PlaylistCategoryType) => {
-    switch (types) {
-      case 'create':
-        setCreateCategoryPopUp(true);
-        break;
-    }
+  const handleChange = async (
+    event: React.ChangeEvent<unknown>,
+    value: number
+  ) => {
+    const result = await ListPlaylistCategoryRequest({
+      userInput: '',
+      loggedUserId: loggedUser?.id ?? '',
+      skip: (value - 1) * 8,
+    });
+    setTotalPage(result.totalPages);
+    setListPlaylistCategory(result.categories);
   };
+
   return (
     <>
       <CreatePlaylistCategoryModal
@@ -84,8 +117,31 @@ export const ListPlaylistCategoryContainer = () => {
         title="Registrar Nova Categoria"
       />
       <LayoutBase title="Listagem Playlist" toolBar={<ToolbarPureTV />}>
-        <Box>
-          <ListPlaylistCategory list={listPlaylistCategory} />
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <Box width="95%">
+            <SearchBar
+              onSearch={searchData}
+              placeholder="Pesquisar Categoria"
+            />
+            <ListPlaylistCategory list={listPlaylistCategory} />
+            <Box
+              marginTop={theme.spacing(2)}
+              display="flex"
+              justifyContent="end"
+            >
+              <Pagination
+                count={totalPage}
+                color="primary"
+                onChange={handleChange}
+              />
+            </Box>
+          </Box>
         </Box>
       </LayoutBase>
       {SnackbarAlert}

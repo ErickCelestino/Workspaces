@@ -21,7 +21,14 @@ export class ListPlaylistCategoryRepositoryImpl
 
     const whereClause = {
       user_id: loggedUserId,
-      ...(userInput !== '' ? { name: userInput } : {}),
+      ...(userInput !== ''
+        ? {
+            name: {
+              contains: userInput,
+              mode: 'insensitive' as 'insensitive',
+            },
+          }
+        : {}),
     };
 
     const [categories, filteredTotal, total] =
@@ -51,7 +58,7 @@ export class ListPlaylistCategoryRepositoryImpl
           },
         }),
       ]);
-
+    const totalPages = Math.ceil(filteredTotal / take);
     const mappedCategories: PlaylistCategory[] = categories.map((category) => {
       return {
         id: category.playlist_category_id,
@@ -65,6 +72,7 @@ export class ListPlaylistCategoryRepositoryImpl
     return {
       categories: mappedCategories,
       filteredTotal,
+      totalPages,
       total,
     };
   }

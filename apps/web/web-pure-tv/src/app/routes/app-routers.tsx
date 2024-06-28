@@ -43,7 +43,7 @@ export const AppRouters = () => {
           path: '/playlist-category',
         },
         {
-          label: 'Categorias Playlists',
+          label: 'Categorias',
           icon: 'category',
           path: '/playlist-category',
         },

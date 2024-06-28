@@ -23,7 +23,7 @@ import { DetailsContentFileRequest } from '../../../services';
 import axios, { AxiosError } from 'axios';
 import EditIcon from '@mui/icons-material/Edit';
 import { FormEditContentFile } from '../../form';
-import { ValidationsError } from '../../../shared';
+import { ValidationsError, formatBrDate } from '../../../shared';
 
 interface DetailsFileModalPros {
   showErrorAlert: (message: string) => void;
@@ -243,7 +243,7 @@ export const DetailsFileModal: FC<DetailsFileModalPros> = ({
                 variant={smDown ? 'body1' : 'h6'}
               >
                 <strong>{uploadDateTitle}:</strong>{' '}
-                {detailsFile?.uploadDate.toString()}
+                {formatBrDate(new Date(detailsFile?.uploadDate ?? new Date()))}
               </Typography>
             </Box>
           </Box>
