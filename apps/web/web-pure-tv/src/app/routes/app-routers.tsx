@@ -6,6 +6,7 @@ import {
   useDrawerContext,
   ListContanteFilesContainer,
   ListPlaylistContainer,
+  ListPlaylistCategoryContainer,
 } from '@workspaces/feature';
 import { useEffect } from 'react';
 
@@ -39,7 +40,12 @@ export const AppRouters = () => {
         {
           label: 'Playlists',
           icon: 'playlist_add',
-          path: '/playlist',
+          path: '/playlist-category',
+        },
+        {
+          label: 'Categorias Playlists',
+          icon: 'category',
+          path: '/playlist-category',
         },
       ],
     });
@@ -52,6 +58,10 @@ export const AppRouters = () => {
       <Route path="list-user" element={<ListUserContainer />} />
       <Route path="files" element={<ListContanteFilesContainer />} />
       <Route path="playlist" element={<ListPlaylistContainer />} />
+      <Route
+        path="playlist-category"
+        element={<ListPlaylistCategoryContainer />}
+      />
 
       <Route path="*" element={<Navigate to="/home" />} />
     </Routes>
