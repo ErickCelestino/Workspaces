@@ -5,6 +5,7 @@ import {
   ListItem,
   ListItemText,
   Typography,
+  useTheme,
 } from '@mui/material';
 import { PlaylistCategory } from '@workspaces/domain';
 import { FC } from 'react';
@@ -24,6 +25,7 @@ export const ListPlaylistCategory: FC<ListPlaylistCategoryProps> = ({
   titleCreatedBy = 'Criado por',
   titleCreatedAt = 'Criado em',
 }) => {
+  const theme = useTheme();
   return (
     <Box
       sx={{
@@ -111,7 +113,15 @@ export const ListPlaylistCategory: FC<ListPlaylistCategoryProps> = ({
                             {titleDescription}:
                           </Typography>
                           <Typography
-                            sx={{ display: 'inline', marginLeft: '4px' }}
+                            overflow="hidden"
+                            sx={{
+                              display: 'inline-block',
+                              width: '100%',
+                              maxHeight: theme.spacing(6),
+                              marginLeft: '4px',
+                              wordWrap: 'break-word',
+                              overflowY: 'auto',
+                            }}
                             component="span"
                             variant="body2"
                             color="text.secondary"

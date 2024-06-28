@@ -17,7 +17,7 @@ export class ListPlaylistCategoryRepositoryImpl
     const { loggedUserId, userInput } = input;
 
     const skip = input?.skip || 0;
-    const take = input?.take || 8;
+    const take = input?.take || 6;
 
     const whereClause = {
       user_id: loggedUserId,

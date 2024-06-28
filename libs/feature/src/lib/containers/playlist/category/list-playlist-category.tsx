@@ -111,10 +111,11 @@ export const ListPlaylistCategoryContainer = () => {
     event: React.ChangeEvent<unknown>,
     value: number
   ) => {
+    setSearch(true);
     const result = await ListPlaylistCategoryRequest({
       userInput: '',
       loggedUserId: loggedUser?.id ?? '',
-      skip: (value - 1) * 8,
+      skip: (value - 1) * 6,
     });
     setTotalPage(result.totalPages);
     setListPlaylistCategory(result.categories);
