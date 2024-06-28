@@ -1,4 +1,4 @@
-import { Faker, faker } from '@faker-js/faker';
+import { faker } from '@faker-js/faker';
 import { PlaylistCategory } from '../../../../src';
 
 export const PlaylistCategoryMock: PlaylistCategory = {

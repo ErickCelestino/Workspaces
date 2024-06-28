@@ -1,15 +1,17 @@
 import {
   ListPlaylistCategoryDto,
+  ListPlaylistCategoryReponseDto,
   ListPlaylistCategoryRepository,
-  PlaylistCategory,
 } from '../../../../src';
-import { PlaylistCategoryMock } from '../../../entity';
+import { ListPlaylistCategoryReponseMock } from '../../../entity';
 export class ListPlaylistCategoryRepositoryMock
   implements ListPlaylistCategoryRepository
 {
   inputMock = {} as ListPlaylistCategoryDto;
-  async list(input: ListPlaylistCategoryDto): Promise<PlaylistCategory[]> {
+  async list(
+    input: ListPlaylistCategoryDto
+  ): Promise<ListPlaylistCategoryReponseDto> {
     this.inputMock = input;
-    return [PlaylistCategoryMock];
+    return ListPlaylistCategoryReponseMock;
   }
 }

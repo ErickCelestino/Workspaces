@@ -1,7 +1,9 @@
 import { Inject } from '@nestjs/common';
 import { UseCase } from '../../../base/use-case';
-import { ListPlaylistCategoryDto } from '../../../dto';
-import { PlaylistCategory } from '../../../entity';
+import {
+  ListPlaylistCategoryDto,
+  ListPlaylistCategoryReponseDto,
+} from '../../../dto';
 import { EntityNotEmpty, EntityNotExists } from '../../../error';
 import { Either, left, right } from '../../../shared/either';
 import {
@@ -13,7 +15,7 @@ export class ListPlaylistCategory
   implements
     UseCase<
       ListPlaylistCategoryDto,
-      Either<EntityNotEmpty | EntityNotExists, PlaylistCategory[]>
+      Either<EntityNotEmpty | EntityNotExists, ListPlaylistCategoryReponseDto>
     >
 {
   constructor(
@@ -25,7 +27,9 @@ export class ListPlaylistCategory
 
   async execute(
     input: ListPlaylistCategoryDto
-  ): Promise<Either<EntityNotEmpty | EntityNotExists, PlaylistCategory[]>> {
+  ): Promise<
+    Either<EntityNotEmpty | EntityNotExists, ListPlaylistCategoryReponseDto>
+  > {
     const { loggedUserId } = input;
 
     if (Object.keys(loggedUserId).length < 1) {

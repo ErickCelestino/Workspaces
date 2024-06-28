@@ -1,6 +1,8 @@
-import { ListPlaylistCategoryDto } from '../../../dto';
-import { PlaylistCategory } from '../../../entity';
+import {
+  ListPlaylistCategoryDto,
+  ListPlaylistCategoryReponseDto,
+} from '../../../dto';
 
 export interface ListPlaylistCategoryRepository {
-  list(input: ListPlaylistCategoryDto): Promise<PlaylistCategory[]>;
+  list(input: ListPlaylistCategoryDto): Promise<ListPlaylistCategoryReponseDto>;
 }
