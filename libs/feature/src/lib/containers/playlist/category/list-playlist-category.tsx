@@ -1,4 +1,5 @@
-import { Box, Pagination, useTheme } from '@mui/material';
+import { Box, IconButton, Pagination, useTheme } from '@mui/material';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 import {
   CreatePlaylistCategoryModal,
   ListPlaylistCategory,
@@ -98,6 +99,14 @@ export const ListPlaylistCategoryContainer = () => {
     }
   };
 
+  const handlePopUpOpen = (types: PlaylistCategoryType) => {
+    switch (types) {
+      case 'create':
+        setCreateCategoryPopUp(true);
+        break;
+    }
+  };
+
   const handleChange = async (
     event: React.ChangeEvent<unknown>,
     value: number
@@ -128,10 +137,36 @@ export const ListPlaylistCategoryContainer = () => {
           }}
         >
           <Box width="95%">
-            <SearchBar
-              onSearch={searchData}
-              placeholder="Pesquisar Categoria"
-            />
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+            >
+              <Box width="55%" marginRight={theme.spacing(2)}>
+                <SearchBar
+                  onSearch={searchData}
+                  placeholder="Pesquisar Categoria"
+                />
+              </Box>
+              <IconButton
+                onClick={() => handlePopUpOpen('create')}
+                sx={{
+                  width: theme.spacing(8),
+                  height: theme.spacing(8),
+                }}
+              >
+                <AddCircleIcon
+                  sx={{
+                    width: theme.spacing(8),
+                    height: theme.spacing(8),
+                  }}
+                  color="primary"
+                  fontSize="large"
+                />
+              </IconButton>
+            </Box>
             <ListPlaylistCategory list={listPlaylistCategory} />
             <Box
               marginTop={theme.spacing(2)}
