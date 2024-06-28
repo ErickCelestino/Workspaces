@@ -53,6 +53,7 @@ export const ListPlaylistCategory: FC<ListPlaylistCategoryProps> = ({
                         }}
                       >
                         <Box
+                          component="span"
                           sx={{
                             display: 'flex',
                             flexDirection: 'row',
@@ -60,7 +61,7 @@ export const ListPlaylistCategory: FC<ListPlaylistCategoryProps> = ({
                             justifyContent: 'space-between',
                           }}
                         >
-                          <Box>
+                          <Box component="span">
                             <Typography
                               sx={{ display: 'inline' }}
                               component="span"
@@ -78,7 +79,7 @@ export const ListPlaylistCategory: FC<ListPlaylistCategoryProps> = ({
                               {category.created_by}
                             </Typography>
                           </Box>
-                          <Box>
+                          <Box component="span">
                             <Typography
                               sx={{ display: 'inline' }}
                               component="span"
@@ -98,6 +99,7 @@ export const ListPlaylistCategory: FC<ListPlaylistCategoryProps> = ({
                           </Box>
                         </Box>
                         <Box
+                          component="span"
                           sx={{
                             display: 'flex',
                             flexDirection: 'row',
@@ -113,7 +115,9 @@ export const ListPlaylistCategory: FC<ListPlaylistCategoryProps> = ({
                             {titleDescription}:
                           </Typography>
                           <Typography
-                            overflow="hidden"
+                            component="span"
+                            variant="body2"
+                            color="text.secondary"
                             sx={{
                               display: 'inline-block',
                               width: '100%',
@@ -122,9 +126,6 @@ export const ListPlaylistCategory: FC<ListPlaylistCategoryProps> = ({
                               wordWrap: 'break-word',
                               overflowY: 'auto',
                             }}
-                            component="span"
-                            variant="body2"
-                            color="text.secondary"
                           >
                             {category.description}
                           </Typography>
