@@ -1,1 +1,1 @@
-export type PlaylistType = 'category';
+export type PlaylistCategoryType = 'create';

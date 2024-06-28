@@ -126,7 +126,6 @@ export const MoveFileToDirectoryModal: FC<MoveFileToDirectoryModalProps> = ({
                 <CloseIcon />
               </IconButton>
             </Box>
-            <Divider />
             <Box
               sx={{
                 display: 'flex',

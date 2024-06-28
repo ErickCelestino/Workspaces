@@ -10,8 +10,8 @@ import {
 } from '@mui/material';
 import { Delete as DeleteIcon } from '@mui/icons-material';
 import { FC } from 'react';
-import { styled } from '@mui/system';
 import { FileWithProgress } from '@workspaces/domain';
+import { ScrollBox } from '../scroll';
 
 interface ProgressFilesListProps {
   filesList: FileWithProgress[];
@@ -19,24 +19,6 @@ interface ProgressFilesListProps {
   title?: string;
   progress: number;
 }
-
-const ScrollBox = styled(Box)({
-  maxHeight: '11rem',
-  overflow: 'auto',
-  '&::-webkit-scrollbar': {
-    width: '12px',
-  },
-  '&::-webkit-scrollbar-track': {
-    background: '#f1f1f1',
-  },
-  '&::-webkit-scrollbar-thumb': {
-    background: '#888',
-    borderRadius: '10px',
-  },
-  '&::-webkit-scrollbar-thumb:hover': {
-    background: '#555',
-  },
-});
 
 export const ProgressFilesList: FC<ProgressFilesListProps> = ({
   filesList,

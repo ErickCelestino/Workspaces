@@ -3,7 +3,6 @@ import {
   FindPlaylistCategoryByNameRepository,
   PlaylistCategory,
 } from '../../../../src';
-import { PlaylistCategoryMock } from '../../../entity';
 
 export class FindPlaylistCategoryByNameRepositoryMock
   implements FindPlaylistCategoryByNameRepository

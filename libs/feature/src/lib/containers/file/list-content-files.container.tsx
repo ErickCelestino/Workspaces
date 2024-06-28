@@ -57,6 +57,7 @@ const onDownloadFile = async (input: DownloadContentFileResponseDto) => {
 };
 
 export const ListContanteFilesContainer = () => {
+  const [search, setSearch] = useState(false);
   const [fileList, setFileList] = useState<ContentFile[]>([]);
   const [totalPage, setTotalPage] = useState<number>(1);
   const [directoryId, setDirectoryId] = useState('');
@@ -119,7 +120,9 @@ export const ListContanteFilesContainer = () => {
   }, [loggedUser, handleData]);
 
   useEffect(() => {
-    getData();
+    if (!search) {
+      getData();
+    }
   }, [getData]);
 
   const handlePopUpClose = (types: FileContentType) => {
@@ -204,6 +207,7 @@ export const ListContanteFilesContainer = () => {
   };
 
   const searchData = async (input: string) => {
+    setSearch(true);
     const result = await handleData({
       directoryId,
       loggedUserId: loggedUser?.id ?? '',
