@@ -13,6 +13,7 @@ import {
 } from './file';
 import { FileS3Storage } from '@workspaces/data-access';
 import { CreatePlaylistCategoryModule } from './create-playlist-category/create-playlist-category.module';
+import { ListPlaylistCategoryModule } from './list-playlist-category/list-playlist-category.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { CreatePlaylistCategoryModule } from './create-playlist-category/create-
     DownloadContentFileModule,
     MoveFileToDirectoryModule,
     CreatePlaylistCategoryModule,
+    ListPlaylistCategoryModule,
   ],
   controllers: [AppController],
   providers: [AppService],
