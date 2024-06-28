@@ -6,12 +6,11 @@ import {
   ToolbarPureTV,
 } from '../../../components';
 import { LayoutBase } from '../../../layout';
-import { FormEvent, useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useSnackbarAlert } from '../../../hooks';
 import {
   ErrorResponse,
   ListPlaylistCategoryDto,
-  ListPlaylistCategoryReponseDto,
   PlaylistCategory,
   PlaylistCategoryType,
 } from '@workspaces/domain';
@@ -25,6 +24,7 @@ export const ListPlaylistCategoryContainer = () => {
   const [listPlaylistCategory, setListPlaylistCategory] = useState<
     PlaylistCategory[]
   >([]);
+  const [search, setSearch] = useState(false);
   const [totalPage, setTotalPage] = useState<number>(1);
   const [createCategoryPopUp, setCreateCategoryPopUp] = useState(false);
   const { showSnackbarAlert, SnackbarAlert } = useSnackbarAlert();
@@ -69,21 +69,24 @@ export const ListPlaylistCategoryContainer = () => {
       loggedUserId: loggedUser?.id ?? '',
       userInput: '',
     });
-    setTotalPage(result?.totalPages ?? 1);
+    setTotalPage(result?.totalPages ?? 0);
     setListPlaylistCategory(result?.categories ?? []);
   }, [loggedUser, handleData]);
 
   useEffect(() => {
-    getData();
+    if (!search) {
+      getData();
+    }
   }, [getData]);
 
   const searchData = async (input: string) => {
+    setSearch(true);
     const result = await handleData({
       loggedUserId: loggedUser?.id ?? '',
       userInput: input,
     });
 
-    setTotalPage(result?.totalPages ?? 1);
+    setTotalPage(result?.totalPages ?? 0);
     setListPlaylistCategory(result?.categories ?? []);
   };
 
