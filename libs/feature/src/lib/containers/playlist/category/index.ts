@@ -1,1 +1,1 @@
-export * from './list-playlist-category';
+export * from './list-playlist-category.container';
