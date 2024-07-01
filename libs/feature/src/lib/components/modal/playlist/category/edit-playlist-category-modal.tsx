@@ -10,19 +10,19 @@ import {
   useTheme,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import { useLoggedUser } from 'libs/feature/src/lib/contexts';
+import { useLoggedUser } from '../../../../contexts';
 import { FC, useCallback, useEffect, useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { EditPlaylistCategoryBodyDto, ErrorResponse } from '@workspaces/domain';
 import {
   EditPlaylistCategorySchema,
   ValidationsError,
-} from 'libs/feature/src/lib/shared';
+} from '../../../../shared';
 import { useForm } from 'react-hook-form';
 import {
   EditPlaylistCategoryRequest,
   FindPlaylistCategoryByIdRequest,
-} from 'libs/feature/src/lib/services';
+} from '../../../../services';
 import axios, { AxiosError } from 'axios';
 import { FormButton } from '../../../form';
 
@@ -114,6 +114,7 @@ export const EditPlaylistCategoryModal: FC<EditPlaylistCategoryModalProps> = ({
       });
       setLoading(false);
       setSuccess(true);
+      handlePopUpClose();
       return result;
     } catch (error) {
       setLoading(false);

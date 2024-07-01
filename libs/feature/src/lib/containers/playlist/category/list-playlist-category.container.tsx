@@ -82,7 +82,7 @@ export const ListPlaylistCategoryContainer = () => {
     if (!search) {
       getData();
     }
-  }, [getData]);
+  }, [getData, search]);
 
   const searchData = async (input: string) => {
     setSearch(true);

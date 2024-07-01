@@ -23,8 +23,8 @@ import {
   ValidationsError,
 } from '../../../../shared';
 import { FormButton } from '../../../form';
-import { useLoggedUser } from 'libs/feature/src/lib/contexts';
-import { CreatePlaylistCategoryRequest } from 'libs/feature/src/lib/services';
+import { useLoggedUser } from '../../../../contexts';
+import { CreatePlaylistCategoryRequest } from '../../../../services';
 import axios, { AxiosError } from 'axios';
 
 interface CreatePlaylistCategoryModalProps {
