@@ -46,6 +46,7 @@ export const EditPlaylistCategoryModal: FC<EditPlaylistCategoryModalProps> = ({
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [dataLoaded, setDataLoaded] = useState(false);
 
   const {
     handleSubmit,
@@ -74,6 +75,7 @@ export const EditPlaylistCategoryModal: FC<EditPlaylistCategoryModalProps> = ({
         name: result.name,
         description: result.description,
       });
+      setDataLoaded(true);
     } catch (error) {
       console.error(error);
       if (axios.isAxiosError(error)) {
@@ -85,6 +87,18 @@ export const EditPlaylistCategoryModal: FC<EditPlaylistCategoryModalProps> = ({
       }
     }
   }, [loggedUser?.id, selectedId, reset, showAlert]);
+
+  useEffect(() => {
+    if (open && selectedId && !dataLoaded) {
+      getData();
+    }
+  }, [open, selectedId, getData, dataLoaded]);
+
+  useEffect(() => {
+    if (!open) {
+      setDataLoaded(false);
+    }
+  }, [open]);
 
   const editCategory = async (data: EditPlaylistCategoryBodyDto) => {
     try {
@@ -114,12 +128,6 @@ export const EditPlaylistCategoryModal: FC<EditPlaylistCategoryModalProps> = ({
       }
     }
   };
-
-  useEffect(() => {
-    if (selectedId) {
-      getData();
-    }
-  }, [selectedId, getData]);
 
   return (
     <Modal open={open} onClose={handlePopUpClose} closeAfterTransition>
