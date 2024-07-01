@@ -1,7 +1,8 @@
-import { Box, IconButton, Pagination, useTheme } from '@mui/material';
+import { Box, IconButton, List, Pagination, useTheme } from '@mui/material';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import {
   CreatePlaylistCategoryModal,
+  EditPlaylistCategoryModal,
   ListPlaylistCategory,
   SearchBar,
   ToolbarPureTV,
@@ -19,15 +20,18 @@ import { ListPlaylistCategoryRequest } from '../../../services';
 import { useLoggedUser } from '../../../contexts';
 import axios, { AxiosError } from 'axios';
 import { ValidationsError } from '../../../shared';
+import { ScrollBox } from '../../../components/scroll';
 
 export const ListPlaylistCategoryContainer = () => {
   const { loggedUser } = useLoggedUser();
   const [listPlaylistCategory, setListPlaylistCategory] = useState<
     PlaylistCategory[]
   >([]);
+  const [playlistCategoryId, setPlaylistCategoryId] = useState('');
   const [search, setSearch] = useState(false);
   const [totalPage, setTotalPage] = useState<number>(1);
   const [createCategoryPopUp, setCreateCategoryPopUp] = useState(false);
+  const [editCategoryPopUp, setEditCategoryPopUp] = useState(false);
   const { showSnackbarAlert, SnackbarAlert } = useSnackbarAlert();
   const theme = useTheme();
 
@@ -78,7 +82,7 @@ export const ListPlaylistCategoryContainer = () => {
     if (!search) {
       getData();
     }
-  }, [getData]);
+  }, [getData, search]);
 
   const searchData = async (input: string) => {
     setSearch(true);
@@ -96,13 +100,20 @@ export const ListPlaylistCategoryContainer = () => {
       case 'create':
         setCreateCategoryPopUp(false);
         break;
+      case 'edit':
+        setEditCategoryPopUp(false);
+        break;
     }
   };
 
-  const handlePopUpOpen = (types: PlaylistCategoryType) => {
+  const handlePopUpOpen = (types: PlaylistCategoryType, id?: string) => {
     switch (types) {
       case 'create':
         setCreateCategoryPopUp(true);
+        break;
+      case 'edit':
+        setPlaylistCategoryId(id ?? '');
+        setEditCategoryPopUp(true);
         break;
     }
   };
@@ -128,6 +139,13 @@ export const ListPlaylistCategoryContainer = () => {
         handlePopUpClose={() => handlePopUpClose('create')}
         open={createCategoryPopUp}
         title="Registrar Nova Categoria"
+      />
+      <EditPlaylistCategoryModal
+        selectedId={playlistCategoryId}
+        showAlert={showAlert}
+        handlePopUpClose={() => handlePopUpClose('edit')}
+        open={editCategoryPopUp}
+        title="Editar Categoria"
       />
       <LayoutBase title="Listagem Playlist" toolBar={<ToolbarPureTV />}>
         <Box
@@ -168,7 +186,31 @@ export const ListPlaylistCategoryContainer = () => {
                 />
               </IconButton>
             </Box>
-            <ListPlaylistCategory list={listPlaylistCategory} />
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                flexDirection: 'column',
+                alignItems: 'center',
+                width: '100%',
+              }}
+            >
+              <Box width="60%">
+                <ScrollBox maxHeight="100%">
+                  <List>
+                    {listPlaylistCategory.map((category) => (
+                      <ListPlaylistCategory
+                        key={category.id}
+                        editPlaylistCategory={async () =>
+                          handlePopUpOpen('edit', category.id)
+                        }
+                        category={category}
+                      />
+                    ))}
+                  </List>
+                </ScrollBox>
+              </Box>
+            </Box>
             <Box
               marginTop={theme.spacing(2)}
               display="flex"

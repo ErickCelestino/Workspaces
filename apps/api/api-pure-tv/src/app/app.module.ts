@@ -14,6 +14,7 @@ import {
 import { FileS3Storage } from '@workspaces/data-access';
 import { CreatePlaylistCategoryModule } from './create-playlist-category/create-playlist-category.module';
 import { ListPlaylistCategoryModule } from './list-playlist-category/list-playlist-category.module';
+import { EditPlaylistCategoryModule } from './edit-playlist-category/edit-playlist-category.module';
 import { FindPlaylistCategoryByIdModule } from './find-playlist-category-by-id/find-playlist-category-by-id.module';
 
 @Module({
@@ -32,6 +33,7 @@ import { FindPlaylistCategoryByIdModule } from './find-playlist-category-by-id/f
     MoveFileToDirectoryModule,
     CreatePlaylistCategoryModule,
     ListPlaylistCategoryModule,
+    EditPlaylistCategoryModule,
     FindPlaylistCategoryByIdModule,
   ],
   controllers: [AppController],

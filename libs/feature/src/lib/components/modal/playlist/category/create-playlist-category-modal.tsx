@@ -13,7 +13,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { FC, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import {
-  CreatePlaylistCategoryBodyDto,
+  PlaylistCategoryBodyDto,
   CreatePlaylistCategoryDto,
   ErrorResponse,
 } from '@workspaces/domain';
@@ -23,8 +23,8 @@ import {
   ValidationsError,
 } from '../../../../shared';
 import { FormButton } from '../../../form';
-import { useLoggedUser } from 'libs/feature/src/lib/contexts';
-import { CreatePlaylistCategoryRequest } from 'libs/feature/src/lib/services';
+import { useLoggedUser } from '../../../../contexts';
+import { CreatePlaylistCategoryRequest } from '../../../../services';
 import axios, { AxiosError } from 'axios';
 
 interface CreatePlaylistCategoryModalProps {
@@ -59,7 +59,7 @@ export const CreatePlaylistCategoryModal: FC<
     register,
     reset,
     formState: { errors },
-  } = useForm<CreatePlaylistCategoryBodyDto>({
+  } = useForm<PlaylistCategoryBodyDto>({
     mode: 'all',
     criteriaMode: 'all',
     resolver: zodResolver(CreatePlaylistCategorySchema),
@@ -74,6 +74,8 @@ export const CreatePlaylistCategoryModal: FC<
       const result = await CreatePlaylistCategoryRequest(input);
       return result;
     } catch (error) {
+      setLoading(false);
+      setSuccess(false);
       console.error(error);
       if (axios.isAxiosError(error)) {
         const axiosError = error as AxiosError<ErrorResponse>;
@@ -85,7 +87,7 @@ export const CreatePlaylistCategoryModal: FC<
     }
   };
 
-  const handleCategoryData = async (data: CreatePlaylistCategoryBodyDto) => {
+  const handleCategoryData = async (data: PlaylistCategoryBodyDto) => {
     setLoading(true);
     setSuccess(false);
     const result = await createCategory({

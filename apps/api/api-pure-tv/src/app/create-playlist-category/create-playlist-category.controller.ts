@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { CreatePlaylistCategoryService } from './create-playlist-category.service';
 import {
-  CreatePlaylistCategoryBodyDto,
+  PlaylistCategoryBodyDto,
   createPlaylistCategorySchema,
 } from '@workspaces/domain';
 import { ZodValidationPipe } from '../pipes/zod-validation-pipe';
@@ -23,7 +23,7 @@ export class CreatePlaylistCategoryController {
   @Post()
   async create(
     @Query('loggedUserId') loggedUserId: string,
-    @Body() body: CreatePlaylistCategoryBodyDto
+    @Body() body: PlaylistCategoryBodyDto
   ) {
     const result = await this.createPlaylistCategoryService.create({
       body,
