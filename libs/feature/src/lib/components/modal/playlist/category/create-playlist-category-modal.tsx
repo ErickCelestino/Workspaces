@@ -74,6 +74,8 @@ export const CreatePlaylistCategoryModal: FC<
       const result = await CreatePlaylistCategoryRequest(input);
       return result;
     } catch (error) {
+      setLoading(false);
+      setSuccess(false);
       console.error(error);
       if (axios.isAxiosError(error)) {
         const axiosError = error as AxiosError<ErrorResponse>;

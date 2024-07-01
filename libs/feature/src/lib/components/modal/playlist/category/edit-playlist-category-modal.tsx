@@ -11,17 +11,27 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { useLoggedUser } from 'libs/feature/src/lib/contexts';
-import { FC } from 'react';
+import { FC, useCallback, useEffect, useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { EditPlaylistCategoryBodyDto } from '@workspaces/domain';
-import { EditPlaylistCategorySchema } from 'libs/feature/src/lib/shared';
+import { EditPlaylistCategoryBodyDto, ErrorResponse } from '@workspaces/domain';
+import {
+  EditPlaylistCategorySchema,
+  ValidationsError,
+} from 'libs/feature/src/lib/shared';
 import { useForm } from 'react-hook-form';
+import {
+  EditPlaylistCategoryRequest,
+  FindPlaylistCategoryByIdRequest,
+} from 'libs/feature/src/lib/services';
+import axios, { AxiosError } from 'axios';
+import { FormButton } from '../../../form';
 
 interface EditPlaylistCategoryModalProps {
   open: boolean;
   handlePopUpClose: () => void;
   showAlert: (message: string, success: boolean) => void;
   title: string;
+  selectedId: string;
 }
 
 export const EditPlaylistCategoryModal: FC<EditPlaylistCategoryModalProps> = ({
@@ -29,10 +39,13 @@ export const EditPlaylistCategoryModal: FC<EditPlaylistCategoryModalProps> = ({
   handlePopUpClose,
   showAlert,
   title,
+  selectedId,
 }) => {
   const theme = useTheme();
   const { loggedUser } = useLoggedUser();
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
 
   const {
     handleSubmit,
@@ -50,6 +63,64 @@ export const EditPlaylistCategoryModal: FC<EditPlaylistCategoryModalProps> = ({
     },
   });
 
+  const getData = useCallback(async () => {
+    try {
+      const result = await FindPlaylistCategoryByIdRequest({
+        loggedUserId: loggedUser?.id ?? '',
+        id: selectedId,
+      });
+      reset({
+        id: result.id,
+        name: result.name,
+        description: result.description,
+      });
+    } catch (error) {
+      console.error(error);
+      if (axios.isAxiosError(error)) {
+        const axiosError = error as AxiosError<ErrorResponse>;
+        const errors = ValidationsError(axiosError, 'Usuario ou Categoria');
+        if (errors) {
+          showAlert(errors, false);
+        }
+      }
+    }
+  }, [loggedUser?.id, selectedId, reset, showAlert]);
+
+  const editCategory = async (data: EditPlaylistCategoryBodyDto) => {
+    try {
+      setLoading(true);
+      setSuccess(false);
+      const result = await EditPlaylistCategoryRequest({
+        body: {
+          name: data.name,
+          description: data.description,
+        },
+        id: data.id,
+        loggedUserId: loggedUser?.id ?? '',
+      });
+      setLoading(false);
+      setSuccess(true);
+      return result;
+    } catch (error) {
+      setLoading(false);
+      setSuccess(false);
+      console.error(error);
+      if (axios.isAxiosError(error)) {
+        const axiosError = error as AxiosError<ErrorResponse>;
+        const errors = ValidationsError(axiosError, 'Usuario ou Categoria');
+        if (errors) {
+          showAlert(errors, false);
+        }
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (selectedId) {
+      getData();
+    }
+  }, [selectedId, getData]);
+
   return (
     <Modal open={open} onClose={handlePopUpClose} closeAfterTransition>
       <Fade in={open}>
@@ -59,7 +130,7 @@ export const EditPlaylistCategoryModal: FC<EditPlaylistCategoryModalProps> = ({
             top: '50%',
             left: '50%',
             transform: 'translate(-50%, -50%)',
-            height: theme.spacing(63),
+            height: theme.spacing(67),
             width: smDown ? '90%' : theme.spacing(80),
             bgcolor: 'background.paper',
             boxShadow: 24,
@@ -88,11 +159,59 @@ export const EditPlaylistCategoryModal: FC<EditPlaylistCategoryModalProps> = ({
             <IconButton onClick={handlePopUpClose}>
               <CloseIcon />
             </IconButton>
-            <Box sx={{ mt: 2 }} component="form">
-              <TextField />
-            </Box>
           </Box>
           <Divider />
+          <Box
+            sx={{ mt: 2 }}
+            component="form"
+            onSubmit={handleSubmit(editCategory)}
+          >
+            <TextField
+              margin="normal"
+              fullWidth
+              InputLabelProps={{ shrink: true, required: true }}
+              disabled={true}
+              error={!!errors.id}
+              helperText={errors.id?.message}
+              id="id"
+              label="id"
+              {...register('id')}
+              autoComplete="id"
+            />
+
+            <TextField
+              margin="normal"
+              fullWidth
+              InputLabelProps={{ shrink: true, required: true }}
+              error={!!errors.name}
+              helperText={errors.name?.message}
+              id="name"
+              label="name"
+              {...register('name')}
+              defaultValue=""
+              autoComplete="name"
+            />
+
+            <TextField
+              margin="normal"
+              fullWidth
+              multiline
+              rows={4}
+              InputLabelProps={{ shrink: true, required: true }}
+              error={!!errors.description}
+              helperText={errors.description?.message}
+              id="description"
+              label="description"
+              {...register('description')}
+              autoComplete="description"
+            />
+
+            <FormButton
+              loading={loading}
+              success={success}
+              buttonTitle="Editar Categoria"
+            />
+          </Box>
         </Box>
       </Fade>
     </Modal>

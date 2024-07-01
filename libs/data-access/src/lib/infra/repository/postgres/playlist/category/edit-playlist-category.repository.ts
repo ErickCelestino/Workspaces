@@ -10,15 +10,15 @@ export class EditPlaylistCategoryRepositoryImpl
 {
   constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
   async edit(input: EditPlaylistCategoryDto): Promise<void> {
-    const { id, name, description } = input;
+    const { id, body } = input;
 
     await this.prismaService.playlist_Category.update({
       where: {
         playlist_category_id: id,
       },
       data: {
-        name: name,
-        description: description,
+        name: body.name,
+        description: body.description,
         updated_at: new Date(),
       },
     });

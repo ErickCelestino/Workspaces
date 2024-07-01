@@ -27,7 +27,7 @@ export class EditPlaylistCategory
   async execute(
     input: EditPlaylistCategoryDto
   ): Promise<Either<EntityNotEmpty | EntityNotExists, void>> {
-    const { id, loggedUserId, name, description } = input;
+    const { id, loggedUserId, body } = input;
 
     if (Object.keys(id).length < 1) {
       return left(new EntityNotEmpty('ID'));
@@ -37,11 +37,11 @@ export class EditPlaylistCategory
       return left(new EntityNotEmpty('Logged User ID'));
     }
 
-    if (Object.keys(name).length < 1) {
+    if (Object.keys(body.name).length < 1) {
       return left(new EntityNotEmpty('Name'));
     }
 
-    if (Object.keys(description).length < 1) {
+    if (Object.keys(body.description).length < 1) {
       return left(new EntityNotEmpty('Description'));
     }
 
