@@ -7,10 +7,13 @@ import {
   Typography,
   useTheme,
 } from '@mui/material';
-import { PlaylistCategory } from '@workspaces/domain';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { IconMenuItem, PlaylistCategory } from '@workspaces/domain';
 import { FC } from 'react';
 import { ScrollBox } from '../scroll';
 import { formatBrDate } from '../../shared';
+import { ButtonFileMenu } from '../menu';
 
 interface ListPlaylistCategoryProps {
   list: PlaylistCategory[];
@@ -26,6 +29,27 @@ export const ListPlaylistCategory: FC<ListPlaylistCategoryProps> = ({
   titleCreatedAt = 'Criado em',
 }) => {
   const theme = useTheme();
+
+  const deletePlaylistCategory = async () => {
+    //More Delete Implementation
+  };
+
+  const editPlaylistCategory = async () => {
+    //More Edit Implementation
+  };
+
+  const iconMenuList: IconMenuItem[] = [
+    {
+      icon: <EditIcon />,
+      title: 'Editar',
+      handleClick: editPlaylistCategory,
+    },
+    {
+      icon: <DeleteIcon />,
+      title: 'Deletar',
+      handleClick: deletePlaylistCategory,
+    },
+  ];
   return (
     <Box
       sx={{
@@ -133,6 +157,13 @@ export const ListPlaylistCategory: FC<ListPlaylistCategoryProps> = ({
                       </Box>
                     }
                   />
+                  <Box
+                    sx={{
+                      marginLeft: theme.spacing(2),
+                    }}
+                  >
+                    <ButtonFileMenu iconMenuItemList={iconMenuList} />
+                  </Box>
                 </ListItem>
                 <Divider variant="inset" component="li" />
               </Box>
