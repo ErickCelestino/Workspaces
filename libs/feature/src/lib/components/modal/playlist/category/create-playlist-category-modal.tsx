@@ -13,7 +13,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { FC, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import {
-  CreatePlaylistCategoryBodyDto,
+  PlaylistCategoryBodyDto,
   CreatePlaylistCategoryDto,
   ErrorResponse,
 } from '@workspaces/domain';
@@ -59,7 +59,7 @@ export const CreatePlaylistCategoryModal: FC<
     register,
     reset,
     formState: { errors },
-  } = useForm<CreatePlaylistCategoryBodyDto>({
+  } = useForm<PlaylistCategoryBodyDto>({
     mode: 'all',
     criteriaMode: 'all',
     resolver: zodResolver(CreatePlaylistCategorySchema),
@@ -85,7 +85,7 @@ export const CreatePlaylistCategoryModal: FC<
     }
   };
 
-  const handleCategoryData = async (data: CreatePlaylistCategoryBodyDto) => {
+  const handleCategoryData = async (data: PlaylistCategoryBodyDto) => {
     setLoading(true);
     setSuccess(false);
     const result = await createCategory({

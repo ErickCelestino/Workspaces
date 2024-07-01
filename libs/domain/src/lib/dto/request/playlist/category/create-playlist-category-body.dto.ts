@@ -1,4 +1,4 @@
-export interface CreatePlaylistCategoryBodyDto {
+export interface PlaylistCategoryBodyDto {
   name: string;
   description: string;
 }
