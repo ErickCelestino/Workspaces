@@ -68,7 +68,7 @@ export class CreatePlaylist
       name,
     });
 
-    if (Object.keys(filteredPlaylist?.id ?? filteredPlaylist).length < 1) {
+    if (Object.keys(filteredPlaylist?.id ?? filteredPlaylist).length > 0) {
       return left(new EntityAlreadyExists('Playlist'));
     }
 
