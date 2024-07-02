@@ -69,7 +69,7 @@ export const ListContanteFilesContainer = () => {
   const theme = useTheme();
   const { loggedUser } = useLoggedUser();
   const { showSnackbarAlert, SnackbarAlert } = useSnackbarAlert();
-  const mdDown = useMediaQuery(theme.breakpoints.down('md'));
+  const smDown = useMediaQuery(theme.breakpoints.down('sm'));
 
   const showErrorAlert = useCallback(
     (message: string) => {
@@ -247,13 +247,16 @@ export const ListContanteFilesContainer = () => {
 
       <LayoutBase title="Listagem de Usuários" toolBar={<ToolbarPureTV />}>
         <Box display="flex" justifyContent="center">
-          <Box width={mdDown ? '100%' : '90%'}>
-            <Box width="95%">
+          <Box>
+            <Box
+              paddingLeft={smDown ? theme.spacing(1.5) : theme.spacing(0)}
+              width="96%"
+            >
               <SearchBar
                 onSearch={searchData}
                 placeholder="Pesquisar Arquivo"
               />
-              <Box mt={theme.spacing(4)}>
+              <Box display="flex" justifyContent="center" mt={theme.spacing(4)}>
                 {fileList.length > 0 ? (
                   <Grid container spacing={2}>
                     {fileList.map((file, index) => (

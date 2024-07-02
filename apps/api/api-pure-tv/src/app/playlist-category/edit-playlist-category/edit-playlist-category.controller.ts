@@ -5,9 +5,14 @@ import {
   Param,
   Put,
   Query,
+  UsePipes,
 } from '@nestjs/common';
 import { EditPlaylistCategoryService } from './edit-playlist-category.service';
-import { PlaylistCategoryBodyDto } from '@workspaces/domain';
+import {
+  PlaylistCategoryBodyDto,
+  editPlaylistCategorySchema,
+} from '@workspaces/domain';
+import { ZodValidationPipe } from '../../pipes/zod-validation-pipe';
 
 @Controller('edit-playlist-category')
 export class EditPlaylistCategoryController {
@@ -15,6 +20,7 @@ export class EditPlaylistCategoryController {
     private readonly editPlaylistCategoryService: EditPlaylistCategoryService
   ) {}
 
+  @UsePipes(new ZodValidationPipe(editPlaylistCategorySchema))
   @Put(':id')
   async edit(
     @Param('id') idToEdit: string,

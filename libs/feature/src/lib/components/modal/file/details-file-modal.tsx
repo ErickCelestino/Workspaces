@@ -108,7 +108,7 @@ export const DetailsFileModal: FC<DetailsFileModalPros> = ({
             left: '50%',
             transform: 'translate(-50%, -50%)',
             height: theme.spacing(45),
-            width: smDown ? '90%' : theme.spacing(80),
+            width: smDown ? '95%' : theme.spacing(80),
             bgcolor: 'background.paper',
             boxShadow: 24,
             p: 4,
@@ -163,6 +163,7 @@ export const DetailsFileModal: FC<DetailsFileModalPros> = ({
                     maxWidth={smDown ? theme.spacing(45) : theme.spacing(50)}
                     marginLeft={theme.spacing(2)}
                     variant={smDown ? 'body1' : 'h6'}
+                    fontSize={smDown ? 16 : 22}
                   >
                     <strong>{fileNameTitle}:</strong>{' '}
                     {detailsFile?.originalName}
@@ -199,6 +200,7 @@ export const DetailsFileModal: FC<DetailsFileModalPros> = ({
                 maxWidth={theme.spacing(50)}
                 marginLeft={theme.spacing(2)}
                 variant={smDown ? 'body1' : 'h6'}
+                fontSize={smDown ? 16 : 22}
               >
                 <strong>{formatFileTitle}:</strong> {detailsFile?.format}
               </Typography>
@@ -220,6 +222,7 @@ export const DetailsFileModal: FC<DetailsFileModalPros> = ({
                 maxWidth={theme.spacing(50)}
                 marginLeft={theme.spacing(2)}
                 variant={smDown ? 'body1' : 'h6'}
+                fontSize={smDown ? 16 : 22}
               >
                 <strong>{sizeFileTitle}:</strong> {detailsFile?.size}
               </Typography>
@@ -241,6 +244,7 @@ export const DetailsFileModal: FC<DetailsFileModalPros> = ({
                 maxWidth={theme.spacing(50)}
                 marginLeft={theme.spacing(2)}
                 variant={smDown ? 'body1' : 'h6'}
+                fontSize={smDown ? 16 : 22}
               >
                 <strong>{uploadDateTitle}:</strong>{' '}
                 {formatBrDate(new Date(detailsFile?.uploadDate ?? new Date()))}

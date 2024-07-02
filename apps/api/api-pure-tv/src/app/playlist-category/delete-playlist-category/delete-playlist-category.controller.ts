@@ -4,8 +4,11 @@ import {
   Delete,
   Param,
   Query,
+  UsePipes,
 } from '@nestjs/common';
 import { DeletePlaylistCategoryService } from './delete-playlist-category.service';
+import { ZodValidationPipe } from '../../pipes/zod-validation-pipe';
+import { deletePlaylistCategorySchema } from '@workspaces/domain';
 
 @Controller('delete-playlist-category')
 export class DeletePlaylistCategoryController {
@@ -13,6 +16,7 @@ export class DeletePlaylistCategoryController {
     private readonly deletePlaylistCategoryService: DeletePlaylistCategoryService
   ) {}
 
+  @UsePipes(new ZodValidationPipe(deletePlaylistCategorySchema))
   @Delete(':id')
   async delete(
     @Param('id') idToDelete: string,
