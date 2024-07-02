@@ -1,4 +1,11 @@
-import { Box, IconButton, List, Pagination, useTheme } from '@mui/material';
+import {
+  Box,
+  IconButton,
+  List,
+  Pagination,
+  useMediaQuery,
+  useTheme,
+} from '@mui/material';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import {
   CreatePlaylistCategoryModal,
@@ -36,6 +43,7 @@ export const ListPlaylistCategoryContainer = () => {
   const [deleteCategoryPopUp, setDeleteCategoryPopUp] = useState(false);
   const { showSnackbarAlert, SnackbarAlert } = useSnackbarAlert();
   const theme = useTheme();
+  const smDown = useMediaQuery(theme.breakpoints.down('sm'));
 
   const showAlert = useCallback(
     (message: string, success: boolean) => {
@@ -178,7 +186,10 @@ export const ListPlaylistCategoryContainer = () => {
                 alignItems: 'center',
               }}
             >
-              <Box width="55%" marginRight={theme.spacing(2)}>
+              <Box
+                width={smDown ? '100%' : '55%'}
+                marginRight={theme.spacing(2)}
+              >
                 <SearchBar
                   onSearch={searchData}
                   placeholder="Pesquisar Categoria"
@@ -210,7 +221,12 @@ export const ListPlaylistCategoryContainer = () => {
                 width: '100%',
               }}
             >
-              <Box width="60%">
+              <Box
+                width={smDown ? '100%' : '60%'}
+                sx={{
+                  marginLeft: smDown ? -3 : '',
+                }}
+              >
                 <ScrollBox maxHeight="100%">
                   <List>
                     {listPlaylistCategory.map((category) => (

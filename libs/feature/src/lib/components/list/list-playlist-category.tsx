@@ -4,6 +4,7 @@ import {
   ListItem,
   ListItemText,
   Typography,
+  useMediaQuery,
   useTheme,
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
@@ -31,6 +32,7 @@ export const ListPlaylistCategory: FC<ListPlaylistCategoryProps> = ({
   titleCreatedAt = 'Criado em',
 }) => {
   const theme = useTheme();
+  const smDown = useMediaQuery(theme.breakpoints.down('sm'));
 
   const iconMenuList: IconMenuItem[] = [
     {
@@ -140,7 +142,7 @@ export const ListPlaylistCategory: FC<ListPlaylistCategoryProps> = ({
         />
         <Box
           sx={{
-            marginLeft: theme.spacing(2),
+            marginLeft: smDown ? 0 : theme.spacing(2),
           }}
         >
           <ButtonFileMenu iconMenuItemList={iconMenuList} />

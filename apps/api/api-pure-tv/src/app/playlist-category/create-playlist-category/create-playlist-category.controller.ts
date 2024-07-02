@@ -11,7 +11,7 @@ import {
   PlaylistCategoryBodyDto,
   createPlaylistCategorySchema,
 } from '@workspaces/domain';
-import { ZodValidationPipe } from '../pipes/zod-validation-pipe';
+import { ZodValidationPipe } from '../../pipes/zod-validation-pipe';
 
 @Controller('create-playlist-category')
 export class CreatePlaylistCategoryController {

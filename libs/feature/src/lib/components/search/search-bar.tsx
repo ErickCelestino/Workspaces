@@ -4,6 +4,7 @@ import {
   IconButton,
   InputAdornment,
   TextField,
+  useMediaQuery,
   useTheme,
 } from '@mui/material';
 import { FC, useState } from 'react';
@@ -16,6 +17,7 @@ interface SearchUserProps {
 export const SearchBar: FC<SearchUserProps> = ({ placeholder, onSearch }) => {
   const [inputText, setInputText] = useState<string>('');
   const theme = useTheme();
+  const smDown = useMediaQuery(theme.breakpoints.down('sm'));
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputText(event.target.value);
@@ -45,10 +47,11 @@ export const SearchBar: FC<SearchUserProps> = ({ placeholder, onSearch }) => {
         onKeyDown={handleKeyPress}
         placeholder={placeholder}
         sx={{
+          fontSize: smDown ? 8 : 20,
           maxWidth: theme.spacing(140),
           '& .MuiOutlinedInput-root': {
             borderRadius: '999px',
-            paddingRight: '8px',
+            paddingRight: smDown ? '-5px' : '8px',
           },
           '& .MuiOutlinedInput-notchedOutline': {
             borderColor: '#dfe1e5',
@@ -62,7 +65,10 @@ export const SearchBar: FC<SearchUserProps> = ({ placeholder, onSearch }) => {
         }}
         InputProps={{
           startAdornment: (
-            <InputAdornment position="start">
+            <InputAdornment
+              sx={{ marginRight: smDown ? -0.5 : 0 }}
+              position="start"
+            >
               <IconButton onClick={handleClick}>
                 <Icon>search</Icon>
               </IconButton>
