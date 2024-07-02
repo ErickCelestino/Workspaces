@@ -4,8 +4,11 @@ import {
   Get,
   Param,
   Query,
+  UsePipes,
 } from '@nestjs/common';
 import { FindPlaylistCategoryByIdService } from './find-playlist-category-by-id.service';
+import { ZodValidationPipe } from '../../pipes/zod-validation-pipe';
+import { findPlaylistCategoryByIdSchema } from '@workspaces/domain';
 
 @Controller('find-playlist-category-by-id')
 export class FindPlaylistCategoryByIdController {
@@ -13,6 +16,7 @@ export class FindPlaylistCategoryByIdController {
     private readonly findPlaylistCategoryByIdService: FindPlaylistCategoryByIdService
   ) {}
 
+  @UsePipes(new ZodValidationPipe(findPlaylistCategoryByIdSchema))
   @Get(':id')
   async find(
     @Param('id') id: string,
