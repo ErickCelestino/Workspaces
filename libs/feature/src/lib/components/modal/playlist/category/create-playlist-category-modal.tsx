@@ -139,6 +139,7 @@ export const CreatePlaylistCategoryModal: FC<
               textOverflow="ellipsis"
               overflow="hidden"
               variant="h5"
+              fontSize={smDown ? 16 : 22}
             >
               <strong>{title}</strong>
             </Typography>
