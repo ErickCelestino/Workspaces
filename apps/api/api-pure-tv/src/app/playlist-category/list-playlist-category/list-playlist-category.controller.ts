@@ -6,7 +6,7 @@ import {
   UsePipes,
 } from '@nestjs/common';
 import { ListPlaylistCategoryService } from './list-playlist-category.service';
-import { ZodValidationPipe } from '../pipes/zod-validation-pipe';
+import { ZodValidationPipe } from '../../pipes/zod-validation-pipe';
 import { listPlaylistCategorySchema } from '@workspaces/domain';
 
 @Controller('list-playlist-category')
