@@ -54,7 +54,7 @@ export const LayoutBase: FC<ILayoutBasePros> = ({
   return (
     <Box height="100%" display="flex" flexDirection="column" gap={1}>
       <Box
-        padding={1}
+        padding={smDown ? 0 : 1}
         display="flex"
         alignItems="center"
         gap={1}
@@ -107,7 +107,7 @@ export const LayoutBase: FC<ILayoutBasePros> = ({
           </Typography>
         )}
       </Box>
-      <Box flex={1} marginLeft={smDown ? 3 : 0} overflow="auto">
+      <Box flex={1} overflow="auto">
         {children}
       </Box>
     </Box>
