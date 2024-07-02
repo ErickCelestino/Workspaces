@@ -86,7 +86,7 @@ export const MoveFileToDirectoryModal: FC<MoveFileToDirectoryModalProps> = ({
             left: '50%',
             transform: 'translate(-50%, -50%)',
             height: theme.spacing(35),
-            width: smDown ? '90%' : theme.spacing(50),
+            width: smDown ? '95%' : theme.spacing(50),
             bgcolor: 'background.paper',
             boxShadow: 24,
             p: 4,
