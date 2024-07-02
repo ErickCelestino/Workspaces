@@ -4,6 +4,7 @@ import { DeletePlaylistCategoryDto } from '../../../dto';
 import { EntityNotEmpty, EntityNotExists } from '../../../error';
 import {
   DeletePlaylistCategoryRepository,
+  FindPlaylistCategoryByIdRepository,
   FindUserByIdRepository,
 } from '../../../repository';
 import { Either, left, right } from '../../../shared/either';
@@ -14,6 +15,8 @@ export class DeletePlaylistCategory
   constructor(
     @Inject('FindUserByIdRepository')
     private findUserByIdRepository: FindUserByIdRepository,
+    @Inject('FindUserByIdRepository')
+    private findPlaylistCategoryByIdRepository: FindPlaylistCategoryByIdRepository,
     @Inject('DeletePlaylistCategoryRepository')
     private deletePlaylistRepository: DeletePlaylistCategoryRepository
   ) {}
@@ -34,6 +37,16 @@ export class DeletePlaylistCategory
 
     if (Object.keys(filteredUser?.userId ?? filteredUser).length < 1) {
       return left(new EntityNotExists('User'));
+    }
+
+    const filteredPlaylistCategory =
+      await this.findPlaylistCategoryByIdRepository.find(id);
+
+    if (
+      Object.keys(filteredPlaylistCategory?.id ?? filteredPlaylistCategory)
+        .length < 1
+    ) {
+      return left(new EntityNotExists('Playlist Category'));
     }
 
     await this.deletePlaylistRepository.delete(id);
