@@ -16,6 +16,7 @@ import { CreatePlaylistCategoryModule } from './create-playlist-category/create-
 import { ListPlaylistCategoryModule } from './list-playlist-category/list-playlist-category.module';
 import { EditPlaylistCategoryModule } from './edit-playlist-category/edit-playlist-category.module';
 import { FindPlaylistCategoryByIdModule } from './find-playlist-category-by-id/find-playlist-category-by-id.module';
+import { DeletePlaylistCategoryModule } from './delete-playlist-category/delete-playlist-category.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { FindPlaylistCategoryByIdModule } from './find-playlist-category-by-id/f
     ListPlaylistCategoryModule,
     EditPlaylistCategoryModule,
     FindPlaylistCategoryByIdModule,
+    DeletePlaylistCategoryModule,
   ],
   controllers: [AppController],
   providers: [AppService],
