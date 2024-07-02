@@ -123,7 +123,7 @@ export const ListContanteFilesContainer = () => {
     if (!search) {
       getData();
     }
-  }, [getData]);
+  }, [getData, search]);
 
   const handlePopUpClose = (types: FileContentType) => {
     switch (types) {

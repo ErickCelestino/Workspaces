@@ -16,6 +16,7 @@ import { ButtonFileMenu } from '../menu';
 interface ListPlaylistCategoryProps {
   category: PlaylistCategory;
   editPlaylistCategory: () => Promise<void>;
+  deletePlaylistCategory: () => Promise<void>;
   titleDescription?: string;
   titleCreatedBy?: string;
   titleCreatedAt?: string;
@@ -24,15 +25,12 @@ interface ListPlaylistCategoryProps {
 export const ListPlaylistCategory: FC<ListPlaylistCategoryProps> = ({
   category,
   editPlaylistCategory,
+  deletePlaylistCategory,
   titleDescription = 'Descrição',
   titleCreatedBy = 'Criado por',
   titleCreatedAt = 'Criado em',
 }) => {
   const theme = useTheme();
-
-  const deletePlaylistCategory = async () => {
-    //More Delete Implementation
-  };
 
   const iconMenuList: IconMenuItem[] = [
     {

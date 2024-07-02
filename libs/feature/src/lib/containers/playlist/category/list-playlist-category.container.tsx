@@ -2,6 +2,7 @@ import { Box, IconButton, List, Pagination, useTheme } from '@mui/material';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import {
   CreatePlaylistCategoryModal,
+  DeletePlaylistCategoryModal,
   EditPlaylistCategoryModal,
   ListPlaylistCategory,
   SearchBar,
@@ -32,6 +33,7 @@ export const ListPlaylistCategoryContainer = () => {
   const [totalPage, setTotalPage] = useState<number>(1);
   const [createCategoryPopUp, setCreateCategoryPopUp] = useState(false);
   const [editCategoryPopUp, setEditCategoryPopUp] = useState(false);
+  const [deleteCategoryPopUp, setDeleteCategoryPopUp] = useState(false);
   const { showSnackbarAlert, SnackbarAlert } = useSnackbarAlert();
   const theme = useTheme();
 
@@ -103,6 +105,8 @@ export const ListPlaylistCategoryContainer = () => {
       case 'edit':
         setEditCategoryPopUp(false);
         break;
+      case 'delete':
+        setDeleteCategoryPopUp(false);
     }
   };
 
@@ -115,6 +119,9 @@ export const ListPlaylistCategoryContainer = () => {
         setPlaylistCategoryId(id ?? '');
         setEditCategoryPopUp(true);
         break;
+      case 'delete':
+        setPlaylistCategoryId(id ?? '');
+        setDeleteCategoryPopUp(true);
     }
   };
 
@@ -146,6 +153,14 @@ export const ListPlaylistCategoryContainer = () => {
         handlePopUpClose={() => handlePopUpClose('edit')}
         open={editCategoryPopUp}
         title="Editar Categoria"
+      />
+      <DeletePlaylistCategoryModal
+        selectedId={playlistCategoryId}
+        showAlert={showAlert}
+        handlePopUpClose={() => handlePopUpClose('delete')}
+        open={deleteCategoryPopUp}
+        title="Deletar Categoria?"
+        subTitle="Por favor, selecione alguma das alternativas"
       />
       <LayoutBase title="Listagem Playlist" toolBar={<ToolbarPureTV />}>
         <Box
@@ -203,6 +218,9 @@ export const ListPlaylistCategoryContainer = () => {
                         key={category.id}
                         editPlaylistCategory={async () =>
                           handlePopUpOpen('edit', category.id)
+                        }
+                        deletePlaylistCategory={async () =>
+                          handlePopUpOpen('delete', category.id)
                         }
                         category={category}
                       />
