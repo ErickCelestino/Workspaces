@@ -22,7 +22,7 @@ import {
   ErrorResponse,
   ListPlaylistCategoryDto,
   PlaylistCategory,
-  PlaylistCategoryType,
+  CrudType,
 } from '@workspaces/domain';
 import { ListPlaylistCategoryRequest } from '../../../services';
 import { useLoggedUser } from '../../../contexts';
@@ -105,7 +105,7 @@ export const ListPlaylistCategoryContainer = () => {
     setListPlaylistCategory(result?.categories ?? []);
   };
 
-  const handlePopUpClose = (types: PlaylistCategoryType) => {
+  const handlePopUpClose = (types: CrudType) => {
     switch (types) {
       case 'create':
         setCreateCategoryPopUp(false);
@@ -118,7 +118,7 @@ export const ListPlaylistCategoryContainer = () => {
     }
   };
 
-  const handlePopUpOpen = (types: PlaylistCategoryType, id?: string) => {
+  const handlePopUpOpen = (types: CrudType, id?: string) => {
     switch (types) {
       case 'create':
         setCreateCategoryPopUp(true);
