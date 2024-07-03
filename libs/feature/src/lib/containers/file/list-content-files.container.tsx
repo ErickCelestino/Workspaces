@@ -248,19 +248,21 @@ export const ListContanteFilesContainer = () => {
       <LayoutBase title="Listagem de Usuários" toolBar={<ToolbarPureTV />}>
         <Box display="flex" justifyContent="center">
           <Box>
-            <Box
-              paddingLeft={smDown ? theme.spacing(1.5) : theme.spacing(0)}
-              width="96%"
-            >
+            <Box width="94%">
               <SearchBar
                 onSearch={searchData}
                 placeholder="Pesquisar Arquivo"
               />
-              <Box display="flex" justifyContent="center" mt={theme.spacing(4)}>
+              <Box display="flex" justifyContent="center" mt={theme.spacing(2)}>
                 {fileList.length > 0 ? (
-                  <Grid container spacing={2}>
+                  <Grid
+                    display="flex"
+                    justifyContent="center"
+                    container
+                    spacing={2}
+                  >
                     {fileList.map((file, index) => (
-                      <Grid item md={4} lg={3} key={index}>
+                      <Grid item lg={4} key={index}>
                         <ListContentFiles
                           deleteFile={() => handleFile(file.id, 'delete')}
                           detailsFile={() => handleFile(file.id, 'details')}

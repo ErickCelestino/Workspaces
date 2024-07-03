@@ -19,6 +19,7 @@ import {
   FindPlaylistCategoryByIdModule,
   DeletePlaylistCategoryModule,
 } from './playlist-category';
+import { CreatePlaylistModule } from './create-playlist/create-playlist.module';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import {
     EditPlaylistCategoryModule,
     FindPlaylistCategoryByIdModule,
     DeletePlaylistCategoryModule,
+    CreatePlaylistModule,
   ],
   controllers: [AppController],
   providers: [AppService],

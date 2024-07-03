@@ -1,1 +1,1 @@
-export type PlaylistCategoryType = 'create' | 'edit' | 'delete';
+export type CrudType = 'create' | 'edit' | 'delete';
