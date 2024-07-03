@@ -49,10 +49,10 @@ export class ListPlaylistRepositoryImpl implements ListPlaylistRepository {
           skip: parseInt(skip.toString()),
           take: parseInt(take.toString()),
         }),
-        this.prismaService.playlist_Category.count({
+        this.prismaService.playlist.count({
           where: whereClause,
         }),
-        this.prismaService.playlist_Category.count({
+        this.prismaService.playlist.count({
           where: {
             user_id: loggedUserId,
           },
