@@ -7,6 +7,7 @@ export * from './menu';
 export * from './modal';
 export * from './notification-card';
 export * from './popup';
+export * from './scroll';
 export * from './search';
 export * from './stepper';
 export * from './toolbar';
