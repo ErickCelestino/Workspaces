@@ -6,7 +6,7 @@ import {
 } from '@workspaces/domain';
 import { PrismaService } from 'nestjs-prisma';
 
-export class FindPlaylistByIdRepositoryImpl
+export class FindPlaylistByNameRepositoryImpl
   implements FindPlaylistByNameRepository
 {
   constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
