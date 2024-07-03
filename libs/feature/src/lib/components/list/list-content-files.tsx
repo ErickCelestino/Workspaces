@@ -38,7 +38,6 @@ export const ListContentFiles: FC<ListContentFilesProps> = ({
   const theme = useTheme();
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
   const mdDown = useMediaQuery(theme.breakpoints.down('md'));
-  const xlDown = useMediaQuery(theme.breakpoints.down('xl'));
 
   const iconMenuList: IconMenuItem[] = [
     {
@@ -66,13 +65,7 @@ export const ListContentFiles: FC<ListContentFilesProps> = ({
   return (
     <Card
       sx={{
-        width: smDown
-          ? theme.spacing(40)
-          : mdDown
-          ? theme.spacing(35)
-          : xlDown
-          ? theme.spacing(32)
-          : theme.spacing(40),
+        width: smDown ? theme.spacing(45) : theme.spacing(40),
         height: theme.spacing(28),
         margin: theme.spacing(2),
       }}
