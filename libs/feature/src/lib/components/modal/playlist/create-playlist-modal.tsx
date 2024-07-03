@@ -13,11 +13,15 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { FormButton } from '../../form';
 import { useLoggedUser } from '../../../contexts';
 import {
+  CreatePlaylistDto,
   ErrorResponse,
   ListPlaylistCategoryDto,
   PlaylistCategory,
 } from '@workspaces/domain';
-import { ListPlaylistCategoryRequest } from '../../../services';
+import {
+  CreatePlaylistRequest,
+  ListPlaylistCategoryRequest,
+} from '../../../services';
 import axios, { AxiosError } from 'axios';
 
 interface CreatePlaylistModalProps {
@@ -61,6 +65,7 @@ export const CreatePlaylistModal: FC<CreatePlaylistModalProps> = ({
     resolver: zodResolver(CreatePlaylistSchema),
     defaultValues: {
       name: '',
+      playlistCategoryId: '',
     },
   });
 
@@ -71,7 +76,6 @@ export const CreatePlaylistModal: FC<CreatePlaylistModalProps> = ({
         setCategories(result.categories);
       } catch (error) {
         console.error(error);
-        console.error((error as { message: string }).message);
         if (axios.isAxiosError(error)) {
           const axiosError = error as AxiosError<ErrorResponse>;
           const errors = ValidationsError(axiosError, 'Playlist');
@@ -84,6 +88,30 @@ export const CreatePlaylistModal: FC<CreatePlaylistModalProps> = ({
     [showAlert]
   );
 
+  const createPlaylist = async (data: CreatePlaylistDto) => {
+    try {
+      const result = await CreatePlaylistRequest(data);
+
+      if (result) {
+        setSuccess(true);
+        setLoading(false);
+        showAlert(successMessage, true);
+        handlePopUpClose();
+      }
+    } catch (error) {
+      setSuccess(false);
+      setLoading(false);
+      console.error(error);
+      if (axios.isAxiosError(error)) {
+        const axiosError = error as AxiosError<ErrorResponse>;
+        const errors = ValidationsError(axiosError, 'Playlist');
+        if (errors) {
+          showAlert(errors, false);
+        }
+      }
+    }
+  };
+
   useEffect(() => {
     getCategories({
       loggedUserId: loggedUser?.id ?? '',
@@ -92,7 +120,12 @@ export const CreatePlaylistModal: FC<CreatePlaylistModalProps> = ({
   }, [loggedUser, getCategories]);
 
   const handlePlaylistData = async (data: CratePlaylistBody) => {
-    console.log(data);
+    setLoading(true);
+    await createPlaylist({
+      loggedUserId: loggedUser?.id ?? '',
+      name: data.name,
+      playlistCategoryId: categoryId,
+    });
   };
 
   const handleChangeCategory = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -138,7 +171,7 @@ export const CreatePlaylistModal: FC<CreatePlaylistModalProps> = ({
           error={!!errors.playlistCategoryId}
           helperText={errors.playlistCategoryId?.message}
           id="playlistCategoryId"
-          label="playlistCategoryId"
+          label="Categoria"
           {...register('playlistCategoryId', {
             onChange: handleChangeCategory,
           })}
