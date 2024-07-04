@@ -26,7 +26,7 @@ interface ListContentFilesProps {
   moveFile: () => Promise<void>;
 }
 
-export const ListContentFiles: FC<ListContentFilesProps> = ({
+export const ContentFileCard: FC<ListContentFilesProps> = ({
   fileImage,
   name,
   fileImageName,

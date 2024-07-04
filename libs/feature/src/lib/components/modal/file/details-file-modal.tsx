@@ -24,6 +24,7 @@ import axios, { AxiosError } from 'axios';
 import EditIcon from '@mui/icons-material/Edit';
 import { FormEditContentFile } from '../../form';
 import { ValidationsError, formatBrDate } from '../../../shared';
+import { SimpleFormModal } from '../simple';
 
 interface DetailsFileModalPros {
   showErrorAlert: (message: string) => void;
@@ -99,160 +100,125 @@ export const DetailsFileModal: FC<DetailsFileModalPros> = ({
   }, [directoryId, idDetails, loggedUserId, open, showErrorAlert]);
 
   return (
-    <Modal open={open} onClose={handlePopUpClose} closeAfterTransition>
-      <Fade in={open}>
-        <Box
-          sx={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            height: theme.spacing(45),
-            width: smDown ? '95%' : theme.spacing(80),
-            bgcolor: 'background.paper',
-            boxShadow: 24,
-            p: 4,
-            borderRadius: 2,
-          }}
-        >
+    <SimpleFormModal
+      open={open}
+      handlePopUpClose={handlePopUpClose}
+      title={title}
+      height={theme.spacing(45)}
+      width={smDown ? '95%' : theme.spacing(80)}
+    >
+      <Box sx={{ mt: 2 }}>
+        {!editFileName ? (
           <Box
             sx={{
               display: 'flex',
+              flexDirection: 'row',
               justifyContent: 'space-between',
-              alignItems: 'center',
-              mb: 2,
-              p: 2,
-              borderRadius: 1,
             }}
           >
-            <Typography
-              noWrap
-              textOverflow="ellipsis"
-              overflow="hidden"
-              variant="h5"
+            <Box
+              component="div"
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                flexDirection: 'row',
+              }}
             >
-              <strong>{title}</strong>
-            </Typography>
-            <IconButton onClick={handlePopUpClose}>
-              <CloseIcon />
+              <DescriptionIcon />
+              <Typography
+                noWrap
+                textOverflow="ellipsis"
+                overflow="hidden"
+                maxWidth={smDown ? theme.spacing(45) : theme.spacing(50)}
+                marginLeft={theme.spacing(2)}
+                variant={smDown ? 'body1' : 'h6'}
+                fontSize={smDown ? 16 : 22}
+              >
+                <strong>{fileNameTitle}:</strong> {detailsFile?.originalName}
+              </Typography>
+            </Box>
+            <IconButton onClick={handleEditFileName}>
+              <EditIcon />
             </IconButton>
           </Box>
-          <Divider />
-          <Box sx={{ mt: 2 }}>
-            {!editFileName ? (
-              <Box
-                sx={{
-                  display: 'flex',
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                }}
-              >
-                <Box
-                  component="div"
-                  sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    flexDirection: 'row',
-                  }}
-                >
-                  <DescriptionIcon />
-                  <Typography
-                    noWrap
-                    textOverflow="ellipsis"
-                    overflow="hidden"
-                    maxWidth={smDown ? theme.spacing(45) : theme.spacing(50)}
-                    marginLeft={theme.spacing(2)}
-                    variant={smDown ? 'body1' : 'h6'}
-                    fontSize={smDown ? 16 : 22}
-                  >
-                    <strong>{fileNameTitle}:</strong>{' '}
-                    {detailsFile?.originalName}
-                  </Typography>
-                </Box>
-                <IconButton onClick={handleEditFileName}>
-                  <EditIcon />
-                </IconButton>
-              </Box>
-            ) : (
-              <FormEditContentFile
-                onEditSuccess={editSuccess}
-                directoryId={directoryId}
-                idToEdit={idDetails}
-                loggedUserId={loggedUserId}
-                showErrorAlert={showErrorAlert}
-                handleEditFileName={handleEditFileName}
-              />
-            )}
-            <Box
-              component="div"
-              sx={{
-                display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'center',
-                mt: theme.spacing(2),
-              }}
-            >
-              <FormatSizeIcon />
-              <Typography
-                noWrap
-                textOverflow="ellipsis"
-                overflow="hidden"
-                maxWidth={theme.spacing(50)}
-                marginLeft={theme.spacing(2)}
-                variant={smDown ? 'body1' : 'h6'}
-                fontSize={smDown ? 16 : 22}
-              >
-                <strong>{formatFileTitle}:</strong> {detailsFile?.format}
-              </Typography>
-            </Box>
-            <Box
-              component="div"
-              sx={{
-                display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'center',
-                mt: theme.spacing(2),
-              }}
-            >
-              <AttachmentIcon />
-              <Typography
-                noWrap
-                textOverflow="ellipsis"
-                overflow="hidden"
-                maxWidth={theme.spacing(50)}
-                marginLeft={theme.spacing(2)}
-                variant={smDown ? 'body1' : 'h6'}
-                fontSize={smDown ? 16 : 22}
-              >
-                <strong>{sizeFileTitle}:</strong> {detailsFile?.size}
-              </Typography>
-            </Box>
-            <Box
-              component="div"
-              sx={{
-                display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'center',
-                mt: theme.spacing(2),
-              }}
-            >
-              <CalendarTodayIcon />
-              <Typography
-                noWrap
-                textOverflow="ellipsis"
-                overflow="hidden"
-                maxWidth={theme.spacing(50)}
-                marginLeft={theme.spacing(2)}
-                variant={smDown ? 'body1' : 'h6'}
-                fontSize={smDown ? 16 : 22}
-              >
-                <strong>{uploadDateTitle}:</strong>{' '}
-                {formatBrDate(new Date(detailsFile?.uploadDate ?? new Date()))}
-              </Typography>
-            </Box>
-          </Box>
+        ) : (
+          <FormEditContentFile
+            onEditSuccess={editSuccess}
+            directoryId={directoryId}
+            idToEdit={idDetails}
+            loggedUserId={loggedUserId}
+            showErrorAlert={showErrorAlert}
+            handleEditFileName={handleEditFileName}
+          />
+        )}
+        <Box
+          component="div"
+          sx={{
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+            mt: theme.spacing(2),
+          }}
+        >
+          <FormatSizeIcon />
+          <Typography
+            noWrap
+            textOverflow="ellipsis"
+            overflow="hidden"
+            maxWidth={theme.spacing(50)}
+            marginLeft={theme.spacing(2)}
+            variant={smDown ? 'body1' : 'h6'}
+            fontSize={smDown ? 16 : 22}
+          >
+            <strong>{formatFileTitle}:</strong> {detailsFile?.format}
+          </Typography>
         </Box>
-      </Fade>
-    </Modal>
+        <Box
+          component="div"
+          sx={{
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+            mt: theme.spacing(2),
+          }}
+        >
+          <AttachmentIcon />
+          <Typography
+            noWrap
+            textOverflow="ellipsis"
+            overflow="hidden"
+            maxWidth={theme.spacing(50)}
+            marginLeft={theme.spacing(2)}
+            variant={smDown ? 'body1' : 'h6'}
+            fontSize={smDown ? 16 : 22}
+          >
+            <strong>{sizeFileTitle}:</strong> {detailsFile?.size}
+          </Typography>
+        </Box>
+        <Box
+          component="div"
+          sx={{
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+            mt: theme.spacing(2),
+          }}
+        >
+          <CalendarTodayIcon />
+          <Typography
+            noWrap
+            textOverflow="ellipsis"
+            overflow="hidden"
+            maxWidth={theme.spacing(50)}
+            marginLeft={theme.spacing(2)}
+            variant={smDown ? 'body1' : 'h6'}
+            fontSize={smDown ? 16 : 22}
+          >
+            <strong>{uploadDateTitle}:</strong>{' '}
+            {formatBrDate(new Date(detailsFile?.uploadDate ?? new Date()))}
+          </Typography>
+        </Box>
+      </Box>
+    </SimpleFormModal>
   );
 };

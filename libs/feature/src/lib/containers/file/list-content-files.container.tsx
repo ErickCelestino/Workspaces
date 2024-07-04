@@ -24,9 +24,9 @@ import {
 } from '../../services';
 import { useLoggedUser } from '../../contexts';
 import {
+  ContentFileCard,
   DeleteFileModal,
   DetailsFileModal,
-  ListContentFiles,
   MoveFileToDirectoryModal,
   SearchBar,
   ToolbarPureTV,
@@ -264,7 +264,7 @@ export const ListContanteFilesContainer = () => {
                   <Grid justifyContent="center" container spacing={2}>
                     {fileList.map((file, index) => (
                       <Grid item md={6} lg={4} key={index}>
-                        <ListContentFiles
+                        <ContentFileCard
                           deleteFile={() => handleFile(file.id, 'delete')}
                           detailsFile={() => handleFile(file.id, 'details')}
                           downloadFile={() => handleFile(file.id, 'download')}
