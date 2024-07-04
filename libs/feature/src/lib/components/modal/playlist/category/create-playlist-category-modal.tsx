@@ -26,6 +26,7 @@ import { FormButton } from '../../../form';
 import { useLoggedUser } from '../../../../contexts';
 import { CreatePlaylistCategoryRequest } from '../../../../services';
 import axios, { AxiosError } from 'axios';
+import { SimpleFormModal } from '../../simple';
 
 interface CreatePlaylistCategoryModalProps {
   open: boolean;
@@ -108,87 +109,52 @@ export const CreatePlaylistCategoryModal: FC<
   };
 
   return (
-    <Modal open={open} onClose={handlePopUpClose} closeAfterTransition>
-      <Fade in={open}>
-        <Box
-          sx={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            height: theme.spacing(63),
-            width: smDown ? '90%' : theme.spacing(80),
-            bgcolor: 'background.paper',
-            boxShadow: 24,
-            p: 4,
-            borderRadius: 2,
-          }}
-        >
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              mb: 2,
-              p: 2,
-              borderRadius: 1,
-            }}
-          >
-            <Typography
-              noWrap
-              textOverflow="ellipsis"
-              overflow="hidden"
-              variant="h5"
-              fontSize={smDown ? 16 : 22}
-            >
-              <strong>{title}</strong>
-            </Typography>
-            <IconButton onClick={handlePopUpClose}>
-              <CloseIcon />
-            </IconButton>
-          </Box>
-          <Divider />
-          <Box
-            sx={{ mt: 2 }}
-            component="form"
-            onSubmit={handleSubmit(handleCategoryData)}
-          >
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              error={!!errors.name}
-              helperText={errors.name?.message}
-              id="name"
-              disabled={loading}
-              label={nameLabel}
-              autoComplete="name"
-              autoFocus
-              {...register('name')}
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              error={!!errors.description}
-              helperText={errors.description?.message}
-              id="description"
-              disabled={loading}
-              label={descriptionLabel}
-              autoComplete="description"
-              multiline
-              rows={4}
-              {...register('description')}
-            />
+    <SimpleFormModal
+      open={open}
+      handlePopUpClose={handlePopUpClose}
+      height={theme.spacing(63)}
+      width={smDown ? '90%' : theme.spacing(80)}
+      title={title}
+    >
+      <Box
+        sx={{ mt: 2 }}
+        component="form"
+        onSubmit={handleSubmit(handleCategoryData)}
+      >
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          error={!!errors.name}
+          helperText={errors.name?.message}
+          id="name"
+          disabled={loading}
+          label={nameLabel}
+          autoComplete="name"
+          autoFocus
+          {...register('name')}
+        />
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          error={!!errors.description}
+          helperText={errors.description?.message}
+          id="description"
+          disabled={loading}
+          label={descriptionLabel}
+          autoComplete="description"
+          multiline
+          rows={4}
+          {...register('description')}
+        />
 
-            <FormButton
-              buttonTitle="Registrar"
-              loading={loading}
-              success={success}
-            />
-          </Box>
-        </Box>
-      </Fade>
-    </Modal>
+        <FormButton
+          buttonTitle="Registrar"
+          loading={loading}
+          success={success}
+        />
+      </Box>
+    </SimpleFormModal>
   );
 };
