@@ -160,6 +160,6 @@ describe('EditPlaylist', () => {
     const result = await sut.execute(editPlaylistDto);
 
     expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityAlreadyExists);
+    expect(result.value).toBeInstanceOf(EntityNotExists);
   });
 });

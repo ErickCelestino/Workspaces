@@ -1,6 +1,7 @@
 import { Inject } from '@nestjs/common';
 import { UseCase } from '../../base/use-case';
-import { EditPlaylistDto } from '../../dto';
+import { FindPlaylistByIdDto } from '../../dto';
+import { Playlist } from '../../entity';
 import {
   EntityAlreadyExists,
   EntityNotEmpty,
@@ -8,24 +9,27 @@ import {
 } from '../../error';
 import { Either, left, right } from '../../shared/either';
 import {
-  EditPlaylistRepository,
   FindPlaylistByIdRepository,
   FindUserByIdRepository,
 } from '../../repository';
 
-export class EditPlaylist
-  implements UseCase<EditPlaylistDto, Either<EntityNotEmpty, void>>
+export class FindPlaylistById
+  implements
+    UseCase<
+      FindPlaylistByIdDto,
+      Either<EntityNotEmpty | EntityNotExists, Playlist>
+    >
 {
   constructor(
     @Inject('FindUserByIdRepository')
     private findUserByIdRepository: FindUserByIdRepository,
     @Inject('FindPlaylistByIdRepository')
-    private findPlaylistByIdRepository: FindPlaylistByIdRepository,
-    @Inject('EditPlaylistRepository')
-    private editPlaylistRepository: EditPlaylistRepository
+    private findPlaylistByIdRepository: FindPlaylistByIdRepository
   ) {}
-  async execute(input: EditPlaylistDto): Promise<Either<EntityNotEmpty, void>> {
-    const { id, loggedUserId, body } = input;
+  async execute(
+    input: FindPlaylistByIdDto
+  ): Promise<Either<EntityNotEmpty | EntityNotExists, Playlist>> {
+    const { id, loggedUserId } = input;
 
     if (Object.keys(id).length < 1) {
       return left(new EntityNotEmpty('ID'));
@@ -33,14 +37,6 @@ export class EditPlaylist
 
     if (Object.keys(loggedUserId).length < 1) {
       return left(new EntityNotEmpty('User ID'));
-    }
-
-    if (Object.keys(body.name ?? body).length < 1) {
-      return left(new EntityNotEmpty('Name'));
-    }
-
-    if (Object.keys(body.playlistCategoryId).length < 1) {
-      return left(new EntityNotEmpty('Playlist'));
     }
 
     const filteredUser = await this.findUserByIdRepository.find(loggedUserId);
@@ -55,8 +51,6 @@ export class EditPlaylist
       return left(new EntityNotExists('Playlist'));
     }
 
-    await this.editPlaylistRepository.edit(input);
-
-    return right(undefined);
+    return right(filteredPlaylist);
   }
 }
