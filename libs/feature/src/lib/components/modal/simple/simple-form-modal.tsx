@@ -16,6 +16,8 @@ interface SimpleFormModalProps {
   handlePopUpClose: () => void;
   title: string;
   children: ReactNode;
+  height: string;
+  width: string;
 }
 
 export const SimpleFormModal: FC<SimpleFormModalProps> = ({
@@ -23,6 +25,8 @@ export const SimpleFormModal: FC<SimpleFormModalProps> = ({
   handlePopUpClose,
   title,
   children,
+  width,
+  height,
 }) => {
   const theme = useTheme();
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
@@ -36,8 +40,8 @@ export const SimpleFormModal: FC<SimpleFormModalProps> = ({
             top: '50%',
             left: '50%',
             transform: 'translate(-50%, -50%)',
-            height: theme.spacing(63),
-            width: smDown ? '90%' : theme.spacing(80),
+            height: height,
+            width: width,
             bgcolor: 'background.paper',
             boxShadow: 24,
             p: 4,

@@ -33,6 +33,8 @@ export const ListPlaylistContainer = () => {
   const { loggedUser } = useLoggedUser();
   const theme = useTheme();
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const mdUp = useMediaQuery(theme.breakpoints.up('md'));
+  const mdDown = useMediaQuery(theme.breakpoints.down('md'));
 
   const [createPlaylistPopUp, setCreatePlaylistPopUp] = useState(false);
   const [search, setSearch] = useState(false);
@@ -169,8 +171,11 @@ export const ListPlaylistContainer = () => {
               }}
             >
               <Box
-                width={smDown ? '100%' : '55%'}
-                marginRight={theme.spacing(2)}
+                sx={{
+                  justifyContent: 'center',
+                  width: mdUp ? '55%' : smDown ? '80%' : mdDown ? '95%' : '80%',
+                  marginLeft: theme.spacing(2),
+                }}
               >
                 <SearchBar
                   onSearch={searchData}
@@ -182,6 +187,7 @@ export const ListPlaylistContainer = () => {
                 sx={{
                   width: theme.spacing(8),
                   height: theme.spacing(8),
+                  marginLeft: theme.spacing(2),
                 }}
               >
                 <AddCircleIcon
@@ -196,11 +202,7 @@ export const ListPlaylistContainer = () => {
             </Box>
           </Box>
 
-          <Box
-            sx={{
-              width: '100%',
-            }}
-          >
+          <Box>
             <Box
               sx={{
                 display: 'flex',
@@ -210,14 +212,16 @@ export const ListPlaylistContainer = () => {
                 width: '100%',
               }}
             >
-              <Box display="flex" justifyContent="center" mt={theme.spacing(2)}>
+              <Box
+                display="flex"
+                justifyContent="center"
+                mt={theme.spacing(2)}
+                sx={{
+                  width: mdUp ? '92%' : smDown ? '94%' : mdDown ? '95%' : '80%',
+                }}
+              >
                 {listPlaylist.length > 0 ? (
-                  <Grid
-                    display="flex"
-                    justifyContent="center"
-                    container
-                    spacing={2}
-                  >
+                  <Grid justifyContent="center" container spacing={2}>
                     {listPlaylist.map((file, index) => (
                       <Grid item md={6} lg={4} key={index}>
                         <PlaylistCard
