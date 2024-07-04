@@ -2,19 +2,21 @@ import {
   EditPlaylist,
   EditPlaylistDto,
   EditPlaylistRepository,
-  EntityAlreadyExists,
   EntityNotEmpty,
   EntityNotExists,
   FindPlaylistByIdRepository,
+  FindPlaylistCategoryByIdRepository,
   FindUserByIdRepository,
   Playlist,
   PlaylistBodyDto,
+  PlaylistCategory,
   UserList,
 } from '../../../src';
 import { PlaylistMock, userMock } from '../../entity';
 import {
   EditPlaylistRepositoryMock,
   FindPlaylistByIdRepositoryMock,
+  FindPlaylistCategoryByIdRepositoryMock,
   FindUserByIdRepositoryMock,
 } from '../../repository';
 
@@ -23,12 +25,15 @@ interface SutTypes {
   editPlaylistDto: EditPlaylistDto;
   findUserByIdRepository: FindUserByIdRepository;
   findPlaylistByIdRepository: FindPlaylistByIdRepository;
+  findPlaylistCategoryByIdRepository: FindPlaylistCategoryByIdRepository;
   editPlaylistRepository: EditPlaylistRepository;
 }
 
 const makeSut = (): SutTypes => {
   const findUserByIdRepository = new FindUserByIdRepositoryMock();
   const findPlaylistByIdRepository = new FindPlaylistByIdRepositoryMock();
+  const findPlaylistCategoryByIdRepository =
+    new FindPlaylistCategoryByIdRepositoryMock();
   const editPlaylistRepository = new EditPlaylistRepositoryMock();
 
   const editPlaylistDto: EditPlaylistDto = {
@@ -43,12 +48,14 @@ const makeSut = (): SutTypes => {
   const sut = new EditPlaylist(
     findUserByIdRepository,
     findPlaylistByIdRepository,
+    findPlaylistCategoryByIdRepository,
     editPlaylistRepository
   );
 
   return {
     findUserByIdRepository,
     findPlaylistByIdRepository,
+    findPlaylistCategoryByIdRepository,
     editPlaylistRepository,
     editPlaylistDto,
     sut,
@@ -120,6 +127,7 @@ describe('EditPlaylist', () => {
     const {
       editPlaylistDto,
       findPlaylistByIdRepository,
+      findPlaylistCategoryByIdRepository,
       editPlaylistRepository,
     } = makeSut();
 
@@ -132,6 +140,34 @@ describe('EditPlaylist', () => {
     const sut = new EditPlaylist(
       mockEmptyRepository,
       findPlaylistByIdRepository,
+      findPlaylistCategoryByIdRepository,
+      editPlaylistRepository
+    );
+
+    const result = await sut.execute(editPlaylistDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.value).toBeInstanceOf(EntityNotExists);
+  });
+
+  it('should return EntityNotExists if there is no playlist created in the database', async () => {
+    const {
+      editPlaylistDto,
+      findUserByIdRepository,
+      editPlaylistRepository,
+      findPlaylistCategoryByIdRepository,
+    } = makeSut();
+
+    const mockEmptyItem = {} as Playlist;
+
+    const mockEmptyRepository: FindPlaylistByIdRepository = {
+      find: jest.fn(async () => mockEmptyItem),
+    };
+
+    const sut = new EditPlaylist(
+      findUserByIdRepository,
+      mockEmptyRepository,
+      findPlaylistCategoryByIdRepository,
       editPlaylistRepository
     );
 
@@ -142,17 +178,22 @@ describe('EditPlaylist', () => {
   });
 
   it('should return EntityNotExists if there is no playlist category created in the database', async () => {
-    const { editPlaylistDto, findUserByIdRepository, editPlaylistRepository } =
-      makeSut();
+    const {
+      editPlaylistDto,
+      findUserByIdRepository,
+      findPlaylistByIdRepository,
+      editPlaylistRepository,
+    } = makeSut();
 
-    const mockEmptyItem = {} as Playlist;
+    const mockEmptyItem = {} as PlaylistCategory;
 
-    const mockEmptyRepository: FindPlaylistByIdRepository = {
+    const mockEmptyRepository: FindPlaylistCategoryByIdRepository = {
       find: jest.fn(async () => mockEmptyItem),
     };
 
     const sut = new EditPlaylist(
       findUserByIdRepository,
+      findPlaylistByIdRepository,
       mockEmptyRepository,
       editPlaylistRepository
     );

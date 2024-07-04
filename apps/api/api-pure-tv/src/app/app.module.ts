@@ -22,6 +22,7 @@ import {
 import { CreatePlaylistModule } from './create-playlist/create-playlist.module';
 import { ListPlaylistModule } from './list-playlist/list-playlist.module';
 import { FindPlaylistByIdModule } from './find-playlist-by-id/find-playlist-by-id.module';
+import { EditPlaylistModule } from './edit-playlist/edit-playlist.module';
 
 @Module({
   imports: [
@@ -45,6 +46,7 @@ import { FindPlaylistByIdModule } from './find-playlist-by-id/find-playlist-by-i
     CreatePlaylistModule,
     ListPlaylistModule,
     FindPlaylistByIdModule,
+    EditPlaylistModule,
   ],
   controllers: [AppController],
   providers: [AppService],

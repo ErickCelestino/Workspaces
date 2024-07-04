@@ -6,6 +6,7 @@ import { Either, left, right } from '../../shared/either';
 import {
   EditPlaylistRepository,
   FindPlaylistByIdRepository,
+  FindPlaylistCategoryByIdRepository,
   FindUserByIdRepository,
 } from '../../repository';
 
@@ -17,6 +18,8 @@ export class EditPlaylist
     private findUserByIdRepository: FindUserByIdRepository,
     @Inject('FindPlaylistByIdRepository')
     private findPlaylistByIdRepository: FindPlaylistByIdRepository,
+    @Inject('FindPlaylistCategoryByIdRepository')
+    private findPlaylistCategoryByIdRepository: FindPlaylistCategoryByIdRepository,
     @Inject('EditPlaylistRepository')
     private editPlaylistRepository: EditPlaylistRepository
   ) {}
@@ -43,6 +46,14 @@ export class EditPlaylist
 
     if (Object.keys(filteredUser?.userId ?? filteredUser).length < 1) {
       return left(new EntityNotExists('User'));
+    }
+
+    const filteredCategory = await this.findPlaylistCategoryByIdRepository.find(
+      body.playlistCategoryId
+    );
+
+    if (Object.keys(filteredCategory?.id ?? filteredCategory).length < 1) {
+      return left(new EntityNotExists('Category'));
     }
 
     const filteredPlaylist = await this.findPlaylistByIdRepository.find(id);
