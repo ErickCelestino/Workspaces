@@ -1,3 +1,5 @@
+import { FC, useCallback, useEffect, useState } from 'react';
+import { SimpleFormModal } from '../simple';
 import {
   Box,
   MenuItem,
@@ -5,27 +7,21 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
-import { FC, useCallback, useEffect, useState } from 'react';
-import { SimpleFormModal } from '../simple';
-import { PlaylistSchema, ValidationsError } from '../../../shared';
+import { FormButton } from '../../form';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { FormButton } from '../../form';
-import { useLoggedUser } from '../../../contexts';
 import {
-  CreatePlaylistDto,
   ErrorResponse,
   ListPlaylistCategoryDto,
   PlaylistBodyDto,
   PlaylistCategory,
 } from '@workspaces/domain';
-import {
-  CreatePlaylistRequest,
-  ListPlaylistCategoryRequest,
-} from '../../../services';
+import { PlaylistSchema, ValidationsError } from '../../../shared';
+import { useLoggedUser } from '../../../contexts';
+import { ListPlaylistCategoryRequest } from '../../../services';
 import axios, { AxiosError } from 'axios';
 
-interface CreatePlaylistModalProps {
+interface EditPlaylistModalProps {
   open: boolean;
   title: string;
   handlePopUpClose: () => void;
@@ -34,21 +30,21 @@ interface CreatePlaylistModalProps {
   successMessage?: string;
 }
 
-export const CreatePlaylistModal: FC<CreatePlaylistModalProps> = ({
+export const EditPlaylistModal: FC<EditPlaylistModalProps> = ({
+  open,
+  title,
   handlePopUpClose,
   showAlert,
-  title,
-  open,
   nameLabel = 'Nome',
-  successMessage = 'Playlist Cadastrada com Sucesso',
+  successMessage = 'Playlist Editada com Sucesso',
 }) => {
   const { loggedUser } = useLoggedUser();
   const theme = useTheme();
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
-  const [categories, setCategories] = useState<PlaylistCategory[]>([]);
-  const [categoryId, setCategoryId] = useState('');
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [categoryId, setCategoryId] = useState('');
+  const [categories, setCategories] = useState<PlaylistCategory[]>([]);
 
   const {
     handleSubmit,
@@ -64,7 +60,6 @@ export const CreatePlaylistModal: FC<CreatePlaylistModalProps> = ({
       playlistCategoryId: '',
     },
   });
-
   const getCategories = useCallback(
     async (input: ListPlaylistCategoryDto) => {
       try {
@@ -84,37 +79,6 @@ export const CreatePlaylistModal: FC<CreatePlaylistModalProps> = ({
     [showAlert]
   );
 
-  const createPlaylist = async (data: CreatePlaylistDto) => {
-    try {
-      const result = await CreatePlaylistRequest(data);
-
-      if (result) {
-        setSuccess(true);
-        setLoading(false);
-        showAlert(successMessage, true);
-
-        setSuccess(false);
-        reset({
-          name: '',
-          playlistCategoryId: '',
-        });
-        setCategoryId('');
-        handlePopUpClose();
-      }
-    } catch (error) {
-      setSuccess(false);
-      setLoading(false);
-      console.error(error);
-      if (axios.isAxiosError(error)) {
-        const axiosError = error as AxiosError<ErrorResponse>;
-        const errors = ValidationsError(axiosError, 'Playlist');
-        if (errors) {
-          showAlert(errors, false);
-        }
-      }
-    }
-  };
-
   useEffect(() => {
     getCategories({
       loggedUserId: loggedUser?.id ?? '',
@@ -124,11 +88,6 @@ export const CreatePlaylistModal: FC<CreatePlaylistModalProps> = ({
 
   const handlePlaylistData = async (data: PlaylistBodyDto) => {
     setLoading(true);
-    await createPlaylist({
-      loggedUserId: loggedUser?.id ?? '',
-      name: data.name,
-      playlistCategoryId: categoryId,
-    });
   };
 
   const handleChangeCategory = (event: React.ChangeEvent<HTMLInputElement>) => {

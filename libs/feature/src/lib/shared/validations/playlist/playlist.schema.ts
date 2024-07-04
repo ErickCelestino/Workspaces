@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { EntityMinLength, EntityMaxLength } from '../../messages';
 
-export const CreatePlaylistSchema = z
+export const PlaylistSchema = z
   .object({
     name: z
       .string()
