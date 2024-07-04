@@ -39,7 +39,7 @@ export class EditPlaylist
       return left(new EntityNotEmpty('Name'));
     }
 
-    if (Object.keys(body.playlistCategoryId ?? body).length < 1) {
+    if (Object.keys(body.playlistCategoryId).length < 1) {
       return left(new EntityNotEmpty('Playlist'));
     }
 
@@ -51,7 +51,7 @@ export class EditPlaylist
 
     const filteredPlaylist = await this.findPlaylistByIdRepository.find(id);
 
-    if (Object.keys(filteredPlaylist?.id ?? filteredPlaylist).length > 0) {
+    if (Object.keys(filteredPlaylist?.id ?? filteredPlaylist).length < 1) {
       return left(new EntityAlreadyExists('Playlist'));
     }
 
