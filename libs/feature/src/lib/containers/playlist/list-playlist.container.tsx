@@ -1,8 +1,9 @@
 import {
   Box,
+  Grid,
   IconButton,
-  List,
   Pagination,
+  Typography,
   useMediaQuery,
   useTheme,
 } from '@mui/material';
@@ -10,11 +11,11 @@ import {
   CreatePlaylistModal,
   SearchBar,
   ToolbarPureTV,
-  ScrollBox,
+  PlaylistCard,
 } from '../../components';
 import { LayoutBase } from '../../layout';
 import { useSnackbarAlert } from '../../hooks';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import {
   CrudType,
@@ -43,6 +44,12 @@ export const ListPlaylistContainer = () => {
       case 'create':
         setCreatePlaylistPopUp(false);
         break;
+      case 'edit':
+        //need implementation
+        break;
+      case 'delete':
+        //need implementation
+        break;
     }
   };
 
@@ -50,6 +57,15 @@ export const ListPlaylistContainer = () => {
     switch (types) {
       case 'create':
         setCreatePlaylistPopUp(true);
+        break;
+      case 'edit':
+        //need implementation
+        break;
+      case 'delete':
+        //need implementation
+        break;
+      case 'details':
+        //need implementation
         break;
     }
   };
@@ -113,6 +129,21 @@ export const ListPlaylistContainer = () => {
     setListPlaylist(result.playlists);
   };
 
+  const getData = useCallback(async () => {
+    const result = await handleData({
+      loggedUserId: loggedUser?.id ?? '',
+      userInput: '',
+    });
+    setTotalPage(result?.totalPages ?? 0);
+    setListPlaylist(result?.playlists ?? []);
+  }, [loggedUser, handleData]);
+
+  useEffect(() => {
+    if (!search) {
+      getData();
+    }
+  }, [getData, search]);
+
   return (
     <>
       <CreatePlaylistModal
@@ -126,7 +157,7 @@ export const ListPlaylistContainer = () => {
           sx={{
             display: 'flex',
             justifyContent: 'center',
-            alignItems: 'center',
+            flexDirection: 'column',
           }}
         >
           <Box width="95%">
@@ -167,37 +198,66 @@ export const ListPlaylistContainer = () => {
 
           <Box
             sx={{
-              display: 'flex',
-              justifyContent: 'center',
-              flexDirection: 'column',
-              alignItems: 'center',
               width: '100%',
             }}
           >
             <Box
-              width={smDown ? '100%' : '60%'}
               sx={{
-                marginLeft: smDown ? -3 : '',
+                display: 'flex',
+                justifyContent: 'center',
+                flexDirection: 'column',
+                alignItems: 'center',
+                width: '100%',
               }}
             >
-              <ScrollBox maxHeight="100%">
-                <List>
-                  {listPlaylist.map((playlist) => (
-                    <div>{playlist.name}</div>
-                  ))}
-                </List>
-              </ScrollBox>
-            </Box>
-            <Box
-              marginTop={theme.spacing(2)}
-              display="flex"
-              justifyContent="end"
-            >
-              <Pagination
-                count={totalPage}
-                color="primary"
-                onChange={handleChange}
-              />
+              <Box display="flex" justifyContent="center" mt={theme.spacing(2)}>
+                {listPlaylist.length > 0 ? (
+                  <Grid
+                    display="flex"
+                    justifyContent="center"
+                    container
+                    spacing={2}
+                  >
+                    {listPlaylist.map((file, index) => (
+                      <Grid item md={6} lg={4} key={index}>
+                        <PlaylistCard
+                          deletePlaylist={async () => handlePopUpOpen('delete')}
+                          detailsPlaylist={async () =>
+                            handlePopUpOpen('details')
+                          }
+                          imageData={{
+                            image: '',
+                            imageName: '',
+                          }}
+                          name={file.name}
+                        />
+                      </Grid>
+                    ))}
+                  </Grid>
+                ) : (
+                  <Box
+                    marginTop={theme.spacing(2)}
+                    width="100%"
+                    display="flex"
+                    justifyContent="center"
+                  >
+                    <Typography variant="h4">
+                      Não foram encontrados registros
+                    </Typography>
+                  </Box>
+                )}
+              </Box>
+              <Box
+                marginTop={theme.spacing(2)}
+                display="flex"
+                justifyContent="end"
+              >
+                <Pagination
+                  count={totalPage}
+                  color="primary"
+                  onChange={handleChange}
+                />
+              </Box>
             </Box>
           </Box>
         </Box>

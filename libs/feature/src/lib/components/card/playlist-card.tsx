@@ -8,32 +8,28 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
+import { IconMenuItem, ImageCardItem } from '@workspaces/domain';
 import InfoIcon from '@mui/icons-material/Info';
-import DownloadIcon from '@mui/icons-material/Download';
 import DeleteIcon from '@mui/icons-material/Delete';
-import DriveFileMoveIcon from '@mui/icons-material/DriveFileMove';
 import { FC } from 'react';
-import { IconMenuItem } from '@workspaces/domain';
 import { ButtonFileMenu } from '../menu';
 
-interface ListContentFilesProps {
-  fileImage: string;
+interface ListPlaylistProps {
   name: string;
-  fileImageName: string;
-  deleteFile: () => Promise<void>;
-  downloadFile: () => Promise<void>;
-  detailsFile: () => Promise<void>;
-  moveFile: () => Promise<void>;
+  deleteTitle?: string;
+  detailsTitle?: string;
+  imageData: ImageCardItem;
+  deletePlaylist: () => Promise<void>;
+  detailsPlaylist: () => Promise<void>;
 }
 
-export const ListContentFiles: FC<ListContentFilesProps> = ({
-  fileImage,
+export const PlaylistCard: FC<ListPlaylistProps> = ({
   name,
-  fileImageName,
-  deleteFile,
-  downloadFile,
-  detailsFile,
-  moveFile,
+  deleteTitle = 'Deletar',
+  detailsTitle = 'Detalhes',
+  imageData,
+  deletePlaylist,
+  detailsPlaylist,
 }) => {
   const theme = useTheme();
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
@@ -41,26 +37,15 @@ export const ListContentFiles: FC<ListContentFilesProps> = ({
   const iconMenuList: IconMenuItem[] = [
     {
       icon: <InfoIcon />,
-      title: 'Detalhes',
-      handleClick: detailsFile,
+      title: detailsTitle,
+      handleClick: detailsPlaylist,
     },
     {
       icon: <DeleteIcon />,
-      title: 'Deletar',
-      handleClick: deleteFile,
-    },
-    {
-      icon: <DownloadIcon />,
-      title: 'Download',
-      handleClick: downloadFile,
-    },
-    {
-      icon: <DriveFileMoveIcon />,
-      title: 'Mover para',
-      handleClick: moveFile,
+      title: deleteTitle,
+      handleClick: deletePlaylist,
     },
   ];
-
   return (
     <Card
       sx={{
@@ -71,8 +56,8 @@ export const ListContentFiles: FC<ListContentFilesProps> = ({
     >
       <CardMedia
         component="img"
-        image={fileImage}
-        title={fileImageName}
+        image={imageData.image}
+        title={imageData.imageName}
         sx={{
           height: theme.spacing(15),
         }}
