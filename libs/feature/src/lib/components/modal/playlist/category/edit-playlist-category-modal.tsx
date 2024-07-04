@@ -25,6 +25,7 @@ import {
 } from '../../../../services';
 import axios, { AxiosError } from 'axios';
 import { FormButton } from '../../../form';
+import { SimpleFormModal } from '../../simple';
 
 interface EditPlaylistCategoryModalProps {
   open: boolean;
@@ -131,98 +132,64 @@ export const EditPlaylistCategoryModal: FC<EditPlaylistCategoryModalProps> = ({
   };
 
   return (
-    <Modal open={open} onClose={handlePopUpClose} closeAfterTransition>
-      <Fade in={open}>
-        <Box
-          sx={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            height: theme.spacing(67),
-            width: smDown ? '90%' : theme.spacing(80),
-            bgcolor: 'background.paper',
-            boxShadow: 24,
-            p: 4,
-            borderRadius: 2,
-          }}
-        >
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              mb: 2,
-              p: 2,
-              borderRadius: 1,
-            }}
-          >
-            <Typography
-              noWrap
-              textOverflow="ellipsis"
-              overflow="hidden"
-              variant="h5"
-            >
-              <strong>{title}</strong>
-            </Typography>
-            <IconButton onClick={handlePopUpClose}>
-              <CloseIcon />
-            </IconButton>
-          </Box>
-          <Divider />
-          <Box
-            sx={{ mt: 2 }}
-            component="form"
-            onSubmit={handleSubmit(editCategory)}
-          >
-            <TextField
-              margin="normal"
-              fullWidth
-              InputLabelProps={{ shrink: true, required: true }}
-              disabled={true}
-              error={!!errors.id}
-              helperText={errors.id?.message}
-              id="id"
-              label="id"
-              {...register('id')}
-              autoComplete="id"
-            />
+    <SimpleFormModal
+      open={open}
+      handlePopUpClose={handlePopUpClose}
+      title={title}
+      height={theme.spacing(67)}
+      width={smDown ? '90%' : theme.spacing(80)}
+    >
+      <Box
+        sx={{ mt: 2 }}
+        component="form"
+        onSubmit={handleSubmit(editCategory)}
+      >
+        <TextField
+          margin="normal"
+          fullWidth
+          InputLabelProps={{ shrink: true, required: true }}
+          disabled={true}
+          error={!!errors.id}
+          helperText={errors.id?.message}
+          id="id"
+          label="id"
+          {...register('id')}
+          autoComplete="id"
+        />
 
-            <TextField
-              margin="normal"
-              fullWidth
-              InputLabelProps={{ shrink: true, required: true }}
-              error={!!errors.name}
-              helperText={errors.name?.message}
-              id="name"
-              label="name"
-              {...register('name')}
-              defaultValue=""
-              autoComplete="name"
-            />
+        <TextField
+          margin="normal"
+          fullWidth
+          InputLabelProps={{ shrink: true, required: true }}
+          error={!!errors.name}
+          helperText={errors.name?.message}
+          id="name"
+          label="name"
+          {...register('name')}
+          defaultValue=""
+          autoComplete="name"
+        />
 
-            <TextField
-              margin="normal"
-              fullWidth
-              multiline
-              rows={4}
-              InputLabelProps={{ shrink: true, required: true }}
-              error={!!errors.description}
-              helperText={errors.description?.message}
-              id="description"
-              label="description"
-              {...register('description')}
-              autoComplete="description"
-            />
+        <TextField
+          margin="normal"
+          fullWidth
+          multiline
+          rows={4}
+          InputLabelProps={{ shrink: true, required: true }}
+          error={!!errors.description}
+          helperText={errors.description?.message}
+          id="description"
+          label="description"
+          {...register('description')}
+          autoComplete="description"
+        />
 
-            <FormButton
-              loading={loading}
-              success={success}
-              buttonTitle="Editar Categoria"
-            />
-          </Box>
-        </Box>
-      </Fade>
-    </Modal>
+        <FormButton
+          loading={loading}
+          success={success}
+          buttonTitle="Editar Categoria"
+        />
+      </Box>
+    </SimpleFormModal>
   );
 };

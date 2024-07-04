@@ -58,6 +58,7 @@ export const CreatePlaylistModal: FC<CreatePlaylistModalProps> = ({
   const {
     handleSubmit,
     register,
+    reset,
     formState: { errors },
   } = useForm<CratePlaylistBody>({
     mode: 'all',
@@ -96,6 +97,13 @@ export const CreatePlaylistModal: FC<CreatePlaylistModalProps> = ({
         setSuccess(true);
         setLoading(false);
         showAlert(successMessage, true);
+
+        setSuccess(false);
+        reset({
+          name: '',
+          playlistCategoryId: '',
+        });
+        setCategoryId('');
         handlePopUpClose();
       }
     } catch (error) {
@@ -134,6 +142,8 @@ export const CreatePlaylistModal: FC<CreatePlaylistModalProps> = ({
 
   return (
     <SimpleFormModal
+      height={smDown ? theme.spacing(55) : theme.spacing(53)}
+      width={smDown ? '90%' : theme.spacing(80)}
       open={open}
       handlePopUpClose={handlePopUpClose}
       title={title}
@@ -158,14 +168,8 @@ export const CreatePlaylistModal: FC<CreatePlaylistModalProps> = ({
         />
 
         <TextField
-          sx={{
-            width: smDown
-              ? '100%'
-              : mdDown
-              ? theme.spacing(45)
-              : theme.spacing(30),
-          }}
           select
+          fullWidth
           value={categoryId}
           margin="normal"
           error={!!errors.playlistCategoryId}

@@ -1,4 +1,5 @@
 export * from './alert';
+export * from './card';
 export * from './drawer';
 export * from './file';
 export * from './form';
@@ -7,6 +8,7 @@ export * from './menu';
 export * from './modal';
 export * from './notification-card';
 export * from './popup';
+export * from './scroll';
 export * from './search';
 export * from './stepper';
 export * from './toolbar';

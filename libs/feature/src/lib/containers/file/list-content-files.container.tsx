@@ -7,6 +7,7 @@ import {
   useTheme,
 } from '@mui/material';
 import { LayoutBase } from '../../layout';
+
 import { useCallback, useEffect, useState } from 'react';
 import {
   ContentFile,
@@ -23,9 +24,9 @@ import {
 } from '../../services';
 import { useLoggedUser } from '../../contexts';
 import {
+  ContentFileCard,
   DeleteFileModal,
   DetailsFileModal,
-  ListContentFiles,
   MoveFileToDirectoryModal,
   SearchBar,
   ToolbarPureTV,
@@ -67,9 +68,11 @@ export const ListContanteFilesContainer = () => {
   const [fileId, setFileId] = useState('');
 
   const theme = useTheme();
+  const smDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const mdUp = useMediaQuery(theme.breakpoints.up('md'));
+  const mdDown = useMediaQuery(theme.breakpoints.down('md'));
   const { loggedUser } = useLoggedUser();
   const { showSnackbarAlert, SnackbarAlert } = useSnackbarAlert();
-  const smDown = useMediaQuery(theme.breakpoints.down('sm'));
 
   const showErrorAlert = useCallback(
     (message: string) => {
@@ -247,23 +250,21 @@ export const ListContanteFilesContainer = () => {
 
       <LayoutBase title="Listagem de Usuários" toolBar={<ToolbarPureTV />}>
         <Box display="flex" justifyContent="center">
-          <Box>
-            <Box width="94%">
+          <Box width={mdUp ? '85%' : '100%'}>
+            <Box
+              width={mdUp ? '92%' : smDown ? '94%' : mdDown ? '95%' : '80%'}
+              marginLeft={smDown ? theme.spacing(1) : 0}
+            >
               <SearchBar
                 onSearch={searchData}
                 placeholder="Pesquisar Arquivo"
               />
               <Box display="flex" justifyContent="center" mt={theme.spacing(2)}>
                 {fileList.length > 0 ? (
-                  <Grid
-                    display="flex"
-                    justifyContent="center"
-                    container
-                    spacing={2}
-                  >
+                  <Grid justifyContent="center" container spacing={2}>
                     {fileList.map((file, index) => (
-                      <Grid item lg={4} key={index}>
-                        <ListContentFiles
+                      <Grid item md={6} lg={4} key={index}>
+                        <ContentFileCard
                           deleteFile={() => handleFile(file.id, 'delete')}
                           detailsFile={() => handleFile(file.id, 'details')}
                           downloadFile={() => handleFile(file.id, 'download')}
