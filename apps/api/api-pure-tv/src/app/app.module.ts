@@ -21,6 +21,7 @@ import {
 } from './playlist-category';
 import { CreatePlaylistModule } from './create-playlist/create-playlist.module';
 import { ListPlaylistModule } from './list-playlist/list-playlist.module';
+import { FindPlaylistByIdModule } from './find-playlist-by-id/find-playlist-by-id.module';
 
 @Module({
   imports: [
@@ -43,6 +44,7 @@ import { ListPlaylistModule } from './list-playlist/list-playlist.module';
     DeletePlaylistCategoryModule,
     CreatePlaylistModule,
     ListPlaylistModule,
+    FindPlaylistByIdModule,
   ],
   controllers: [AppController],
   providers: [AppService],
