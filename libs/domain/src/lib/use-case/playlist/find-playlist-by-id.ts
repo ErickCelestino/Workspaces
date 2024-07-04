@@ -2,11 +2,7 @@ import { Inject } from '@nestjs/common';
 import { UseCase } from '../../base/use-case';
 import { FindPlaylistByIdDto } from '../../dto';
 import { Playlist } from '../../entity';
-import {
-  EntityAlreadyExists,
-  EntityNotEmpty,
-  EntityNotExists,
-} from '../../error';
+import { EntityNotEmpty, EntityNotExists } from '../../error';
 import { Either, left, right } from '../../shared/either';
 import {
   FindPlaylistByIdRepository,
