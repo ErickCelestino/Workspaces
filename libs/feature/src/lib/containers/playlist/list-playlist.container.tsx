@@ -217,7 +217,7 @@ export const ListPlaylistContainer = () => {
                 justifyContent="center"
                 mt={theme.spacing(2)}
                 sx={{
-                  width: mdUp ? '92%' : smDown ? '94%' : mdDown ? '95%' : '80%',
+                  width: mdUp ? '80%' : smDown ? '94%' : mdDown ? '95%' : '80%',
                 }}
               >
                 {listPlaylist.length > 0 ? (
@@ -251,6 +251,8 @@ export const ListPlaylistContainer = () => {
                   </Box>
                 )}
               </Box>
+            </Box>
+            <Box width="80%">
               <Box
                 marginTop={theme.spacing(2)}
                 display="flex"

@@ -70,17 +70,19 @@ export const PlaylistCard: FC<ListPlaylistProps> = ({
         }}
       >
         <CardContent>
-          <Typography
-            component="div"
-            variant="body2"
-            overflow="hidden"
-            noWrap
-            width={theme.spacing(20)}
-            textOverflow="ellipsis"
-            fontSize={14}
-          >
-            {name}
-          </Typography>
+          <Box>
+            <Typography
+              component="div"
+              variant="body2"
+              overflow="hidden"
+              noWrap
+              width={theme.spacing(20)}
+              textOverflow="ellipsis"
+              fontSize={14}
+            >
+              {name}
+            </Typography>
+          </Box>
         </CardContent>
         <CardActions>
           <ButtonFileMenu iconMenuItemList={iconMenuList} />
