@@ -11,10 +11,15 @@ import {
 } from '@mui/material';
 import { FormAuthCard, FormButton } from '../../components';
 import { useAuth } from '../../hooks';
-import { ValidateUserDto } from '@workspaces/domain';
-import React, { useState } from 'react';
+import { LoggedUser, ValidateUserDto } from '@workspaces/domain';
+import React, { ReactNode, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSnackbarAlert } from '../../hooks';
+import { useForm } from 'react-hook-form';
+import { LoginSchema } from '../../shared';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { ListUserRequest, setItemLocalStorage } from '../../services';
+import { useLoggedUser } from '../../contexts';
 
 interface LoginContainerProps {
   cardImage: string;
@@ -26,35 +31,64 @@ interface LoginContainerProps {
   remenberTitle?: string;
   registerTitle?: string;
   registerHref?: string;
+  children?: ReactNode;
 }
 
 export const LoginContainer: React.FC<LoginContainerProps> = ({
   cardImage = '',
   logo = '',
   title = 'Fazer Login',
-  passwordLabel = 'Digite seu Password',
+  passwordLabel = 'Digite sua Senha',
   emailLabel = 'Digite seu Email',
   buttonTitle = 'Entrar',
   remenberTitle = 'Lembrar',
   registerTitle = 'Quer se cadastrar?',
   registerHref = '/register',
+  children,
 }) => {
   const auth = useAuth();
   const history = useNavigate();
   const theme = useTheme();
   const { showSnackbarAlert, SnackbarAlert } = useSnackbarAlert();
+  const { setLoggedUser } = useLoggedUser();
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
 
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = useForm<ValidateUserDto>({
+    mode: 'all',
+    criteriaMode: 'all',
+    resolver: zodResolver(LoginSchema),
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+  });
+
+  const setLocalUserId = async (email: string) => {
+    const user = await ListUserRequest({ input: email });
+    if (Object.keys(user).length > 0) {
+      const loggedUser: LoggedUser = {
+        id: user.users[0].userId,
+        email: user.users[0].email,
+        name: user.users[0].name,
+        type: user.users[0].type,
+      };
+      setItemLocalStorage(JSON.stringify(loggedUser), 'lu');
+      setLoggedUser(loggedUser);
+    }
+    history('/');
+  };
+
   const onFinish = async (data: ValidateUserDto) => {
     try {
-      setSuccess(false);
-      setLoading(true);
       await auth.authenticate(data.email, data.password);
       setSuccess(true);
       setLoading(false);
-
-      history('/');
+      await setLocalUserId(data.email);
     } catch (error) {
       setLoading(false);
       setSuccess(false);
@@ -63,18 +97,6 @@ export const LoginContainer: React.FC<LoginContainerProps> = ({
         severity: 'error',
       });
     }
-  };
-
-  const handleLogin = async (
-    event: React.FormEvent<HTMLFormElement>
-  ): Promise<void> => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-
-    await onFinish({
-      email: `${data.get('email')}`,
-      password: `${data.get('password')}`,
-    });
   };
 
   return (
@@ -102,7 +124,7 @@ export const LoginContainer: React.FC<LoginContainerProps> = ({
             </Typography>
             <Box
               component="form"
-              onSubmit={handleLogin}
+              onSubmit={handleSubmit(onFinish)}
               noValidate
               sx={{ mt: 1 }}
             >
@@ -110,21 +132,25 @@ export const LoginContainer: React.FC<LoginContainerProps> = ({
                 margin="normal"
                 required
                 fullWidth
+                error={!!errors.email}
+                helperText={errors.email?.message}
                 id="email"
                 label={emailLabel}
-                name="email"
                 autoComplete="email"
                 autoFocus
+                {...register('email')}
               />
               <TextField
                 margin="normal"
                 required
                 fullWidth
+                error={!!errors.password}
+                helperText={errors.password?.message}
                 id="password"
                 label={passwordLabel}
-                name="password"
                 type="password"
                 autoComplete="current-password"
+                {...register('password')}
               />
               <Box display="flex" justifyContent="space-between">
                 <FormControlLabel

@@ -8,6 +8,7 @@ import {
   FindUserByIdRepository,
   InsufficientCharacters,
   HashGeneratorRepository,
+  UserList,
 } from '../../../src';
 import { userMock } from '../../entity';
 import { authMock } from '../../entity/user/auth.mock';
@@ -135,8 +136,10 @@ describe('CreateAuth', () => {
 
     userMock.userId = '';
 
+    const emptyMock = {} as UserList;
+
     const mockEmptyRepository: FindUserByIdRepository = {
-      find: jest.fn(async () => userMock),
+      find: jest.fn(async () => emptyMock),
     };
 
     const sut = new CreateAuth(

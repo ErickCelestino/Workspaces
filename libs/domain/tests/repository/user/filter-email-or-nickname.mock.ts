@@ -6,13 +6,9 @@ export class FilterByEmailOrNicknameRepositoryMock
   input = '';
 
   async filter(input: string): Promise<User> {
-    const emptyUser: User = {
-      auth: [],
-      birthDate: new Date(),
-      name: '',
-      nickname: '',
+    const emptyUser = {
       userId: '',
-    };
+    } as User;
     this.input = input;
     return emptyUser;
   }

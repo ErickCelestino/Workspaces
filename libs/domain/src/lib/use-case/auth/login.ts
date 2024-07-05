@@ -23,17 +23,17 @@ export class Login
     input: LoginDto
   ): Promise<Either<EntityNotExists, AccessToken>> {
     const { email, error } = input;
-    if (error.length > 0) {
+    if (Object.keys(error).length > 0) {
       return left(new IncorrectPassword());
     }
 
-    if (email.length < 1) {
+    if (Object.keys(email).length < 1) {
       return left(new EntityNotExists('email'));
     }
 
     const filteredUserEmail = await this.filterEmail.filter(email);
 
-    if (filteredUserEmail.userId.length < 1) {
+    if (Object.keys(filteredUserEmail).length < 1) {
       return left(new EntityNotExists('User'));
     }
 
