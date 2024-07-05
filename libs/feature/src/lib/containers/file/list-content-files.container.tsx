@@ -74,11 +74,11 @@ export const ListContanteFilesContainer = () => {
   const { loggedUser } = useLoggedUser();
   const { showSnackbarAlert, SnackbarAlert } = useSnackbarAlert();
 
-  const showErrorAlert = useCallback(
-    (message: string) => {
+  const showAlert = useCallback(
+    (message: string, success: boolean) => {
       showSnackbarAlert({
         message: message,
-        severity: 'error',
+        severity: success ? 'success' : 'error',
       });
     },
     [showSnackbarAlert]
@@ -102,12 +102,12 @@ export const ListContanteFilesContainer = () => {
           const axiosError = error as AxiosError<ErrorResponse>;
           const errors = ValidationsError(axiosError, 'Arquivos');
           if (errors) {
-            showErrorAlert(errors);
+            showAlert(errors, false);
           }
         }
       }
     },
-    [showErrorAlert]
+    [showAlert]
   );
 
   const getData = useCallback(async () => {
@@ -174,7 +174,7 @@ export const ListContanteFilesContainer = () => {
         const axiosError = error as AxiosError<ErrorResponse>;
         const errors = ValidationsError(axiosError, 'Download');
         if (errors) {
-          showErrorAlert(errors);
+          showAlert(errors, false);
         }
       }
     }
@@ -192,7 +192,7 @@ export const ListContanteFilesContainer = () => {
     if (url) {
       onDownloadFile(url);
     } else {
-      showErrorAlert(DownloadError('PT-BR'));
+      showAlert(DownloadError('PT-BR'), true);
     }
   };
 
@@ -228,20 +228,20 @@ export const ListContanteFilesContainer = () => {
         onClose={() => handlePopUpClose('delete')}
         idToDelete={fileId}
         loggedUserId={loggedUser?.id ?? ''}
-        showErrorAlert={showErrorAlert}
+        showAlert={showAlert}
       />
       <DetailsFileModal
         directoryId={directoryId}
         open={detailsPopUp}
         idDetails={fileId}
         loggedUserId={loggedUser?.id ?? ''}
-        showErrorAlert={showErrorAlert}
+        showAlert={showAlert}
         handlePopUpClose={() => handlePopUpClose('details')}
       />
       <MoveFileToDirectoryModal
         open={movePopUp}
         loggedUserId={loggedUser?.id ?? ''}
-        showErrorAlert={showErrorAlert}
+        showAlert={showAlert}
         onClose={() => handlePopUpClose('moveFile')}
         idToMove={fileId}
         title="Mover Arquivo para"

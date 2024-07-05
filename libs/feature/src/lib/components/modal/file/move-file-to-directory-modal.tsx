@@ -21,23 +21,25 @@ import { ValidationsError } from '../../../shared';
 interface MoveFileToDirectoryModalProps {
   open: boolean;
   onClose: () => void;
-  showErrorAlert: (message: string) => void;
+  showAlert: (message: string, success: boolean) => void;
   idToMove: string;
   loggedUserId: string;
   title: string;
   buttonTitle: string;
   fieldLabel?: string;
+  successMessage?: string;
 }
 
 export const MoveFileToDirectoryModal: FC<MoveFileToDirectoryModalProps> = ({
   open,
   onClose,
-  showErrorAlert,
+  showAlert,
   idToMove,
   loggedUserId,
   title,
   buttonTitle,
   fieldLabel = 'Diretório',
+  successMessage = 'Arquivo Movido com Sucesso!',
 }) => {
   const [directoryList, setDirectoryList] = useState<ListDirectoryNameDto[]>([
     {
@@ -59,6 +61,7 @@ export const MoveFileToDirectoryModal: FC<MoveFileToDirectoryModalProps> = ({
         idToMoveDirectory: selectedDirectoryId,
         loggedUserId,
       });
+      showAlert(successMessage, true);
       onClose();
     } catch (error) {
       console.error(error);
@@ -66,7 +69,7 @@ export const MoveFileToDirectoryModal: FC<MoveFileToDirectoryModalProps> = ({
         const axiosError = error as AxiosError<ErrorResponse>;
         const errors = ValidationsError(axiosError, 'arquivo ou diretório');
         if (errors) {
-          showErrorAlert(errors);
+          showAlert(errors, false);
         }
       }
     }

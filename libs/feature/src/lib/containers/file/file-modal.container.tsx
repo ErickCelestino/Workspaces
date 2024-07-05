@@ -18,13 +18,7 @@ import {
 } from '@workspaces/domain';
 import { useSnackbarAlert } from '../../hooks';
 import axios, { AxiosError } from 'axios';
-import {
-  ConnectionError,
-  EntityNotAllowed,
-  EntityNotCreated,
-  EntityNotEmpty,
-  ValidationsError,
-} from '../../shared';
+import { ValidationsError } from '../../shared';
 import {
   CreateContenVideoRequest,
   getItemLocalStorage,
