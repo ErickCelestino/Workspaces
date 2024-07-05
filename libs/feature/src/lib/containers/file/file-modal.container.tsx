@@ -163,7 +163,7 @@ export const FileModalContainer: FC<FileModalContainerProps> = ({
             left: '50%',
             transform: 'translate(-50%, -50%)',
             width: smDown
-              ? theme.spacing(45)
+              ? '95%'
               : mdDown
               ? theme.spacing(65)
               : theme.spacing(100),
@@ -187,13 +187,7 @@ export const FileModalContainer: FC<FileModalContainerProps> = ({
               onFileDelete={handleFileToDelete}
               progress={progress}
               onFileUpload={handleFileUpload}
-              width={
-                smDown
-                  ? theme.spacing(45)
-                  : mdDown
-                  ? theme.spacing(65)
-                  : theme.spacing(92)
-              }
+              width="100%"
               height={theme.spacing(28)}
             />
           </Box>
