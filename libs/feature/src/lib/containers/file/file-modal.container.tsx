@@ -23,6 +23,7 @@ import {
   EntityNotAllowed,
   EntityNotCreated,
   EntityNotEmpty,
+  ValidationsError,
 } from '../../shared';
 import {
   CreateContenVideoRequest,
@@ -54,7 +55,6 @@ export const FileModalContainer: FC<FileModalContainerProps> = ({
 
   const handleUpload = () => {
     setUploading(true);
-    handleClose();
     uploadFiles();
   };
 
@@ -98,25 +98,11 @@ export const FileModalContainer: FC<FileModalContainerProps> = ({
       removeItemLocalStorage('files');
       setProgress(0);
       console.error(error);
-      console.error((error as { message: string }).message);
       if (axios.isAxiosError(error)) {
         const axiosError = error as AxiosError<ErrorResponse>;
-        switch (axiosError.response?.data.error.name) {
-          case 'EntityNotEmpty':
-            showErrorAlert(EntityNotEmpty('Arquivos', 'PT-BR'));
-            break;
-
-          case 'EntityNotCreated':
-            showErrorAlert(EntityNotCreated('Arquivos', 'PT-BR'));
-            break;
-
-          case 'FileNotAllowed':
-            showErrorAlert(EntityNotAllowed('Arquivos', 'PT-BR'));
-            break;
-
-          default:
-            showErrorAlert(ConnectionError('PT-BR'));
-            break;
+        const errors = ValidationsError(axiosError, 'Arquivo');
+        if (errors) {
+          showErrorAlert(errors);
         }
       }
     }
@@ -131,6 +117,7 @@ export const FileModalContainer: FC<FileModalContainerProps> = ({
 
   const onCloseProgressFile = () => {
     setUploading(false);
+    setProgress(0);
   };
 
   const uploadFiles = useCallback(async () => {
@@ -146,6 +133,7 @@ export const FileModalContainer: FC<FileModalContainerProps> = ({
       updateProgress
     );
     if (result) {
+      handleClose();
       showSnackbarAlert({
         message: sucessAlertMessage,
         severity: 'success',
