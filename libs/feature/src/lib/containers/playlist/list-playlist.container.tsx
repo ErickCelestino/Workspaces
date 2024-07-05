@@ -12,6 +12,7 @@ import {
   SearchBar,
   ToolbarPureTV,
   PlaylistCard,
+  DeletePlaylistModal,
 } from '../../components';
 import { LayoutBase } from '../../layout';
 import { useSnackbarAlert } from '../../hooks';
@@ -39,6 +40,7 @@ export const ListPlaylistContainer = () => {
 
   const [createPlaylistPopUp, setCreatePlaylistPopUp] = useState(false);
   const [editPlaylistPopUp, setEditPlaylistPopUp] = useState(false);
+  const [deletePlaylistPopUp, setDeletePlaylistPopUp] = useState(false);
   const [search, setSearch] = useState(false);
   const [listPlaylist, setListPlaylist] = useState<Playlist[]>([]);
   const [totalPage, setTotalPage] = useState<number>(1);
@@ -53,7 +55,7 @@ export const ListPlaylistContainer = () => {
         setEditPlaylistPopUp(false);
         break;
       case 'delete':
-        //need implementation
+        setDeletePlaylistPopUp(false);
         break;
     }
   };
@@ -68,7 +70,8 @@ export const ListPlaylistContainer = () => {
         setEditPlaylistPopUp(true);
         break;
       case 'delete':
-        //need implementation
+        setPlaylistId(id ?? '');
+        setDeletePlaylistPopUp(true);
         break;
       case 'details':
         //need implementation
@@ -165,6 +168,14 @@ export const ListPlaylistContainer = () => {
         open={editPlaylistPopUp}
         title="Editar Playlist"
       />
+      <DeletePlaylistModal
+        idToDelete={playlistId}
+        handlePopUpClose={() => handlePopUpClose('delete')}
+        showAlert={showAlert}
+        open={deletePlaylistPopUp}
+        title="Deletar Playlist?"
+        subTitle="Por favor, selecione alguma das alternativas"
+      />
       <LayoutBase title="Listagem Playlist" toolBar={<ToolbarPureTV />}>
         <Box
           sx={{
@@ -239,7 +250,9 @@ export const ListPlaylistContainer = () => {
                           editPlaylist={async () =>
                             handlePopUpOpen('edit', playlist.id)
                           }
-                          deletePlaylist={async () => handlePopUpOpen('delete')}
+                          deletePlaylist={async () =>
+                            handlePopUpOpen('delete', playlist.id)
+                          }
                           detailsPlaylist={async () =>
                             handlePopUpOpen('details')
                           }
