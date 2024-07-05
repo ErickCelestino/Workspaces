@@ -1,12 +1,15 @@
 import { Inject } from '@nestjs/common';
-import { FindPlaylistByIdRepository, Playlist } from '@workspaces/domain';
+import {
+  FindPlaylistByIdRepository,
+  PlaylistResponseDto,
+} from '@workspaces/domain';
 import { PrismaService } from 'nestjs-prisma';
 
 export class FindPlaylistByIdRepositoryImpl
   implements FindPlaylistByIdRepository
 {
   constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
-  async find(id: string): Promise<Playlist> {
+  async find(id: string): Promise<PlaylistResponseDto> {
     const filteredPlaylist = await this.prismaService.playlist.findFirst({
       where: {
         playlist_id: id,
@@ -18,6 +21,7 @@ export class FindPlaylistByIdRepositoryImpl
         category: {
           select: {
             name: true,
+            playlist_category_id: true,
           },
         },
         user: {
@@ -29,7 +33,10 @@ export class FindPlaylistByIdRepositoryImpl
     });
 
     return {
-      category: filteredPlaylist?.category.name ?? '',
+      category: {
+        id: filteredPlaylist?.category.playlist_category_id ?? '',
+        name: filteredPlaylist?.category.name ?? '',
+      },
       created_at: filteredPlaylist?.created_at ?? new Date(),
       created_by: filteredPlaylist?.user.nick_name ?? '',
       id: filteredPlaylist?.playlist_id ?? '',

@@ -5,10 +5,10 @@ import {
   FindPlaylistByIdDto,
   FindPlaylistByIdRepository,
   FindUserByIdRepository,
-  Playlist,
+  PlaylistResponseDto,
   UserList,
 } from '../../../src';
-import { PlaylistMock, userMock } from '../../entity';
+import { PlaylistMock, PlaylistResponseMock, userMock } from '../../entity';
 import {
   FindPlaylistByIdRepositoryMock,
   FindUserByIdRepositoryMock,
@@ -44,14 +44,14 @@ const makeSut = (): SutTypes => {
 };
 
 describe('FindPlaylistById', () => {
-  it('should return playlist id when a correct playlist exist in database', async () => {
+  it('should return playlist when a correct playlist exist in database', async () => {
     const { findPlaylistByIdDto, sut } = makeSut();
 
     const result = await sut.execute(findPlaylistByIdDto);
 
     expect(result.isLeft()).toBe(false);
     expect(result.isRight()).toBe(true);
-    expect(result.value).toStrictEqual(PlaylistMock);
+    expect(result.value).toStrictEqual(PlaylistResponseMock);
   });
 
   it('should return EntityNotEmpty when a pass incorrect Logged User ID', async () => {
@@ -97,7 +97,7 @@ describe('FindPlaylistById', () => {
   it('should return EntityNotExists if there is no playlist created in the database', async () => {
     const { findPlaylistByIdDto, findUserByIdRepository } = makeSut();
 
-    const mockEmptyItem = {} as Playlist;
+    const mockEmptyItem = {} as PlaylistResponseDto;
 
     const mockEmptyRepository: FindPlaylistByIdRepository = {
       find: jest.fn(async () => mockEmptyItem),

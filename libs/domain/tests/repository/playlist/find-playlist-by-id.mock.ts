@@ -1,11 +1,11 @@
-import { FindPlaylistByIdRepository, Playlist } from '../../../src';
-import { PlaylistMock } from '../../entity/playlist/playlist.mock';
+import { FindPlaylistByIdRepository, PlaylistResponseDto } from '../../../src';
+import { PlaylistResponseMock } from '../../entity';
 export class FindPlaylistByIdRepositoryMock
   implements FindPlaylistByIdRepository
 {
   inputMock = '';
-  async find(id: string): Promise<Playlist> {
+  async find(id: string): Promise<PlaylistResponseDto> {
     this.inputMock = id;
-    return PlaylistMock;
+    return PlaylistResponseMock;
   }
 }

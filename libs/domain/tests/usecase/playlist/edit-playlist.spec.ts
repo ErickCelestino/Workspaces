@@ -7,9 +7,9 @@ import {
   FindPlaylistByIdRepository,
   FindPlaylistCategoryByIdRepository,
   FindUserByIdRepository,
-  Playlist,
   PlaylistBodyDto,
   PlaylistCategory,
+  PlaylistResponseDto,
   UserList,
 } from '../../../src';
 import { PlaylistMock, userMock } from '../../entity';
@@ -158,7 +158,7 @@ describe('EditPlaylist', () => {
       findPlaylistCategoryByIdRepository,
     } = makeSut();
 
-    const mockEmptyItem = {} as Playlist;
+    const mockEmptyItem = {} as PlaylistResponseDto;
 
     const mockEmptyRepository: FindPlaylistByIdRepository = {
       find: jest.fn(async () => mockEmptyItem),

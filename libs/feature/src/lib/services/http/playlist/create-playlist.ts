@@ -1,7 +1,4 @@
-import {
-  CreatePlaylistCategoryDto,
-  CreatePlaylistDto,
-} from '@workspaces/domain';
+import { CreatePlaylistDto } from '@workspaces/domain';
 import { pureTvApi } from '../axios-config';
 
 export async function CreatePlaylistRequest(input: CreatePlaylistDto) {
