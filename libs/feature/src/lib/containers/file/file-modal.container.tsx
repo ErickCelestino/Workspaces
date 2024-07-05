@@ -94,6 +94,9 @@ export const FileModalContainer: FC<FileModalContainerProps> = ({
 
       return result;
     } catch (error) {
+      setFilesToUpload([]);
+      removeItemLocalStorage('files');
+      setProgress(0);
       console.error(error);
       console.error((error as { message: string }).message);
       if (axios.isAxiosError(error)) {

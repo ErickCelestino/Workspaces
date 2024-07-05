@@ -70,6 +70,9 @@ export const PlaylistCard: FC<ListPlaylistProps> = ({
         title={imageData.imageName}
         sx={{
           height: theme.spacing(15),
+          objectFit: 'contain',
+          objectPosition: 'center',
+          margin: 'auto',
         }}
       />
       <Box

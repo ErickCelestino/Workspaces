@@ -75,6 +75,9 @@ export const ContentFileCard: FC<ListContentFilesProps> = ({
         title={fileImageName}
         sx={{
           height: theme.spacing(15),
+          objectFit: 'contain',
+          objectPosition: 'center',
+          margin: 'auto',
         }}
       />
       <Box
