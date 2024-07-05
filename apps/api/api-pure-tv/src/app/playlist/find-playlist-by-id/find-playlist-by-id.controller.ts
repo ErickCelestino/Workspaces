@@ -7,7 +7,7 @@ import {
   UsePipes,
 } from '@nestjs/common';
 import { FindPlaylistByIdService } from './find-playlist-by-id.service';
-import { ZodValidationPipe } from '../pipes/zod-validation-pipe';
+import { ZodValidationPipe } from '../../pipes/zod-validation-pipe';
 import { findPlaylistByIdSchema } from '@workspaces/domain';
 
 @Controller('find-playlist-by-id')
