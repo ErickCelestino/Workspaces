@@ -7,7 +7,7 @@ import {
   UsePipes,
 } from '@nestjs/common';
 import { CreatePlaylistService } from './create-playlist.service';
-import { ZodValidationPipe } from '../pipes/zod-validation-pipe';
+import { ZodValidationPipe } from '../../pipes/zod-validation-pipe';
 import { createPlaylistSchema } from '@workspaces/domain';
 
 @Controller('create-playlist')

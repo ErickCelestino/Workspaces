@@ -19,10 +19,13 @@ import {
   FindPlaylistCategoryByIdModule,
   DeletePlaylistCategoryModule,
 } from './playlist-category';
-import { CreatePlaylistModule } from './create-playlist/create-playlist.module';
-import { ListPlaylistModule } from './list-playlist/list-playlist.module';
-import { FindPlaylistByIdModule } from './find-playlist-by-id/find-playlist-by-id.module';
-import { EditPlaylistModule } from './edit-playlist/edit-playlist.module';
+import {
+  CreatePlaylistModule,
+  ListPlaylistModule,
+  FindPlaylistByIdModule,
+  EditPlaylistModule,
+  DeletePlaylistModule,
+} from './playlist';
 
 @Module({
   imports: [
@@ -47,6 +50,7 @@ import { EditPlaylistModule } from './edit-playlist/edit-playlist.module';
     ListPlaylistModule,
     FindPlaylistByIdModule,
     EditPlaylistModule,
+    DeletePlaylistModule,
   ],
   controllers: [AppController],
   providers: [AppService],
