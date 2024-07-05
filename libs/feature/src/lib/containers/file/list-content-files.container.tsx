@@ -122,12 +122,6 @@ export const ListContanteFilesContainer = () => {
     setTotalPage(result?.totalPages ?? 0);
   }, [loggedUser, handleData]);
 
-  useEffect(() => {
-    if (!search) {
-      getData();
-    }
-  }, [getData, search]);
-
   const handlePopUpClose = (types: FileContentType) => {
     switch (types) {
       case 'delete':
@@ -220,6 +214,12 @@ export const ListContanteFilesContainer = () => {
     setTotalPage(result?.totalPages ?? 0);
   };
 
+  useEffect(() => {
+    if (!search) {
+      getData();
+    }
+  }, [getData, search]);
+
   return (
     <>
       <DeleteFileModal
@@ -249,17 +249,54 @@ export const ListContanteFilesContainer = () => {
       />
 
       <LayoutBase title="Listagem de Usuários" toolBar={<ToolbarPureTV />}>
-        <Box display="flex" justifyContent="center">
-          <Box width={mdUp ? '85%' : '100%'}>
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            flexDirection: 'column',
+          }}
+        >
+          <Box width="95%">
             <Box
-              width={mdUp ? '92%' : smDown ? '94%' : mdDown ? '95%' : '80%'}
-              marginLeft={smDown ? theme.spacing(1) : 0}
+              sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
             >
-              <SearchBar
-                onSearch={searchData}
-                placeholder="Pesquisar Arquivo"
-              />
-              <Box display="flex" justifyContent="center" mt={theme.spacing(2)}>
+              <Box
+                sx={{
+                  justifyContent: 'center',
+                  width: mdUp ? '55%' : smDown ? '80%' : mdDown ? '95%' : '80%',
+                  marginLeft: theme.spacing(2),
+                }}
+              >
+                <SearchBar
+                  onSearch={searchData}
+                  placeholder="Pesquisar Playlist"
+                />
+              </Box>
+            </Box>
+          </Box>
+
+          <Box>
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                flexDirection: 'column',
+                alignItems: 'center',
+                width: '100%',
+              }}
+            >
+              <Box
+                display="flex"
+                justifyContent="center"
+                mt={theme.spacing(2)}
+                sx={{
+                  width: mdUp ? '80%' : smDown ? '94%' : mdDown ? '95%' : '80%',
+                }}
+              >
                 {fileList.length > 0 ? (
                   <Grid justifyContent="center" container spacing={2}>
                     {fileList.map((file, index) => (
@@ -291,16 +328,18 @@ export const ListContanteFilesContainer = () => {
                 )}
               </Box>
             </Box>
-            <Box
-              marginTop={theme.spacing(2)}
-              display="flex"
-              justifyContent="end"
-            >
-              <Pagination
-                count={totalPage}
-                color="primary"
-                onChange={handleChange}
-              />
+            <Box width="80%">
+              <Box
+                marginTop={theme.spacing(2)}
+                display="flex"
+                justifyContent="end"
+              >
+                <Pagination
+                  count={totalPage}
+                  color="primary"
+                  onChange={handleChange}
+                />
+              </Box>
             </Box>
           </Box>
         </Box>
