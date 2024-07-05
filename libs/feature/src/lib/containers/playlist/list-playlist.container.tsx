@@ -27,6 +27,7 @@ import { ListPlaylistRequest } from '../../services';
 import axios, { AxiosError } from 'axios';
 import { ValidationsError } from '../../shared';
 import { useLoggedUser } from '../../contexts';
+import { EditPlaylistModal } from '../../components/modal/playlist/edit-playlist-modal';
 
 export const ListPlaylistContainer = () => {
   const { showSnackbarAlert, SnackbarAlert } = useSnackbarAlert();
@@ -37,9 +38,11 @@ export const ListPlaylistContainer = () => {
   const mdDown = useMediaQuery(theme.breakpoints.down('md'));
 
   const [createPlaylistPopUp, setCreatePlaylistPopUp] = useState(false);
+  const [editPlaylistPopUp, setEditPlaylistPopUp] = useState(false);
   const [search, setSearch] = useState(false);
   const [listPlaylist, setListPlaylist] = useState<Playlist[]>([]);
   const [totalPage, setTotalPage] = useState<number>(1);
+  const [playlistId, setPlaylistId] = useState('');
 
   const handlePopUpClose = (types: CrudType) => {
     switch (types) {
@@ -47,7 +50,7 @@ export const ListPlaylistContainer = () => {
         setCreatePlaylistPopUp(false);
         break;
       case 'edit':
-        //need implementation
+        setEditPlaylistPopUp(false);
         break;
       case 'delete':
         //need implementation
@@ -61,7 +64,8 @@ export const ListPlaylistContainer = () => {
         setCreatePlaylistPopUp(true);
         break;
       case 'edit':
-        //need implementation
+        setPlaylistId(id ?? '');
+        setEditPlaylistPopUp(true);
         break;
       case 'delete':
         //need implementation
@@ -154,6 +158,13 @@ export const ListPlaylistContainer = () => {
         open={createPlaylistPopUp}
         title="Criar Playlist"
       />
+      <EditPlaylistModal
+        idToEdit={playlistId}
+        handlePopUpClose={() => handlePopUpClose('edit')}
+        showAlert={showAlert}
+        open={editPlaylistPopUp}
+        title="Editar Playlist"
+      />
       <LayoutBase title="Listagem Playlist" toolBar={<ToolbarPureTV />}>
         <Box
           sx={{
@@ -222,9 +233,12 @@ export const ListPlaylistContainer = () => {
               >
                 {listPlaylist.length > 0 ? (
                   <Grid justifyContent="center" container spacing={2}>
-                    {listPlaylist.map((file, index) => (
+                    {listPlaylist.map((playlist, index) => (
                       <Grid item md={6} lg={4} key={index}>
                         <PlaylistCard
+                          editPlaylist={async () =>
+                            handlePopUpOpen('edit', playlist.id)
+                          }
                           deletePlaylist={async () => handlePopUpOpen('delete')}
                           detailsPlaylist={async () =>
                             handlePopUpOpen('details')
@@ -233,7 +247,7 @@ export const ListPlaylistContainer = () => {
                             image: '',
                             imageName: '',
                           }}
-                          name={file.name}
+                          name={playlist.name}
                         />
                       </Grid>
                     ))}

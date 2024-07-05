@@ -9,6 +9,7 @@ import {
   useTheme,
 } from '@mui/material';
 import { IconMenuItem, ImageCardItem } from '@workspaces/domain';
+import EditIcon from '@mui/icons-material/Edit';
 import InfoIcon from '@mui/icons-material/Info';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { FC } from 'react';
@@ -16,18 +17,22 @@ import { ButtonFileMenu } from '../menu';
 
 interface ListPlaylistProps {
   name: string;
+  editTitle?: string;
   deleteTitle?: string;
   detailsTitle?: string;
   imageData: ImageCardItem;
+  editPlaylist: () => Promise<void>;
   deletePlaylist: () => Promise<void>;
   detailsPlaylist: () => Promise<void>;
 }
 
 export const PlaylistCard: FC<ListPlaylistProps> = ({
   name,
+  editTitle = 'Editar',
   deleteTitle = 'Deletar',
   detailsTitle = 'Detalhes',
   imageData,
+  editPlaylist,
   deletePlaylist,
   detailsPlaylist,
 }) => {
@@ -35,6 +40,11 @@ export const PlaylistCard: FC<ListPlaylistProps> = ({
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
 
   const iconMenuList: IconMenuItem[] = [
+    {
+      icon: <EditIcon />,
+      title: editTitle,
+      handleClick: editPlaylist,
+    },
     {
       icon: <InfoIcon />,
       title: detailsTitle,

@@ -1,3 +1,5 @@
+import { FC, useCallback, useEffect, useState } from 'react';
+import { SimpleFormModal } from '../simple';
 import {
   Box,
   MenuItem,
@@ -5,27 +7,28 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
-import { FC, useCallback, useEffect, useState } from 'react';
-import { SimpleFormModal } from '../simple';
-import { PlaylistSchema, ValidationsError } from '../../../shared';
+import { FormButton } from '../../form';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { FormButton } from '../../form';
-import { useLoggedUser } from '../../../contexts';
 import {
-  CreatePlaylistDto,
+  EditPlaylistDto,
   ErrorResponse,
+  FindPlaylistByIdDto,
   ListPlaylistCategoryDto,
   PlaylistBodyDto,
   PlaylistCategory,
 } from '@workspaces/domain';
+import { PlaylistSchema, ValidationsError } from '../../../shared';
+import { useLoggedUser } from '../../../contexts';
 import {
-  CreatePlaylistRequest,
+  EditPlaylistRequest,
+  FindPlaylistByIdRequest,
   ListPlaylistCategoryRequest,
 } from '../../../services';
 import axios, { AxiosError } from 'axios';
 
-interface CreatePlaylistModalProps {
+interface EditPlaylistModalProps {
+  idToEdit: string;
   open: boolean;
   title: string;
   handlePopUpClose: () => void;
@@ -34,21 +37,23 @@ interface CreatePlaylistModalProps {
   successMessage?: string;
 }
 
-export const CreatePlaylistModal: FC<CreatePlaylistModalProps> = ({
+export const EditPlaylistModal: FC<EditPlaylistModalProps> = ({
+  idToEdit,
+  open,
+  title,
   handlePopUpClose,
   showAlert,
-  title,
-  open,
   nameLabel = 'Nome',
-  successMessage = 'Playlist Cadastrada com Sucesso',
+  successMessage = 'Playlist Editada com Sucesso',
 }) => {
   const { loggedUser } = useLoggedUser();
   const theme = useTheme();
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
-  const [categories, setCategories] = useState<PlaylistCategory[]>([]);
-  const [categoryId, setCategoryId] = useState('');
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [categoryId, setCategoryId] = useState('');
+  const [categories, setCategories] = useState<PlaylistCategory[]>([]);
+  const [dataLoaded, setDataLoaded] = useState(false);
 
   const {
     handleSubmit,
@@ -65,11 +70,18 @@ export const CreatePlaylistModal: FC<CreatePlaylistModalProps> = ({
     },
   });
 
+  useEffect(() => {
+    if (!open) {
+      setDataLoaded(false);
+    }
+  }, [open]);
+
   const getCategories = useCallback(
     async (input: ListPlaylistCategoryDto) => {
       try {
         const result = await ListPlaylistCategoryRequest(input);
         setCategories(result.categories);
+        setDataLoaded(true);
       } catch (error) {
         console.error(error);
         if (axios.isAxiosError(error)) {
@@ -84,30 +96,59 @@ export const CreatePlaylistModal: FC<CreatePlaylistModalProps> = ({
     [showAlert]
   );
 
-  const createPlaylist = async (data: CreatePlaylistDto) => {
-    try {
-      const result = await CreatePlaylistRequest(data);
-
-      if (result) {
-        setSuccess(true);
-        setLoading(false);
-        showAlert(successMessage, true);
-
-        setSuccess(false);
+  const getPlaylist = useCallback(
+    async (input: FindPlaylistByIdDto) => {
+      try {
+        const result = await FindPlaylistByIdRequest(input);
         reset({
-          name: '',
-          playlistCategoryId: '',
+          name: result.name,
+          playlistCategoryId: result.category.id,
         });
-        setCategoryId('');
-        handlePopUpClose();
+        setCategoryId(result.category.id);
+      } catch (error) {
+        console.error(error);
+        if (axios.isAxiosError(error)) {
+          const axiosError = error as AxiosError<ErrorResponse>;
+          const errors = ValidationsError(axiosError, 'Category');
+          if (errors) {
+            showAlert(errors, false);
+          }
+        }
       }
-    } catch (error) {
-      setSuccess(false);
+    },
+    [showAlert, reset]
+  );
+
+  useEffect(() => {
+    if (open && idToEdit && !dataLoaded) {
+      const loggedUserId = loggedUser?.id ?? '';
+      getCategories({
+        loggedUserId: loggedUserId,
+        userInput: '',
+      });
+
+      getPlaylist({
+        id: idToEdit,
+        loggedUserId: loggedUserId,
+      });
+    }
+  }, [loggedUser, idToEdit, dataLoaded, open, getCategories, getPlaylist]);
+
+  const edtiPlaylist = async (input: EditPlaylistDto) => {
+    try {
+      await EditPlaylistRequest(input);
       setLoading(false);
+      setSuccess(true);
+      showAlert(successMessage, true);
+      setSuccess(false);
+      handlePopUpClose();
+    } catch (error) {
+      setLoading(false);
+      setSuccess(false);
       console.error(error);
       if (axios.isAxiosError(error)) {
         const axiosError = error as AxiosError<ErrorResponse>;
-        const errors = ValidationsError(axiosError, 'Playlist');
+        const errors = ValidationsError(axiosError, 'Category');
         if (errors) {
           showAlert(errors, false);
         }
@@ -115,19 +156,16 @@ export const CreatePlaylistModal: FC<CreatePlaylistModalProps> = ({
     }
   };
 
-  useEffect(() => {
-    getCategories({
-      loggedUserId: loggedUser?.id ?? '',
-      userInput: '',
-    });
-  }, [loggedUser, getCategories]);
-
   const handlePlaylistData = async (data: PlaylistBodyDto) => {
     setLoading(true);
-    await createPlaylist({
+    setSuccess(false);
+    edtiPlaylist({
+      body: {
+        name: data.name,
+        playlistCategoryId: categoryId,
+      },
+      id: idToEdit,
       loggedUserId: loggedUser?.id ?? '',
-      name: data.name,
-      playlistCategoryId: categoryId,
     });
   };
 
@@ -152,6 +190,7 @@ export const CreatePlaylistModal: FC<CreatePlaylistModalProps> = ({
           margin="normal"
           required
           fullWidth
+          InputLabelProps={{ shrink: true, required: true }}
           error={!!errors.name}
           helperText={errors.name?.message}
           id="name"
