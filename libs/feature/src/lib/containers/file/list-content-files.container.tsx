@@ -1,11 +1,4 @@
-import {
-  Box,
-  Grid,
-  Pagination,
-  Typography,
-  useMediaQuery,
-  useTheme,
-} from '@mui/material';
+import { Box, Grid, Typography, useTheme } from '@mui/material';
 import { LayoutBase } from '../../layout';
 
 import { useCallback, useEffect, useState } from 'react';
@@ -24,11 +17,11 @@ import {
 } from '../../services';
 import { useLoggedUser } from '../../contexts';
 import {
+  ContainerCardList,
   ContentFileCard,
   DeleteFileModal,
   DetailsFileModal,
   MoveFileToDirectoryModal,
-  SearchBar,
   ToolbarPureTV,
 } from '../../components';
 import axios, { AxiosError } from 'axios';
@@ -68,9 +61,6 @@ export const ListContanteFilesContainer = () => {
   const [fileId, setFileId] = useState('');
 
   const theme = useTheme();
-  const smDown = useMediaQuery(theme.breakpoints.down('sm'));
-  const mdUp = useMediaQuery(theme.breakpoints.up('md'));
-  const mdDown = useMediaQuery(theme.breakpoints.down('md'));
   const { loggedUser } = useLoggedUser();
   const { showSnackbarAlert, SnackbarAlert } = useSnackbarAlert();
 
@@ -249,100 +239,41 @@ export const ListContanteFilesContainer = () => {
       />
 
       <LayoutBase title="Listagem de Usuários" toolBar={<ToolbarPureTV />}>
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            flexDirection: 'column',
-          }}
+        <ContainerCardList
+          searchData={searchData}
+          totalPage={totalPage}
+          handleChange={handleChange}
         >
-          <Box width="95%">
+          {fileList.length > 0 ? (
+            <Grid justifyContent="center" container spacing={2}>
+              {fileList.map((file, index) => (
+                <Grid item md={6} lg={4} key={index}>
+                  <ContentFileCard
+                    deleteFile={() => handleFile(file.id, 'delete')}
+                    detailsFile={() => handleFile(file.id, 'details')}
+                    downloadFile={() => handleFile(file.id, 'download')}
+                    moveFile={() => handleFile(file.id, 'moveFile')}
+                    fileImage={file.path}
+                    fileImageName={file.fileName}
+                    name={file.originalName}
+                    key={file.id}
+                  />
+                </Grid>
+              ))}
+            </Grid>
+          ) : (
             <Box
-              sx={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
+              marginTop={theme.spacing(2)}
+              width="100%"
+              display="flex"
+              justifyContent="center"
             >
-              <Box
-                sx={{
-                  justifyContent: 'center',
-                  width: mdUp ? '55%' : smDown ? '80%' : mdDown ? '95%' : '80%',
-                  marginLeft: theme.spacing(2),
-                }}
-              >
-                <SearchBar
-                  onSearch={searchData}
-                  placeholder="Pesquisar Playlist"
-                />
-              </Box>
+              <Typography variant="h4">
+                Não foram encontrados registros
+              </Typography>
             </Box>
-          </Box>
-
-          <Box>
-            <Box
-              sx={{
-                display: 'flex',
-                justifyContent: 'center',
-                flexDirection: 'column',
-                alignItems: 'center',
-                width: '100%',
-              }}
-            >
-              <Box
-                display="flex"
-                justifyContent="center"
-                mt={theme.spacing(2)}
-                sx={{
-                  width: mdUp ? '80%' : smDown ? '94%' : mdDown ? '95%' : '80%',
-                }}
-              >
-                {fileList.length > 0 ? (
-                  <Grid justifyContent="center" container spacing={2}>
-                    {fileList.map((file, index) => (
-                      <Grid item md={6} lg={4} key={index}>
-                        <ContentFileCard
-                          deleteFile={() => handleFile(file.id, 'delete')}
-                          detailsFile={() => handleFile(file.id, 'details')}
-                          downloadFile={() => handleFile(file.id, 'download')}
-                          moveFile={() => handleFile(file.id, 'moveFile')}
-                          fileImage={file.path}
-                          fileImageName={file.fileName}
-                          name={file.originalName}
-                          key={file.id}
-                        />
-                      </Grid>
-                    ))}
-                  </Grid>
-                ) : (
-                  <Box
-                    marginTop={theme.spacing(2)}
-                    width="100%"
-                    display="flex"
-                    justifyContent="center"
-                  >
-                    <Typography variant="h4">
-                      Não foram encontrados registros
-                    </Typography>
-                  </Box>
-                )}
-              </Box>
-            </Box>
-            <Box width="80%">
-              <Box
-                marginTop={theme.spacing(2)}
-                display="flex"
-                justifyContent="end"
-              >
-                <Pagination
-                  count={totalPage}
-                  color="primary"
-                  onChange={handleChange}
-                />
-              </Box>
-            </Box>
-          </Box>
-        </Box>
+          )}
+        </ContainerCardList>
       </LayoutBase>
       {SnackbarAlert}
     </>
