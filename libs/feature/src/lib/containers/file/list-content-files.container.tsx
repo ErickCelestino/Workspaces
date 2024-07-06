@@ -240,7 +240,10 @@ export const ListContanteFilesContainer = () => {
 
       <LayoutBase title="Listagem de Usuários" toolBar={<ToolbarPureTV />}>
         <ContainerCardList
-          searchData={searchData}
+          search={{
+            searchData: searchData,
+            placeholder: 'Pesquisar Arquivo',
+          }}
           totalPage={totalPage}
           handleChange={handleChange}
         >

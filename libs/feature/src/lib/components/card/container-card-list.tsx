@@ -1,11 +1,23 @@
-import { Box, Pagination, useMediaQuery, useTheme } from '@mui/material';
-import { SearchBar } from '../search';
+import {
+  Box,
+  IconButton,
+  Pagination,
+  useMediaQuery,
+  useTheme,
+} from '@mui/material';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { FC, ReactNode } from 'react';
+
+import { SearchBar } from '../search';
 
 interface ContainerCardListProps {
   children: ReactNode;
   totalPage: number;
-  searchData: (input: string) => Promise<void>;
+  search: {
+    placeholder: string;
+    searchData: (input: string) => Promise<void>;
+    createPopUp?: () => void;
+  };
   handleChange: (
     event: React.ChangeEvent<unknown>,
     value: number
@@ -15,7 +27,7 @@ interface ContainerCardListProps {
 export const ContainerCardList: FC<ContainerCardListProps> = ({
   children,
   totalPage,
-  searchData,
+  search,
   handleChange,
 }) => {
   const theme = useTheme();
@@ -46,8 +58,30 @@ export const ContainerCardList: FC<ContainerCardListProps> = ({
               marginLeft: theme.spacing(2),
             }}
           >
-            <SearchBar onSearch={searchData} placeholder="Pesquisar Playlist" />
+            <SearchBar
+              onSearch={search.searchData}
+              placeholder={search.placeholder}
+            />
           </Box>
+          {search.createPopUp && (
+            <IconButton
+              onClick={search.createPopUp}
+              sx={{
+                width: theme.spacing(8),
+                height: theme.spacing(8),
+                marginLeft: theme.spacing(2),
+              }}
+            >
+              <AddCircleIcon
+                sx={{
+                  width: theme.spacing(8),
+                  height: theme.spacing(8),
+                }}
+                color="primary"
+                fontSize="large"
+              />
+            </IconButton>
+          )}
         </Box>
       </Box>
 
