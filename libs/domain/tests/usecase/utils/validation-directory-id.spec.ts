@@ -16,7 +16,7 @@ const makeSut = (id: string, repository: FindDirectoryByIdRepository) => {
 };
 
 describe('ValidationDirectoryId', () => {
-  it('should return undefined when exist user id in database', async () => {
+  it('should return undefined when exist directory id in database', async () => {
     const { sut } = makeSut('any_id', new FindDirectoryByIdRespositoryMock());
 
     const result = await sut;
@@ -26,7 +26,7 @@ describe('ValidationDirectoryId', () => {
     expect(result.value).toStrictEqual(undefined);
   });
 
-  it('should return EntityNotEmpty when no pass correct user id', async () => {
+  it('should return EntityNotEmpty when no pass correct directory id', async () => {
     const { sut } = makeSut('', new FindDirectoryByIdRespositoryMock());
 
     const result = await sut;

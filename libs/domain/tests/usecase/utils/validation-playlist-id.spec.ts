@@ -26,7 +26,7 @@ describe('ValidationPlaylistId', () => {
     expect(result.value).toStrictEqual(undefined);
   });
 
-  it('should return EntityNotEmpty when no pass correct user id', async () => {
+  it('should return EntityNotEmpty when no pass correct playlist id', async () => {
     const { sut } = makeSut('', new FindPlaylistByIdRepositoryMock());
 
     const result = await sut;

@@ -32,7 +32,7 @@ describe('ValidationPlaylistCategoryId', () => {
     expect(result.value).toStrictEqual(undefined);
   });
 
-  it('should return EntityNotEmpty when no pass correct user id', async () => {
+  it('should return EntityNotEmpty when no pass correct playlist category id', async () => {
     const { sut } = makeSut('', new FindPlaylistCategoryByIdRepositoryMock());
 
     const result = await sut;
