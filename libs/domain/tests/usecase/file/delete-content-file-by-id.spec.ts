@@ -2,7 +2,6 @@ import {
   FindUserByIdRepository,
   FindDirectoryByIdRepository,
   EntityNotEmpty,
-  UserList,
   EntityNotExists,
   Directory,
   DeleteContentFileById,
