@@ -3,7 +3,6 @@ import {
   FindDirectoryByIdRepository,
   EntityNotEmpty,
   EntityNotExists,
-  Directory,
   DeleteContentFileById,
   DeleteContentFileByIdDto,
   DeleteContentFileByIdRepository,

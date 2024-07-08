@@ -1,6 +1,5 @@
 import {
   ContentFile,
-  Directory,
   DownloadContentFile,
   DownloadContentFileDto,
   DownloadContentFileRepository,

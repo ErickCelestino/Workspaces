@@ -2,7 +2,6 @@ import {
   ContentFile,
   DetailsContentFile,
   DetailsContentFileDto,
-  Directory,
   EntityNotEmpty,
   EntityNotExists,
   FindContentFileByIdRepository,
