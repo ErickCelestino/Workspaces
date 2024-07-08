@@ -1,11 +1,16 @@
 import { Inject } from '@nestjs/common';
 import { UseCase } from '../../../base/use-case';
 import { AddFileToPlaylistDto } from '../../../dto';
-import { EntityNotCreated, EntityNotEmpty } from '../../../error';
+import {
+  EntityAlreadyExists,
+  EntityNotCreated,
+  EntityNotEmpty,
+} from '../../../error';
 import { Either, left, right } from '../../../shared/either';
 import {
   AddFileToPlaylistRepository,
   FindContentFileByIdRepository,
+  FindFileInFileToPlaylistRepository,
   FindPlaylistByIdRepository,
   FindUserByIdRepository,
 } from '../../../repository';
@@ -23,6 +28,8 @@ export class AddFileToPlaylist
     private findUserByIdRepository: FindUserByIdRepository,
     @Inject('FindContentFileByIdRepository')
     private findContentFileByIdRepository: FindContentFileByIdRepository,
+    @Inject('FindFileInFileToPlaylistRepository')
+    private findFileInFileToPlaylistRepository: FindFileInFileToPlaylistRepository,
     @Inject('FindPlaylistByIdRepository')
     private findPlaylistByIdRepository: FindPlaylistByIdRepository,
     @Inject('AddFileToPlaylistRepository')
@@ -49,6 +56,14 @@ export class AddFileToPlaylist
       }
 
       await ValidationContentFileId(file, this.findContentFileByIdRepository);
+
+      const filteredFile = await this.findFileInFileToPlaylistRepository.find(
+        file
+      );
+
+      if (Object.keys(filteredFile).length < 1) {
+        return left(new EntityAlreadyExists(filteredFile));
+      }
     }
 
     await ValidationPlaylistId(playlistId, this.findPlaylistByIdRepository);

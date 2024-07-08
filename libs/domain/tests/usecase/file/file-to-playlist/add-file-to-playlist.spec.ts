@@ -2,9 +2,11 @@ import {
   AddFileToPlaylist,
   AddFileToPlaylistDto,
   AddFileToPlaylistRepository,
+  EntityAlreadyExists,
   EntityNotCreated,
   EntityNotEmpty,
   FindContentFileByIdRepository,
+  FindFileInFileToPlaylistRepository,
   FindPlaylistByIdRepository,
   FindUserByIdRepository,
 } from '../../../../src';
@@ -17,6 +19,7 @@ import {
 import {
   AddFileToPlaylistRepositoryMock,
   FindContentFileByIdRepositoryMock,
+  FindFileInFileToPlaylistRepositoryMock,
   FindPlaylistByIdRepositoryMock,
   FindUserByIdRepositoryMock,
 } from '../../../repository';
@@ -26,6 +29,7 @@ interface SutTypes {
   addtFileToPlaylistDto: AddFileToPlaylistDto;
   findUserByIdRepository: FindUserByIdRepository;
   findContentFileByIdRepository: FindContentFileByIdRepository;
+  findFileInFileToPlaylistRepository: FindFileInFileToPlaylistRepository;
   findPlaylistByIdRepository: FindPlaylistByIdRepository;
   addFileToPlaylistRepository: AddFileToPlaylistRepository;
 }
@@ -33,6 +37,8 @@ interface SutTypes {
 const makeSut = (): SutTypes => {
   const findUserByIdRepository = new FindUserByIdRepositoryMock();
   const findContentFileByIdRepository = new FindContentFileByIdRepositoryMock();
+  const findFileInFileToPlaylistRepository =
+    new FindFileInFileToPlaylistRepositoryMock();
   const findPlaylistByIdRepository = new FindPlaylistByIdRepositoryMock();
   const addFileToPlaylistRepository = new AddFileToPlaylistRepositoryMock();
 
@@ -45,6 +51,7 @@ const makeSut = (): SutTypes => {
   const sut = new AddFileToPlaylist(
     findUserByIdRepository,
     findContentFileByIdRepository,
+    findFileInFileToPlaylistRepository,
     findPlaylistByIdRepository,
     addFileToPlaylistRepository
   );
@@ -52,6 +59,7 @@ const makeSut = (): SutTypes => {
   return {
     findUserByIdRepository,
     findContentFileByIdRepository,
+    findFileInFileToPlaylistRepository,
     findPlaylistByIdRepository,
     addFileToPlaylistRepository,
     addtFileToPlaylistDto,
@@ -106,6 +114,7 @@ describe('AddFileToPlaylist', () => {
       findUserByIdRepository,
       addtFileToPlaylistDto,
       findPlaylistByIdRepository,
+      findFileInFileToPlaylistRepository,
     } = makeSut();
 
     const mockEmptyRepository: AddFileToPlaylistRepository = {
@@ -115,6 +124,7 @@ describe('AddFileToPlaylist', () => {
     const sut = new AddFileToPlaylist(
       findUserByIdRepository,
       findContentFileByIdRepository,
+      findFileInFileToPlaylistRepository,
       findPlaylistByIdRepository,
       mockEmptyRepository
     );
@@ -123,5 +133,32 @@ describe('AddFileToPlaylist', () => {
 
     expect(result.isLeft()).toBe(true);
     expect(result.value).toBeInstanceOf(EntityNotCreated);
+  });
+
+  it('should return EntityAlreadyExists if there is exist file in file to playlist in the database', async () => {
+    const {
+      findContentFileByIdRepository,
+      findUserByIdRepository,
+      addtFileToPlaylistDto,
+      findPlaylistByIdRepository,
+      addFileToPlaylistRepository,
+    } = makeSut();
+
+    const mockEmptyRepository: FindFileInFileToPlaylistRepository = {
+      find: jest.fn(async () => ''),
+    };
+
+    const sut = new AddFileToPlaylist(
+      findUserByIdRepository,
+      findContentFileByIdRepository,
+      mockEmptyRepository,
+      findPlaylistByIdRepository,
+      addFileToPlaylistRepository
+    );
+
+    const result = await sut.execute(addtFileToPlaylistDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.value).toBeInstanceOf(EntityAlreadyExists);
   });
 });
