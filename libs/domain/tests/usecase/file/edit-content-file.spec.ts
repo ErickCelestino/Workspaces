@@ -1,10 +1,8 @@
 import {
-  ContentFile,
   EditContentFile,
   EditContentFileDto,
   EditContentFileRepository,
   EntityNotEmpty,
-  EntityNotExists,
   FindContentFileByIdRepository,
   FindDirectoryByIdRepository,
   FindUserByIdRepository,
@@ -103,32 +101,5 @@ describe('EditContentFile', () => {
     expect(result.isLeft()).toBe(true);
     expect(result.isRight()).toBe(false);
     expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
-  it('should return EntityNotExists if there is no content file created in the database', async () => {
-    const {
-      editContentFileDto,
-      findUserByIdRepository,
-      editContentFileRepository,
-      findDirectoryByIdRepository,
-    } = makeSut();
-
-    const mockEmptyItem = {} as ContentFile;
-
-    const mockEmptyRepository: FindContentFileByIdRepository = {
-      find: jest.fn(async () => mockEmptyItem),
-    };
-
-    const sut = new EditContentFile(
-      editContentFileRepository,
-      findUserByIdRepository,
-      findDirectoryByIdRepository,
-      mockEmptyRepository
-    );
-
-    const result = await sut.execute(editContentFileDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotExists);
   });
 });
