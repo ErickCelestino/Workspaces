@@ -9,17 +9,23 @@ export class AddFileToPlaylistRepositoryImpl
   implements AddFileToPlaylistRepository
 {
   constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
-  async add(input: AddFileToPlaylistDto): Promise<string> {
-    const { fileId, playlistId } = input;
+  async add(input: AddFileToPlaylistDto): Promise<string[]> {
+    const { filesId, playlistId } = input;
+    let listId: string[] = [];
+    for (const file of filesId) {
+      const createdFileToPlaylist =
+        await this.prismaService.playlist_X_Content_Files.create({
+          data: {
+            playlist_id: playlistId,
+            Content_Files_id: file,
+          },
+        });
 
-    const createdFileToPlaylist =
-      await this.prismaService.playlist_X_Content_Files.create({
-        data: {
-          playlist_id: playlistId,
-          Content_Files_id: fileId,
-        },
-      });
+      listId.push(
+        `${createdFileToPlaylist.Content_Files_id}-${createdFileToPlaylist.playlist_id}`
+      );
+    }
 
-    return `${createdFileToPlaylist.Content_Files_id}-${createdFileToPlaylist.playlist_id}`;
+    return listId;
   }
 }

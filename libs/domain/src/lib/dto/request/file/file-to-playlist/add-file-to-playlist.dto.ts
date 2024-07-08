@@ -1,5 +1,5 @@
 export interface AddFileToPlaylistDto {
   loggedUserId: string;
-  fileId: string;
+  filesId: string[];
   playlistId: string;
 }

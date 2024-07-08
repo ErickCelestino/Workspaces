@@ -16,7 +16,7 @@ import {
 } from '../../../utils';
 
 export class AddFileToPlaylist
-  implements UseCase<AddFileToPlaylistDto, Either<EntityNotEmpty, string>>
+  implements UseCase<AddFileToPlaylistDto, Either<EntityNotEmpty, string[]>>
 {
   constructor(
     @Inject('FindUserByIdRepository')
@@ -30,15 +30,11 @@ export class AddFileToPlaylist
   ) {}
   async execute(
     input: AddFileToPlaylistDto
-  ): Promise<Either<EntityNotEmpty, string>> {
-    const { loggedUserId, fileId, playlistId } = input;
+  ): Promise<Either<EntityNotEmpty, string[]>> {
+    const { loggedUserId, filesId, playlistId } = input;
 
     if (Object.keys(loggedUserId).length < 1) {
       return left(new EntityNotEmpty('User ID'));
-    }
-
-    if (Object.keys(fileId).length < 1) {
-      return left(new EntityNotEmpty('File ID'));
     }
 
     if (Object.keys(playlistId).length < 1) {
@@ -47,7 +43,13 @@ export class AddFileToPlaylist
 
     await ValidationUserId(loggedUserId, this.findUserByIdRepository);
 
-    await ValidationContentFileId(fileId, this.findContentFileByIdRepository);
+    for (const file of filesId) {
+      if (Object.keys(file).length < 1) {
+        return left(new EntityNotEmpty('File ID'));
+      }
+
+      await ValidationContentFileId(file, this.findContentFileByIdRepository);
+    }
 
     await ValidationPlaylistId(playlistId, this.findPlaylistByIdRepository);
 

@@ -37,7 +37,7 @@ const makeSut = (): SutTypes => {
   const addFileToPlaylistRepository = new AddFileToPlaylistRepositoryMock();
 
   const addtFileToPlaylistDto: AddFileToPlaylistDto = {
-    fileId: ContentFileMock.id,
+    filesId: [ContentFileMock.id],
     loggedUserId: userMock.userId,
     playlistId: PlaylistMock.id,
   };
@@ -67,12 +67,12 @@ describe('AddFileToPlaylist', () => {
 
     expect(result.isLeft()).toBe(false);
     expect(result.isRight()).toBe(true);
-    expect(result.value).toStrictEqual(FileToPlaylistMock.id);
+    expect(result.value).toStrictEqual([FileToPlaylistMock.id]);
   });
 
   it('should return EntityNotEmpty when a pass incorrect file id', async () => {
     const { sut, addtFileToPlaylistDto } = makeSut();
-    addtFileToPlaylistDto.fileId = '';
+    addtFileToPlaylistDto.filesId[0] = '';
     const result = await sut.execute(addtFileToPlaylistDto);
 
     expect(result.isLeft()).toBe(true);
@@ -109,7 +109,7 @@ describe('AddFileToPlaylist', () => {
     } = makeSut();
 
     const mockEmptyRepository: AddFileToPlaylistRepository = {
-      add: jest.fn(async () => ''),
+      add: jest.fn(async () => []),
     };
 
     const sut = new AddFileToPlaylist(

@@ -8,8 +8,8 @@ export class AddFileToPlaylistRepositoryMock
   implements AddFileToPlaylistRepository
 {
   inputMock = {} as AddFileToPlaylistDto;
-  async add(input: AddFileToPlaylistDto): Promise<string> {
+  async add(input: AddFileToPlaylistDto): Promise<string[]> {
     this.inputMock = input;
-    return FileToPlaylistMock.id;
+    return [FileToPlaylistMock.id];
   }
 }

@@ -26,6 +26,7 @@ import {
   EditPlaylistModule,
   DeletePlaylistModule,
 } from './playlist';
+import { AddFileToPlaylistModule } from './add-file-to-playlist/add-file-to-playlist.module';
 
 @Module({
   imports: [
@@ -51,6 +52,7 @@ import {
     FindPlaylistByIdModule,
     EditPlaylistModule,
     DeletePlaylistModule,
+    AddFileToPlaylistModule,
   ],
   controllers: [AppController],
   providers: [AppService],
