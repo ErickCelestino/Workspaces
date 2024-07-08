@@ -7,6 +7,6 @@ export class FindFileInFileToPlaylistRepositoryMock
   inputMock = '';
   async find(id: string): Promise<string> {
     this.inputMock = id;
-    return ContentFileMock.id;
+    return '';
   }
 }

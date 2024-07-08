@@ -19,7 +19,6 @@ export class AddFileToPlaylistController {
     @Body() body: { filesId: string[] },
     @Query('playlistId') playlistId: string
   ) {
-    console.log(body.filesId);
     const result = await this.addFileToPlaylistService.add({
       filesId: body.filesId,
       loggedUserId,

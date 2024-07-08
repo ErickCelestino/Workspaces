@@ -145,7 +145,7 @@ describe('AddFileToPlaylist', () => {
     } = makeSut();
 
     const mockEmptyRepository: FindFileInFileToPlaylistRepository = {
-      find: jest.fn(async () => ''),
+      find: jest.fn(async () => ContentFileMock.id),
     };
 
     const sut = new AddFileToPlaylist(

@@ -60,8 +60,7 @@ export class AddFileToPlaylist
       const filteredFile = await this.findFileInFileToPlaylistRepository.find(
         file
       );
-
-      if (Object.keys(filteredFile).length < 1) {
+      if (Object.keys(filteredFile).length > 0) {
         return left(new EntityAlreadyExists(filteredFile));
       }
     }

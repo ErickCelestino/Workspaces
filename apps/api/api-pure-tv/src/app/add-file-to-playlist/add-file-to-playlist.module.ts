@@ -5,6 +5,7 @@ import { AddFileToPlaylist } from '@workspaces/domain';
 import {
   AddFileToPlaylistRepositoryImpl,
   FindContentFileByIdRepositoryImpl,
+  FindFileInFileToPlaylistRepositoryImpl,
   FindPlaylistByIdRepositoryImpl,
   FindUserByIdRepositoryImpl,
   PrismaService,
@@ -34,6 +35,10 @@ import {
     {
       provide: 'AddFileToPlaylistRepository',
       useClass: AddFileToPlaylistRepositoryImpl,
+    },
+    {
+      provide: 'FindFileInFileToPlaylistRepository',
+      useClass: FindFileInFileToPlaylistRepositoryImpl,
     },
   ],
 })
