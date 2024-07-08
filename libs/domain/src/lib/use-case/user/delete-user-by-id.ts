@@ -12,6 +12,7 @@ import {
   VerifyUserStatusByIdRepository,
 } from '../../repository';
 import { Either, left, right } from '../../shared/either';
+import { ValidationUserId } from '../../utils';
 
 export class DeleteUserById
   implements
@@ -65,11 +66,7 @@ export class DeleteUserById
       return left(new NotPermissionError(loggedUserString));
     }
 
-    const findedUser = await this.findUserByIdRepository.find(id);
-
-    if (Object.keys(findedUser).length < 1) {
-      return left(new EntityNotExists(idString));
-    }
+    await ValidationUserId(loggedUser, this.findUserByIdRepository);
 
     await this.deleteUserByIdRepository.delete(input);
 
