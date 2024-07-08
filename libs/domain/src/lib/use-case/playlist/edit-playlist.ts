@@ -9,7 +9,7 @@ import {
   FindPlaylistCategoryByIdRepository,
   FindUserByIdRepository,
 } from '../../repository';
-import { ValidationUserId } from '../../utils';
+import { ValidationPlaylistId, ValidationUserId } from '../../utils';
 
 export class EditPlaylist
   implements UseCase<EditPlaylistDto, Either<EntityNotEmpty, void>>
@@ -53,11 +53,7 @@ export class EditPlaylist
       return left(new EntityNotExists('Category'));
     }
 
-    const filteredPlaylist = await this.findPlaylistByIdRepository.find(id);
-
-    if (Object.keys(filteredPlaylist?.id ?? filteredPlaylist).length < 1) {
-      return left(new EntityNotExists('Playlist'));
-    }
+    await ValidationPlaylistId(id, this.findPlaylistByIdRepository);
 
     await this.editPlaylistRepository.edit(input);
 
