@@ -5,7 +5,6 @@ import {
   CardContent,
   CardMedia,
   Typography,
-  useMediaQuery,
   useTheme,
 } from '@mui/material';
 import InfoIcon from '@mui/icons-material/Info';
@@ -36,7 +35,6 @@ export const ContentFileCard: FC<ListContentFilesProps> = ({
   moveFile,
 }) => {
   const theme = useTheme();
-  const smDown = useMediaQuery(theme.breakpoints.down('sm'));
 
   const iconMenuList: IconMenuItem[] = [
     {
@@ -64,7 +62,7 @@ export const ContentFileCard: FC<ListContentFilesProps> = ({
   return (
     <Card
       sx={{
-        width: smDown ? theme.spacing(45) : theme.spacing(40),
+        width: theme.spacing(40),
         height: theme.spacing(28),
         margin: theme.spacing(2),
       }}

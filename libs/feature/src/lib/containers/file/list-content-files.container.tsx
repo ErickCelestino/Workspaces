@@ -250,7 +250,7 @@ export const ListContanteFilesContainer = () => {
           {fileList.length > 0 ? (
             <Grid justifyContent="center" container spacing={2}>
               {fileList.map((file, index) => (
-                <Grid item md={6} lg={4} key={index}>
+                <Grid item md={6} lg={4} xl={3} key={index}>
                   <ContentFileCard
                     deleteFile={() => handleFile(file.id, 'delete')}
                     detailsFile={() => handleFile(file.id, 'details')}

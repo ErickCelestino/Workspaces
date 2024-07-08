@@ -106,8 +106,8 @@ export const ContainerCardList: FC<ContainerCardListProps> = ({
             {children}
           </Box>
         </Box>
-        <Box width="80%">
-          <Box marginTop={theme.spacing(2)} display="flex" justifyContent="end">
+        <Box width="100%" display="flex" justifyContent="center">
+          <Box marginTop={theme.spacing(2)}>
             <Pagination
               count={totalPage}
               color="primary"

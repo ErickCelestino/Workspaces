@@ -177,7 +177,7 @@ export const ListPlaylistContainer = () => {
           {listPlaylist.length > 0 ? (
             <Grid justifyContent="center" container spacing={2}>
               {listPlaylist.map((playlist, index) => (
-                <Grid item md={6} lg={4} key={index}>
+                <Grid item md={6} lg={4} xl={3} key={index}>
                   <PlaylistCard
                     editPlaylist={async () =>
                       handlePopUpOpen('edit', playlist.id)
