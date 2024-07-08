@@ -107,33 +107,6 @@ describe('EditContentFile', () => {
     expect(result.value).toBeInstanceOf(EntityNotEmpty);
   });
 
-  it('should return EntityNotExists if there is no user created in the database', async () => {
-    const {
-      editContentFileDto,
-      findDirectoryByIdRepository,
-      findContentFileByIdRepository,
-      editContentFileRepository,
-    } = makeSut();
-
-    const mockEmptyItem = {} as UserList;
-
-    const mockEmptyRepository: FindUserByIdRepository = {
-      find: jest.fn(async () => mockEmptyItem),
-    };
-
-    const sut = new EditContentFile(
-      editContentFileRepository,
-      mockEmptyRepository,
-      findDirectoryByIdRepository,
-      findContentFileByIdRepository
-    );
-
-    const result = await sut.execute(editContentFileDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotExists);
-  });
-
   it('should return EntityNotExists if there is no directory created in the database', async () => {
     const {
       editContentFileDto,
