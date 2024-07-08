@@ -12,6 +12,7 @@ import {
 import { PlaylistCategoryMock, PlaylistMock, userMock } from '../../entity';
 import {
   CreatePlaylistRepositoryMock,
+  FindPlaylistByNameRepositoryMock,
   FindUserByIdRepositoryMock,
 } from '../../repository';
 interface SutTypes {
@@ -25,9 +26,7 @@ interface SutTypes {
 const makeSut = (): SutTypes => {
   const findUserByIdRepository = new FindUserByIdRepositoryMock();
   const mockResult = {} as Playlist;
-  const findPlaylistByNameRepository: FindPlaylistByNameRepository = {
-    find: jest.fn(async () => mockResult),
-  };
+  const findPlaylistByNameRepository = new FindPlaylistByNameRepositoryMock();
   const createPlaylistRepository = new CreatePlaylistRepositoryMock();
 
   const createPlaylistDto: CreatePlaylistDto = {
