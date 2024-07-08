@@ -1,6 +1,6 @@
 import { EntityNotEmpty, EntityNotExists } from '../error';
 import { FindUserByIdRepository } from '../repository';
-import { left } from '../shared/either';
+import { left, right } from '../shared/either';
 
 export async function ValidationUserId(
   id: string,
@@ -16,5 +16,5 @@ export async function ValidationUserId(
     return left(new EntityNotExists('User'));
   }
 
-  return;
+  return right(undefined);
 }
