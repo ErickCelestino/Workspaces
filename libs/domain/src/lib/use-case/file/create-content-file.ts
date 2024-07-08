@@ -15,6 +15,7 @@ import {
 } from '../../repository';
 import { Either, left, right } from '../../shared/either';
 import { FileTypes } from '../../type';
+import { ValidationUserId } from '../../utils';
 
 export class CreateContentFile
   implements
@@ -53,11 +54,7 @@ export class CreateContentFile
       return left(new EntityNotEmpty('File'));
     }
 
-    const filteredUser = await this.findUserByIdRepository.find(loggedUserId);
-
-    if (Object.keys(filteredUser?.userId ?? filteredUser).length < 1) {
-      return left(new EntityNotExists('User'));
-    }
+    await ValidationUserId(loggedUserId, this.findUserByIdRepository);
 
     const fiteredDirectory = await this.findDirectoryByIdRepository.find(
       directoryId
