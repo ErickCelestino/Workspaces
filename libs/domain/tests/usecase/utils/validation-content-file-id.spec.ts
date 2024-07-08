@@ -1,16 +1,11 @@
 import {
   ContentFile,
-  Directory,
   EntityNotEmpty,
   EntityNotExists,
   FindContentFileByIdRepository,
-  FindDirectoryByIdRepository,
   ValidationContentFileId,
 } from '../../../src';
-import {
-  FindContentFileByIdRepositoryMock,
-  FindDirectoryByIdRespositoryMock,
-} from '../../repository';
+import { FindContentFileByIdRepositoryMock } from '../../repository';
 
 const makeSut = (id: string, repository: FindContentFileByIdRepository) => {
   const sut = ValidationContentFileId(id, repository);

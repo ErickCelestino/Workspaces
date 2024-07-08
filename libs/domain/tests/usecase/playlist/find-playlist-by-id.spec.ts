@@ -6,7 +6,6 @@ import {
   FindPlaylistByIdRepository,
   FindUserByIdRepository,
   PlaylistResponseDto,
-  UserList,
 } from '../../../src';
 import { PlaylistMock, PlaylistResponseMock, userMock } from '../../entity';
 import {

@@ -21,9 +21,9 @@ describe('ValidationUserId', () => {
 
     const result = await sut;
 
-    expect(result.isLeft()).toBe(false);
-    expect(result.isRight()).toBe(true);
-    expect(result.value).toStrictEqual(undefined);
+    expect(result?.isLeft()).toBe(false);
+    expect(result?.isRight()).toBe(true);
+    expect(result?.value).toStrictEqual(undefined);
   });
 
   it('should return EntityNotEmpty when no pass correct user id', async () => {
@@ -31,9 +31,9 @@ describe('ValidationUserId', () => {
 
     const result = await sut;
 
-    expect(result.isLeft()).toBe(true);
-    expect(result.isRight()).toBe(false);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
+    expect(result?.isLeft()).toBe(true);
+    expect(result?.isRight()).toBe(false);
+    expect(result?.value).toBeInstanceOf(EntityNotEmpty);
   });
 
   it('should return EntityNotExists when no pass correct user id', async () => {
@@ -46,8 +46,8 @@ describe('ValidationUserId', () => {
 
     const result = await sut;
 
-    expect(result.isLeft()).toBe(true);
-    expect(result.isRight()).toBe(false);
-    expect(result.value).toBeInstanceOf(EntityNotExists);
+    expect(result?.isLeft()).toBe(true);
+    expect(result?.isRight()).toBe(false);
+    expect(result?.value).toBeInstanceOf(EntityNotExists);
   });
 });

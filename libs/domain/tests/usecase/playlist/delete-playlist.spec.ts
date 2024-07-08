@@ -3,10 +3,8 @@ import {
   DeletePlaylistDto,
   DeletePlaylistRepoistory,
   EntityNotEmpty,
-  EntityNotExists,
   FindPlaylistByIdRepository,
   FindUserByIdRepository,
-  PlaylistResponseDto,
 } from '../../../src';
 import { PlaylistMock, userMock } from '../../entity';
 import {

@@ -7,7 +7,6 @@ import {
   EntityNotEmpty,
   FindPlaylistByNameRepository,
   FindUserByIdRepository,
-  Playlist,
 } from '../../../src';
 import { PlaylistCategoryMock, PlaylistMock, userMock } from '../../entity';
 import {
@@ -25,7 +24,6 @@ interface SutTypes {
 
 const makeSut = (): SutTypes => {
   const findUserByIdRepository = new FindUserByIdRepositoryMock();
-  const mockResult = {} as Playlist;
   const findPlaylistByNameRepository = new FindPlaylistByNameRepositoryMock();
   const createPlaylistRepository = new CreatePlaylistRepositoryMock();
 
