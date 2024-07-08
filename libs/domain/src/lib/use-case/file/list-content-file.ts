@@ -8,7 +8,7 @@ import {
   ListContentFileRepository,
 } from '../../repository';
 import { Either, left, right } from '../../shared/either';
-import { ValidationUserId } from '../../utils';
+import { ValidationDirectoryId, ValidationUserId } from '../../utils';
 
 export class ListContentFile
   implements
@@ -45,13 +45,7 @@ export class ListContentFile
 
     await ValidationUserId(loggedUserId, this.findUserByIdRepository);
 
-    const directoryResult = await this.findDirectoryByIdRepository.find(
-      directoryId
-    );
-
-    if (Object.keys(directoryResult?.id ?? directoryResult).length < 1) {
-      return left(new EntityNotExists(directoryString));
-    }
+    await ValidationDirectoryId(directoryId, this.findDirectoryByIdRepository);
 
     const resultList = await this.listContentFileRepository.list(input);
 
