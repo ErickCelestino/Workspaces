@@ -10,6 +10,7 @@ import {
   FindUserByIdRepository,
 } from '../../repository';
 import { Either, left, right } from '../../shared/either';
+import { ValidationUserId } from '../../utils';
 
 export class DeleteContentFileById
   implements
@@ -48,11 +49,7 @@ export class DeleteContentFileById
       return left(new EntityNotEmpty('ID to delete'));
     }
 
-    const filteredUser = await this.findUserByIdRepository.find(loggedUserId);
-
-    if (Object.keys(filteredUser?.userId ?? filteredUser).length < 1) {
-      return left(new EntityNotExists('User'));
-    }
+    await ValidationUserId(loggedUserId, this.findUserByIdRepository);
 
     const fiteredDirectory = await this.findDirectoryByIdRepository.find(
       directoryId

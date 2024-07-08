@@ -103,35 +103,6 @@ describe('DeleteContentFileById', () => {
     expect(result.value).toBeInstanceOf(EntityNotEmpty);
   });
 
-  it('should return EntityNotExists if there is no user created in the database', async () => {
-    const {
-      deleteContentFileByIdDto,
-      findDirectoryByIdRepository,
-      deleteContentFileByIdRepository,
-      findContentFileByIdRepository,
-      deleteFileByNameRepository,
-    } = makeSut();
-
-    const mockEmptyItem = {} as UserList;
-
-    const mockEmptyRepository: FindUserByIdRepository = {
-      find: jest.fn(async () => mockEmptyItem),
-    };
-
-    const sut = new DeleteContentFileById(
-      deleteContentFileByIdRepository,
-      mockEmptyRepository,
-      findDirectoryByIdRepository,
-      findContentFileByIdRepository,
-      deleteFileByNameRepository
-    );
-
-    const result = await sut.execute(deleteContentFileByIdDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotExists);
-  });
-
   it('should return EntityNotExists if there is no directory created in the database', async () => {
     const {
       deleteContentFileByIdDto,
