@@ -9,7 +9,7 @@ import {
   FindUserByIdRepository,
   MoveFileToDirectoryRepository,
 } from '../../repository';
-import { ValidationUserId } from '../../utils';
+import { ValidationDirectoryId, ValidationUserId } from '../../utils';
 
 export class MoveFileToDirectory
   implements
@@ -47,13 +47,10 @@ export class MoveFileToDirectory
 
     await ValidationUserId(loggedUserId, this.findUserByIdRepository);
 
-    const fiteredDirectory = await this.findDirectoryByIdRepository.find(
-      idToMoveDirectory
+    await ValidationDirectoryId(
+      idToMoveDirectory,
+      this.findDirectoryByIdRepository
     );
-
-    if (Object.keys(fiteredDirectory?.id ?? fiteredDirectory).length < 1) {
-      return left(new EntityNotExists('Directory'));
-    }
 
     const filteredFile = await this.findContentFileByIdRepository.find(
       idToMove

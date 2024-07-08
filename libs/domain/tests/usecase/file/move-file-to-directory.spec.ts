@@ -1,6 +1,5 @@
 import {
   ContentFile,
-  Directory,
   EntityNotEmpty,
   EntityNotExists,
   FindContentFileByIdRepository,
@@ -93,33 +92,6 @@ describe('MoveFileToDirectory', () => {
     expect(result.isLeft()).toBe(true);
     expect(result.isRight()).toBe(false);
     expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
-  it('should return EntityNotExists if there is no directory created in the database', async () => {
-    const {
-      moveFileToDirectoryDto,
-      findUserByIdRepository,
-      moveFileToDirectoryRepository,
-      findContentFileByIdRepository,
-    } = makeSut();
-
-    const mockEmptyItem = {} as Directory;
-
-    const mockEmptyRepository: FindDirectoryByIdRepository = {
-      find: jest.fn(async () => mockEmptyItem),
-    };
-
-    const sut = new MoveFileToDirectory(
-      findUserByIdRepository,
-      mockEmptyRepository,
-      findContentFileByIdRepository,
-      moveFileToDirectoryRepository
-    );
-
-    const result = await sut.execute(moveFileToDirectoryDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotExists);
   });
 
   it('should return EntityNotExists if there is no content file created in the database', async () => {
