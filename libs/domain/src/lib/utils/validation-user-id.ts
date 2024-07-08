@@ -7,7 +7,7 @@ export async function ValidationUserId(
   findUserByIdRepository: FindUserByIdRepository
 ) {
   if (Object.keys(id).length < 1) {
-    return left(new EntityNotEmpty('File ID'));
+    return left(new EntityNotEmpty('User ID'));
   }
 
   const filteredUser = await findUserByIdRepository.find(id);
