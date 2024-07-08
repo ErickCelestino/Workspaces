@@ -1,5 +1,5 @@
 export * from './app';
-export * from './content-file';
+export * from './file';
 export * from './directory';
 export * from './playlist';
 export * from './user';
