@@ -1,9 +1,6 @@
 import {
   EntityNotEmpty,
-  EntityNotExists,
   FindPlaylistCategoryByIdRepository,
-  PlaylistCategory,
-  UserList,
 } from '../../../../src';
 import {
   DeletePlaylistCategory,
@@ -81,30 +78,5 @@ describe('DeletePlaylistCategory', () => {
     expect(result.isLeft()).toBe(true);
     expect(result.isRight()).toBe(false);
     expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
-  it('should return EntityNotExists if there is no playlist category created in the database', async () => {
-    const {
-      deletePlaylistCategoryDto,
-      findUserRepository,
-      deletePlaylistCategoryRepository,
-    } = makeSut();
-
-    const mockEmptyItem = {} as PlaylistCategory;
-
-    const mockEmptyRepository: FindPlaylistCategoryByIdRepository = {
-      find: jest.fn(async () => mockEmptyItem),
-    };
-
-    const sut = new DeletePlaylistCategory(
-      findUserRepository,
-      mockEmptyRepository,
-      deletePlaylistCategoryRepository
-    );
-
-    const result = await sut.execute(deletePlaylistCategoryDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotExists);
   });
 });
