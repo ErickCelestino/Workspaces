@@ -18,12 +18,7 @@ import {
 } from '@workspaces/domain';
 import { useSnackbarAlert } from '../../hooks';
 import axios, { AxiosError } from 'axios';
-import {
-  ConnectionError,
-  EntityNotAllowed,
-  EntityNotCreated,
-  EntityNotEmpty,
-} from '../../shared';
+import { ValidationsError } from '../../shared';
 import {
   CreateContenVideoRequest,
   getItemLocalStorage,
@@ -54,7 +49,6 @@ export const FileModalContainer: FC<FileModalContainerProps> = ({
 
   const handleUpload = () => {
     setUploading(true);
-    handleClose();
     uploadFiles();
   };
 
@@ -94,26 +88,15 @@ export const FileModalContainer: FC<FileModalContainerProps> = ({
 
       return result;
     } catch (error) {
+      setFilesToUpload([]);
+      removeItemLocalStorage('files');
+      setProgress(0);
       console.error(error);
-      console.error((error as { message: string }).message);
       if (axios.isAxiosError(error)) {
         const axiosError = error as AxiosError<ErrorResponse>;
-        switch (axiosError.response?.data.error.name) {
-          case 'EntityNotEmpty':
-            showErrorAlert(EntityNotEmpty('Arquivos', 'PT-BR'));
-            break;
-
-          case 'EntityNotCreated':
-            showErrorAlert(EntityNotCreated('Arquivos', 'PT-BR'));
-            break;
-
-          case 'FileNotAllowed':
-            showErrorAlert(EntityNotAllowed('Arquivos', 'PT-BR'));
-            break;
-
-          default:
-            showErrorAlert(ConnectionError('PT-BR'));
-            break;
+        const errors = ValidationsError(axiosError, 'Arquivo');
+        if (errors) {
+          showErrorAlert(errors);
         }
       }
     }
@@ -128,6 +111,7 @@ export const FileModalContainer: FC<FileModalContainerProps> = ({
 
   const onCloseProgressFile = () => {
     setUploading(false);
+    setProgress(0);
   };
 
   const uploadFiles = useCallback(async () => {
@@ -143,6 +127,7 @@ export const FileModalContainer: FC<FileModalContainerProps> = ({
       updateProgress
     );
     if (result) {
+      handleClose();
       showSnackbarAlert({
         message: sucessAlertMessage,
         severity: 'success',
@@ -160,7 +145,7 @@ export const FileModalContainer: FC<FileModalContainerProps> = ({
             left: '50%',
             transform: 'translate(-50%, -50%)',
             width: smDown
-              ? theme.spacing(45)
+              ? '95%'
               : mdDown
               ? theme.spacing(65)
               : theme.spacing(100),
@@ -184,13 +169,7 @@ export const FileModalContainer: FC<FileModalContainerProps> = ({
               onFileDelete={handleFileToDelete}
               progress={progress}
               onFileUpload={handleFileUpload}
-              width={
-                smDown
-                  ? theme.spacing(45)
-                  : mdDown
-                  ? theme.spacing(65)
-                  : theme.spacing(92)
-              }
+              width="100%"
               height={theme.spacing(28)}
             />
           </Box>

@@ -1,11 +1,4 @@
-import {
-  Box,
-  Grid,
-  Pagination,
-  Typography,
-  useMediaQuery,
-  useTheme,
-} from '@mui/material';
+import { Box, Grid, Typography, useTheme } from '@mui/material';
 import { LayoutBase } from '../../layout';
 
 import { useCallback, useEffect, useState } from 'react';
@@ -24,11 +17,11 @@ import {
 } from '../../services';
 import { useLoggedUser } from '../../contexts';
 import {
+  ContainerCardList,
   ContentFileCard,
   DeleteFileModal,
   DetailsFileModal,
   MoveFileToDirectoryModal,
-  SearchBar,
   ToolbarPureTV,
 } from '../../components';
 import axios, { AxiosError } from 'axios';
@@ -68,17 +61,14 @@ export const ListContanteFilesContainer = () => {
   const [fileId, setFileId] = useState('');
 
   const theme = useTheme();
-  const smDown = useMediaQuery(theme.breakpoints.down('sm'));
-  const mdUp = useMediaQuery(theme.breakpoints.up('md'));
-  const mdDown = useMediaQuery(theme.breakpoints.down('md'));
   const { loggedUser } = useLoggedUser();
   const { showSnackbarAlert, SnackbarAlert } = useSnackbarAlert();
 
-  const showErrorAlert = useCallback(
-    (message: string) => {
+  const showAlert = useCallback(
+    (message: string, success: boolean) => {
       showSnackbarAlert({
         message: message,
-        severity: 'error',
+        severity: success ? 'success' : 'error',
       });
     },
     [showSnackbarAlert]
@@ -102,12 +92,12 @@ export const ListContanteFilesContainer = () => {
           const axiosError = error as AxiosError<ErrorResponse>;
           const errors = ValidationsError(axiosError, 'Arquivos');
           if (errors) {
-            showErrorAlert(errors);
+            showAlert(errors, false);
           }
         }
       }
     },
-    [showErrorAlert]
+    [showAlert]
   );
 
   const getData = useCallback(async () => {
@@ -121,12 +111,6 @@ export const ListContanteFilesContainer = () => {
     setDirectoryId(directoryId);
     setTotalPage(result?.totalPages ?? 0);
   }, [loggedUser, handleData]);
-
-  useEffect(() => {
-    if (!search) {
-      getData();
-    }
-  }, [getData, search]);
 
   const handlePopUpClose = (types: FileContentType) => {
     switch (types) {
@@ -174,7 +158,7 @@ export const ListContanteFilesContainer = () => {
         const axiosError = error as AxiosError<ErrorResponse>;
         const errors = ValidationsError(axiosError, 'Download');
         if (errors) {
-          showErrorAlert(errors);
+          showAlert(errors, false);
         }
       }
     }
@@ -192,7 +176,7 @@ export const ListContanteFilesContainer = () => {
     if (url) {
       onDownloadFile(url);
     } else {
-      showErrorAlert(DownloadError('PT-BR'));
+      showAlert(DownloadError('PT-BR'), true);
     }
   };
 
@@ -220,6 +204,12 @@ export const ListContanteFilesContainer = () => {
     setTotalPage(result?.totalPages ?? 0);
   };
 
+  useEffect(() => {
+    if (!search) {
+      getData();
+    }
+  }, [getData, search]);
+
   return (
     <>
       <DeleteFileModal
@@ -228,20 +218,20 @@ export const ListContanteFilesContainer = () => {
         onClose={() => handlePopUpClose('delete')}
         idToDelete={fileId}
         loggedUserId={loggedUser?.id ?? ''}
-        showErrorAlert={showErrorAlert}
+        showAlert={showAlert}
       />
       <DetailsFileModal
         directoryId={directoryId}
         open={detailsPopUp}
         idDetails={fileId}
         loggedUserId={loggedUser?.id ?? ''}
-        showErrorAlert={showErrorAlert}
+        showAlert={showAlert}
         handlePopUpClose={() => handlePopUpClose('details')}
       />
       <MoveFileToDirectoryModal
         open={movePopUp}
         loggedUserId={loggedUser?.id ?? ''}
-        showErrorAlert={showErrorAlert}
+        showAlert={showAlert}
         onClose={() => handlePopUpClose('moveFile')}
         idToMove={fileId}
         title="Mover Arquivo para"
@@ -249,61 +239,44 @@ export const ListContanteFilesContainer = () => {
       />
 
       <LayoutBase title="Listagem de Usuários" toolBar={<ToolbarPureTV />}>
-        <Box display="flex" justifyContent="center">
-          <Box width={mdUp ? '85%' : '100%'}>
-            <Box
-              width={mdUp ? '92%' : smDown ? '94%' : mdDown ? '95%' : '80%'}
-              marginLeft={smDown ? theme.spacing(1) : 0}
-            >
-              <SearchBar
-                onSearch={searchData}
-                placeholder="Pesquisar Arquivo"
-              />
-              <Box display="flex" justifyContent="center" mt={theme.spacing(2)}>
-                {fileList.length > 0 ? (
-                  <Grid justifyContent="center" container spacing={2}>
-                    {fileList.map((file, index) => (
-                      <Grid item md={6} lg={4} key={index}>
-                        <ContentFileCard
-                          deleteFile={() => handleFile(file.id, 'delete')}
-                          detailsFile={() => handleFile(file.id, 'details')}
-                          downloadFile={() => handleFile(file.id, 'download')}
-                          moveFile={() => handleFile(file.id, 'moveFile')}
-                          fileImage={file.path}
-                          fileImageName={file.fileName}
-                          name={file.originalName}
-                          key={file.id}
-                        />
-                      </Grid>
-                    ))}
-                  </Grid>
-                ) : (
-                  <Box
-                    marginTop={theme.spacing(2)}
-                    width="100%"
-                    display="flex"
-                    justifyContent="center"
-                  >
-                    <Typography variant="h4">
-                      Não foram encontrados registros
-                    </Typography>
-                  </Box>
-                )}
-              </Box>
-            </Box>
+        <ContainerCardList
+          search={{
+            searchData: searchData,
+            placeholder: 'Pesquisar Arquivo',
+          }}
+          totalPage={totalPage}
+          handleChange={handleChange}
+        >
+          {fileList.length > 0 ? (
+            <Grid justifyContent="center" container spacing={2}>
+              {fileList.map((file, index) => (
+                <Grid item md={6} lg={4} xl={3} key={index}>
+                  <ContentFileCard
+                    deleteFile={() => handleFile(file.id, 'delete')}
+                    detailsFile={() => handleFile(file.id, 'details')}
+                    downloadFile={() => handleFile(file.id, 'download')}
+                    moveFile={() => handleFile(file.id, 'moveFile')}
+                    fileImage={file.path}
+                    fileImageName={file.fileName}
+                    name={file.originalName}
+                    key={file.id}
+                  />
+                </Grid>
+              ))}
+            </Grid>
+          ) : (
             <Box
               marginTop={theme.spacing(2)}
+              width="100%"
               display="flex"
-              justifyContent="end"
+              justifyContent="center"
             >
-              <Pagination
-                count={totalPage}
-                color="primary"
-                onChange={handleChange}
-              />
+              <Typography variant="h4">
+                Não foram encontrados registros
+              </Typography>
             </Box>
-          </Box>
-        </Box>
+          )}
+        </ContainerCardList>
       </LayoutBase>
       {SnackbarAlert}
     </>

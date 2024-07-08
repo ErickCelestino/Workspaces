@@ -1,23 +1,14 @@
-import {
-  Box,
-  Grid,
-  IconButton,
-  Pagination,
-  Typography,
-  useMediaQuery,
-  useTheme,
-} from '@mui/material';
+import { Box, Grid, Typography, useTheme } from '@mui/material';
 import {
   CreatePlaylistModal,
-  SearchBar,
   ToolbarPureTV,
   PlaylistCard,
   DeletePlaylistModal,
+  ContainerCardList,
 } from '../../components';
 import { LayoutBase } from '../../layout';
 import { useSnackbarAlert } from '../../hooks';
 import { useCallback, useEffect, useState } from 'react';
-import AddCircleIcon from '@mui/icons-material/AddCircle';
 import {
   CrudType,
   ErrorResponse,
@@ -34,9 +25,6 @@ export const ListPlaylistContainer = () => {
   const { showSnackbarAlert, SnackbarAlert } = useSnackbarAlert();
   const { loggedUser } = useLoggedUser();
   const theme = useTheme();
-  const smDown = useMediaQuery(theme.breakpoints.down('sm'));
-  const mdUp = useMediaQuery(theme.breakpoints.up('md'));
-  const mdDown = useMediaQuery(theme.breakpoints.down('md'));
 
   const [createPlaylistPopUp, setCreatePlaylistPopUp] = useState(false);
   const [editPlaylistPopUp, setEditPlaylistPopUp] = useState(false);
@@ -177,123 +165,49 @@ export const ListPlaylistContainer = () => {
         subTitle="Por favor, selecione alguma das alternativas"
       />
       <LayoutBase title="Listagem Playlist" toolBar={<ToolbarPureTV />}>
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            flexDirection: 'column',
+        <ContainerCardList
+          handleChange={handleChange}
+          search={{
+            searchData: searchData,
+            placeholder: 'Pesquisar Playlist',
+            createPopUp: () => handlePopUpOpen('create'),
           }}
+          totalPage={totalPage}
         >
-          <Box width="95%">
+          {listPlaylist.length > 0 ? (
+            <Grid justifyContent="center" container spacing={2}>
+              {listPlaylist.map((playlist, index) => (
+                <Grid item md={6} lg={4} xl={3} key={index}>
+                  <PlaylistCard
+                    editPlaylist={async () =>
+                      handlePopUpOpen('edit', playlist.id)
+                    }
+                    deletePlaylist={async () =>
+                      handlePopUpOpen('delete', playlist.id)
+                    }
+                    detailsPlaylist={async () => handlePopUpOpen('details')}
+                    imageData={{
+                      image: '',
+                      imageName: '',
+                    }}
+                    name={playlist.name}
+                  />
+                </Grid>
+              ))}
+            </Grid>
+          ) : (
             <Box
-              sx={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
+              marginTop={theme.spacing(2)}
+              width="100%"
+              display="flex"
+              justifyContent="center"
             >
-              <Box
-                sx={{
-                  justifyContent: 'center',
-                  width: mdUp ? '55%' : smDown ? '80%' : mdDown ? '95%' : '80%',
-                  marginLeft: theme.spacing(2),
-                }}
-              >
-                <SearchBar
-                  onSearch={searchData}
-                  placeholder="Pesquisar Playlist"
-                />
-              </Box>
-              <IconButton
-                onClick={() => handlePopUpOpen('create')}
-                sx={{
-                  width: theme.spacing(8),
-                  height: theme.spacing(8),
-                  marginLeft: theme.spacing(2),
-                }}
-              >
-                <AddCircleIcon
-                  sx={{
-                    width: theme.spacing(8),
-                    height: theme.spacing(8),
-                  }}
-                  color="primary"
-                  fontSize="large"
-                />
-              </IconButton>
+              <Typography variant="h4">
+                Não foram encontrados registros
+              </Typography>
             </Box>
-          </Box>
-
-          <Box>
-            <Box
-              sx={{
-                display: 'flex',
-                justifyContent: 'center',
-                flexDirection: 'column',
-                alignItems: 'center',
-                width: '100%',
-              }}
-            >
-              <Box
-                display="flex"
-                justifyContent="center"
-                mt={theme.spacing(2)}
-                sx={{
-                  width: mdUp ? '80%' : smDown ? '94%' : mdDown ? '95%' : '80%',
-                }}
-              >
-                {listPlaylist.length > 0 ? (
-                  <Grid justifyContent="center" container spacing={2}>
-                    {listPlaylist.map((playlist, index) => (
-                      <Grid item md={6} lg={4} key={index}>
-                        <PlaylistCard
-                          editPlaylist={async () =>
-                            handlePopUpOpen('edit', playlist.id)
-                          }
-                          deletePlaylist={async () =>
-                            handlePopUpOpen('delete', playlist.id)
-                          }
-                          detailsPlaylist={async () =>
-                            handlePopUpOpen('details')
-                          }
-                          imageData={{
-                            image: '',
-                            imageName: '',
-                          }}
-                          name={playlist.name}
-                        />
-                      </Grid>
-                    ))}
-                  </Grid>
-                ) : (
-                  <Box
-                    marginTop={theme.spacing(2)}
-                    width="100%"
-                    display="flex"
-                    justifyContent="center"
-                  >
-                    <Typography variant="h4">
-                      Não foram encontrados registros
-                    </Typography>
-                  </Box>
-                )}
-              </Box>
-            </Box>
-            <Box width="80%">
-              <Box
-                marginTop={theme.spacing(2)}
-                display="flex"
-                justifyContent="end"
-              >
-                <Pagination
-                  count={totalPage}
-                  color="primary"
-                  onChange={handleChange}
-                />
-              </Box>
-            </Box>
-          </Box>
-        </Box>
+          )}
+        </ContainerCardList>
       </LayoutBase>
       {SnackbarAlert}
     </>

@@ -14,7 +14,6 @@ import {
   DetailsContentFileDto,
   ErrorResponse,
 } from '@workspaces/domain';
-import CloseIcon from '@mui/icons-material/Close';
 import DescriptionIcon from '@mui/icons-material/Description';
 import FormatSizeIcon from '@mui/icons-material/FormatSize';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
@@ -27,7 +26,7 @@ import { ValidationsError, formatBrDate } from '../../../shared';
 import { SimpleFormModal } from '../simple';
 
 interface DetailsFileModalPros {
-  showErrorAlert: (message: string) => void;
+  showAlert: (message: string, success: boolean) => void;
   handlePopUpClose: () => void;
   open: boolean;
   directoryId: string;
@@ -38,10 +37,11 @@ interface DetailsFileModalPros {
   formatFileTitle?: string;
   sizeFileTitle?: string;
   uploadDateTitle?: string;
+  successMessage?: string;
 }
 
 export const DetailsFileModal: FC<DetailsFileModalPros> = ({
-  showErrorAlert,
+  showAlert,
   handlePopUpClose,
   open,
   directoryId,
@@ -52,6 +52,7 @@ export const DetailsFileModal: FC<DetailsFileModalPros> = ({
   formatFileTitle = 'Formato do Arquivo',
   sizeFileTitle = 'Tamanho do Arquivo',
   uploadDateTitle = 'Data de Upload',
+  successMessage = 'Arquivo Editado com Sucesso!',
 }) => {
   const [detailsFile, setDetailsFile] = useState<ContentFile>();
   const [editFileName, setEditFileName] = useState<boolean>(false);
@@ -64,6 +65,7 @@ export const DetailsFileModal: FC<DetailsFileModalPros> = ({
 
   const editSuccess = () => {
     setEditFileName(false);
+    showAlert(successMessage, true);
   };
 
   useEffect(() => {
@@ -88,7 +90,7 @@ export const DetailsFileModal: FC<DetailsFileModalPros> = ({
           const axiosError = error as AxiosError<ErrorResponse>;
           const errors = ValidationsError(axiosError, 'arquivo ou diretório');
           if (errors) {
-            showErrorAlert(errors);
+            showAlert(errors, false);
           }
         }
       }
@@ -97,7 +99,7 @@ export const DetailsFileModal: FC<DetailsFileModalPros> = ({
     if (open) {
       getContentFile();
     }
-  }, [directoryId, idDetails, loggedUserId, open, showErrorAlert]);
+  }, [directoryId, idDetails, loggedUserId, open, showAlert]);
 
   return (
     <SimpleFormModal
@@ -147,7 +149,7 @@ export const DetailsFileModal: FC<DetailsFileModalPros> = ({
             directoryId={directoryId}
             idToEdit={idDetails}
             loggedUserId={loggedUserId}
-            showErrorAlert={showErrorAlert}
+            showAlert={showAlert}
             handleEditFileName={handleEditFileName}
           />
         )}

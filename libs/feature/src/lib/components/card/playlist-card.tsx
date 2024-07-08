@@ -5,7 +5,6 @@ import {
   CardContent,
   CardMedia,
   Typography,
-  useMediaQuery,
   useTheme,
 } from '@mui/material';
 import { IconMenuItem, ImageCardItem } from '@workspaces/domain';
@@ -37,7 +36,6 @@ export const PlaylistCard: FC<ListPlaylistProps> = ({
   detailsPlaylist,
 }) => {
   const theme = useTheme();
-  const smDown = useMediaQuery(theme.breakpoints.down('sm'));
 
   const iconMenuList: IconMenuItem[] = [
     {
@@ -59,7 +57,7 @@ export const PlaylistCard: FC<ListPlaylistProps> = ({
   return (
     <Card
       sx={{
-        width: smDown ? theme.spacing(45) : theme.spacing(40),
+        width: theme.spacing(40),
         height: theme.spacing(28),
         margin: theme.spacing(2),
       }}
@@ -70,6 +68,9 @@ export const PlaylistCard: FC<ListPlaylistProps> = ({
         title={imageData.imageName}
         sx={{
           height: theme.spacing(15),
+          objectFit: 'contain',
+          objectPosition: 'center',
+          margin: 'auto',
         }}
       />
       <Box
