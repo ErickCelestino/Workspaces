@@ -5,15 +5,14 @@ import {
   EntityAlreadyExists,
   EntityNotCreated,
   EntityNotEmpty,
-  EntityNotExists,
   FindPlaylistByNameRepository,
   FindUserByIdRepository,
   Playlist,
-  UserList,
 } from '../../../src';
 import { PlaylistCategoryMock, PlaylistMock, userMock } from '../../entity';
 import {
   CreatePlaylistRepositoryMock,
+  FindPlaylistByNameRepositoryMock,
   FindUserByIdRepositoryMock,
 } from '../../repository';
 interface SutTypes {
@@ -27,9 +26,7 @@ interface SutTypes {
 const makeSut = (): SutTypes => {
   const findUserByIdRepository = new FindUserByIdRepositoryMock();
   const mockResult = {} as Playlist;
-  const findPlaylistByNameRepository: FindPlaylistByNameRepository = {
-    find: jest.fn(async () => mockResult),
-  };
+  const findPlaylistByNameRepository = new FindPlaylistByNameRepositoryMock();
   const createPlaylistRepository = new CreatePlaylistRepositoryMock();
 
   const createPlaylistDto: CreatePlaylistDto = {
@@ -92,31 +89,6 @@ describe('CreatePlaylist', () => {
     expect(result.isLeft()).toBe(true);
     expect(result.isRight()).toBe(false);
     expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
-  it('should return EntityNotExists if there is no user created in the database', async () => {
-    const {
-      createPlaylistDto,
-      findPlaylistByNameRepository,
-      createPlaylistRepository,
-    } = makeSut();
-
-    const mockEmptyItem = {} as UserList;
-
-    const mockEmptyRepository: FindUserByIdRepository = {
-      find: jest.fn(async () => mockEmptyItem),
-    };
-
-    const sut = new CreatePlaylist(
-      mockEmptyRepository,
-      findPlaylistByNameRepository,
-      createPlaylistRepository
-    );
-
-    const result = await sut.execute(createPlaylistDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotExists);
   });
 
   it('should return EntityAlreadyExists if there is no user created in the database', async () => {

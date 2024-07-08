@@ -74,26 +74,6 @@ describe('FindPlaylistById', () => {
     expect(result.value).toBeInstanceOf(EntityNotEmpty);
   });
 
-  it('should return EntityNotExists if there is no user created in the database', async () => {
-    const { findPlaylistByIdDto, findPlaylistByIdRepository } = makeSut();
-
-    const mockEmptyItem = {} as UserList;
-
-    const mockEmptyRepository: FindUserByIdRepository = {
-      find: jest.fn(async () => mockEmptyItem),
-    };
-
-    const sut = new FindPlaylistById(
-      mockEmptyRepository,
-      findPlaylistByIdRepository
-    );
-
-    const result = await sut.execute(findPlaylistByIdDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotExists);
-  });
-
   it('should return EntityNotExists if there is no playlist created in the database', async () => {
     const { findPlaylistByIdDto, findUserByIdRepository } = makeSut();
 

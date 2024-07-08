@@ -8,6 +8,7 @@ import {
   ListContentFileRepository,
 } from '../../repository';
 import { Either, left, right } from '../../shared/either';
+import { ValidationDirectoryId, ValidationUserId } from '../../utils';
 
 export class ListContentFile
   implements
@@ -42,19 +43,9 @@ export class ListContentFile
       return left(new EntityNotEmpty(`${loggedUserString} ID`));
     }
 
-    const userResult = await this.findUserByIdRepository.find(loggedUserId);
+    await ValidationUserId(loggedUserId, this.findUserByIdRepository);
 
-    if (Object.keys(userResult?.userId ?? userResult).length < 1) {
-      return left(new EntityNotExists(loggedUserString));
-    }
-
-    const directoryResult = await this.findDirectoryByIdRepository.find(
-      directoryId
-    );
-
-    if (Object.keys(directoryResult?.id ?? directoryResult).length < 1) {
-      return left(new EntityNotExists(directoryString));
-    }
+    await ValidationDirectoryId(directoryId, this.findDirectoryByIdRepository);
 
     const resultList = await this.listContentFileRepository.list(input);
 

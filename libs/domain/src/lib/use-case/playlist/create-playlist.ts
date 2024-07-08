@@ -13,6 +13,7 @@ import {
   FindPlaylistByNameRepository,
   FindUserByIdRepository,
 } from '../../repository';
+import { ValidationUserId } from '../../utils';
 
 export class CreatePlaylist
   implements
@@ -57,11 +58,7 @@ export class CreatePlaylist
       return left(new EntityNotEmpty('Name'));
     }
 
-    const filteredUser = await this.findUserByIdRepository.find(loggedUserId);
-
-    if (Object.keys(filteredUser?.userId ?? filteredUser).length < 1) {
-      return left(new EntityNotExists('User'));
-    }
+    await ValidationUserId(loggedUserId, this.findUserByIdRepository);
 
     const filteredPlaylist = await this.findPlaylistByNameRepository.find({
       loggedUserId,

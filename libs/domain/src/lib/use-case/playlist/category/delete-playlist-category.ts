@@ -8,6 +8,7 @@ import {
   FindUserByIdRepository,
 } from '../../../repository';
 import { Either, left, right } from '../../../shared/either';
+import { ValidationPlaylistCategoryId, ValidationUserId } from '../../../utils';
 
 export class DeletePlaylistCategory
   implements UseCase<DeletePlaylistCategoryDto, Either<EntityNotEmpty, void>>
@@ -33,21 +34,12 @@ export class DeletePlaylistCategory
       return left(new EntityNotEmpty('Logged User ID'));
     }
 
-    const filteredUser = await this.findUserByIdRepository.find(loggedUserId);
+    await ValidationUserId(loggedUserId, this.findUserByIdRepository);
 
-    if (Object.keys(filteredUser?.userId ?? filteredUser).length < 1) {
-      return left(new EntityNotExists('User'));
-    }
-
-    const filteredPlaylistCategory =
-      await this.findPlaylistCategoryByIdRepository.find(id);
-
-    if (
-      Object.keys(filteredPlaylistCategory?.id ?? filteredPlaylistCategory)
-        .length < 1
-    ) {
-      return left(new EntityNotExists('Playlist Category'));
-    }
+    await ValidationPlaylistCategoryId(
+      id,
+      this.findPlaylistCategoryByIdRepository
+    );
 
     await this.deletePlaylistRepository.delete(id);
 

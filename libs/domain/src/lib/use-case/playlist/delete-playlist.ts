@@ -1,13 +1,14 @@
 import { Inject } from '@nestjs/common';
 import { UseCase } from '../../base/use-case';
 import { DeletePlaylistDto } from '../../dto';
-import { EntityNotEmpty, EntityNotExists } from '../../error';
+import { EntityNotEmpty } from '../../error';
 import { Either, left, right } from '../../shared/either';
 import {
   DeletePlaylistRepoistory,
   FindPlaylistByIdRepository,
   FindUserByIdRepository,
 } from '../../repository';
+import { ValidationPlaylistId, ValidationUserId } from '../../utils';
 
 export class DeletePlaylist
   implements UseCase<DeletePlaylistDto, Either<EntityNotEmpty, void>>
@@ -33,17 +34,9 @@ export class DeletePlaylist
       return left(new EntityNotEmpty('Logged User'));
     }
 
-    const filteredUser = await this.findUserByIdRepository.find(loggedUserId);
+    await ValidationUserId(loggedUserId, this.findUserByIdRepository);
 
-    if (Object.keys(filteredUser?.userId ?? filteredUser).length < 1) {
-      return left(new EntityNotExists('User'));
-    }
-
-    const filteredPlaylist = await this.findPlaylistByIdRepository.find(id);
-
-    if (Object.keys(filteredPlaylist?.id ?? filteredPlaylist).length < 1) {
-      return left(new EntityNotExists('Playlist'));
-    }
+    await ValidationPlaylistId(id, this.findPlaylistByIdRepository);
 
     await this.deletePlaylistRepository.delete(id);
 

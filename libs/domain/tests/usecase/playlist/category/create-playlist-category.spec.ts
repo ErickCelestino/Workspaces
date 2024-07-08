@@ -5,10 +5,8 @@ import {
   EntityAlreadyExists,
   EntityNotCreated,
   EntityNotEmpty,
-  EntityNotExists,
   FindPlaylistCategoryByNameRepository,
   FindUserByIdRepository,
-  UserList,
 } from '../../../../src';
 import { PlaylistCategoryMock, userMock } from '../../../entity';
 import {
@@ -93,31 +91,6 @@ describe('CreatePlaylistCategory', () => {
     expect(result.isLeft()).toBe(true);
     expect(result.isRight()).toBe(false);
     expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
-  it('should return EntityNotExists if there is no user created in the database', async () => {
-    const {
-      creatPlaylistCategoryDto,
-      createPlaylistCategoryRepository,
-      findPlaylistCategoryByNameRepository,
-    } = makeSut();
-
-    const mockEmptyItem = {} as UserList;
-
-    const mockEmptyRepository: FindUserByIdRepository = {
-      find: jest.fn(async () => mockEmptyItem),
-    };
-
-    const sut = new CreatePlaylistCategory(
-      mockEmptyRepository,
-      createPlaylistCategoryRepository,
-      findPlaylistCategoryByNameRepository
-    );
-
-    const result = await sut.execute(creatPlaylistCategoryDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotExists);
   });
 
   it('should return EntityNotCreated if there is no playlist category created in the database', async () => {

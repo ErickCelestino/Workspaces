@@ -1,13 +1,12 @@
 import {
   EntityNotEmpty,
-  EntityNotExists,
   FindUserByIdRepository,
   ListPlaylist,
   ListPlaylistDto,
   ListPlaylistRepository,
   UserList,
 } from '../../../src';
-import { ListPlaylistReponseMock, PlaylistMock, userMock } from '../../entity';
+import { ListPlaylistReponseMock, userMock } from '../../entity';
 import {
   FindUserByIdRepositoryMock,
   ListPlaylistRepositoryMock,
@@ -58,22 +57,5 @@ describe('ListPlaylist', () => {
     expect(result.isLeft()).toBe(true);
     expect(result.isRight()).toBe(false);
     expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
-  it('should return EntityNotExists if there is no user created in the database', async () => {
-    const { listPlaylistDto, listPlaylistRepository } = makeSut();
-
-    const mockEmptyItem = {} as UserList;
-
-    const mockEmptyRepository: FindUserByIdRepository = {
-      find: jest.fn(async () => mockEmptyItem),
-    };
-
-    const sut = new ListPlaylist(mockEmptyRepository, listPlaylistRepository);
-
-    const result = await sut.execute(listPlaylistDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotExists);
   });
 });

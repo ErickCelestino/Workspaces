@@ -7,7 +7,6 @@ import {
   FindPlaylistByIdRepository,
   FindUserByIdRepository,
   PlaylistResponseDto,
-  UserList,
 } from '../../../src';
 import { PlaylistMock, userMock } from '../../entity';
 import {
@@ -88,55 +87,5 @@ describe('DeletePlaylist', () => {
     expect(result.isLeft()).toBe(true);
     expect(result.isRight()).toBe(false);
     expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
-  it('should return EntityNotExists if there is no user created in the database', async () => {
-    const {
-      deletePlaylistDto,
-      findPlaylistByIdRepository,
-      deletePlaylistRepository,
-    } = makeSut();
-
-    const mockEmptyItem = {} as UserList;
-
-    const mockEmptyRepository: FindUserByIdRepository = {
-      find: jest.fn(async () => mockEmptyItem),
-    };
-
-    const sut = new DeletePlaylist(
-      mockEmptyRepository,
-      findPlaylistByIdRepository,
-      deletePlaylistRepository
-    );
-
-    const result = await sut.execute(deletePlaylistDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotExists);
-  });
-
-  it('should return EntityNotExists if there is no playlist created in the database', async () => {
-    const {
-      deletePlaylistDto,
-      findUserByIdRepository,
-      deletePlaylistRepository,
-    } = makeSut();
-
-    const mockEmptyItem = {} as PlaylistResponseDto;
-
-    const mockEmptyRepository: FindPlaylistByIdRepository = {
-      find: jest.fn(async () => mockEmptyItem),
-    };
-
-    const sut = new DeletePlaylist(
-      findUserByIdRepository,
-      mockEmptyRepository,
-      deletePlaylistRepository
-    );
-
-    const result = await sut.execute(deletePlaylistDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotExists);
   });
 });

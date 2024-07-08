@@ -9,6 +9,11 @@ import {
   FindDirectoryByIdRepository,
   FindUserByIdRepository,
 } from '../../repository';
+import {
+  ValidationContentFileId,
+  ValidationDirectoryId,
+  ValidationUserId,
+} from '../../utils';
 
 export class EditContentFile
   implements
@@ -46,29 +51,11 @@ export class EditContentFile
       return left(new EntityNotEmpty('name'));
     }
 
-    const filteredUser = await this.findUserByIdRepository.find(loggedUserId);
+    await ValidationUserId(loggedUserId, this.findUserByIdRepository);
 
-    if (Object.keys(filteredUser?.userId ?? filteredUser).length < 1) {
-      return left(new EntityNotExists('User'));
-    }
+    await ValidationDirectoryId(directoryId, this.findDirectoryByIdRepository);
 
-    const fiteredDirectory = await this.findDirectoryByIdRepository.find(
-      directoryId
-    );
-
-    if (Object.keys(fiteredDirectory?.id ?? fiteredDirectory).length < 1) {
-      return left(new EntityNotExists('Directory'));
-    }
-
-    const filteredContentFile = await this.findContentFileByIdRepository.find(
-      idToEdit
-    );
-
-    if (
-      Object.keys(filteredContentFile?.id ?? filteredContentFile).length < 1
-    ) {
-      return left(new EntityNotExists('Content File'));
-    }
+    await ValidationContentFileId(idToEdit, this.findContentFileByIdRepository);
 
     await this.editContentFileRepository.edit(input);
 

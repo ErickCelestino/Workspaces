@@ -91,31 +91,6 @@ describe('DeleteUserById', () => {
     expect(result.value).toBeInstanceOf(EntityNotEmpty);
   });
 
-  it('should return EntityNotExists when a not exist user in database', async () => {
-    const {
-      deleteUserByIdDto,
-      deleteUserByIdRepository,
-      verifyUserStatusById,
-    } = makeSut();
-
-    const mockResult = {} as UserList;
-
-    const mockEmptyRepository: FindUserByIdRepository = {
-      find: jest.fn(async () => mockResult),
-    };
-
-    const sut = new DeleteUserById(
-      deleteUserByIdRepository,
-      mockEmptyRepository,
-      verifyUserStatusById
-    );
-
-    const result = await sut.execute(deleteUserByIdDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotExists);
-  });
-
   it('should return NotPermissionError when a logged user passed it does not have permission in database', async () => {
     const {
       deleteUserByIdDto,

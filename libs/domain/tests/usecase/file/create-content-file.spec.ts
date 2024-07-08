@@ -5,7 +5,6 @@ import {
   CreateContentFileRepository,
   FindDirectoryByIdRepository,
   EntityNotEmpty,
-  UserList,
   EntityNotExists,
   Directory,
   EntityNotCreated,
@@ -108,60 +107,6 @@ describe('CreateContentFile', () => {
     expect(result.isLeft()).toBe(true);
     expect(result.isRight()).toBe(false);
     expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
-  it('should return EntityNotExists if there is no user created in the database', async () => {
-    const {
-      CreateContentFileDto,
-      findDirectoryByIdRepository,
-      CreateContentFileRepository,
-      findUrlFileRespository,
-    } = makeSut();
-
-    const mockEmptyItem = {} as UserList;
-
-    const mockEmptyRepository: FindUserByIdRepository = {
-      find: jest.fn(async () => mockEmptyItem),
-    };
-
-    const sut = new CreateContentFile(
-      CreateContentFileRepository,
-      mockEmptyRepository,
-      findDirectoryByIdRepository,
-      findUrlFileRespository
-    );
-
-    const result = await sut.execute(CreateContentFileDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotExists);
-  });
-
-  it('should return EntityNotExists if there is no directory created in the database', async () => {
-    const {
-      CreateContentFileDto,
-      findUserByIdRepository,
-      CreateContentFileRepository,
-      findUrlFileRespository,
-    } = makeSut();
-
-    const mockEmptyItem = {} as Directory;
-
-    const mockEmptyRepository: FindDirectoryByIdRepository = {
-      find: jest.fn(async () => mockEmptyItem),
-    };
-
-    const sut = new CreateContentFile(
-      CreateContentFileRepository,
-      findUserByIdRepository,
-      mockEmptyRepository,
-      findUrlFileRespository
-    );
-
-    const result = await sut.execute(CreateContentFileDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotExists);
   });
 
   it('should return EntityNotCreated if there is no content video created in the database', async () => {

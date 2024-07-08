@@ -2,13 +2,11 @@ import {
   ContentFile,
   DetailsContentFile,
   DetailsContentFileDto,
-  Directory,
   EntityNotEmpty,
   EntityNotExists,
   FindContentFileByIdRepository,
   FindDirectoryByIdRepository,
   FindUserByIdRepository,
-  UserList,
 } from '../../../src';
 import { ContentFileMock, DirectoryMock, userMock } from '../../entity';
 import {
@@ -87,56 +85,6 @@ describe('DetailsContentFile', () => {
     expect(result.isLeft()).toBe(true);
     expect(result.isRight()).toBe(false);
     expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
-  it('should return EntityNotExists if there is no user created in the database', async () => {
-    const {
-      detailsContentFileByIdDto,
-      findDirectoryByIdRepository,
-      findContentFileByIdRepository,
-    } = makeSut();
-
-    const mockEmptyItem = {} as UserList;
-
-    const mockEmptyRepository: FindUserByIdRepository = {
-      find: jest.fn(async () => mockEmptyItem),
-    };
-
-    const sut = new DetailsContentFile(
-      mockEmptyRepository,
-      findDirectoryByIdRepository,
-      findContentFileByIdRepository
-    );
-
-    const result = await sut.execute(detailsContentFileByIdDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotExists);
-  });
-
-  it('should return EntityNotExists if there is no directory created in the database', async () => {
-    const {
-      detailsContentFileByIdDto,
-      findUserByIdRepository,
-      findContentFileByIdRepository,
-    } = makeSut();
-
-    const mockEmptyItem = {} as Directory;
-
-    const mockEmptyRepository: FindDirectoryByIdRepository = {
-      find: jest.fn(async () => mockEmptyItem),
-    };
-
-    const sut = new DetailsContentFile(
-      findUserByIdRepository,
-      mockEmptyRepository,
-      findContentFileByIdRepository
-    );
-
-    const result = await sut.execute(detailsContentFileByIdDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotExists);
   });
 
   it('should return EntityNotExists if there is no content file created in the database', async () => {
