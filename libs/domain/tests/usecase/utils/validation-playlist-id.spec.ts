@@ -15,11 +15,14 @@ const makeSut = (id: string, repository: FindPlaylistByIdRepository) => {
   };
 };
 
-describe('ValidationUserId', () => {
+describe('ValidationPlaylistId', () => {
   it('should return undefined when exist playlist id in database', async () => {
     const { sut } = makeSut('any_id', new FindPlaylistByIdRepositoryMock());
 
     const result = await sut;
+
+    expect(result.isLeft()).toBe(false);
+    expect(result.isRight()).toBe(true);
     expect(result.value).toStrictEqual(undefined);
   });
 
@@ -27,6 +30,9 @@ describe('ValidationUserId', () => {
     const { sut } = makeSut('', new FindPlaylistByIdRepositoryMock());
 
     const result = await sut;
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
     expect(result.value).toBeInstanceOf(EntityNotEmpty);
   });
 
@@ -39,6 +45,9 @@ describe('ValidationUserId', () => {
     const { sut } = makeSut('any_id', mockEmptyRepository);
 
     const result = await sut;
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
     expect(result.value).toBeInstanceOf(EntityNotExists);
   });
 });
