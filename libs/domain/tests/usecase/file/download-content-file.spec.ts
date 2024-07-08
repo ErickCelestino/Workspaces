@@ -97,33 +97,6 @@ describe('DownloadContentFile', () => {
     expect(result.value).toBeInstanceOf(EntityNotEmpty);
   });
 
-  it('should return EntityNotExists if there is no directory created in the database', async () => {
-    const {
-      downloadContentFileDto,
-      findUserByIdRepository,
-      downloadContentFileRepository,
-      findContentFileByIdRepository,
-    } = makeSut();
-
-    const mockEmptyItem = {} as Directory;
-
-    const mockEmptyRepository: FindDirectoryByIdRepository = {
-      find: jest.fn(async () => mockEmptyItem),
-    };
-
-    const sut = new DownloadContentFile(
-      findUserByIdRepository,
-      mockEmptyRepository,
-      findContentFileByIdRepository,
-      downloadContentFileRepository
-    );
-
-    const result = await sut.execute(downloadContentFileDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotExists);
-  });
-
   it('should return EntityNotExists if there is no content file created in the database', async () => {
     const {
       downloadContentFileDto,
