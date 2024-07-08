@@ -13,6 +13,7 @@ import {
 } from '../../repository';
 import { Either, left, right } from '../../shared/either';
 import { Inject } from '@nestjs/common';
+import { ValidationUserId } from '../../utils';
 
 export class CreateAuth
   implements
@@ -54,11 +55,7 @@ export class CreateAuth
     if (Object.keys(filteredEmail?.userId).length > 0) {
       return left(new EntityAlreadyExists(email));
     }
-    const userResult = await this.findUserByIdRepository.find(userId);
-
-    if (Object.keys(userResult).length < 1) {
-      return left(new EntityNotExists('User'));
-    }
+    await ValidationUserId(userId, this.findUserByIdRepository);
 
     const hashedPassword = await this.hashGenerator.hash(password);
 
