@@ -8,6 +8,7 @@ import {
   FindPlaylistByIdRepository,
   FindUserByIdRepository,
 } from '../../repository';
+import { ValidationUserId } from '../../utils';
 
 export class DeletePlaylist
   implements UseCase<DeletePlaylistDto, Either<EntityNotEmpty, void>>
@@ -33,11 +34,7 @@ export class DeletePlaylist
       return left(new EntityNotEmpty('Logged User'));
     }
 
-    const filteredUser = await this.findUserByIdRepository.find(loggedUserId);
-
-    if (Object.keys(filteredUser?.userId ?? filteredUser).length < 1) {
-      return left(new EntityNotExists('User'));
-    }
+    await ValidationUserId(loggedUserId, this.findUserByIdRepository);
 
     const filteredPlaylist = await this.findPlaylistByIdRepository.find(id);
 
