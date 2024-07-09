@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   Controller,
   Post,
   Query,
@@ -9,7 +8,11 @@ import {
 } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { CreateContentFileService } from './create-content-file.service';
-import { UploadedFile, createContentFileSchema } from '@workspaces/domain';
+import {
+  ErrorMessageResult,
+  UploadedFile,
+  createContentFileSchema,
+} from '@workspaces/domain';
 import { FileS3Storage } from '@workspaces/data-access';
 import { ZodValidationPipe } from '../../pipes/zod-validation-pipe';
 
@@ -44,12 +47,6 @@ export class CreateContentFileController {
     });
 
     if (result.isRight()) return result.value;
-    else
-      throw new BadRequestException({
-        error: {
-          name: result.value.name,
-          message: result.value.message,
-        },
-      });
+    else ErrorMessageResult(result.value.name, result.value.message);
   }
 }
