@@ -26,6 +26,7 @@ import {
   EditPlaylistModule,
   DeletePlaylistModule,
 } from './playlist';
+import { ListSimpleDirectoryModule } from './list-simple-directory/list-simple-directory.module';
 
 @Module({
   imports: [
@@ -51,6 +52,7 @@ import {
     FindPlaylistByIdModule,
     EditPlaylistModule,
     DeletePlaylistModule,
+    ListSimpleDirectoryModule,
   ],
   controllers: [AppController],
   providers: [AppService],
