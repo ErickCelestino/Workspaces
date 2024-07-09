@@ -1,13 +1,7 @@
-import {
-  BadRequestException,
-  Controller,
-  Get,
-  Param,
-  UsePipes,
-} from '@nestjs/common';
+import { Controller, Get, Param, UsePipes } from '@nestjs/common';
 import { FindUserByIdService } from './find-user-by-id.service';
 import { ZodValidationPipe } from '../../pipes/zod-validation-pipe';
-import { findUserByIdSchema } from '@workspaces/domain';
+import { ErrorMessageResult, findUserByIdSchema } from '@workspaces/domain';
 
 @Controller('find-user-by-id')
 export class FindUserByIdController {
@@ -19,12 +13,6 @@ export class FindUserByIdController {
     const result = await this.findUserByIdService.find(id);
 
     if (result.isRight()) return result.value;
-    else
-      throw new BadRequestException({
-        error: {
-          name: result.value.name,
-          message: result.value.message,
-        },
-      });
+    else ErrorMessageResult(result.value.name, result.value.message);
   }
 }
