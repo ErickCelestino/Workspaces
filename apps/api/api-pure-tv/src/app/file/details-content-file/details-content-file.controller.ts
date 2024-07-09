@@ -1,15 +1,9 @@
-import {
-  BadRequestException,
-  Controller,
-  Get,
-  Param,
-  Query,
-  UsePipes,
-} from '@nestjs/common';
+import { Controller, Get, Param, Query, UsePipes } from '@nestjs/common';
 import { DetailsContentFileService } from './details-content-file.service';
 import {
   DetailsContentFileDto,
   detailsContentFileSchema,
+  ErrorMessageResult,
 } from '@workspaces/domain';
 import { ZodValidationPipe } from '../../pipes/zod-validation-pipe';
 
@@ -35,12 +29,6 @@ export class DetailsContentFileController {
     const result = await this.detailsContentFileService.details(dto);
 
     if (result.isRight()) return result.value;
-    else
-      throw new BadRequestException({
-        error: {
-          name: result.value.name,
-          message: result.value.message,
-        },
-      });
+    else ErrorMessageResult(result.value.name, result.value.message);
   }
 }

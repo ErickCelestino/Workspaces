@@ -1,14 +1,7 @@
-import {
-  BadRequestException,
-  Controller,
-  Get,
-  Param,
-  Query,
-  UsePipes,
-} from '@nestjs/common';
+import { Controller, Get, Param, Query, UsePipes } from '@nestjs/common';
 import { FindPlaylistByIdService } from './find-playlist-by-id.service';
 import { ZodValidationPipe } from '../../pipes/zod-validation-pipe';
-import { findPlaylistByIdSchema } from '@workspaces/domain';
+import { ErrorMessageResult, findPlaylistByIdSchema } from '@workspaces/domain';
 
 @Controller('find-playlist-by-id')
 export class FindPlaylistByIdController {
@@ -28,12 +21,6 @@ export class FindPlaylistByIdController {
     });
 
     if (result.isRight()) return result.value;
-    else
-      throw new BadRequestException({
-        error: {
-          name: result.value.name,
-          message: result.value.message,
-        },
-      });
+    else ErrorMessageResult(result.value.name, result.value.message);
   }
 }

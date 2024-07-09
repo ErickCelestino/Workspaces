@@ -1,14 +1,10 @@
-import {
-  BadRequestException,
-  Controller,
-  Delete,
-  Param,
-  Query,
-  UsePipes,
-} from '@nestjs/common';
+import { Controller, Delete, Param, Query, UsePipes } from '@nestjs/common';
 import { DeletePlaylistCategoryService } from './delete-playlist-category.service';
 import { ZodValidationPipe } from '../../pipes/zod-validation-pipe';
-import { deletePlaylistCategorySchema } from '@workspaces/domain';
+import {
+  deletePlaylistCategorySchema,
+  ErrorMessageResult,
+} from '@workspaces/domain';
 
 @Controller('delete-playlist-category')
 export class DeletePlaylistCategoryController {
@@ -28,12 +24,6 @@ export class DeletePlaylistCategoryController {
     });
 
     if (result.isRight()) return { playlistCategoryId: result.value };
-    else
-      throw new BadRequestException({
-        error: {
-          name: result.value.name,
-          message: result.value.message,
-        },
-      });
+    else ErrorMessageResult(result.value.name, result.value.message);
   }
 }
