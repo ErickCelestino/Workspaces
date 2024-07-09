@@ -9,11 +9,7 @@ import {
 } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { CreateContentFileService } from './create-content-file.service';
-import {
-  CreateContentFileDto,
-  UploadedFile,
-  createContentFileSchema,
-} from '@workspaces/domain';
+import { UploadedFile, createContentFileSchema } from '@workspaces/domain';
 import { FileS3Storage } from '@workspaces/data-access';
 import { ZodValidationPipe } from '../../pipes/zod-validation-pipe';
 
@@ -28,6 +24,7 @@ export class CreateContentFileController {
   @UseInterceptors(
     FilesInterceptor('files', undefined, {
       storage: FileS3Storage.Storage,
+      fileFilter: FileS3Storage.fileFilter,
     })
   )
   async create(
@@ -40,12 +37,11 @@ export class CreateContentFileController {
       ...file,
       filename: uploadedFileNames[index],
     }));
-    const dtoRequest: CreateContentFileDto = {
+    const result = await this.createContentVideoService.create({
       directoryId: directoryId,
       file: updatedFiles,
       loggedUserId,
-    };
-    const result = await this.createContentVideoService.create(dtoRequest);
+    });
 
     if (result.isRight()) return result.value;
     else
