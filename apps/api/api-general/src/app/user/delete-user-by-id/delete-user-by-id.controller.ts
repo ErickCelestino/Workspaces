@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -8,7 +7,11 @@ import {
   UsePipes,
 } from '@nestjs/common';
 import { DeleteUserByIdService } from './delete-user-by-id.service';
-import { DeleteUserByIdDto, deleteUserByIdSchema } from '@workspaces/domain';
+import {
+  DeleteUserByIdDto,
+  deleteUserByIdSchema,
+  ErrorMessageResult,
+} from '@workspaces/domain';
 import { ZodValidationPipe } from '../../pipes/zod-validation-pipe';
 
 @Controller('delete-user-by-id')
@@ -30,12 +33,6 @@ export class DeleteUserByIdController {
     const result = await this.deleteUserByIdService.delete(dto);
 
     if (result.isRight()) return;
-    else
-      throw new BadRequestException({
-        error: {
-          name: result.value.name,
-          message: result.value.message,
-        },
-      });
+    else ErrorMessageResult(result.value.name, result.value.message);
   }
 }

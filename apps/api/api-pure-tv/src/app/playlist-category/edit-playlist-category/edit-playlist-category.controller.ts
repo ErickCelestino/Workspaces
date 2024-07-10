@@ -1,14 +1,7 @@
-import {
-  BadRequestException,
-  Body,
-  Controller,
-  Param,
-  Put,
-  Query,
-  UsePipes,
-} from '@nestjs/common';
+import { Body, Controller, Param, Put, Query, UsePipes } from '@nestjs/common';
 import { EditPlaylistCategoryService } from './edit-playlist-category.service';
 import {
+  ErrorMessageResult,
   PlaylistCategoryBodyDto,
   editPlaylistCategorySchema,
 } from '@workspaces/domain';
@@ -34,12 +27,6 @@ export class EditPlaylistCategoryController {
     });
 
     if (result.isRight()) return { playlistCategoryId: result.value };
-    else
-      throw new BadRequestException({
-        error: {
-          name: result.value.name,
-          message: result.value.message,
-        },
-      });
+    else ErrorMessageResult(result.value.name, result.value.message);
   }
 }

@@ -1,7 +1,6 @@
 import {
   Box,
   Button,
-  Divider,
   Fade,
   IconButton,
   MenuItem,
@@ -13,7 +12,10 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { FC, useState } from 'react';
-import { ErrorResponse, ListDirectoryNameDto } from '@workspaces/domain';
+import {
+  ErrorResponse,
+  ListDirectoryNameResponseDto,
+} from '@workspaces/domain';
 import { MoveFileToDirectoryRequest } from '../../../services';
 import axios, { AxiosError } from 'axios';
 import { ValidationsError } from '../../../shared';
@@ -41,7 +43,9 @@ export const MoveFileToDirectoryModal: FC<MoveFileToDirectoryModalProps> = ({
   fieldLabel = 'Diretório',
   successMessage = 'Arquivo Movido com Sucesso!',
 }) => {
-  const [directoryList, setDirectoryList] = useState<ListDirectoryNameDto[]>([
+  const [directoryList, setDirectoryList] = useState<
+    ListDirectoryNameResponseDto[]
+  >([
     {
       id: '2',
       name: 'teste',

@@ -1,1 +1,1 @@
-export * from './list-directory-name.dto';
+export * from './list-simple-directory.dto';

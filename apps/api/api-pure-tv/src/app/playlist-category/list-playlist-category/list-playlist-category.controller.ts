@@ -1,13 +1,10 @@
-import {
-  BadRequestException,
-  Controller,
-  Get,
-  Query,
-  UsePipes,
-} from '@nestjs/common';
+import { Controller, Get, Query, UsePipes } from '@nestjs/common';
 import { ListPlaylistCategoryService } from './list-playlist-category.service';
 import { ZodValidationPipe } from '../../pipes/zod-validation-pipe';
-import { listPlaylistCategorySchema } from '@workspaces/domain';
+import {
+  ErrorMessageResult,
+  listPlaylistCategorySchema,
+} from '@workspaces/domain';
 
 @Controller('list-playlist-category')
 export class ListPlaylistCategoryController {
@@ -31,12 +28,6 @@ export class ListPlaylistCategoryController {
     });
 
     if (result.isRight()) return result.value;
-    else
-      throw new BadRequestException({
-        error: {
-          name: result.value.name,
-          message: result.value.message,
-        },
-      });
+    else ErrorMessageResult(result.value.name, result.value.message);
   }
 }

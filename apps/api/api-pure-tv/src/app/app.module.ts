@@ -27,6 +27,7 @@ import {
   DeletePlaylistModule,
 } from './playlist';
 import { AddFileToPlaylistModule } from './add-file-to-playlist/add-file-to-playlist.module';
+import { ListSimpleDirectoryModule } from './list-simple-directory/list-simple-directory.module';
 
 @Module({
   imports: [
@@ -53,6 +54,7 @@ import { AddFileToPlaylistModule } from './add-file-to-playlist/add-file-to-play
     EditPlaylistModule,
     DeletePlaylistModule,
     AddFileToPlaylistModule,
+    ListSimpleDirectoryModule,
   ],
   controllers: [AppController],
   providers: [AppService],
