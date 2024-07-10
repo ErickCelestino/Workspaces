@@ -4,6 +4,7 @@ import { DeletePlaylistDto } from '../../dto';
 import { EntityNotEmpty } from '../../error';
 import { Either, left, right } from '../../shared/either';
 import {
+  DeleteFileByPlaylistRepository,
   DeletePlaylistRepoistory,
   FindPlaylistByIdRepository,
   FindUserByIdRepository,
@@ -18,6 +19,8 @@ export class DeletePlaylist
     private findUserByIdRepository: FindUserByIdRepository,
     @Inject('FindPlaylistByIdRepository')
     private findPlaylistByIdRepository: FindPlaylistByIdRepository,
+    @Inject('DeleteFileByPlaylistRepository')
+    private deleteFileByPlaylist: DeleteFileByPlaylistRepository,
     @Inject('DeletePlaylistRepoistory')
     private deletePlaylistRepository: DeletePlaylistRepoistory
   ) {}
@@ -37,6 +40,8 @@ export class DeletePlaylist
     await ValidationUserId(loggedUserId, this.findUserByIdRepository);
 
     await ValidationPlaylistId(id, this.findPlaylistByIdRepository);
+
+    await this.deleteFileByPlaylist.delete(id);
 
     await this.deletePlaylistRepository.delete(id);
 

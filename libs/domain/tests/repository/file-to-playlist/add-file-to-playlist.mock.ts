@@ -1,8 +1,8 @@
 import {
   AddFileToPlaylistDto,
   AddFileToPlaylistRepository,
-} from '../../../../src';
-import { FileToPlaylistMock } from '../../../entity';
+} from '../../../src';
+import { FileToPlaylistMock } from '../../entity';
 
 export class AddFileToPlaylistRepositoryMock
   implements AddFileToPlaylistRepository

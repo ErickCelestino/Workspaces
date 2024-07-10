@@ -1,5 +1,4 @@
-import { FindFileInFileToPlaylistRepository } from '../../../../src';
-import { ContentFileMock } from '../../../entity';
+import { FindFileInFileToPlaylistRepository } from '../../../src';
 
 export class FindFileInFileToPlaylistRepositoryMock
   implements FindFileInFileToPlaylistRepository
