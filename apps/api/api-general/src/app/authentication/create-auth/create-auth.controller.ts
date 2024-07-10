@@ -1,13 +1,11 @@
-import {
-  BadRequestException,
-  Body,
-  Controller,
-  Post,
-  UsePipes,
-} from '@nestjs/common';
+import { Body, Controller, Post, UsePipes } from '@nestjs/common';
 import { CreateAuthService } from './create-auth.service';
 import { ZodValidationPipe } from '../../pipes/zod-validation-pipe';
-import { CreateAuthDto, createAuthSchema } from '@workspaces/domain';
+import {
+  CreateAuthDto,
+  createAuthSchema,
+  ErrorMessageResult,
+} from '@workspaces/domain';
 
 @Controller('create-auth')
 export class CreateAuthController {
@@ -19,12 +17,6 @@ export class CreateAuthController {
     const result = await this.createAuthService.create(input);
 
     if (result.isRight()) return;
-    else
-      throw new BadRequestException({
-        error: {
-          name: result.value.name,
-          message: result.value.message,
-        },
-      });
+    else ErrorMessageResult(result.value.name, result.value.message);
   }
 }

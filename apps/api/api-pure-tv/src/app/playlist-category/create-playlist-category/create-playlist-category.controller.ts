@@ -1,13 +1,7 @@
-import {
-  BadRequestException,
-  Body,
-  Controller,
-  Post,
-  Query,
-  UsePipes,
-} from '@nestjs/common';
+import { Body, Controller, Post, Query, UsePipes } from '@nestjs/common';
 import { CreatePlaylistCategoryService } from './create-playlist-category.service';
 import {
+  ErrorMessageResult,
   PlaylistCategoryBodyDto,
   createPlaylistCategorySchema,
 } from '@workspaces/domain';
@@ -31,12 +25,6 @@ export class CreatePlaylistCategoryController {
     });
 
     if (result.isRight()) return { playlistCategoryId: result.value };
-    else
-      throw new BadRequestException({
-        error: {
-          name: result.value.name,
-          message: result.value.message,
-        },
-      });
+    else ErrorMessageResult(result.value.name, result.value.message);
   }
 }

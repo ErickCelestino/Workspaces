@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   Controller,
   Post,
   Query,
@@ -10,7 +9,7 @@ import {
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { CreateContentFileService } from './create-content-file.service';
 import {
-  CreateContentFileDto,
+  ErrorMessageResult,
   UploadedFile,
   createContentFileSchema,
 } from '@workspaces/domain';
@@ -28,6 +27,7 @@ export class CreateContentFileController {
   @UseInterceptors(
     FilesInterceptor('files', undefined, {
       storage: FileS3Storage.Storage,
+      fileFilter: FileS3Storage.fileFilter,
     })
   )
   async create(
@@ -40,20 +40,13 @@ export class CreateContentFileController {
       ...file,
       filename: uploadedFileNames[index],
     }));
-    const dtoRequest: CreateContentFileDto = {
+    const result = await this.createContentVideoService.create({
       directoryId: directoryId,
       file: updatedFiles,
       loggedUserId,
-    };
-    const result = await this.createContentVideoService.create(dtoRequest);
+    });
 
     if (result.isRight()) return result.value;
-    else
-      throw new BadRequestException({
-        error: {
-          name: result.value.name,
-          message: result.value.message,
-        },
-      });
+    else ErrorMessageResult(result.value.name, result.value.message);
   }
 }

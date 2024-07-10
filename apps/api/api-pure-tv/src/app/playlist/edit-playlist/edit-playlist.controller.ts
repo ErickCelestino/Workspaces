@@ -1,14 +1,10 @@
-import {
-  BadRequestException,
-  Body,
-  Controller,
-  Param,
-  Put,
-  Query,
-  UsePipes,
-} from '@nestjs/common';
+import { Body, Controller, Param, Put, Query, UsePipes } from '@nestjs/common';
 import { EditPlaylistService } from './edit-playlist.service';
-import { editPlaylistSchema, PlaylistBodyDto } from '@workspaces/domain';
+import {
+  editPlaylistSchema,
+  ErrorMessageResult,
+  PlaylistBodyDto,
+} from '@workspaces/domain';
 import { ZodValidationPipe } from '../../pipes/zod-validation-pipe';
 
 @Controller('edit-playlist')
@@ -29,12 +25,6 @@ export class EditPlaylistController {
     });
 
     if (result.isRight()) return result.value;
-    else
-      throw new BadRequestException({
-        error: {
-          name: result.value.name,
-          message: result.value.message,
-        },
-      });
+    else ErrorMessageResult(result.value.name, result.value.message);
   }
 }

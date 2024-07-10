@@ -1,13 +1,7 @@
-import {
-  BadRequestException,
-  Controller,
-  Get,
-  Query,
-  UsePipes,
-} from '@nestjs/common';
+import { Controller, Get, Query, UsePipes } from '@nestjs/common';
 import { ListUserService } from './list-user.service';
 import { ZodValidationPipe } from '../../pipes/zod-validation-pipe';
-import { listUserSchema } from '@workspaces/domain';
+import { ErrorMessageResult, listUserSchema } from '@workspaces/domain';
 
 @Controller('list-user')
 export class ListUserController {
@@ -23,12 +17,6 @@ export class ListUserController {
     const result = await this.listUserService.list({ input, skip, take });
 
     if (result.isRight()) return result.value;
-    else
-      throw new BadRequestException({
-        error: {
-          name: result.value.name,
-          message: result.value.message,
-        },
-      });
+    else ErrorMessageResult(result.value.name, result.value.message);
   }
 }
