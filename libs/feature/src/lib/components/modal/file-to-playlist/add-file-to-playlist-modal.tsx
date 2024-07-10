@@ -78,7 +78,7 @@ export const AddFileToPlaylistModal: FC<AddFileToPlaylistModalProps> = ({
 
   return (
     <SimpleFormModal
-      height={smDown ? theme.spacing(55) : theme.spacing(53)}
+      height={smDown ? theme.spacing(55) : theme.spacing(70)}
       width={smDown ? '90%' : theme.spacing(80)}
       open={open}
       handlePopUpClose={handlePopUpClose}
