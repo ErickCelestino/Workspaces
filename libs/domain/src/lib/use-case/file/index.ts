@@ -1,4 +1,3 @@
-export * from './file-to-playlist';
 export * from './create-content-file';
 export * from './delete-content-file-by-id';
 export * from './details-content-file';
