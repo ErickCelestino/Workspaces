@@ -5,6 +5,7 @@ import {
   PlaylistCard,
   DeletePlaylistModal,
   ContainerCardList,
+  AddFileToPlaylistModal,
 } from '../../components';
 import { LayoutBase } from '../../layout';
 import { useSnackbarAlert } from '../../hooks';
@@ -29,12 +30,13 @@ export const ListPlaylistContainer = () => {
   const [createPlaylistPopUp, setCreatePlaylistPopUp] = useState(false);
   const [editPlaylistPopUp, setEditPlaylistPopUp] = useState(false);
   const [deletePlaylistPopUp, setDeletePlaylistPopUp] = useState(false);
+  const [addFilePopUp, setAddFilePopUp] = useState(false);
   const [search, setSearch] = useState(false);
   const [listPlaylist, setListPlaylist] = useState<Playlist[]>([]);
   const [totalPage, setTotalPage] = useState<number>(1);
   const [playlistId, setPlaylistId] = useState('');
 
-  const handlePopUpClose = (types: CrudType) => {
+  const handlePopUpClose = (types: CrudType | 'add-file') => {
     switch (types) {
       case 'create':
         setCreatePlaylistPopUp(false);
@@ -45,10 +47,13 @@ export const ListPlaylistContainer = () => {
       case 'delete':
         setDeletePlaylistPopUp(false);
         break;
+      case 'add-file':
+        setAddFilePopUp(false);
+        break;
     }
   };
 
-  const handlePopUpOpen = (types: CrudType, id?: string) => {
+  const handlePopUpOpen = (types: CrudType | 'add-file', id?: string) => {
     switch (types) {
       case 'create':
         setCreatePlaylistPopUp(true);
@@ -61,8 +66,9 @@ export const ListPlaylistContainer = () => {
         setPlaylistId(id ?? '');
         setDeletePlaylistPopUp(true);
         break;
-      case 'details':
-        //need implementation
+      case 'add-file':
+        setPlaylistId(id ?? '');
+        setAddFilePopUp(true);
         break;
     }
   };
@@ -164,6 +170,13 @@ export const ListPlaylistContainer = () => {
         title="Deletar Playlist?"
         subTitle="Por favor, selecione alguma das alternativas"
       />
+      <AddFileToPlaylistModal
+        idPlaylist={playlistId}
+        open={addFilePopUp}
+        showAlert={showAlert}
+        handlePopUpClose={() => handlePopUpClose('add-file')}
+        title="Adicionar Arquivos a Playlist?"
+      />
       <LayoutBase title="Listagem Playlist" toolBar={<ToolbarPureTV />}>
         <ContainerCardList
           handleChange={handleChange}
@@ -185,7 +198,9 @@ export const ListPlaylistContainer = () => {
                     deletePlaylist={async () =>
                       handlePopUpOpen('delete', playlist.id)
                     }
-                    detailsPlaylist={async () => handlePopUpOpen('details')}
+                    addFile={async () =>
+                      handlePopUpOpen('add-file', playlist.id)
+                    }
                     imageData={{
                       image: '',
                       imageName: '',

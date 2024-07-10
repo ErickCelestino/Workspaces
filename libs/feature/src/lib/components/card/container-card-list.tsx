@@ -43,7 +43,7 @@ export const ContainerCardList: FC<ContainerCardListProps> = ({
         flexDirection: 'column',
       }}
     >
-      <Box width="95%">
+      <Box width="97%">
         <Box
           sx={{
             display: 'flex',
@@ -100,20 +100,23 @@ export const ContainerCardList: FC<ContainerCardListProps> = ({
             justifyContent="center"
             mt={theme.spacing(2)}
             sx={{
-              width: mdUp ? '80%' : smDown ? '94%' : mdDown ? '95%' : '80%',
+              width: mdUp ? '100%' : smDown ? '94%' : mdDown ? '95%' : '80%',
             }}
           >
             {children}
           </Box>
         </Box>
-        <Box width="100%" display="flex" justifyContent="center">
-          <Box marginTop={theme.spacing(2)}>
-            <Pagination
-              count={totalPage}
-              color="primary"
-              onChange={handleChange}
-            />
-          </Box>
+        <Box
+          width={mdUp ? '97%' : '100%'}
+          display="flex"
+          justifyContent="center"
+          marginTop={theme.spacing(2)}
+        >
+          <Pagination
+            count={totalPage}
+            color="primary"
+            onChange={handleChange}
+          />
         </Box>
       </Box>
     </Box>

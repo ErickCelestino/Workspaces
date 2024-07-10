@@ -44,7 +44,7 @@ export const ProgressFilesList: FC<ProgressFilesListProps> = ({
       <Typography marginLeft="1rem" variant="h6">
         {title}
       </Typography>
-      <ScrollBox>
+      <ScrollBox maxHeight="11rem">
         <List>
           {filesList.map(({ file }) => (
             <ListItem key={file.name}>

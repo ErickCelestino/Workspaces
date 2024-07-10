@@ -5,8 +5,6 @@ import {
   CreateContentFileRepository,
   FindDirectoryByIdRepository,
   EntityNotEmpty,
-  EntityNotExists,
-  Directory,
   EntityNotCreated,
   FileNotAllowed,
   FindUrlFileRepository,

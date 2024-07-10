@@ -9,7 +9,6 @@ import {
   FindUserByIdRepository,
   PlaylistBodyDto,
   PlaylistCategory,
-  PlaylistResponseDto,
 } from '../../../src';
 import { PlaylistMock, userMock } from '../../entity';
 import {

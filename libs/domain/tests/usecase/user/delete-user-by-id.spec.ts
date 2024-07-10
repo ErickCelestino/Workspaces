@@ -6,7 +6,6 @@ import {
   EntityNotExists,
   FindUserByIdRepository,
   NotPermissionError,
-  UserList,
   VerifyUserStatusByIdRepository,
 } from '../../../src';
 import { userMock } from '../../entity';

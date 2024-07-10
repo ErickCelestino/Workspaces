@@ -39,7 +39,7 @@ export const ButtonFileMenu: FC<ButtonFileMenuProps> = ({
           <MenuItem
             key={index}
             sx={{
-              width: theme.spacing(20),
+              width: theme.spacing(25),
             }}
             onClick={() => {
               item.handleClick();
