@@ -32,12 +32,14 @@ import { ScrollBox } from '../scroll';
 interface ListSimpleDirectoryProps {
   listDirectories: ListDirectoryNameResponseDto[];
   showAlert: (message: string, success: boolean) => void;
+  addFileToPlaylist: (data: string[]) => void;
   buttonTitle?: string;
 }
 
 export const ListSimpleDirectory: FC<ListSimpleDirectoryProps> = ({
   listDirectories,
   showAlert,
+  addFileToPlaylist,
   buttonTitle = 'Adicionar à Playlist',
 }) => {
   const [listFiles, setListFiles] = useState<{ [key: string]: ContentFile[] }>(
@@ -112,8 +114,7 @@ export const ListSimpleDirectory: FC<ListSimpleDirectoryProps> = ({
     const selectedFileIds = Object.keys(selectedFiles).filter(
       (fileId) => selectedFiles[fileId]
     );
-    console.log('Selected file IDs:', selectedFileIds);
-    // Você pode fazer algo com os IDs dos arquivos selecionados, como enviá-los para uma API
+    addFileToPlaylist(selectedFileIds);
   };
 
   return (

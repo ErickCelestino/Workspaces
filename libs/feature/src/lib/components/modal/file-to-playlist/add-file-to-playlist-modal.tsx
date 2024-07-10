@@ -2,6 +2,7 @@ import { FC, useCallback, useEffect, useState } from 'react';
 import { SimpleFormModal } from '../simple';
 import { Box, useMediaQuery, useTheme } from '@mui/material';
 import {
+  AddFileToPlaylistDto,
   ContentFile,
   ErrorResponse,
   ListContentFileDto,
@@ -16,6 +17,7 @@ import axios, { AxiosError } from 'axios';
 import { ValidationsError } from '../../../shared';
 import { useLoggedUser } from '../../../contexts';
 import { ListSimpleDirectory } from '../../list';
+import { AddFileToPlaylistRequest } from '../../../services/http/file-to-playlist/add-file-to-playlist';
 
 interface AddFileToPlaylistModalProps {
   showAlert: (message: string, success: boolean) => void;
@@ -47,6 +49,32 @@ export const AddFileToPlaylistModal: FC<AddFileToPlaylistModalProps> = ({
       setDataLoaded(false);
     }
   }, [open]);
+
+  const addFileToPlaylist = async (data: string[]) => {
+    if (data.length > 0) {
+      try {
+        const result = await AddFileToPlaylistRequest({
+          loggedUserId: loggedUser?.id ?? '',
+          filesId: data,
+          playlistId: idPlaylist,
+        });
+
+        if (result) {
+          showAlert(successMessage, true);
+          handlePopUpClose();
+        }
+      } catch (error) {
+        console.error(error);
+        if (axios.isAxiosError(error)) {
+          const axiosError = error as AxiosError<ErrorResponse>;
+          const errors = ValidationsError(axiosError, 'Arquivo(s)');
+          if (errors) {
+            showAlert(errors, false);
+          }
+        }
+      }
+    }
+  };
 
   const getDirectory = useCallback(
     async (input: ListSimpleDirectoryDto) => {
@@ -88,6 +116,7 @@ export const AddFileToPlaylistModal: FC<AddFileToPlaylistModalProps> = ({
         <ListSimpleDirectory
           listDirectories={directoriesList}
           showAlert={showAlert}
+          addFileToPlaylist={addFileToPlaylist}
         />
       </Box>
     </SimpleFormModal>

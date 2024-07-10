@@ -1,5 +1,5 @@
 import { AddFileToPlaylistDto } from '@workspaces/domain';
-import { pureTvApi } from '../../axios-config';
+import { pureTvApi } from '../axios-config';
 
 export async function AddFileToPlaylistRequest(input: AddFileToPlaylistDto) {
   const result = await pureTvApi.post(
