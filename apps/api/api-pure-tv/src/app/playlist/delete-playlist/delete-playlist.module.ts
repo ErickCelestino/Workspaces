@@ -3,6 +3,7 @@ import { DeletePlaylistService } from './delete-playlist.service';
 import { DeletePlaylistController } from './delete-playlist.controller';
 import { DeletePlaylist } from '@workspaces/domain';
 import {
+  DeleteFileByPlaylistRepositoryImpl,
   DeletePlaylistRepositoryImpl,
   FindPlaylistByIdRepositoryImpl,
   FindUserByIdRepositoryImpl,
@@ -29,6 +30,10 @@ import {
     {
       provide: 'DeletePlaylistRepoistory',
       useClass: DeletePlaylistRepositoryImpl,
+    },
+    {
+      provide: 'DeleteFileByPlaylistRepository',
+      useClass: DeleteFileByPlaylistRepositoryImpl,
     },
   ],
 })

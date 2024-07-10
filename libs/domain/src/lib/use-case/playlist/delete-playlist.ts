@@ -20,7 +20,7 @@ export class DeletePlaylist
     @Inject('FindPlaylistByIdRepository')
     private findPlaylistByIdRepository: FindPlaylistByIdRepository,
     @Inject('DeleteFileByPlaylistRepository')
-    private deleteFileByPlaylist: DeleteFileByPlaylistRepository,
+    private deleteFileByPlaylistRepository: DeleteFileByPlaylistRepository,
     @Inject('DeletePlaylistRepoistory')
     private deletePlaylistRepository: DeletePlaylistRepoistory
   ) {}
@@ -41,7 +41,7 @@ export class DeletePlaylist
 
     await ValidationPlaylistId(id, this.findPlaylistByIdRepository);
 
-    await this.deleteFileByPlaylist.delete(id);
+    await this.deleteFileByPlaylistRepository.delete(id);
 
     await this.deletePlaylistRepository.delete(id);
 
