@@ -9,7 +9,7 @@ import {
 } from '@mui/material';
 import { IconMenuItem, ImageCardItem } from '@workspaces/domain';
 import EditIcon from '@mui/icons-material/Edit';
-import InfoIcon from '@mui/icons-material/Info';
+import NoteAddIcon from '@mui/icons-material/NoteAdd';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { FC } from 'react';
 import { ButtonFileMenu } from '../menu';
@@ -18,22 +18,22 @@ interface ListPlaylistProps {
   name: string;
   editTitle?: string;
   deleteTitle?: string;
-  detailsTitle?: string;
+  addFileTitle?: string;
   imageData: ImageCardItem;
   editPlaylist: () => Promise<void>;
   deletePlaylist: () => Promise<void>;
-  detailsPlaylist: () => Promise<void>;
+  addFile: () => Promise<void>;
 }
 
 export const PlaylistCard: FC<ListPlaylistProps> = ({
   name,
   editTitle = 'Editar',
   deleteTitle = 'Deletar',
-  detailsTitle = 'Detalhes',
+  addFileTitle = 'Adicionar Arquivos',
   imageData,
   editPlaylist,
   deletePlaylist,
-  detailsPlaylist,
+  addFile,
 }) => {
   const theme = useTheme();
 
@@ -44,14 +44,14 @@ export const PlaylistCard: FC<ListPlaylistProps> = ({
       handleClick: editPlaylist,
     },
     {
-      icon: <InfoIcon />,
-      title: detailsTitle,
-      handleClick: detailsPlaylist,
-    },
-    {
       icon: <DeleteIcon />,
       title: deleteTitle,
       handleClick: deletePlaylist,
+    },
+    {
+      icon: <NoteAddIcon />,
+      title: addFileTitle,
+      handleClick: addFile,
     },
   ];
   return (

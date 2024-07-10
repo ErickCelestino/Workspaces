@@ -22,7 +22,7 @@ export class ListSimpleDirectoryController {
       take,
     });
 
-    if (result.isRight()) return { playlistId: result.value };
+    if (result.isRight()) return result.value;
     else ErrorMessageResult(result.value.name, result.value.message);
   }
 }

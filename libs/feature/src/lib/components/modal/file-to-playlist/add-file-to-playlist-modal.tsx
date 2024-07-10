@@ -5,17 +5,23 @@ import {
   ContentFile,
   ErrorResponse,
   ListContentFileDto,
+  ListDirectoryNameResponseDto,
+  ListSimpleDirectoryDto,
 } from '@workspaces/domain';
-import { ListContentFilesRequest } from '../../../services';
+import {
+  ListContentFilesRequest,
+  ListSimpleDirectoryRequest,
+} from '../../../services';
 import axios, { AxiosError } from 'axios';
 import { ValidationsError } from '../../../shared';
+import { useLoggedUser } from '../../../contexts';
+import { ListSimpleDirectory } from '../../list';
 
 interface AddFileToPlaylistModalProps {
   showAlert: (message: string, success: boolean) => void;
   handlePopUpClose: () => void;
   title: string;
   idPlaylist: string;
-  loggedUserId: string;
   open: boolean;
   successMessage?: string;
 }
@@ -28,10 +34,13 @@ export const AddFileToPlaylistModal: FC<AddFileToPlaylistModalProps> = ({
   open,
   successMessage = 'Arquivo(s) Adicionado(s) com Sucesso!',
 }) => {
-  const [filesList, setFilesList] = useState<ContentFile[]>([]);
+  const [directoriesList, setDirectoriesList] = useState<
+    ListDirectoryNameResponseDto[]
+  >([]);
   const [dataLoaded, setDataLoaded] = useState(false);
   const theme = useTheme();
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const { loggedUser } = useLoggedUser();
 
   useEffect(() => {
     if (!open) {
@@ -39,16 +48,16 @@ export const AddFileToPlaylistModal: FC<AddFileToPlaylistModalProps> = ({
     }
   }, [open]);
 
-  const getFiles = useCallback(
-    async (input: ListContentFileDto) => {
+  const getDirectory = useCallback(
+    async (input: ListSimpleDirectoryDto) => {
       try {
-        const result = await ListContentFilesRequest(input);
-        setFilesList(result.files);
+        const result = await ListSimpleDirectoryRequest(input);
+        setDirectoriesList(result.directories);
       } catch (error) {
         console.error(error);
         if (axios.isAxiosError(error)) {
           const axiosError = error as AxiosError<ErrorResponse>;
-          const errors = ValidationsError(axiosError, 'Category');
+          const errors = ValidationsError(axiosError, 'Directory');
           if (errors) {
             showAlert(errors, false);
           }
@@ -60,9 +69,12 @@ export const AddFileToPlaylistModal: FC<AddFileToPlaylistModalProps> = ({
 
   useEffect(() => {
     if (open && idPlaylist && !dataLoaded) {
-      console.log('more inplementation');
+      getDirectory({
+        loggedUserId: loggedUser?.id ?? '',
+        userInput: '',
+      });
     }
-  }, [getFiles, dataLoaded, idPlaylist, open]);
+  }, [dataLoaded, idPlaylist, open]);
 
   return (
     <SimpleFormModal
@@ -72,7 +84,12 @@ export const AddFileToPlaylistModal: FC<AddFileToPlaylistModalProps> = ({
       handlePopUpClose={handlePopUpClose}
       title={title}
     >
-      <Box></Box>
+      <Box>
+        <ListSimpleDirectory
+          listDirectories={directoriesList}
+          showAlert={showAlert}
+        />
+      </Box>
     </SimpleFormModal>
   );
 };
