@@ -9,20 +9,20 @@ import {
   FindFileInFileToPlaylistRepository,
   FindPlaylistByIdRepository,
   FindUserByIdRepository,
-} from '../../../../src';
+} from '../../../src';
 import {
   ContentFileMock,
   FileToPlaylistMock,
   PlaylistMock,
   userMock,
-} from '../../../entity';
+} from '../../entity';
 import {
   AddFileToPlaylistRepositoryMock,
   FindContentFileByIdRepositoryMock,
   FindFileInFileToPlaylistRepositoryMock,
   FindPlaylistByIdRepositoryMock,
   FindUserByIdRepositoryMock,
-} from '../../../repository';
+} from '../../repository';
 
 interface SutTypes {
   sut: AddFileToPlaylist;

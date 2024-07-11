@@ -1,24 +1,24 @@
 import { Inject } from '@nestjs/common';
-import { UseCase } from '../../../base/use-case';
-import { AddFileToPlaylistDto } from '../../../dto';
+import { UseCase } from '../../base/use-case';
+import { AddFileToPlaylistDto } from '../../dto';
 import {
   EntityAlreadyExists,
   EntityNotCreated,
   EntityNotEmpty,
-} from '../../../error';
-import { Either, left, right } from '../../../shared/either';
+} from '../../error';
+import { Either, left, right } from '../../shared/either';
 import {
   AddFileToPlaylistRepository,
   FindContentFileByIdRepository,
   FindFileInFileToPlaylistRepository,
   FindPlaylistByIdRepository,
   FindUserByIdRepository,
-} from '../../../repository';
+} from '../../repository';
 import {
   ValidationContentFileId,
   ValidationPlaylistId,
   ValidationUserId,
-} from '../../../utils';
+} from '../../utils';
 
 export class AddFileToPlaylist
   implements UseCase<AddFileToPlaylistDto, Either<EntityNotEmpty, string[]>>
