@@ -1,4 +1,3 @@
-export * from './file-to-playlist';
 export * from './create-content-file.repository';
 export * from './delete-content-file-by-id.repository';
 export * from './edit-content-file.repository';

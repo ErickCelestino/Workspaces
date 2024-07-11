@@ -1,4 +1,5 @@
 import {
+  DeleteFileByPlaylistRepository,
   DeletePlaylist,
   DeletePlaylistDto,
   DeletePlaylistRepoistory,
@@ -8,6 +9,7 @@ import {
 } from '../../../src';
 import { PlaylistMock, userMock } from '../../entity';
 import {
+  DeleteFileByPlaylistRepositoryMock,
   DeletePlaylistRepositoryMock,
   FindPlaylistByIdRepositoryMock,
   FindUserByIdRepositoryMock,
@@ -18,12 +20,15 @@ interface SutTypes {
   deletePlaylistDto: DeletePlaylistDto;
   findUserByIdRepository: FindUserByIdRepository;
   findPlaylistByIdRepository: FindPlaylistByIdRepository;
+  deleteFileByPlaylistRepository: DeleteFileByPlaylistRepository;
   deletePlaylistRepository: DeletePlaylistRepoistory;
 }
 
 const makeSut = (): SutTypes => {
   const findUserByIdRepository = new FindUserByIdRepositoryMock();
   const findPlaylistByIdRepository = new FindPlaylistByIdRepositoryMock();
+  const deleteFileByPlaylistRepository =
+    new DeleteFileByPlaylistRepositoryMock();
   const deletePlaylistRepository = new DeletePlaylistRepositoryMock();
 
   const deletePlaylistDto: DeletePlaylistDto = {
@@ -34,12 +39,14 @@ const makeSut = (): SutTypes => {
   const sut = new DeletePlaylist(
     findUserByIdRepository,
     findPlaylistByIdRepository,
+    deleteFileByPlaylistRepository,
     deletePlaylistRepository
   );
 
   return {
     findUserByIdRepository,
     findPlaylistByIdRepository,
+    deleteFileByPlaylistRepository,
     deletePlaylistRepository,
     deletePlaylistDto,
     sut,
