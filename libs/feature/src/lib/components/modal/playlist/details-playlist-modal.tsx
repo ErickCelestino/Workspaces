@@ -72,7 +72,7 @@ export const DetailsPlaylistModal: FC<DetailsPlaylistModalProps> = ({
         playlistId: idPlaylist,
       });
     }
-  }, []);
+  }, [open, idPlaylist, dataLoaded, getPlaylist, loggedUser]);
 
   return (
     <SimpleFormModal
@@ -83,8 +83,8 @@ export const DetailsPlaylistModal: FC<DetailsPlaylistModalProps> = ({
       title={title}
     >
       <Box>
-        <Typography>{playlistDetails.name}</Typography>
-        <Typography>{playlistDetails.category.name}</Typography>
+        <Typography>{playlistDetails?.name ?? ''}</Typography>
+        <Typography>{playlistDetails.category?.name ?? ''}</Typography>
         <Typography>
           {formatBrDate(new Date(playlistDetails?.created_at ?? new Date()))}
         </Typography>

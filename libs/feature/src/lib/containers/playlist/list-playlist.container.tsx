@@ -21,6 +21,7 @@ import axios, { AxiosError } from 'axios';
 import { ValidationsError } from '../../shared';
 import { useLoggedUser } from '../../contexts';
 import { EditPlaylistModal } from '../../components/modal/playlist/edit-playlist-modal';
+import { DetailsPlaylistModal } from '../../components/modal/playlist/details-playlist-modal';
 
 export const ListPlaylistContainer = () => {
   const { showSnackbarAlert, SnackbarAlert } = useSnackbarAlert();
@@ -30,6 +31,7 @@ export const ListPlaylistContainer = () => {
   const [createPlaylistPopUp, setCreatePlaylistPopUp] = useState(false);
   const [editPlaylistPopUp, setEditPlaylistPopUp] = useState(false);
   const [deletePlaylistPopUp, setDeletePlaylistPopUp] = useState(false);
+  const [detailsPlaylistPopUp, setDetailsPlaylistPopUp] = useState(false);
   const [addFilePopUp, setAddFilePopUp] = useState(false);
   const [search, setSearch] = useState(false);
   const [listPlaylist, setListPlaylist] = useState<Playlist[]>([]);
@@ -50,6 +52,8 @@ export const ListPlaylistContainer = () => {
       case 'add-file':
         setAddFilePopUp(false);
         break;
+      case 'details':
+        setDetailsPlaylistPopUp(false);
     }
   };
 
@@ -70,6 +74,9 @@ export const ListPlaylistContainer = () => {
         setPlaylistId(id ?? '');
         setAddFilePopUp(true);
         break;
+      case 'details':
+        setPlaylistId(id ?? '');
+        setDetailsPlaylistPopUp(true);
     }
   };
 
@@ -177,6 +184,13 @@ export const ListPlaylistContainer = () => {
         handlePopUpClose={() => handlePopUpClose('add-file')}
         title="Adicionar Arquivos a Playlist?"
       />
+      <DetailsPlaylistModal
+        idPlaylist={playlistId}
+        handlePopUpClose={() => handlePopUpClose('details')}
+        showAlert={showAlert}
+        open={detailsPlaylistPopUp}
+        title="Detalhes da Playlist"
+      />
       <LayoutBase title="Listagem Playlist" toolBar={<ToolbarPureTV />}>
         <ContainerCardList
           handleChange={handleChange}
@@ -200,6 +214,9 @@ export const ListPlaylistContainer = () => {
                     }
                     addFile={async () =>
                       handlePopUpOpen('add-file', playlist.id)
+                    }
+                    detailsPlaylist={async () =>
+                      handlePopUpOpen('details', playlist.id)
                     }
                     imageData={{
                       image: '',
