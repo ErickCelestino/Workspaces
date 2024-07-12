@@ -1,4 +1,5 @@
 import {
+  Directory,
   FindDirectoryByNameDto,
   FindDirectoryByNameRepository,
 } from '../../../src';
@@ -7,8 +8,9 @@ export class FindDirectoryByNameRepositoryMock
   implements FindDirectoryByNameRepository
 {
   inputMock = {} as FindDirectoryByNameDto;
-  async find(input: FindDirectoryByNameDto): Promise<string> {
+  async find(input: FindDirectoryByNameDto): Promise<Directory | object> {
     this.inputMock = input;
-    return '';
+    const directory = {};
+    return directory;
   }
 }

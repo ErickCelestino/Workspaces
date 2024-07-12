@@ -82,7 +82,7 @@ describe('CreateDirectory', () => {
       makeSut();
     jest
       .spyOn(FindDirectoryByNameRepository, 'find')
-      .mockResolvedValueOnce(DirectoryMock.id);
+      .mockResolvedValueOnce(DirectoryMock);
     const result = await sut.execute(CreateDirectoryDto);
     expect(result.isLeft()).toBe(true);
   });
