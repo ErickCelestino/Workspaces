@@ -1,6 +1,6 @@
 import { FC, useCallback, useEffect, useState } from 'react';
 import { SimpleFormModal } from '../simple';
-import { Box, Typography, useMediaQuery, useTheme } from '@mui/material';
+import { Box, Chip, Typography, useMediaQuery, useTheme } from '@mui/material';
 import {
   ContentFile,
   DetailsPlaylistDto,
@@ -82,12 +82,51 @@ export const DetailsPlaylistModal: FC<DetailsPlaylistModalProps> = ({
       handlePopUpClose={handlePopUpClose}
       title={title}
     >
-      <Box>
-        <Typography>{playlistDetails?.name ?? ''}</Typography>
-        <Typography>{playlistDetails.category?.name ?? ''}</Typography>
-        <Typography>
-          {formatBrDate(new Date(playlistDetails?.created_at ?? new Date()))}
-        </Typography>
+      <Box sx={{ padding: theme.spacing(2) }}>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            marginBottom: theme.spacing(2),
+          }}
+        >
+          <Typography
+            sx={{
+              fontSize: '18px',
+            }}
+          >
+            <strong>Nome: </strong>
+            {playlistDetails?.name ?? ''}
+          </Typography>
+          <Chip
+            label={playlistDetails.category?.name ?? ''}
+            color="success"
+            variant="filled"
+            size="medium"
+          />
+        </Box>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+          }}
+        >
+          <Typography
+            sx={{
+              fontSize: '18px',
+            }}
+          >
+            <strong>Criado por: </strong>
+            {playlistDetails?.created_by ?? ''}
+          </Typography>
+          <Typography>
+            <strong>Criado em: </strong>
+            {formatBrDate(new Date(playlistDetails?.created_at ?? new Date()))}
+          </Typography>
+        </Box>
+        <Box></Box>
       </Box>
     </SimpleFormModal>
   );
