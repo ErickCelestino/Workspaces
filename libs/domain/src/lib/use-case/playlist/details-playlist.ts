@@ -20,7 +20,7 @@ export class DetailsPlaylist
   constructor(
     @Inject('FindUserByIdRepository')
     private findUserByIdRepository: FindUserByIdRepository,
-    @Inject('FindUserByIdRepository')
+    @Inject('FindPlaylistByIdRepository')
     private findPlaylistByIdRepository: FindPlaylistByIdRepository,
     @Inject('DetailsPlaylistRepository')
     private detailsPlaylistRepository: DetailsPlaylistRepository
