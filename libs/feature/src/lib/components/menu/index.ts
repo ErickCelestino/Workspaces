@@ -1,3 +1,3 @@
 export * from './base-menu';
-export * from './button-file-menu';
+export * from './button-menu';
 export * from './right-click-menu';
