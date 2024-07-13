@@ -1,1 +1,1 @@
-export * from './create-directory';
+export * from './create-directory/create-directory.module';

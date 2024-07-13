@@ -1,4 +1,6 @@
+import { CreateDirectoryBodyDto } from './create-directory-body.dto';
+
 export interface CreateDirectoryDto {
-  name: string;
+  body: CreateDirectoryBodyDto;
   loggedUserId: string;
 }

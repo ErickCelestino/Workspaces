@@ -26,7 +26,7 @@ const makeSut = (): SutTypes => {
   const FindDirectoryByNameRepository = new FindDirectoryByNameRepositoryMock();
 
   const CreateDirectoryDto: CreateDirectoryDto = {
-    name: DirectoryMock.name,
+    body: { name: DirectoryMock.name },
     loggedUserId: userMock.userId,
   };
 
@@ -54,7 +54,7 @@ describe('CreateDirectory', () => {
 
   it('ensure it will return EntityNotEmpty error if the name field is empty', async () => {
     const { sut, CreateDirectoryDto } = makeSut();
-    CreateDirectoryDto.name = '';
+    CreateDirectoryDto.body.name = '';
     const result = await sut.execute(CreateDirectoryDto);
     expect(result.isLeft()).toBe(true);
     expect(result.value).toBeInstanceOf(EntityNotEmpty);

@@ -9,7 +9,7 @@ import { CreateDirectoryService } from './create-directory.service';
 import {
   CreateDirectoryDto,
   CreateDirectoryResponseDto,
-  createDirectorySchema,
+  CreateDirectorySchema,
 } from '@workspaces/domain';
 import { ZodValidationPipe } from '../../pipes/zod-validation-pipe';
 
@@ -20,7 +20,7 @@ export class CreateDirectoryController {
   ) {}
 
   @Post()
-  @UsePipes(new ZodValidationPipe(createDirectorySchema))
+  @UsePipes(new ZodValidationPipe(CreateDirectorySchema))
   async create(@Body() input: CreateDirectoryDto) {
     const result = await this.createDirectoryService.create(input);
     const response: CreateDirectoryResponseDto = {
