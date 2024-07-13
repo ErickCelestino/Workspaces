@@ -3,11 +3,12 @@ import {
   Body,
   Controller,
   Post,
+  Query,
   UsePipes,
 } from '@nestjs/common';
 import { CreateDirectoryService } from './create-directory.service';
 import {
-  CreateDirectoryDto,
+  CreateDirectoryBodyDto,
   CreateDirectoryResponseDto,
   CreateDirectorySchema,
 } from '@workspaces/domain';
@@ -21,8 +22,14 @@ export class CreateDirectoryController {
 
   @Post()
   @UsePipes(new ZodValidationPipe(CreateDirectorySchema))
-  async create(@Body() input: CreateDirectoryDto) {
-    const result = await this.createDirectoryService.create(input);
+  async create(
+    @Query('loggedUserId') loggedUserId: string,
+    @Body() body: CreateDirectoryBodyDto
+  ) {
+    const result = await this.createDirectoryService.create({
+      body,
+      loggedUserId,
+    });
     const response: CreateDirectoryResponseDto = {
       directory_id: `${result.value}`,
     };
