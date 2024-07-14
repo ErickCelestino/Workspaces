@@ -91,8 +91,8 @@ export const CreateDirectoryModal: FC<CreateDirectoryModalProps> = ({
     <SimpleFormModal
       open={open}
       handlePopUpClose={handlePopUpClose}
-      height={theme.spacing(45)}
-      width={smDown ? '90%' : theme.spacing(80)}
+      height={smDown ? theme.spacing(45) : theme.spacing(50)}
+      width={smDown ? '90%' : theme.spacing(90)}
       title={title}
     >
       <Box

@@ -1,5 +1,5 @@
 import { UseCase } from '../../base/use-case';
-import { CreateDirectoryDto, FindDirectoryByNameDto } from '../../dto';
+import { CreateDirectoryDto } from '../../dto';
 import {
   EntityAlreadyExists,
   EntityNotCreated,
@@ -60,14 +60,10 @@ export class CreateDirectory
       return left(new EntityNotExists('User'));
     }
 
-    const findDirectoryInput: FindDirectoryByNameDto = {
+    const findDirectory = await this.findDirectoryByNameRepository.find({
       name: body.name,
       loggedUserId,
-    };
-
-    const findDirectory = await this.findDirectoryByNameRepository.find(
-      findDirectoryInput
-    );
+    });
 
     if (Object.keys(findDirectory).length > 0) {
       return left(new EntityAlreadyExists('Directory'));

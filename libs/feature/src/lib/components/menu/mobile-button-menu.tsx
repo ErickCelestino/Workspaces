@@ -26,7 +26,6 @@ export const MobileButtonMenu: FC<MobileButtonMenuProps> = ({
     bottom: theme.spacing(2),
     right: theme.spacing(2),
   };
-
   return (
     <SpeedDial
       ariaLabel="Options"
