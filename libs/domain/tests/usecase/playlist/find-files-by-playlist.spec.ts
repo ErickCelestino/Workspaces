@@ -49,12 +49,16 @@ const makeSut = (): SutTypes => {
 describe('FindFilesByPlaylist', () => {
   it('should return PlaylistResponseDto when a correct DetailsPlaylistDto', async () => {
     const { findFilesByPlaylistDto, sut } = makeSut();
-
+    [ContentFileMock];
     const result = await sut.execute(findFilesByPlaylistDto);
 
     expect(result.isRight()).toBe(true);
     expect(result.isLeft()).toBe(false);
-    expect(result.value).toStrictEqual([ContentFileMock]);
+    expect(result.value).toStrictEqual({
+      total: 1,
+      totalPages: 1,
+      files: [ContentFileMock],
+    });
   });
 
   it('should return EntityNotEmpty when a incorrect User ID', async () => {

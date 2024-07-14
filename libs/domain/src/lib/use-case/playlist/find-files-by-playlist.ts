@@ -1,7 +1,9 @@
 import { Inject } from '@nestjs/common';
 import { UseCase } from '../../base/use-case';
-import { FindFilesByPlaylistDto } from '../../dto';
-import { ContentFile } from '../../entity';
+import {
+  FindFilesByPlaylistDto,
+  FindFilesByPlaylistResponseDto,
+} from '../../dto';
 import { EntityNotEmpty } from '../../error';
 import {
   FindFilesByPlaylistRepository,
@@ -13,7 +15,10 @@ import { ValidationPlaylistId, ValidationUserId } from '../../utils';
 
 export class FindFilesByPlaylist
   implements
-    UseCase<FindFilesByPlaylistDto, Either<EntityNotEmpty, ContentFile[]>>
+    UseCase<
+      FindFilesByPlaylistDto,
+      Either<EntityNotEmpty, FindFilesByPlaylistResponseDto>
+    >
 {
   constructor(
     @Inject('FindUserByIdRepository')
@@ -26,7 +31,7 @@ export class FindFilesByPlaylist
 
   async execute(
     input: FindFilesByPlaylistDto
-  ): Promise<Either<EntityNotEmpty, ContentFile[]>> {
+  ): Promise<Either<EntityNotEmpty, FindFilesByPlaylistResponseDto>> {
     const { idPlaylist, loggedUserId } = input;
     if (Object.keys(loggedUserId).length < 1) {
       return left(new EntityNotEmpty('Logged User'));

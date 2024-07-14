@@ -1,6 +1,8 @@
-import { FindFilesByPlaylistDto } from '../../dto';
-import { ContentFile } from '../../entity';
+import {
+  FindFilesByPlaylistDto,
+  FindFilesByPlaylistResponseDto,
+} from '../../dto';
 
 export interface FindFilesByPlaylistRepository {
-  find(input: FindFilesByPlaylistDto): Promise<ContentFile[]>;
+  find(input: FindFilesByPlaylistDto): Promise<FindFilesByPlaylistResponseDto>;
 }
