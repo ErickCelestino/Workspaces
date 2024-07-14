@@ -1,10 +1,4 @@
-import {
-  BadRequestException,
-  Body,
-  Controller,
-  Post,
-  Query,
-} from '@nestjs/common';
+import { Body, Controller, Post, Query } from '@nestjs/common';
 import { AddFileToPlaylistService } from './add-file-to-playlist.service';
 import { ErrorMessageResult } from '@workspaces/domain';
 

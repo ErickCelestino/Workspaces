@@ -14,7 +14,7 @@ export class FindFilesByPlaylistRepositoryImpl
   async find(
     input: FindFilesByPlaylistDto
   ): Promise<FindFilesByPlaylistResponseDto> {
-    const { idPlaylist, loggedUserId } = input;
+    const { idPlaylist } = input;
     const skip = input?.skip || 0;
     const take = input?.take || 6;
 
@@ -46,9 +46,9 @@ export class FindFilesByPlaylistRepositoryImpl
         skip: parseInt(skip.toString()),
         take: parseInt(take.toString()),
       }),
-      this.prismaService.playlist.count({
+      this.prismaService.playlist_X_Content_Files.count({
         where: {
-          user_id: loggedUserId,
+          playlist_id: idPlaylist,
         },
       }),
     ]);
