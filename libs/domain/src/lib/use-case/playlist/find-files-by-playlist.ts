@@ -41,10 +41,6 @@ export class FindFilesByPlaylist
 
     const resultedFiles = await this.findFilesByPlaylistRepository.find(input);
 
-    if (Object.keys(resultedFiles).length < 1) {
-      return left(new EntityNotEmpty('Playlist ID'));
-    }
-
     return right(resultedFiles);
   }
 }
