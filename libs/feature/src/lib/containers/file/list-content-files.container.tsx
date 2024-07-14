@@ -1,4 +1,11 @@
-import { Box, Grid, Icon, Typography, useTheme } from '@mui/material';
+import {
+  Box,
+  Grid,
+  Icon,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from '@mui/material';
 import { LayoutBase } from '../../layout';
 
 import { useCallback, useEffect, useState } from 'react';
@@ -24,6 +31,7 @@ import {
   CreateDirectoryModal,
   DeleteFileModal,
   DetailsFileModal,
+  MobileButtonMenu,
   MoveFileToDirectoryModal,
   RightClickMenu,
   ToolbarPureTV,
@@ -66,6 +74,7 @@ export const ListContanteFilesContainer = () => {
   const [fileId, setFileId] = useState('');
 
   const theme = useTheme();
+  const smDown = useMediaQuery(theme.breakpoints.down('sm'));
   const { loggedUser } = useLoggedUser();
   const { showSnackbarAlert, SnackbarAlert } = useSnackbarAlert();
 
@@ -280,6 +289,7 @@ export const ListContanteFilesContainer = () => {
 
       <LayoutBase title="Listagem de Usuários" toolBar={<ToolbarPureTV />}>
         <RightClickMenu iconMenuItemList={rightClickMenuList}>
+          {smDown && <MobileButtonMenu iconMenuItemList={rightClickMenuList} />}
           <ContainerCardList
             search={{
               searchData: searchData,
