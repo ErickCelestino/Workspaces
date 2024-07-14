@@ -72,14 +72,10 @@ export const CreateDirectoryModal: FC<CreateDirectoryModalProps> = ({
   const handleDirectoryData = async (data: CreateDirectoryBodyDto) => {
     setLoading(true);
     setSuccess(false);
-    console.log('data');
-    console.log(data);
     const result = await createDirectory({
       body: data,
       loggedUserId: loggedUser?.id ?? '',
     });
-    console.log('result');
-    console.log(result);
     if (result) {
       setLoading(false);
       setSuccess(true);
@@ -95,7 +91,7 @@ export const CreateDirectoryModal: FC<CreateDirectoryModalProps> = ({
     <SimpleFormModal
       open={open}
       handlePopUpClose={handlePopUpClose}
-      height={theme.spacing(40)}
+      height={theme.spacing(45)}
       width={smDown ? '90%' : theme.spacing(80)}
       title={title}
     >

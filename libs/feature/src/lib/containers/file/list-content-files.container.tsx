@@ -246,11 +246,6 @@ export const ListContanteFilesContainer = () => {
       title: 'Nova Pasta',
       handleClick: async () => handleDirectoryPopUpOpen('create'),
     },
-    {
-      icon: <Icon>star</Icon>,
-      title: 'testeeee',
-      handleClick: async () => handleDirectoryPopUpOpen('create'),
-    },
   ];
 
   return (
