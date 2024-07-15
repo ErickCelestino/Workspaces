@@ -63,7 +63,7 @@ export class AddFileToPlaylist
         playlsitId: playlistId,
       });
       if (Object.keys(filteredFile).length > 0) {
-        return left(new EntityAlreadyExists(filteredFile));
+        return left(new EntityAlreadyExists(file));
       }
     }
 
