@@ -1,13 +1,22 @@
-import { Box, Grid, Typography, useTheme } from '@mui/material';
+import {
+  Box,
+  Grid,
+  Icon,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from '@mui/material';
 import { LayoutBase } from '../../layout';
 
 import { useCallback, useEffect, useState } from 'react';
 import {
   ContentFile,
+  CrudType,
   DownloadContentFileDto,
   DownloadContentFileResponseDto,
   ErrorResponse,
   FileContentType,
+  IconMenuItem,
   ListContentFileDto,
 } from '@workspaces/domain';
 import {
@@ -19,9 +28,12 @@ import { useLoggedUser } from '../../contexts';
 import {
   ContainerCardList,
   ContentFileCard,
+  CreateDirectoryModal,
   DeleteFileModal,
   DetailsFileModal,
+  MobileButtonMenu,
   MoveFileToDirectoryModal,
+  RightClickMenu,
   ToolbarPureTV,
 } from '../../components';
 import axios, { AxiosError } from 'axios';
@@ -57,10 +69,12 @@ export const ListContanteFilesContainer = () => {
   const [directoryId, setDirectoryId] = useState('');
   const [deletePopUp, setDeletePopUp] = useState(false);
   const [detailsPopUp, setDetailsPopUp] = useState(false);
+  const [createDirectoryPopUp, setCreateDirectoryPopUp] = useState(false);
   const [movePopUp, setMovePopUp] = useState(false);
   const [fileId, setFileId] = useState('');
 
   const theme = useTheme();
+  const smDown = useMediaQuery(theme.breakpoints.down('sm'));
   const { loggedUser } = useLoggedUser();
   const { showSnackbarAlert, SnackbarAlert } = useSnackbarAlert();
 
@@ -146,6 +160,22 @@ export const ListContanteFilesContainer = () => {
     }
   };
 
+  const handleDirectoryPopUpOpen = (types: CrudType) => {
+    switch (types) {
+      case 'create':
+        setCreateDirectoryPopUp(true);
+        break;
+    }
+  };
+
+  const handleDirectoryPopUpClose = (types: CrudType) => {
+    switch (types) {
+      case 'create':
+        setCreateDirectoryPopUp(false);
+        break;
+    }
+  };
+
   const getDownloadFile = async (
     downloadContentFileDto: DownloadContentFileDto
   ) => {
@@ -210,6 +240,14 @@ export const ListContanteFilesContainer = () => {
     }
   }, [getData, search]);
 
+  const rightClickMenuList: IconMenuItem[] = [
+    {
+      icon: <Icon>create_new_folder</Icon>,
+      title: 'Nova Pasta',
+      handleClick: async () => handleDirectoryPopUpOpen('create'),
+    },
+  ];
+
   return (
     <>
       <DeleteFileModal
@@ -237,46 +275,55 @@ export const ListContanteFilesContainer = () => {
         title="Mover Arquivo para"
         buttonTitle="Mover Arquivo"
       />
+      <CreateDirectoryModal
+        open={createDirectoryPopUp}
+        showAlert={showAlert}
+        handlePopUpClose={() => handleDirectoryPopUpClose('create')}
+        title="Criar Diretório"
+      />
 
       <LayoutBase title="Listagem de Usuários" toolBar={<ToolbarPureTV />}>
-        <ContainerCardList
-          search={{
-            searchData: searchData,
-            placeholder: 'Pesquisar Arquivo',
-          }}
-          totalPage={totalPage}
-          handleChange={handleChange}
-        >
-          {fileList.length > 0 ? (
-            <Grid justifyContent="center" container spacing={2}>
-              {fileList.map((file, index) => (
-                <Grid item md={6} lg={4} xl={3} key={index}>
-                  <ContentFileCard
-                    deleteFile={() => handleFile(file.id, 'delete')}
-                    detailsFile={() => handleFile(file.id, 'details')}
-                    downloadFile={() => handleFile(file.id, 'download')}
-                    moveFile={() => handleFile(file.id, 'moveFile')}
-                    fileImage={file.path}
-                    fileImageName={file.fileName}
-                    name={file.originalName}
-                    key={file.id}
-                  />
-                </Grid>
-              ))}
-            </Grid>
-          ) : (
-            <Box
-              marginTop={theme.spacing(2)}
-              width="100%"
-              display="flex"
-              justifyContent="center"
-            >
-              <Typography variant="h4">
-                Não foram encontrados registros
-              </Typography>
-            </Box>
-          )}
-        </ContainerCardList>
+        <RightClickMenu iconMenuItemList={rightClickMenuList}>
+          {smDown && <MobileButtonMenu iconMenuItemList={rightClickMenuList} />}
+          <ContainerCardList
+            search={{
+              searchData: searchData,
+              placeholder: 'Pesquisar Arquivo',
+            }}
+            totalPage={totalPage}
+            handleChange={handleChange}
+          >
+            {fileList.length > 0 ? (
+              <Grid justifyContent="center" container spacing={2}>
+                {fileList.map((file, index) => (
+                  <Grid item md={6} lg={4} xl={3} key={index}>
+                    <ContentFileCard
+                      deleteFile={() => handleFile(file.id, 'delete')}
+                      detailsFile={() => handleFile(file.id, 'details')}
+                      downloadFile={() => handleFile(file.id, 'download')}
+                      moveFile={() => handleFile(file.id, 'moveFile')}
+                      fileImage={file.path}
+                      fileImageName={file.fileName}
+                      name={file.originalName}
+                      key={file.id}
+                    />
+                  </Grid>
+                ))}
+              </Grid>
+            ) : (
+              <Box
+                marginTop={theme.spacing(2)}
+                width="100%"
+                display="flex"
+                justifyContent="center"
+              >
+                <Typography variant="h4">
+                  Não foram encontrados registros
+                </Typography>
+              </Box>
+            )}
+          </ContainerCardList>
+        </RightClickMenu>
       </LayoutBase>
       {SnackbarAlert}
     </>
