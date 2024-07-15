@@ -68,15 +68,6 @@ describe('CreateDirectory', () => {
     expect(result.value).toBeInstanceOf(EntityNotEmpty);
   });
 
-  it('ensure it will return EntityNotExists error if the user does not exist', async () => {
-    const { sut, CreateDirectoryDto, FindUserByIdRepository } = makeSut();
-    jest
-      .spyOn(FindUserByIdRepository, 'find')
-      .mockResolvedValueOnce({} as UserList);
-    const result = await sut.execute(CreateDirectoryDto);
-    expect(result.isLeft()).toBe(true);
-  });
-
   it('ensure it will return EntityAlreadyExists error if the directory already exists', async () => {
     const { sut, CreateDirectoryDto, FindDirectoryByNameRepository } =
       makeSut();

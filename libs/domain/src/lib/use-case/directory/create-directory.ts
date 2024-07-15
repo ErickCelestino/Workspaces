@@ -13,6 +13,7 @@ import {
 import { Either, left, right } from '../../shared/either';
 import { FindDirectoryByNameRepository } from '../../repository/directory/find-directory-by-name';
 import { Inject } from '@nestjs/common';
+import { ValidationUserId } from '../../utils';
 
 export class CreateDirectory
   implements
@@ -54,11 +55,7 @@ export class CreateDirectory
       return left(new EntityNotEmpty('Logged User ID'));
     }
 
-    const filteredUser = await this.findUserByIdRepository.find(loggedUserId);
-
-    if (Object.keys(filteredUser).length < 1) {
-      return left(new EntityNotExists('User'));
-    }
+    await ValidationUserId(loggedUserId, this.findUserByIdRepository);
 
     const findDirectory = await this.findDirectoryByNameRepository.find({
       name: body.name,
