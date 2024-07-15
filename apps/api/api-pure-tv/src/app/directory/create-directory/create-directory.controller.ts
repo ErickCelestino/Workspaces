@@ -1,16 +1,10 @@
-import {
-  BadRequestException,
-  Body,
-  Controller,
-  Post,
-  Query,
-  UsePipes,
-} from '@nestjs/common';
+import { Body, Controller, Post, Query, UsePipes } from '@nestjs/common';
 import { CreateDirectoryService } from './create-directory.service';
 import {
   CreateDirectoryBodyDto,
   CreateDirectoryResponseDto,
   CreateDirectorySchema,
+  ErrorMessageResult,
 } from '@workspaces/domain';
 import { ZodValidationPipe } from '../../pipes/zod-validation-pipe';
 
@@ -35,12 +29,6 @@ export class CreateDirectoryController {
     };
 
     if (result.isRight()) return response;
-    else
-      throw new BadRequestException({
-        error: {
-          name: result.value.name,
-          message: result.value.message,
-        },
-      });
+    else await ErrorMessageResult(result.value.name, result.value.message);
   }
 }
