@@ -27,9 +27,11 @@ import {
   DeletePlaylistModule,
   DetailsPlaylistModule,
 } from './playlist';
-import { AddFileToPlaylistModule } from './add-file-to-playlist/add-file-to-playlist.module';
+import {
+  AddFileToPlaylistModule,
+  FindFilesByPlaylistModule,
+} from './file-to-playlist';
 import { ListSimpleDirectoryModule } from './list-simple-directory/list-simple-directory.module';
-import { FindFilesByPlaylistModule } from './find-files-by-playlist/find-files-by-playlist.module';
 import { CreateDirectoryModule } from './directory/create-directory/create-directory.module';
 
 @Module({
