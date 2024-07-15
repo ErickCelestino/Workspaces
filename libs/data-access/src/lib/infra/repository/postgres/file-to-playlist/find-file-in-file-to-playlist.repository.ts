@@ -1,16 +1,20 @@
 import { Inject } from '@nestjs/common';
-import { FindFileInFileToPlaylistRepository } from '@workspaces/domain';
+import {
+  FindFileInFileToPlaylistDto,
+  FindFileInFileToPlaylistRepository,
+} from '@workspaces/domain';
 import { PrismaService } from 'nestjs-prisma';
 
 export class FindFileInFileToPlaylistRepositoryImpl
   implements FindFileInFileToPlaylistRepository
 {
   constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
-  async find(id: string): Promise<string> {
+  async find(input: FindFileInFileToPlaylistDto): Promise<string> {
     const filteredFile =
       await this.prismaService.playlist_X_Content_Files.findFirst({
         where: {
-          Content_Files_id: id,
+          Content_Files_id: input.fileId,
+          playlist_id: input.playlsitId,
         },
       });
 

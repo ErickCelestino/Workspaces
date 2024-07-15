@@ -5,6 +5,7 @@ import {
   EntityAlreadyExists,
   EntityNotCreated,
   EntityNotEmpty,
+  EntityNotExists,
 } from '../../error';
 import { Either, left, right } from '../../shared/either';
 import {
@@ -57,9 +58,10 @@ export class AddFileToPlaylist
 
       await ValidationContentFileId(file, this.findContentFileByIdRepository);
 
-      const filteredFile = await this.findFileInFileToPlaylistRepository.find(
-        file
-      );
+      const filteredFile = await this.findFileInFileToPlaylistRepository.find({
+        fileId: file,
+        playlsitId: playlistId,
+      });
       if (Object.keys(filteredFile).length > 0) {
         return left(new EntityAlreadyExists(filteredFile));
       }
@@ -67,12 +69,12 @@ export class AddFileToPlaylist
 
     await ValidationPlaylistId(playlistId, this.findPlaylistByIdRepository);
 
-    const filteredResult = await this.addFileToPlaylistRepository.add(input);
+    const createdResult = await this.addFileToPlaylistRepository.add(input);
 
-    if (Object.keys(filteredResult).length < 1) {
+    if (Object.keys(createdResult).length < 1) {
       return left(new EntityNotCreated('File to Playlist'));
     }
 
-    return right(filteredResult);
+    return right(createdResult);
   }
 }

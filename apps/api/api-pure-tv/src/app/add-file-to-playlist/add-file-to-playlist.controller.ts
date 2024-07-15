@@ -19,8 +19,8 @@ export class AddFileToPlaylistController {
       loggedUserId,
       playlistId,
     });
-
+    console.log(result.value);
     if (result.isRight()) return result.value;
-    else ErrorMessageResult(result.value.name, result.value.message);
+    //else ErrorMessageResult(result.value.name, result.value.message);
   }
 }

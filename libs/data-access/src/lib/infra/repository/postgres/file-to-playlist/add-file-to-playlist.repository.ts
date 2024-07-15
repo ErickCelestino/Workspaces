@@ -11,8 +11,9 @@ export class AddFileToPlaylistRepositoryImpl
   constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
   async add(input: AddFileToPlaylistDto): Promise<string[]> {
     const { filesId, playlistId } = input;
-    let listId: string[] = [];
+    const listId: string[] = [];
     for (const file of filesId) {
+      console.log(`file1: ${file}`);
       const createdFileToPlaylist =
         await this.prismaService.playlist_X_Content_Files.create({
           data: {
