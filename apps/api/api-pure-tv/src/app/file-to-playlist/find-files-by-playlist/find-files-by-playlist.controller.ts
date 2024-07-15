@@ -1,6 +1,10 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import { Controller, Get, Param, Query, UsePipes } from '@nestjs/common';
 import { FindFilesByPlaylistService } from './find-files-by-playlist.service';
-import { ErrorMessageResult } from '@workspaces/domain';
+import {
+  ErrorMessageResult,
+  findFilesByPlaylistSchema,
+} from '@workspaces/domain';
+import { ZodValidationPipe } from '../../pipes/zod-validation-pipe';
 
 @Controller('find-files-by-playlist')
 export class FindFilesByPlaylistController {
@@ -8,6 +12,7 @@ export class FindFilesByPlaylistController {
     private readonly findFilesByPlaylistService: FindFilesByPlaylistService
   ) {}
 
+  @UsePipes(new ZodValidationPipe(findFilesByPlaylistSchema))
   @Get(':playlistId')
   async find(
     @Param('playlistId') playlistId: string,

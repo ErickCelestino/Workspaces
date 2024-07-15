@@ -13,7 +13,6 @@ export class AddFileToPlaylistRepositoryImpl
     const { filesId, playlistId } = input;
     const listId: string[] = [];
     for (const file of filesId) {
-      console.log(`file1: ${file}`);
       const createdFileToPlaylist =
         await this.prismaService.playlist_X_Content_Files.create({
           data: {
