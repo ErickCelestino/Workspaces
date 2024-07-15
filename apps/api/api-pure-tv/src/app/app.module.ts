@@ -31,8 +31,7 @@ import {
   AddFileToPlaylistModule,
   FindFilesByPlaylistModule,
 } from './file-to-playlist';
-import { ListSimpleDirectoryModule } from './list-simple-directory/list-simple-directory.module';
-import { CreateDirectoryModule } from './directory/create-directory/create-directory.module';
+import { ListSimpleDirectoryModule, CreateDirectoryModule } from './directory';
 
 @Module({
   imports: [
