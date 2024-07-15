@@ -1,16 +1,28 @@
 import { FC, useCallback, useEffect, useState } from 'react';
 import { SimpleFormModal } from '../simple';
-import { Box, Chip, Typography, useMediaQuery, useTheme } from '@mui/material';
+import {
+  Avatar,
+  Box,
+  Chip,
+  Divider,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from '@mui/material';
 import {
   ContentFile,
   DetailsPlaylistDto,
   ErrorResponse,
-  ListContentFileDto,
+  FindFilesByPlaylistDto,
   PlaylistResponseDto,
 } from '@workspaces/domain';
 import {
   DetailsPlaylistRequest,
-  ListContentFilesRequest,
+  FindFilesByPlaylistRequest,
 } from '../../../services';
 import axios, { AxiosError } from 'axios';
 import { formatBrDate, ValidationsError } from '../../../shared';
@@ -20,6 +32,7 @@ interface DetailsPlaylistModalProps {
   open: boolean;
   title: string;
   idPlaylist: string;
+  filesTitle?: string;
   handlePopUpClose: () => void;
   showAlert: (message: string, success: boolean) => void;
 }
@@ -28,12 +41,14 @@ export const DetailsPlaylistModal: FC<DetailsPlaylistModalProps> = ({
   handlePopUpClose,
   showAlert,
   idPlaylist,
+  filesTitle = 'Arquivos',
   title,
   open,
 }) => {
   const [playlistDetails, setPlaylistDetails] = useState<PlaylistResponseDto>(
     {} as PlaylistResponseDto
   );
+  const [files, setFiles] = useState<ContentFile[]>([]);
   const [dataLoaded, setDataLoaded] = useState(false);
 
   const { loggedUser } = useLoggedUser();
@@ -45,6 +60,25 @@ export const DetailsPlaylistModal: FC<DetailsPlaylistModalProps> = ({
       try {
         const result = await DetailsPlaylistRequest(input);
         setPlaylistDetails(result);
+      } catch (error) {
+        console.error(error);
+        if (axios.isAxiosError(error)) {
+          const axiosError = error as AxiosError<ErrorResponse>;
+          const errors = ValidationsError(axiosError, 'Playlist');
+          if (errors) {
+            showAlert(errors, false);
+          }
+        }
+      }
+    },
+    [showAlert]
+  );
+
+  const getFilesByPlaylist = useCallback(
+    async (input: FindFilesByPlaylistDto) => {
+      try {
+        const result = await FindFilesByPlaylistRequest(input);
+        setFiles(result.files);
       } catch (error) {
         console.error(error);
         if (axios.isAxiosError(error)) {
@@ -71,12 +105,16 @@ export const DetailsPlaylistModal: FC<DetailsPlaylistModalProps> = ({
         loggedUserId: loggedUser?.id ?? '',
         playlistId: idPlaylist,
       });
+      getFilesByPlaylist({
+        idPlaylist,
+        loggedUserId: loggedUser?.id ?? '',
+      });
     }
   }, [open, idPlaylist, dataLoaded, getPlaylist, loggedUser]);
 
   return (
     <SimpleFormModal
-      height={smDown ? theme.spacing(55) : theme.spacing(53)}
+      height={smDown ? theme.spacing(55) : theme.spacing(80)}
       width={smDown ? '90%' : theme.spacing(80)}
       open={open}
       handlePopUpClose={handlePopUpClose}
@@ -126,7 +164,49 @@ export const DetailsPlaylistModal: FC<DetailsPlaylistModalProps> = ({
             {formatBrDate(new Date(playlistDetails?.created_at ?? new Date()))}
           </Typography>
         </Box>
-        <Box></Box>
+        <Divider
+          sx={{
+            marginTop: theme.spacing(2),
+            marginBottom: theme.spacing(2),
+          }}
+        />
+        <Box>
+          <Typography variant="h5">
+            <strong>{filesTitle}</strong>
+          </Typography>
+          <List>
+            {files.map((file) => (
+              <ListItem key={file.id}>
+                <ListItemAvatar>
+                  <Avatar
+                    alt={file.originalName}
+                    src={file.path}
+                    sx={{
+                      width: theme.spacing(8),
+                      height: theme.spacing(8),
+                      '& img': {
+                        objectFit: 'contain',
+                        objectPosition: 'center',
+                        maxHeight: '100%',
+                        maxWidth: '100%',
+                      },
+                    }}
+                  />
+                </ListItemAvatar>
+
+                <ListItemText
+                  sx={{
+                    marginLeft: theme.spacing(2),
+                    overflow: 'hidden',
+                    fontSize: smDown ? '8px' : '16px',
+                    textOverflow: 'ellipsis',
+                  }}
+                  primary={file.originalName}
+                />
+              </ListItem>
+            ))}
+          </List>
+        </Box>
       </Box>
     </SimpleFormModal>
   );
