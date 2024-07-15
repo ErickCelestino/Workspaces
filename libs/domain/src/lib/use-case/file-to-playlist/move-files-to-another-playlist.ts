@@ -77,7 +77,11 @@ export class MoveFilesToAnotherPlaylist
         return left(new EntityNotAssociate(file));
       }
 
-      await this.MoveFileToAnotherPlaylistRepository.move(input);
+      await this.MoveFileToAnotherPlaylistRepository.move({
+        fileId: file,
+        newPlaylistId,
+        oldPlaylistId,
+      });
     }
 
     return right(undefined);

@@ -1,5 +1,5 @@
-import { MoveFilesToAnotherPlaylistDto } from '../../dto';
+import { MoveFileToAnotherPlaylistDto } from '../../dto';
 
 export interface MoveFileToAnotherPlaylistRepository {
-  move(input: MoveFilesToAnotherPlaylistDto): Promise<void>;
+  move(input: MoveFileToAnotherPlaylistDto): Promise<void>;
 }
