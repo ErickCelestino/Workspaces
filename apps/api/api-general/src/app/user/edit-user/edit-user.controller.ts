@@ -16,7 +16,7 @@ export class EditUserController {
   async edit(@Body() input: EditUserDto) {
     const result = await this.editUserService.edit(input);
 
-    if (result.isRight()) return;
-    else ErrorMessageResult(result.value.name, result.value.message);
+    if (result.isRight()) return result.value;
+    else await ErrorMessageResult(result.value.name, result.value.message);
   }
 }
