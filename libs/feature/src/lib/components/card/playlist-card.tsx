@@ -11,6 +11,7 @@ import { IconMenuItem, ImageCardItem } from '@workspaces/domain';
 import EditIcon from '@mui/icons-material/Edit';
 import NoteAddIcon from '@mui/icons-material/NoteAdd';
 import DeleteIcon from '@mui/icons-material/Delete';
+import InfoIcon from '@mui/icons-material/Info';
 import { FC } from 'react';
 import { ButtonFileMenu } from '../menu';
 
@@ -19,10 +20,12 @@ interface ListPlaylistProps {
   editTitle?: string;
   deleteTitle?: string;
   addFileTitle?: string;
+  detailsTitle?: string;
   imageData: ImageCardItem;
   editPlaylist: () => Promise<void>;
   deletePlaylist: () => Promise<void>;
   addFile: () => Promise<void>;
+  detailsPlaylist: () => Promise<void>;
 }
 
 export const PlaylistCard: FC<ListPlaylistProps> = ({
@@ -30,10 +33,12 @@ export const PlaylistCard: FC<ListPlaylistProps> = ({
   editTitle = 'Editar',
   deleteTitle = 'Deletar',
   addFileTitle = 'Adicionar Arquivos',
+  detailsTitle = 'Detalhes',
   imageData,
   editPlaylist,
   deletePlaylist,
   addFile,
+  detailsPlaylist,
 }) => {
   const theme = useTheme();
 
@@ -47,6 +52,11 @@ export const PlaylistCard: FC<ListPlaylistProps> = ({
       icon: <DeleteIcon />,
       title: deleteTitle,
       handleClick: deletePlaylist,
+    },
+    {
+      icon: <InfoIcon />,
+      title: detailsTitle,
+      handleClick: detailsPlaylist,
     },
     {
       icon: <NoteAddIcon />,

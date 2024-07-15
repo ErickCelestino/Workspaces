@@ -1,4 +1,11 @@
-import { Box, Grid, Typography, useTheme } from '@mui/material';
+import {
+  Box,
+  Grid,
+  Icon,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from '@mui/material';
 import {
   CreatePlaylistModal,
   ToolbarPureTV,
@@ -6,6 +13,8 @@ import {
   DeletePlaylistModal,
   ContainerCardList,
   AddFileToPlaylistModal,
+  RightClickMenu,
+  MobileButtonMenu,
 } from '../../components';
 import { LayoutBase } from '../../layout';
 import { useSnackbarAlert } from '../../hooks';
@@ -13,6 +22,7 @@ import { useCallback, useEffect, useState } from 'react';
 import {
   CrudType,
   ErrorResponse,
+  IconMenuItem,
   ListPlaylistDto,
   Playlist,
 } from '@workspaces/domain';
@@ -21,15 +31,18 @@ import axios, { AxiosError } from 'axios';
 import { ValidationsError } from '../../shared';
 import { useLoggedUser } from '../../contexts';
 import { EditPlaylistModal } from '../../components/modal/playlist/edit-playlist-modal';
+import { DetailsPlaylistModal } from '../../components/modal/playlist/details-playlist-modal';
 
 export const ListPlaylistContainer = () => {
   const { showSnackbarAlert, SnackbarAlert } = useSnackbarAlert();
   const { loggedUser } = useLoggedUser();
   const theme = useTheme();
+  const smDown = useMediaQuery(theme.breakpoints.down('sm'));
 
   const [createPlaylistPopUp, setCreatePlaylistPopUp] = useState(false);
   const [editPlaylistPopUp, setEditPlaylistPopUp] = useState(false);
   const [deletePlaylistPopUp, setDeletePlaylistPopUp] = useState(false);
+  const [detailsPlaylistPopUp, setDetailsPlaylistPopUp] = useState(false);
   const [addFilePopUp, setAddFilePopUp] = useState(false);
   const [search, setSearch] = useState(false);
   const [listPlaylist, setListPlaylist] = useState<Playlist[]>([]);
@@ -50,6 +63,8 @@ export const ListPlaylistContainer = () => {
       case 'add-file':
         setAddFilePopUp(false);
         break;
+      case 'details':
+        setDetailsPlaylistPopUp(false);
     }
   };
 
@@ -70,6 +85,9 @@ export const ListPlaylistContainer = () => {
         setPlaylistId(id ?? '');
         setAddFilePopUp(true);
         break;
+      case 'details':
+        setPlaylistId(id ?? '');
+        setDetailsPlaylistPopUp(true);
     }
   };
 
@@ -147,6 +165,14 @@ export const ListPlaylistContainer = () => {
     }
   }, [getData, search]);
 
+  const rightClickMenuList: IconMenuItem[] = [
+    {
+      icon: <Icon>playlist_add</Icon>,
+      title: 'Nova Playlist',
+      handleClick: async () => handlePopUpOpen('create'),
+    },
+  ];
+
   return (
     <>
       <CreatePlaylistModal
@@ -177,52 +203,66 @@ export const ListPlaylistContainer = () => {
         handlePopUpClose={() => handlePopUpClose('add-file')}
         title="Adicionar Arquivos a Playlist?"
       />
+      <DetailsPlaylistModal
+        idPlaylist={playlistId}
+        handlePopUpClose={() => handlePopUpClose('details')}
+        showAlert={showAlert}
+        open={detailsPlaylistPopUp}
+        title="Detalhes da Playlist"
+      />
       <LayoutBase title="Listagem Playlist" toolBar={<ToolbarPureTV />}>
-        <ContainerCardList
-          handleChange={handleChange}
-          search={{
-            searchData: searchData,
-            placeholder: 'Pesquisar Playlist',
-            createPopUp: () => handlePopUpOpen('create'),
-          }}
-          totalPage={totalPage}
-        >
-          {listPlaylist.length > 0 ? (
-            <Grid justifyContent="center" container spacing={2}>
-              {listPlaylist.map((playlist, index) => (
-                <Grid item md={6} lg={4} xl={3} key={index}>
-                  <PlaylistCard
-                    editPlaylist={async () =>
-                      handlePopUpOpen('edit', playlist.id)
-                    }
-                    deletePlaylist={async () =>
-                      handlePopUpOpen('delete', playlist.id)
-                    }
-                    addFile={async () =>
-                      handlePopUpOpen('add-file', playlist.id)
-                    }
-                    imageData={{
-                      image: '',
-                      imageName: '',
-                    }}
-                    name={playlist.name}
-                  />
-                </Grid>
-              ))}
-            </Grid>
-          ) : (
-            <Box
-              marginTop={theme.spacing(2)}
-              width="100%"
-              display="flex"
-              justifyContent="center"
-            >
-              <Typography variant="h4">
-                Não foram encontrados registros
-              </Typography>
-            </Box>
-          )}
-        </ContainerCardList>
+        <RightClickMenu iconMenuItemList={rightClickMenuList}>
+          {smDown && <MobileButtonMenu iconMenuItemList={rightClickMenuList} />}
+
+          <ContainerCardList
+            handleChange={handleChange}
+            search={{
+              searchData: searchData,
+              placeholder: 'Pesquisar Playlist',
+              createPopUp: () => handlePopUpOpen('create'),
+            }}
+            totalPage={totalPage}
+          >
+            {listPlaylist.length > 0 ? (
+              <Grid justifyContent="center" container spacing={2}>
+                {listPlaylist.map((playlist, index) => (
+                  <Grid item md={6} lg={4} xl={3} key={index}>
+                    <PlaylistCard
+                      editPlaylist={async () =>
+                        handlePopUpOpen('edit', playlist.id)
+                      }
+                      deletePlaylist={async () =>
+                        handlePopUpOpen('delete', playlist.id)
+                      }
+                      addFile={async () =>
+                        handlePopUpOpen('add-file', playlist.id)
+                      }
+                      detailsPlaylist={async () =>
+                        handlePopUpOpen('details', playlist.id)
+                      }
+                      imageData={{
+                        image: '',
+                        imageName: '',
+                      }}
+                      name={playlist.name}
+                    />
+                  </Grid>
+                ))}
+              </Grid>
+            ) : (
+              <Box
+                marginTop={theme.spacing(2)}
+                width="100%"
+                display="flex"
+                justifyContent="center"
+              >
+                <Typography variant="h4">
+                  Não foram encontrados registros
+                </Typography>
+              </Box>
+            )}
+          </ContainerCardList>
+        </RightClickMenu>
       </LayoutBase>
       {SnackbarAlert}
     </>

@@ -1,11 +1,14 @@
-import { FindFileInFileToPlaylistRepository } from '../../../src';
+import {
+  FindFileInFileToPlaylistDto,
+  FindFileInFileToPlaylistRepository,
+} from '../../../src';
 
 export class FindFileInFileToPlaylistRepositoryMock
   implements FindFileInFileToPlaylistRepository
 {
-  inputMock = '';
-  async find(id: string): Promise<string> {
-    this.inputMock = id;
+  inputMock = {} as FindFileInFileToPlaylistDto;
+  async find(input: FindFileInFileToPlaylistDto): Promise<string> {
+    this.inputMock = input;
     return '';
   }
 }

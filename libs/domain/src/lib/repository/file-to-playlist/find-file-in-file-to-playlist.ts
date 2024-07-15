@@ -1,3 +1,5 @@
+import { FindFileInFileToPlaylistDto } from '../../dto';
+
 export interface FindFileInFileToPlaylistRepository {
-  find(id: string): Promise<string>;
+  find(input: FindFileInFileToPlaylistDto): Promise<string>;
 }

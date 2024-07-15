@@ -1,12 +1,10 @@
-import {
-  BadRequestException,
-  Body,
-  Controller,
-  Post,
-  Query,
-} from '@nestjs/common';
+import { Body, Controller, Post, Query, UsePipes } from '@nestjs/common';
 import { AddFileToPlaylistService } from './add-file-to-playlist.service';
-import { ErrorMessageResult } from '@workspaces/domain';
+import {
+  addFileToPlaylistSchema,
+  ErrorMessageResult,
+} from '@workspaces/domain';
+import { ZodValidationPipe } from '../../pipes/zod-validation-pipe';
 
 @Controller('add-file-to-playlist')
 export class AddFileToPlaylistController {
@@ -14,6 +12,7 @@ export class AddFileToPlaylistController {
     private readonly addFileToPlaylistService: AddFileToPlaylistService
   ) {}
 
+  @UsePipes(new ZodValidationPipe(addFileToPlaylistSchema))
   @Post()
   async add(
     @Query('loggedUserId') loggedUserId: string,

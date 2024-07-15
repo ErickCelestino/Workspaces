@@ -3,7 +3,7 @@ import { CreateDirectoryService } from './create-directory.service';
 import {
   CreateDirectoryBodyDto,
   CreateDirectoryResponseDto,
-  CreateDirectorySchema,
+  createDirectorySchema,
   ErrorMessageResult,
 } from '@workspaces/domain';
 import { ZodValidationPipe } from '../../pipes/zod-validation-pipe';
@@ -15,7 +15,7 @@ export class CreateDirectoryController {
   ) {}
 
   @Post()
-  @UsePipes(new ZodValidationPipe(CreateDirectorySchema))
+  @UsePipes(new ZodValidationPipe(createDirectorySchema))
   async create(
     @Query('loggedUserId') loggedUserId: string,
     @Body() body: CreateDirectoryBodyDto

@@ -25,10 +25,13 @@ import {
   FindPlaylistByIdModule,
   EditPlaylistModule,
   DeletePlaylistModule,
+  DetailsPlaylistModule,
 } from './playlist';
-import { AddFileToPlaylistModule } from './add-file-to-playlist/add-file-to-playlist.module';
-import { ListSimpleDirectoryModule } from './list-simple-directory/list-simple-directory.module';
-import { CreateDirectoryModule } from './directory/create-directory/create-directory.module';
+import {
+  AddFileToPlaylistModule,
+  FindFilesByPlaylistModule,
+} from './file-to-playlist';
+import { ListSimpleDirectoryModule, CreateDirectoryModule } from './directory';
 
 @Module({
   imports: [
@@ -56,6 +59,8 @@ import { CreateDirectoryModule } from './directory/create-directory/create-direc
     DeletePlaylistModule,
     AddFileToPlaylistModule,
     ListSimpleDirectoryModule,
+    DetailsPlaylistModule,
+    FindFilesByPlaylistModule,
     CreateDirectoryModule,
   ],
   controllers: [AppController],
