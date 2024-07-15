@@ -1,7 +1,11 @@
 import { Inject } from '@nestjs/common';
 import { UseCase } from '../../base/use-case';
 import { MoveFilesToAnotherPlaylistDto } from '../../dto';
-import { EntityNotAssociate, EntityNotEmpty } from '../../error';
+import {
+  EntityAlreadyExists,
+  EntityNotAssociate,
+  EntityNotEmpty,
+} from '../../error';
 import { Either, left, right } from '../../shared/either';
 import {
   ValidationContentFileId,
@@ -20,7 +24,7 @@ export class MoveFilesToAnotherPlaylist
   implements
     UseCase<
       MoveFilesToAnotherPlaylistDto,
-      Either<EntityNotEmpty | EntityNotAssociate, void>
+      Either<EntityNotEmpty | EntityNotAssociate | EntityAlreadyExists, void>
     >
 {
   constructor(
@@ -38,7 +42,9 @@ export class MoveFilesToAnotherPlaylist
 
   async execute(
     input: MoveFilesToAnotherPlaylistDto
-  ): Promise<Either<EntityNotEmpty | EntityNotAssociate, void>> {
+  ): Promise<
+    Either<EntityNotEmpty | EntityNotAssociate | EntityAlreadyExists, void>
+  > {
     const { filesId, loggedUserId, newPlaylistId, oldPlaylistId } = input;
 
     if (Object.keys(filesId).length < 1) {
@@ -68,13 +74,24 @@ export class MoveFilesToAnotherPlaylist
 
       await ValidationContentFileId(file, this.findContentFileByIdRepository);
 
-      const filteredFile = await this.findFileInFileToPlaylistRepository.find({
-        fileId: file,
-        playlsitId: oldPlaylistId,
-      });
+      const filteredOldPlaylist =
+        await this.findFileInFileToPlaylistRepository.find({
+          fileId: file,
+          playlsitId: oldPlaylistId,
+        });
 
-      if (Object.keys(filteredFile).length < 1) {
+      if (Object.keys(filteredOldPlaylist).length < 1) {
         return left(new EntityNotAssociate(file));
+      }
+
+      const filterednewPlaylist =
+        await this.findFileInFileToPlaylistRepository.find({
+          fileId: file,
+          playlsitId: newPlaylistId,
+        });
+
+      if (Object.keys(filterednewPlaylist).length > 0) {
+        return left(new EntityAlreadyExists(file));
       }
 
       await this.MoveFileToAnotherPlaylistRepository.move({

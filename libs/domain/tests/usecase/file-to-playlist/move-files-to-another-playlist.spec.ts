@@ -1,4 +1,5 @@
 import {
+  EntityAlreadyExists,
   EntityNotAssociate,
   EntityNotEmpty,
   FindContentFileByIdRepository,
@@ -68,6 +69,12 @@ const makeSut = (): SutTypes => {
 describe('MoveFilesToAnotherPlaylist', () => {
   it('should return void when a correct move files to another playlist dto', async () => {
     const { sut, moveFilesToAnotherPlaylistDto } = makeSut();
+    jest
+      .spyOn(sut['findFileInFileToPlaylistRepository'], 'find')
+      .mockResolvedValueOnce(ContentFileMock.id);
+    jest
+      .spyOn(sut['findFileInFileToPlaylistRepository'], 'find')
+      .mockResolvedValueOnce('');
 
     const result = await sut.execute(moveFilesToAnotherPlaylistDto);
 
@@ -168,5 +175,60 @@ describe('MoveFilesToAnotherPlaylist', () => {
 
     expect(result.isLeft()).toBe(true);
     expect(result.value).toBeInstanceOf(EntityNotAssociate);
+  });
+  it('should return EntityNotAssociate if there is no file to old playlist created in the database', async () => {
+    const {
+      findContentFileByIdRepository,
+      findUserByIdRepository,
+      moveFilesToAnotherPlaylistDto,
+      findPlaylistByIdRepository,
+      moveFileToAnotherPlaylistRepository,
+    } = makeSut();
+
+    const mockEmptyRepository = new FindFileInFileToPlaylistRepositoryMock();
+
+    const sut = new MoveFilesToAnotherPlaylist(
+      findUserByIdRepository,
+      findContentFileByIdRepository,
+      findPlaylistByIdRepository,
+      mockEmptyRepository,
+      moveFileToAnotherPlaylistRepository
+    );
+
+    const result = await sut.execute(moveFilesToAnotherPlaylistDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.value).toBeInstanceOf(EntityNotAssociate);
+  });
+
+  it('should return EntityAlreadyExists if there is no file to new playlist created in the database', async () => {
+    const {
+      findContentFileByIdRepository,
+      findUserByIdRepository,
+      moveFilesToAnotherPlaylistDto,
+      findPlaylistByIdRepository,
+      findFileInFileToPlaylistRepository,
+      moveFileToAnotherPlaylistRepository,
+    } = makeSut();
+
+    const sut = new MoveFilesToAnotherPlaylist(
+      findUserByIdRepository,
+      findContentFileByIdRepository,
+      findPlaylistByIdRepository,
+      findFileInFileToPlaylistRepository,
+      moveFileToAnotherPlaylistRepository
+    );
+
+    jest
+      .spyOn(sut['findFileInFileToPlaylistRepository'], 'find')
+      .mockResolvedValueOnce(ContentFileMock.id);
+    jest
+      .spyOn(sut['findFileInFileToPlaylistRepository'], 'find')
+      .mockResolvedValueOnce('any_id');
+
+    const result = await sut.execute(moveFilesToAnotherPlaylistDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.value).toBeInstanceOf(EntityAlreadyExists);
   });
 });
