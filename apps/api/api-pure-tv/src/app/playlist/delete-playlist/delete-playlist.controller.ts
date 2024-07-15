@@ -18,7 +18,7 @@ export class DeletePlaylistController {
       loggedUserId,
     });
 
-    if (result.isRight()) return { playlistId: result.value };
-    else ErrorMessageResult(result.value.name, result.value.message);
+    if (result.isRight()) return result.value;
+    else await ErrorMessageResult(result.value.name, result.value.message);
   }
 }

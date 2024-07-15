@@ -17,6 +17,6 @@ export class ListUserController {
     const result = await this.listUserService.list({ input, skip, take });
 
     if (result.isRight()) return result.value;
-    else ErrorMessageResult(result.value.name, result.value.message);
+    else await ErrorMessageResult(result.value.name, result.value.message);
   }
 }

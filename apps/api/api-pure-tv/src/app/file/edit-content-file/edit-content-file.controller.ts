@@ -29,7 +29,8 @@ export class EditContentFileController {
     };
 
     const result = await this.editContentFileService.edit(dto);
+
     if (result.isRight()) return result.value;
-    else ErrorMessageResult(result.value.name, result.value.message);
+    else await ErrorMessageResult(result.value.name, result.value.message);
   }
 }

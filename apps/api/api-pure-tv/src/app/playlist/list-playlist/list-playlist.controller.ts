@@ -23,6 +23,6 @@ export class ListPlaylistController {
     });
 
     if (result.isRight()) return result.value;
-    else ErrorMessageResult(result.value.name, result.value.message);
+    else await ErrorMessageResult(result.value.name, result.value.message);
   }
 }

@@ -32,7 +32,7 @@ export class DeleteUserByIdController {
     };
     const result = await this.deleteUserByIdService.delete(dto);
 
-    if (result.isRight()) return;
-    else ErrorMessageResult(result.value.name, result.value.message);
+    if (result.isRight()) return result.value;
+    else await ErrorMessageResult(result.value.name, result.value.message);
   }
 }

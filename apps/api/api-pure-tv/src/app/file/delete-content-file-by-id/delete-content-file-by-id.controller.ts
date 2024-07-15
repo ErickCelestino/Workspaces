@@ -28,6 +28,6 @@ export class DeleteContentFileByIdController {
     const result = await this.deleteContentFileByIdService.delete(dto);
 
     if (result.isRight()) return result.value;
-    else ErrorMessageResult(result.value.name, result.value.message);
+    else await ErrorMessageResult(result.value.name, result.value.message);
   }
 }

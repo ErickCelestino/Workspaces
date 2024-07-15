@@ -28,6 +28,6 @@ export class MoveFileToDirectoryController {
     const result = await this.moveFileToDirectoryService.move(dto);
 
     if (result.isRight()) return result.value;
-    else ErrorMessageResult(result.value.name, result.value.message);
+    else await ErrorMessageResult(result.value.name, result.value.message);
   }
 }
