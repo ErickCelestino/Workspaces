@@ -9,6 +9,7 @@ import {
   ListItem,
   ListItemAvatar,
   ListItemText,
+  Pagination,
   Typography,
   useMediaQuery,
   useTheme,
@@ -49,6 +50,7 @@ export const DetailsPlaylistModal: FC<DetailsPlaylistModalProps> = ({
     {} as PlaylistResponseDto
   );
   const [files, setFiles] = useState<ContentFile[]>([]);
+  const [totalPagesFiles, setTotalPagesFiles] = useState(0);
   const [dataLoaded, setDataLoaded] = useState(false);
 
   const { loggedUser } = useLoggedUser();
@@ -79,6 +81,7 @@ export const DetailsPlaylistModal: FC<DetailsPlaylistModalProps> = ({
       try {
         const result = await FindFilesByPlaylistRequest(input);
         setFiles(result.files);
+        setTotalPagesFiles(result.totalPages);
       } catch (error) {
         console.error(error);
         if (axios.isAxiosError(error)) {
@@ -92,6 +95,18 @@ export const DetailsPlaylistModal: FC<DetailsPlaylistModalProps> = ({
     },
     [showAlert]
   );
+
+  const handleChange = async (
+    event: React.ChangeEvent<unknown>,
+    value: number
+  ) => {
+    const result = await FindFilesByPlaylistRequest({
+      loggedUserId: loggedUser?.id ?? '',
+      idPlaylist,
+      skip: (value - 1) * 8,
+    });
+    setFiles(result.files);
+  };
 
   useEffect(() => {
     if (!open) {
@@ -206,6 +221,18 @@ export const DetailsPlaylistModal: FC<DetailsPlaylistModalProps> = ({
               </ListItem>
             ))}
           </List>
+          <Box
+            width="100%"
+            display="flex"
+            justifyContent="center"
+            marginTop={theme.spacing(2)}
+          >
+            <Pagination
+              count={totalPagesFiles}
+              color="primary"
+              onChange={handleChange}
+            />
+          </Box>
         </Box>
       </Box>
     </SimpleFormModal>
