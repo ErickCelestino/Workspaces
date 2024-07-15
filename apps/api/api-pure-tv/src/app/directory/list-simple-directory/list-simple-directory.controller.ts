@@ -1,6 +1,10 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Query, UsePipes } from '@nestjs/common';
 import { ListSimpleDirectoryService } from './list-simple-directory.service';
-import { ErrorMessageResult } from '@workspaces/domain';
+import {
+  ErrorMessageResult,
+  listSimpleDirectorySchema,
+} from '@workspaces/domain';
+import { ZodValidationPipe } from '../../pipes/zod-validation-pipe';
 
 @Controller('list-simple-directory')
 export class ListSimpleDirectoryController {
@@ -8,6 +12,7 @@ export class ListSimpleDirectoryController {
     private readonly listSimpleDirectoryService: ListSimpleDirectoryService
   ) {}
 
+  @UsePipes(new ZodValidationPipe(listSimpleDirectorySchema))
   @Get()
   async list(
     @Query('filter') filter: string,

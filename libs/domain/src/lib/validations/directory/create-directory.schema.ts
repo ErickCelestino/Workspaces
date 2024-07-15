@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const CreateDirectorySchema = {
+export const createDirectorySchema = {
   name: z.string().min(1),
   loggedUserId: z.string().min(1),
 };
