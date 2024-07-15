@@ -21,6 +21,6 @@ export class CreatePlaylistController {
     });
 
     if (result.isRight()) return { playlistId: result.value };
-    else ErrorMessageResult(result.value.name, result.value.message);
+    else await ErrorMessageResult(result.value.name, result.value.message);
   }
 }

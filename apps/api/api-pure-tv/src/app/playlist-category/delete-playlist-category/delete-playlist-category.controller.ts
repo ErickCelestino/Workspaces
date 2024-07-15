@@ -24,6 +24,6 @@ export class DeletePlaylistCategoryController {
     });
 
     if (result.isRight()) return { playlistCategoryId: result.value };
-    else ErrorMessageResult(result.value.name, result.value.message);
+    else await ErrorMessageResult(result.value.name, result.value.message);
   }
 }

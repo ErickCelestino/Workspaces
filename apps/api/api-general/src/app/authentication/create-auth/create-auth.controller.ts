@@ -16,7 +16,7 @@ export class CreateAuthController {
   async create(@Body() input: CreateAuthDto) {
     const result = await this.createAuthService.create(input);
 
-    if (result.isRight()) return;
-    else ErrorMessageResult(result.value.name, result.value.message);
+    if (result.isRight()) return result.value;
+    else await ErrorMessageResult(result.value.name, result.value.message);
   }
 }
