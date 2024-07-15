@@ -30,6 +30,7 @@ import {
 import { AddFileToPlaylistModule } from './add-file-to-playlist/add-file-to-playlist.module';
 import { ListSimpleDirectoryModule } from './list-simple-directory/list-simple-directory.module';
 import { FindFilesByPlaylistModule } from './find-files-by-playlist/find-files-by-playlist.module';
+import { CreateDirectoryModule } from './directory/create-directory/create-directory.module';
 
 @Module({
   imports: [
@@ -59,6 +60,7 @@ import { FindFilesByPlaylistModule } from './find-files-by-playlist/find-files-b
     ListSimpleDirectoryModule,
     DetailsPlaylistModule,
     FindFilesByPlaylistModule,
+    CreateDirectoryModule,
   ],
   controllers: [AppController],
   providers: [AppService],
