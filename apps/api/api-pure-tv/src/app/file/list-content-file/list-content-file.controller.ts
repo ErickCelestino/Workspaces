@@ -33,6 +33,6 @@ export class ListContentFileController {
     const result = await this.listContentFileService.list(dto);
 
     if (result.isRight()) return result.value;
-    else ErrorMessageResult(result.value.name, result.value.message);
+    else await ErrorMessageResult(result.value.name, result.value.message);
   }
 }

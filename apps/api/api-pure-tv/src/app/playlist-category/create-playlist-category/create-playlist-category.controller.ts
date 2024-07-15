@@ -24,7 +24,7 @@ export class CreatePlaylistCategoryController {
       loggedUserId,
     });
 
-    if (result.isRight()) return { playlistCategoryId: result.value };
-    else ErrorMessageResult(result.value.name, result.value.message);
+    if (result.isRight()) return result.value;
+    else await ErrorMessageResult(result.value.name, result.value.message);
   }
 }

@@ -6,6 +6,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { AddFileToPlaylistService } from './add-file-to-playlist.service';
+import { ErrorMessageResult } from '@workspaces/domain';
 
 @Controller('add-file-to-playlist')
 export class AddFileToPlaylistController {
@@ -26,12 +27,6 @@ export class AddFileToPlaylistController {
     });
 
     if (result.isRight()) return result.value;
-    else
-      throw new BadRequestException({
-        error: {
-          name: result.value.name,
-          message: result.value.message,
-        },
-      });
+    else await ErrorMessageResult(result.value.name, result.value.message);
   }
 }
