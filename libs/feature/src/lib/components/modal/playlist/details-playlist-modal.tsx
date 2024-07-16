@@ -1,24 +1,22 @@
 import { FC, useCallback, useEffect, useState } from 'react';
 import { SimpleFormModal } from '../simple';
 import {
-  Avatar,
   Box,
   Chip,
   Divider,
   List,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
   Pagination,
   Typography,
   useMediaQuery,
   useTheme,
 } from '@mui/material';
+import OpenWithIcon from '@mui/icons-material/OpenWith';
 import {
   ContentFile,
   DetailsPlaylistDto,
   ErrorResponse,
   FindFilesByPlaylistDto,
+  IconMenuItem,
   PlaylistResponseDto,
 } from '@workspaces/domain';
 import {
@@ -29,6 +27,7 @@ import axios, { AxiosError } from 'axios';
 import { formatBrDate, ValidationsError } from '../../../shared';
 import { useLoggedUser } from '../../../contexts';
 import { ContentFileItem } from '../../list';
+import { ButtonFileMenu } from '../../menu';
 
 interface DetailsPlaylistModalProps {
   open: boolean;
@@ -53,6 +52,10 @@ export const DetailsPlaylistModal: FC<DetailsPlaylistModalProps> = ({
   const [files, setFiles] = useState<ContentFile[]>([]);
   const [totalPagesFiles, setTotalPagesFiles] = useState(0);
   const [dataLoaded, setDataLoaded] = useState(false);
+  const [moveFilePopUp, setMoveFilePopUp] = useState(false);
+  const [selectedFiles, setSelectedFiles] = useState<{
+    [key: string]: boolean;
+  }>({});
 
   const { loggedUser } = useLoggedUser();
   const theme = useTheme();
@@ -128,6 +131,35 @@ export const DetailsPlaylistModal: FC<DetailsPlaylistModalProps> = ({
     }
   }, [open, idPlaylist, dataLoaded, getPlaylist, loggedUser]);
 
+  const iconMenuList: IconMenuItem[] = [
+    {
+      icon: <OpenWithIcon />,
+      title: 'Mover para',
+      handleClick: async () => {},
+    },
+  ];
+
+  const handleFileToggle = (fileId: string) => {
+    setSelectedFiles((prevSelectedFiles) => {
+      const newSelectedFiles = {
+        ...prevSelectedFiles,
+        [fileId]: !prevSelectedFiles[fileId],
+      };
+      const selectedFileIds = Object.keys(newSelectedFiles).filter(
+        (id) => newSelectedFiles[id]
+      );
+      return newSelectedFiles;
+    });
+    handlePopUpOpen('move-file');
+  };
+
+  const handlePopUpOpen = (types: 'move-file', id?: string) => {
+    switch (types) {
+      case 'move-file':
+        setMoveFilePopUp(true);
+        break;
+    }
+  };
   return (
     <SimpleFormModal
       height={smDown ? theme.spacing(55) : theme.spacing(80)}
@@ -187,12 +219,25 @@ export const DetailsPlaylistModal: FC<DetailsPlaylistModalProps> = ({
           }}
         />
         <Box>
-          <Typography variant="h5">
-            <strong>{filesTitle}</strong>
-          </Typography>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+            }}
+          >
+            <Typography variant="h5">
+              <strong>{filesTitle}</strong>
+            </Typography>
+            <ButtonFileMenu iconMenuItemList={iconMenuList} />
+          </Box>
           <List>
             {files.map((file) => (
-              <ContentFileItem contentFile={file} />
+              <ContentFileItem
+                contentFile={file}
+                key={file.id}
+                isSelected={!!selectedFiles[file.id]}
+                onFileToggle={handleFileToggle}
+              />
             ))}
           </List>
           <Box

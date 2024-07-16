@@ -1,25 +1,49 @@
 import {
   Avatar,
   Box,
+  Checkbox,
   Divider,
   ListItem,
   ListItemAvatar,
+  ListItemIcon,
   ListItemText,
   useMediaQuery,
   useTheme,
 } from '@mui/material';
+import { FC, useState } from 'react';
 import { ContentFile } from '@workspaces/domain';
-import { FC } from 'react';
 
 interface ContentFileItemProps {
   contentFile: ContentFile;
+  isSelected: boolean;
+  onFileToggle: (files: string) => void;
 }
-export const ContentFileItem: FC<ContentFileItemProps> = ({ contentFile }) => {
+export const ContentFileItem: FC<ContentFileItemProps> = ({
+  contentFile,
+  isSelected,
+  onFileToggle,
+}) => {
   const theme = useTheme();
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
+
+  const [selectedFiles, setSelectedFiles] = useState<{
+    [key: string]: boolean;
+  }>({});
+
   return (
     <Box>
       <ListItem key={contentFile.id}>
+        <ListItemIcon
+          sx={{
+            marginRight: smDown ? theme.spacing(-2) : theme.spacing(0),
+          }}
+        >
+          <Checkbox
+            edge="start"
+            checked={isSelected}
+            onChange={() => onFileToggle(contentFile.id)}
+          />
+        </ListItemIcon>
         <ListItemAvatar>
           <Avatar
             alt={contentFile.originalName}
@@ -47,7 +71,16 @@ export const ContentFileItem: FC<ContentFileItemProps> = ({ contentFile }) => {
           primary={contentFile.originalName}
         />
       </ListItem>
-      <Divider variant="inset" component="li" />
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        <Divider sx={{ width: '90%' }} />
+      </Box>
     </Box>
   );
 };
