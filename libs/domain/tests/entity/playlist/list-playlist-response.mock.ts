@@ -1,8 +1,8 @@
 import { faker } from '@faker-js/faker';
-import { ListPlaylistReponseDto } from '../../../src';
+import { ListPlaylistReponseDto as ListPlaylistResponseDto } from '../../../src';
 import { PlaylistMock } from './playlist.mock';
 
-export const ListPlaylistReponseMock: ListPlaylistReponseDto = {
+export const ListPlaylistResponseMock: ListPlaylistResponseDto = {
   playlists: [PlaylistMock],
   filteredTotal: parseInt(`${faker.number.bigInt}`),
   total: parseInt(`${faker.number.bigInt}`),
