@@ -33,7 +33,11 @@ import {
   MoveFilesToAnotherPlaylistModule,
   DeletePlaylistFilesModule,
 } from './file-to-playlist';
-import { ListSimpleDirectoryModule, CreateDirectoryModule } from './directory';
+import {
+  ListSimpleDirectoryModule,
+  CreateDirectoryModule,
+  ListDirectoryModule,
+} from './directory';
 
 @Module({
   imports: [
@@ -66,6 +70,7 @@ import { ListSimpleDirectoryModule, CreateDirectoryModule } from './directory';
     CreateDirectoryModule,
     MoveFilesToAnotherPlaylistModule,
     DeletePlaylistFilesModule,
+    ListDirectoryModule,
   ],
   controllers: [AppController],
   providers: [AppService],
