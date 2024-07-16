@@ -138,9 +138,6 @@ export const DetailsPlaylistModal: FC<DetailsPlaylistModalProps> = ({
         ...prevSelectedFiles,
         [fileId]: !prevSelectedFiles[fileId],
       };
-      const selectedFileIds = Object.keys(newSelectedFiles).filter(
-        (id) => newSelectedFiles[id]
-      );
       return newSelectedFiles;
     });
   };
@@ -148,7 +145,12 @@ export const DetailsPlaylistModal: FC<DetailsPlaylistModalProps> = ({
   const handlePopUpOpen = (types: 'move-file', id?: string) => {
     switch (types) {
       case 'move-file':
-        setMoveFilePopUp(true);
+        if (Object.keys(selectedFiles).length > 0) {
+          setMoveFilePopUp(true);
+        } else {
+          showAlert('Selecione um arquivo para mover', false);
+        }
+
         break;
     }
   };

@@ -1,13 +1,16 @@
 import { FC, useCallback, useState } from 'react';
 import { SimpleFormModal } from '../simple';
-import { Box, useMediaQuery, useTheme } from '@mui/material';
+import { Box, Button, useMediaQuery, useTheme } from '@mui/material';
 import {
   ComboBoxListResult,
   ErrorResponse,
   ListPlaylistDto,
   Playlist,
 } from '@workspaces/domain';
-import { ListPlaylistRequest } from '../../../services';
+import {
+  ListPlaylistRequest,
+  MoveFilesToAnotherPlaylistRequest,
+} from '../../../services';
 import axios, { AxiosError } from 'axios';
 import { ValidationsError } from '../../../shared';
 import { useLoggedUser } from '../../../contexts';
@@ -20,6 +23,7 @@ interface MoveFileToAnotherPlaylistModalProps {
   handlePopUpClose: () => void;
   title: string;
   showAlert: (message: string, success: boolean) => void;
+  buttonTitle?: string;
 }
 
 export const MoveFileToAnotherPlaylistModal: FC<
@@ -31,6 +35,7 @@ export const MoveFileToAnotherPlaylistModal: FC<
   open,
   title,
   showAlert,
+  buttonTitle = 'Mover Arquivos',
 }) => {
   const { loggedUser } = useLoggedUser();
   const theme = useTheme();
@@ -63,7 +68,7 @@ export const MoveFileToAnotherPlaylistModal: FC<
   );
 
   const searchData = async (input: string) => {
-    const result = await handleData({
+    await handleData({
       loggedUserId: loggedUser?.id ?? '',
       userInput: input,
       skip: 0,
@@ -95,9 +100,33 @@ export const MoveFileToAnotherPlaylistModal: FC<
   const getResult = (item: ComboBoxListResult | null) => {
     setComboBoxListResult(item);
   };
+
+  const moveFiles = async () => {
+    try {
+      const result = await MoveFilesToAnotherPlaylistRequest({
+        filesId: Object.keys(selectedFiles),
+        loggedUserId: loggedUser?.id ?? '',
+        oldPlaylistId: oldPlaylist,
+        newPlaylistId: comboBoxListResult?.id ?? '',
+      });
+
+      showAlert('Arquivos movidos com sucesso', true);
+      handlePopUpClose();
+    } catch (error) {
+      console.error(error);
+      if (axios.isAxiosError(error)) {
+        const axiosError = error as AxiosError<ErrorResponse>;
+        const errors = ValidationsError(axiosError, 'Move Files');
+        if (errors) {
+          showAlert(errors, false);
+        }
+      }
+    }
+  };
+
   return (
     <SimpleFormModal
-      height={smDown ? theme.spacing(55) : theme.spacing(53)}
+      height={smDown ? theme.spacing(55) : theme.spacing(36)}
       width={smDown ? '90%' : theme.spacing(80)}
       open={open}
       handlePopUpClose={handlePopUpClose}
@@ -110,6 +139,17 @@ export const MoveFileToAnotherPlaylistModal: FC<
           onItemSelected={getResult}
           pageSize={6}
         />
+      </Box>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          marginTop: theme.spacing(2),
+        }}
+      >
+        <Button variant="contained" onClick={moveFiles}>
+          {buttonTitle}
+        </Button>
       </Box>
     </SimpleFormModal>
   );
