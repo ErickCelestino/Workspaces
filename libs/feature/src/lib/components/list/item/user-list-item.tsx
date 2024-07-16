@@ -14,7 +14,7 @@ import {
 import { StatusColor } from '@workspaces/domain';
 import { FC } from 'react';
 
-interface ListUserProps {
+interface UserListItemProps {
   image: string;
   imageAlt: string;
   name: string;
@@ -27,7 +27,7 @@ interface ListUserProps {
   deleteUser?: () => void;
 }
 
-export const ListUser: FC<ListUserProps> = ({
+export const UserListItem: FC<UserListItemProps> = ({
   image,
   imageAlt,
   name,

@@ -11,7 +11,7 @@ import {
   CreatePlaylistCategoryModal,
   DeletePlaylistCategoryModal,
   EditPlaylistCategoryModal,
-  ListPlaylistCategory,
+  PlaylistCategoryItem,
   SearchBar,
   ToolbarPureTV,
 } from '../../../components';
@@ -230,7 +230,7 @@ export const ListPlaylistCategoryContainer = () => {
                 <ScrollBox maxHeight="100%">
                   <List>
                     {listPlaylistCategory.map((category) => (
-                      <ListPlaylistCategory
+                      <PlaylistCategoryItem
                         key={category.id}
                         editPlaylistCategory={async () =>
                           handlePopUpOpen('edit', category.id)

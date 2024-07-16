@@ -28,6 +28,7 @@ import {
 import axios, { AxiosError } from 'axios';
 import { formatBrDate, ValidationsError } from '../../../shared';
 import { useLoggedUser } from '../../../contexts';
+import { ContentFileItem } from '../../list';
 
 interface DetailsPlaylistModalProps {
   open: boolean;
@@ -191,34 +192,7 @@ export const DetailsPlaylistModal: FC<DetailsPlaylistModalProps> = ({
           </Typography>
           <List>
             {files.map((file) => (
-              <ListItem key={file.id}>
-                <ListItemAvatar>
-                  <Avatar
-                    alt={file.originalName}
-                    src={file.path}
-                    sx={{
-                      width: theme.spacing(8),
-                      height: theme.spacing(8),
-                      '& img': {
-                        objectFit: 'contain',
-                        objectPosition: 'center',
-                        maxHeight: '100%',
-                        maxWidth: '100%',
-                      },
-                    }}
-                  />
-                </ListItemAvatar>
-
-                <ListItemText
-                  sx={{
-                    marginLeft: theme.spacing(2),
-                    overflow: 'hidden',
-                    fontSize: smDown ? '8px' : '16px',
-                    textOverflow: 'ellipsis',
-                  }}
-                  primary={file.originalName}
-                />
-              </ListItem>
+              <ContentFileItem contentFile={file} />
             ))}
           </List>
           <Box
