@@ -174,6 +174,7 @@ export const DetailsPlaylistModal: FC<DetailsPlaylistModalProps> = ({
         handlePopUpClose={() => handlesPopUpClose('move-file')}
         oldPlaylist={idPlaylist}
         open={moveFilePopUp}
+        showAlert={showAlert}
         title="Mover Arquivos para Playlist"
         selectedFiles={selectedFiles}
       />
