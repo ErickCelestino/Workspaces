@@ -31,7 +31,11 @@ import {
   AddFileToPlaylistModule,
   FindFilesByPlaylistModule,
 } from './file-to-playlist';
-import { ListSimpleDirectoryModule, CreateDirectoryModule } from './directory';
+import {
+  ListSimpleDirectoryModule,
+  CreateDirectoryModule,
+  ListDirectoryModule,
+} from './directory';
 
 @Module({
   imports: [
@@ -62,6 +66,7 @@ import { ListSimpleDirectoryModule, CreateDirectoryModule } from './directory';
     DetailsPlaylistModule,
     FindFilesByPlaylistModule,
     CreateDirectoryModule,
+    ListDirectoryModule,
   ],
   controllers: [AppController],
   providers: [AppService],
