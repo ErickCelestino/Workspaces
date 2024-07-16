@@ -1,6 +1,6 @@
-import { Box, CircularProgress, TextField } from '@mui/material';
+import { Box, TextField, Typography } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
-import { FC, useState, useEffect, useCallback, UIEventHandler } from 'react';
+import { FC, useState, useEffect, useCallback } from 'react';
 
 interface SearchComboBoxProps {
   onSearch: (searchTerm: string) => Promise<void>;
@@ -10,28 +10,30 @@ interface SearchComboBoxProps {
     pageSize: number
   ) => Promise<string[]>;
   pageSize?: number;
+  emptyListMessage?: string;
 }
 
 export const SearchComboBox: FC<SearchComboBoxProps> = ({
   onSearch,
   onList,
   pageSize = 20,
+  emptyListMessage = 'Sem Resultados',
 }) => {
   const [searchTerm, setSearchTerm] = useState<string>('');
-  const [page, setPage] = useState<number>(1);
   const [options, setOptions] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const [searching, setSearching] = useState<boolean>(false); // Track searching state
-  const [opened, setOpened] = useState<boolean>(false); // Track if Autocomplete is opened
+  const [opened, setOpened] = useState<boolean>(false);
+  const [noResults, setNoResults] = useState<boolean>(false);
 
-  const debouncedSearchTerm = useDebounce(searchTerm, 300); // Debounce search term
+  const debouncedSearchTerm = useDebounce(searchTerm, 300);
 
   const loadItems = useCallback(
-    async (term: string, pageNumber: number) => {
+    async (term: string) => {
       setLoading(true);
       try {
-        const newItems = await onList(term, pageNumber, pageSize);
-        return newItems;
+        const newItems = await onList(term, 1, pageSize);
+        setOptions(newItems);
+        setNoResults(newItems.length === 0);
       } finally {
         setLoading(false);
       }
@@ -40,81 +42,43 @@ export const SearchComboBox: FC<SearchComboBoxProps> = ({
   );
 
   useEffect(() => {
-    if (opened && options.length === 0) {
-      // Load all items when Autocomplete is opened for the first time
-      setLoading(true);
-      loadItems('', 1)
-        .then((newItems) => {
-          // Load initial items without search term
-          setOptions(newItems);
-        })
-        .finally(() => setLoading(false));
-    }
-  }, [opened, options.length, loadItems]);
+    let isMounted = true;
 
-  useEffect(() => {
-    if (debouncedSearchTerm && opened) {
-      setPage(1);
-      setOptions([]);
-      setSearching(true);
-      loadItems(debouncedSearchTerm, 1)
-        .then((newItems) => {
-          setOptions(newItems);
-        })
-        .finally(() => setSearching(false));
-    }
-  }, [debouncedSearchTerm, opened, loadItems]);
-
-  useEffect(() => {
-    if (page > 1 && !loading && !searching && opened) {
-      loadItems(debouncedSearchTerm, page).then((newItems) => {
-        setOptions((prevItems) => [...prevItems, ...newItems]);
-      });
-    }
-  }, [page, debouncedSearchTerm, loadItems, loading, searching, opened]);
-
-  const handleSearchChange = async (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const newSearchTerm = event.target.value;
-    setSearchTerm(newSearchTerm);
-    await onSearch(newSearchTerm);
-  };
-
-  const handleScroll: UIEventHandler<HTMLUListElement> = (event) => {
-    const listboxNode = event.currentTarget;
-    if (
-      listboxNode.scrollTop + listboxNode.clientHeight >=
-        listboxNode.scrollHeight - 100 &&
-      !loading &&
-      !searching &&
-      opened &&
-      options.length > 0
-    ) {
-      setPage((prevPage) => prevPage + 1);
-    }
-  };
-
-  useEffect(() => {
     if (opened) {
-      window.addEventListener(
-        'scroll',
-        handleScroll as unknown as EventListener
-      );
-    } else {
-      window.removeEventListener(
-        'scroll',
-        handleScroll as unknown as EventListener
-      );
+      setLoading(true);
+      loadItems('').finally(() => {
+        if (isMounted) {
+          setLoading(false);
+        }
+      });
     }
 
     return () => {
-      window.removeEventListener(
-        'scroll',
-        handleScroll as unknown as EventListener
-      );
+      isMounted = false;
     };
-  }, [opened]);
+  }, [opened, loadItems]);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    if (debouncedSearchTerm && opened) {
+      setLoading(true);
+      loadItems(debouncedSearchTerm).finally(() => {
+        if (isMounted) {
+          setLoading(false);
+        }
+      });
+    }
+
+    return () => {
+      isMounted = false;
+    };
+  }, [debouncedSearchTerm, opened, loadItems]);
+
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newSearchTerm = event.target.value;
+    setSearchTerm(newSearchTerm);
+  };
 
   const handleOpen = () => {
     if (!opened) {
@@ -122,12 +86,29 @@ export const SearchComboBox: FC<SearchComboBoxProps> = ({
     }
   };
 
+  useEffect(() => {
+    let isMounted = true;
+
+    if (debouncedSearchTerm && opened) {
+      setLoading(true);
+      onSearch(debouncedSearchTerm).finally(() => {
+        if (isMounted) {
+          setLoading(false);
+        }
+      });
+    }
+
+    return () => {
+      isMounted = false;
+    };
+  }, [debouncedSearchTerm, opened, onSearch]);
+
   return (
     <Box>
       <Autocomplete
         options={options}
-        loading={loading || searching} // Consider searching state as loading state
-        onOpen={handleOpen} // Track when Autocomplete is opened
+        loading={loading}
+        onOpen={handleOpen}
         renderInput={(params) => (
           <TextField
             {...params}
@@ -137,20 +118,16 @@ export const SearchComboBox: FC<SearchComboBoxProps> = ({
             onChange={handleSearchChange}
           />
         )}
-        ListboxProps={{
-          onScroll: handleScroll,
-        }}
       />
-      {loading && (
-        <Box display="flex" justifyContent="center" alignItems="center" mt={2}>
-          <CircularProgress />
-        </Box>
+      {!loading && noResults && (
+        <Typography variant="body2" color="textSecondary">
+          {emptyListMessage}
+        </Typography>
       )}
     </Box>
   );
 };
 
-// Helper hook for debounce
 function useDebounce(value: string, delay: number) {
   const [debouncedValue, setDebouncedValue] = useState(value);
 
