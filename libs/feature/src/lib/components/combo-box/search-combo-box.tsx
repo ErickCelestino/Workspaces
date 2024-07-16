@@ -1,5 +1,6 @@
 import { Box, TextField, Typography } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
+import { ComboBoxListResult } from '@workspaces/domain';
 import { FC, useState, useEffect, useCallback } from 'react';
 
 interface SearchComboBoxProps {
@@ -8,19 +9,21 @@ interface SearchComboBoxProps {
     searchTerm: string,
     page: number,
     pageSize: number
-  ) => Promise<string[]>;
+  ) => Promise<ComboBoxListResult[]>;
   pageSize?: number;
   emptyListMessage?: string;
+  onItemSelected?: (item: ComboBoxListResult | null) => void;
 }
 
 export const SearchComboBox: FC<SearchComboBoxProps> = ({
   onSearch,
   onList,
+  onItemSelected,
   pageSize = 20,
   emptyListMessage = 'Sem Resultados',
 }) => {
   const [searchTerm, setSearchTerm] = useState<string>('');
-  const [options, setOptions] = useState<string[]>([]);
+  const [options, setOptions] = useState<ComboBoxListResult[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [opened, setOpened] = useState<boolean>(false);
   const [noResults, setNoResults] = useState<boolean>(false);
@@ -86,6 +89,10 @@ export const SearchComboBox: FC<SearchComboBoxProps> = ({
     }
   };
 
+  const handleItemSelected = (value: ComboBoxListResult | null) => {
+    onItemSelected?.(value);
+  };
+
   useEffect(() => {
     let isMounted = true;
 
@@ -106,9 +113,14 @@ export const SearchComboBox: FC<SearchComboBoxProps> = ({
   return (
     <Box>
       <Autocomplete
-        options={options}
+        options={options.map((item) => item.key)}
+        getOptionLabel={(option) => option}
         loading={loading}
         onOpen={handleOpen}
+        onChange={(event, value) => {
+          const selectedOption = options.find((item) => item.key === value);
+          handleItemSelected(selectedOption || null);
+        }}
         renderInput={(params) => (
           <TextField
             {...params}

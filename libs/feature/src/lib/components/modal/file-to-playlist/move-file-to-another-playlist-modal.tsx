@@ -1,7 +1,12 @@
 import { FC, useCallback, useState } from 'react';
 import { SimpleFormModal } from '../simple';
 import { Box, useMediaQuery, useTheme } from '@mui/material';
-import { ErrorResponse, ListPlaylistDto, Playlist } from '@workspaces/domain';
+import {
+  ComboBoxListResult,
+  ErrorResponse,
+  ListPlaylistDto,
+  Playlist,
+} from '@workspaces/domain';
 import { ListPlaylistRequest } from '../../../services';
 import axios, { AxiosError } from 'axios';
 import { ValidationsError } from '../../../shared';
@@ -30,6 +35,8 @@ export const MoveFileToAnotherPlaylistModal: FC<
   const { loggedUser } = useLoggedUser();
   const theme = useTheme();
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const [comboBoxListResult, setComboBoxListResult] =
+    useState<ComboBoxListResult | null>(null);
 
   const handleData = useCallback(
     async (data: ListPlaylistDto) => {
@@ -75,9 +82,19 @@ export const MoveFileToAnotherPlaylistModal: FC<
       skip: (page - 1) * pageSize,
       take: pageSize,
     });
-    return result?.playlists.map((playlist) => playlist.name) ?? [];
+    return (
+      result?.playlists.map((playlist) => {
+        return {
+          id: playlist.id,
+          key: playlist.name,
+        };
+      }) ?? []
+    );
   };
 
+  const getResult = (item: ComboBoxListResult | null) => {
+    setComboBoxListResult(item);
+  };
   return (
     <SimpleFormModal
       height={smDown ? theme.spacing(55) : theme.spacing(53)}
@@ -90,6 +107,7 @@ export const MoveFileToAnotherPlaylistModal: FC<
         <SearchComboBox
           onSearch={searchData}
           onList={handleList}
+          onItemSelected={getResult}
           pageSize={6}
         />
       </Box>

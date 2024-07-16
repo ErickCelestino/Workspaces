@@ -1,6 +1,7 @@
 export * from './alert';
 export * from './app';
 export * from './auth';
+export * from './combo-box';
 export * from './config';
 export * from './directory';
 export * from './drawer';
