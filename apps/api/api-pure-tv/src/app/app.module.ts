@@ -34,17 +34,17 @@ import {
   DeletePlaylistFilesModule,
 } from './file-to-playlist';
 import {
-  ListSimpleDirectoryModule,
-  CreateDirectoryModule,
-  ListDirectoryModule,
-} from './directory';
-import {
   CreateSchedulingModule,
   ListSchedulesModule,
   DeleteSchedulingModule,
   EditSchedulingModule,
   FindSchedulingByIdModule,
 } from './scheduling';
+import {
+  ListSimpleDirectoryModule,
+  CreateDirectoryModule,
+  ListDirectoryModule,
+} from './directory';
 
 @Module({
   imports: [
@@ -83,6 +83,7 @@ import {
     DeleteSchedulingModule,
     EditSchedulingModule,
     FindSchedulingByIdModule,
+    ListDirectoryModule,
   ],
   controllers: [AppController],
   providers: [AppService],
