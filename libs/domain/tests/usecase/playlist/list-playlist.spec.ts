@@ -5,7 +5,7 @@ import {
   ListPlaylistDto,
   ListPlaylistRepository,
 } from '../../../src';
-import { ListPlaylistReponseMock, userMock } from '../../entity';
+import { ListPlaylistResponseMock, userMock } from '../../entity';
 import {
   FindUserByIdRepositoryMock,
   ListPlaylistRepositoryMock,
@@ -45,7 +45,7 @@ describe('ListPlaylist', () => {
 
     expect(result.isLeft()).toBe(false);
     expect(result.isRight()).toBe(true);
-    expect(result.value).toStrictEqual(ListPlaylistReponseMock);
+    expect(result.value).toStrictEqual(ListPlaylistResponseMock);
   });
 
   it('should return EntityNotEmpty when a pass incorrect Logged User ID', async () => {
