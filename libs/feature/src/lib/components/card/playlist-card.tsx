@@ -106,7 +106,7 @@ export const PlaylistCard: FC<ListPlaylistProps> = ({
     >
       <CardMedia
         component="img"
-        image={imageData.image}
+        image={imageData.image ?? '/assets/images/Sem_Arquivo.png'}
         title={imageData.imageName}
         sx={{
           height: theme.spacing(15),
