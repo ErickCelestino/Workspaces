@@ -240,10 +240,7 @@ export const ListPlaylistContainer = () => {
                       detailsPlaylist={async () =>
                         handlePopUpOpen('details', playlist.id)
                       }
-                      imageData={{
-                        image: '',
-                        imageName: '',
-                      }}
+                      idPlaylist={playlist.id}
                       name={playlist.name}
                     />
                   </Grid>

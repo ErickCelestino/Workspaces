@@ -12,8 +12,10 @@ import EditIcon from '@mui/icons-material/Edit';
 import NoteAddIcon from '@mui/icons-material/NoteAdd';
 import DeleteIcon from '@mui/icons-material/Delete';
 import InfoIcon from '@mui/icons-material/Info';
-import { FC } from 'react';
+import { FC, useCallback, useEffect, useState } from 'react';
 import { ButtonFileMenu } from '../menu';
+import { FindFilesByPlaylistRequest } from '../../services';
+import { useLoggedUser } from '../../contexts';
 
 interface ListPlaylistProps {
   name: string;
@@ -21,7 +23,7 @@ interface ListPlaylistProps {
   deleteTitle?: string;
   addFileTitle?: string;
   detailsTitle?: string;
-  imageData: ImageCardItem;
+  idPlaylist: string;
   editPlaylist: () => Promise<void>;
   deletePlaylist: () => Promise<void>;
   addFile: () => Promise<void>;
@@ -34,13 +36,17 @@ export const PlaylistCard: FC<ListPlaylistProps> = ({
   deleteTitle = 'Deletar',
   addFileTitle = 'Adicionar Arquivos',
   detailsTitle = 'Detalhes',
-  imageData,
+  idPlaylist,
   editPlaylist,
   deletePlaylist,
   addFile,
   detailsPlaylist,
 }) => {
   const theme = useTheme();
+  const { loggedUser } = useLoggedUser();
+  const [imageData, setImageData] = useState<ImageCardItem>(
+    {} as ImageCardItem
+  );
 
   const iconMenuList: IconMenuItem[] = [
     {
@@ -64,6 +70,25 @@ export const PlaylistCard: FC<ListPlaylistProps> = ({
       handleClick: addFile,
     },
   ];
+
+  const getImage = useCallback(async () => {
+    try {
+      const result = await FindFilesByPlaylistRequest({
+        idPlaylist,
+        loggedUserId: loggedUser?.id ?? '',
+      });
+
+      setImageData({
+        image: result.files[0].path,
+        imageName: result.files[0].originalName,
+      });
+    } catch (error) {}
+  }, [idPlaylist]);
+
+  useEffect(() => {
+    getImage();
+  }, [getImage]);
+
   return (
     <Card
       sx={{
