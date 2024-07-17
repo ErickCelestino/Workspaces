@@ -63,13 +63,13 @@ export class DeletePlaylistFiles
 
       await ValidationContentFileId(file, this.findContentFileByIdRepository);
 
-      const filteredOldPlaylist =
+      const filteredPlaylist =
         await this.findFileInFileToPlaylistRepository.find({
           fileId: file,
           playlsitId: playlistId,
         });
 
-      if (Object.keys(filteredOldPlaylist).length < 1) {
+      if (Object.keys(filteredPlaylist).length < 1) {
         return left(new EntityNotAssociate(file));
       }
 
