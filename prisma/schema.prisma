@@ -385,7 +385,6 @@ model Playlist_Category {
   @@schema("pure_tv")
 }
 
-
 model Playlist_X_Scheduling {
   scheduling_id String
   playlist_id String
@@ -404,8 +403,8 @@ model Scheduling {
   scheduling_id String @id @default(uuid())
   user_id String
   name String
-  start_time DateTime
-  end_time DateTime
+  start_time DateTime @db.Time
+  end_time DateTime @db.Time
   looping Boolean
   priority Int
   created_at DateTime @default(now())
