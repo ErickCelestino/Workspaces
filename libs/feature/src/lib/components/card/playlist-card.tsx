@@ -7,7 +7,11 @@ import {
   Typography,
   useTheme,
 } from '@mui/material';
-import { IconMenuItem, ImageCardItem } from '@workspaces/domain';
+import {
+  FindFilesByPlaylistDto,
+  IconMenuItem,
+  ImageCardItem,
+} from '@workspaces/domain';
 import EditIcon from '@mui/icons-material/Edit';
 import NoteAddIcon from '@mui/icons-material/NoteAdd';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -71,11 +75,11 @@ export const PlaylistCard: FC<ListPlaylistProps> = ({
     },
   ];
 
-  const getImage = useCallback(async () => {
+  const getImage = useCallback(async (input: FindFilesByPlaylistDto) => {
     try {
       const result = await FindFilesByPlaylistRequest({
-        idPlaylist,
-        loggedUserId: loggedUser?.id ?? '',
+        idPlaylist: input.idPlaylist,
+        loggedUserId: input.loggedUserId,
       });
 
       setImageData({
@@ -83,11 +87,14 @@ export const PlaylistCard: FC<ListPlaylistProps> = ({
         imageName: result.files[0].originalName,
       });
     } catch (error) {}
-  }, [idPlaylist]);
+  }, []);
 
   useEffect(() => {
-    getImage();
-  }, [getImage]);
+    getImage({
+      idPlaylist,
+      loggedUserId: loggedUser?.id ?? '',
+    });
+  }, [idPlaylist, loggedUser, getImage]);
 
   return (
     <Card

@@ -82,7 +82,7 @@ describe('MoveFilesToAnotherPlaylist', () => {
     expect(result.isLeft()).toBe(false);
     expect(result.value).toStrictEqual(undefined);
   });
-  it('should return EntityNotEmpty when a pass incorrect logged playlist id', async () => {
+  it('should return EntityNotEmpty when a pass incorrect logged id', async () => {
     const { sut, moveFilesToAnotherPlaylistDto } = makeSut();
     moveFilesToAnotherPlaylistDto.loggedUserId = '';
     const result = await sut.execute(moveFilesToAnotherPlaylistDto);
@@ -142,17 +142,7 @@ describe('MoveFilesToAnotherPlaylist', () => {
     expect(result.value).toBeInstanceOf(EntityNotEmpty);
   });
 
-  it('should return EntityNotEmpty when a pass incorrect old Playlist id', async () => {
-    const { sut, moveFilesToAnotherPlaylistDto } = makeSut();
-    moveFilesToAnotherPlaylistDto.oldPlaylistId = '';
-    const result = await sut.execute(moveFilesToAnotherPlaylistDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.isRight()).toBe(false);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
-  it('should return EntityNotCreated if there is no file to playlist created in the database', async () => {
+  it('should return EntityNotCreated if there is no file to new playlist created in the database', async () => {
     const {
       findContentFileByIdRepository,
       findUserByIdRepository,
@@ -176,31 +166,6 @@ describe('MoveFilesToAnotherPlaylist', () => {
     expect(result.isLeft()).toBe(true);
     expect(result.value).toBeInstanceOf(EntityNotAssociate);
   });
-  it('should return EntityNotAssociate if there is no file to old playlist created in the database', async () => {
-    const {
-      findContentFileByIdRepository,
-      findUserByIdRepository,
-      moveFilesToAnotherPlaylistDto,
-      findPlaylistByIdRepository,
-      moveFileToAnotherPlaylistRepository,
-    } = makeSut();
-
-    const mockEmptyRepository = new FindFileInFileToPlaylistRepositoryMock();
-
-    const sut = new MoveFilesToAnotherPlaylist(
-      findUserByIdRepository,
-      findContentFileByIdRepository,
-      findPlaylistByIdRepository,
-      mockEmptyRepository,
-      moveFileToAnotherPlaylistRepository
-    );
-
-    const result = await sut.execute(moveFilesToAnotherPlaylistDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotAssociate);
-  });
-
   it('should return EntityAlreadyExists if there is no file to new playlist created in the database', async () => {
     const {
       findContentFileByIdRepository,

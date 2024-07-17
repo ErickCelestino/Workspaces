@@ -10,9 +10,11 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
+import DeleteSweepIcon from '@mui/icons-material/DeleteSweep';
 import OpenWithIcon from '@mui/icons-material/OpenWith';
 import {
   ContentFile,
+  DeletePlaylist,
   DetailsPlaylistDto,
   ErrorResponse,
   FindFilesByPlaylistDto,
@@ -28,7 +30,10 @@ import { formatBrDate, ValidationsError } from '../../../shared';
 import { useLoggedUser } from '../../../contexts';
 import { ContentFileItem } from '../../list';
 import { ButtonFileMenu } from '../../menu';
-import { MoveFileToAnotherPlaylistModal } from '../file-to-playlist';
+import {
+  DeletePlaylistFilesModal,
+  MoveFileToAnotherPlaylistModal,
+} from '../file-to-playlist';
 
 interface DetailsPlaylistModalProps {
   open: boolean;
@@ -54,6 +59,7 @@ export const DetailsPlaylistModal: FC<DetailsPlaylistModalProps> = ({
   const [totalPagesFiles, setTotalPagesFiles] = useState(0);
   const [dataLoaded, setDataLoaded] = useState(false);
   const [moveFilePopUp, setMoveFilePopUp] = useState(false);
+  const [deleteFilePopUp, setDeleteFilePopUp] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState<{
     [key: string]: boolean;
   }>({});
@@ -142,23 +148,33 @@ export const DetailsPlaylistModal: FC<DetailsPlaylistModalProps> = ({
     });
   };
 
-  const handlePopUpOpen = (types: 'move-file', id?: string) => {
+  const handlePopUpOpen = (types: 'move-file' | 'delete-file', id?: string) => {
+    const selecteFileMessage = 'Selecione um arquivo para mover';
     switch (types) {
       case 'move-file':
         if (Object.keys(selectedFiles).length > 0) {
           setMoveFilePopUp(true);
         } else {
-          showAlert('Selecione um arquivo para mover', false);
+          showAlert(selecteFileMessage, false);
         }
-
+        break;
+      case 'delete-file':
+        if (Object.keys(selectedFiles).length > 0) {
+          setDeleteFilePopUp(true);
+        } else {
+          showAlert(selecteFileMessage, false);
+        }
         break;
     }
   };
 
-  const handlesPopUpClose = (types: 'move-file') => {
+  const handlesPopUpClose = (types: 'move-file' | 'delete-file') => {
     switch (types) {
       case 'move-file':
         setMoveFilePopUp(false);
+        break;
+      case 'delete-file':
+        setDeleteFilePopUp(false);
         break;
     }
   };
@@ -168,6 +184,11 @@ export const DetailsPlaylistModal: FC<DetailsPlaylistModalProps> = ({
       icon: <OpenWithIcon />,
       title: 'Mover para',
       handleClick: async () => handlePopUpOpen('move-file'),
+    },
+    {
+      icon: <DeleteSweepIcon />,
+      title: 'Deletar Arquivos',
+      handleClick: async () => handlePopUpOpen('delete-file'),
     },
   ];
   return (
@@ -179,6 +200,17 @@ export const DetailsPlaylistModal: FC<DetailsPlaylistModalProps> = ({
         showAlert={showAlert}
         title="Mover Arquivos para Playlist"
         selectedFiles={selectedFiles}
+      />
+      <DeletePlaylistFilesModal
+        handlePopUpClose={() => handlesPopUpClose('delete-file')}
+        idsToDelete={Object.keys(selectedFiles)}
+        idPlaylist={idPlaylist}
+        open={deleteFilePopUp}
+        showAlert={showAlert}
+        title="Deletar Arquivos"
+        subTitle={`Deseja realmente deletar os ${
+          Object.keys(selectedFiles).length
+        } arquivos selecionados?`}
       />
       <SimpleFormModal
         height={smDown ? theme.spacing(55) : theme.spacing(80)}
