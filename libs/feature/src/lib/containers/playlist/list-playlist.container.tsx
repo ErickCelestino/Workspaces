@@ -15,6 +15,8 @@ import {
   AddFileToPlaylistModal,
   RightClickMenu,
   MobileButtonMenu,
+  DetailsPlaylistModal,
+  EditPlaylistModal,
 } from '../../components';
 import { LayoutBase } from '../../layout';
 import { useSnackbarAlert } from '../../hooks';
@@ -30,8 +32,6 @@ import { ListPlaylistRequest } from '../../services';
 import axios, { AxiosError } from 'axios';
 import { ValidationsError } from '../../shared';
 import { useLoggedUser } from '../../contexts';
-import { EditPlaylistModal } from '../../components/modal/playlist/edit-playlist-modal';
-import { DetailsPlaylistModal } from '../../components/modal/playlist/details-playlist-modal';
 
 export const ListPlaylistContainer = () => {
   const { showSnackbarAlert, SnackbarAlert } = useSnackbarAlert();
@@ -240,10 +240,7 @@ export const ListPlaylistContainer = () => {
                       detailsPlaylist={async () =>
                         handlePopUpOpen('details', playlist.id)
                       }
-                      imageData={{
-                        image: '',
-                        imageName: '',
-                      }}
+                      idPlaylist={playlist.id}
                       name={playlist.name}
                     />
                   </Grid>

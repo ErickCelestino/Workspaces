@@ -7,7 +7,7 @@ import {
 } from '@mui/material';
 import {
   FormDeleteUser,
-  ListUser,
+  UserListItem,
   SearchBar,
   SimpleModal,
   ToolbarPureTV,
@@ -111,7 +111,7 @@ export const ListUserContainer = () => {
             <Box width="95%">
               {userList.length > 0 ? (
                 userList.map((user) => (
-                  <ListUser
+                  <UserListItem
                     deleteUser={() => deleteUser(user.userId)}
                     editUser={() => editUser(user.userId)}
                     key={user.userId}

@@ -11,10 +11,10 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { IconMenuItem, PlaylistCategory } from '@workspaces/domain';
 import { FC } from 'react';
-import { formatBrDate } from '../../shared';
-import { ButtonFileMenu } from '../menu';
+import { formatBrDate } from '../../../shared';
+import { ButtonFileMenu } from '../../menu';
 
-interface ListPlaylistCategoryProps {
+interface PlaylistCategoryItemProps {
   category: PlaylistCategory;
   editPlaylistCategory: () => Promise<void>;
   deletePlaylistCategory: () => Promise<void>;
@@ -23,7 +23,7 @@ interface ListPlaylistCategoryProps {
   titleCreatedAt?: string;
 }
 
-export const ListPlaylistCategory: FC<ListPlaylistCategoryProps> = ({
+export const PlaylistCategoryItem: FC<PlaylistCategoryItemProps> = ({
   category,
   editPlaylistCategory,
   deletePlaylistCategory,

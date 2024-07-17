@@ -20,7 +20,7 @@ export class CreateUserController {
       user_id: `${result.value}`,
     };
 
-    if (result.isRight()) return result.value;
+    if (result.isRight()) return response;
     else await ErrorMessageResult(result.value.name, result.value.message);
   }
 }

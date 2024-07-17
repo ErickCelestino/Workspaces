@@ -1,24 +1,22 @@
 import { FC, useCallback, useEffect, useState } from 'react';
 import { SimpleFormModal } from '../simple';
 import {
-  Avatar,
   Box,
   Chip,
   Divider,
   List,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
   Pagination,
   Typography,
   useMediaQuery,
   useTheme,
 } from '@mui/material';
+import OpenWithIcon from '@mui/icons-material/OpenWith';
 import {
   ContentFile,
   DetailsPlaylistDto,
   ErrorResponse,
   FindFilesByPlaylistDto,
+  IconMenuItem,
   PlaylistResponseDto,
 } from '@workspaces/domain';
 import {
@@ -28,6 +26,9 @@ import {
 import axios, { AxiosError } from 'axios';
 import { formatBrDate, ValidationsError } from '../../../shared';
 import { useLoggedUser } from '../../../contexts';
+import { ContentFileItem } from '../../list';
+import { ButtonFileMenu } from '../../menu';
+import { MoveFileToAnotherPlaylistModal } from '../file-to-playlist';
 
 interface DetailsPlaylistModalProps {
   open: boolean;
@@ -52,6 +53,10 @@ export const DetailsPlaylistModal: FC<DetailsPlaylistModalProps> = ({
   const [files, setFiles] = useState<ContentFile[]>([]);
   const [totalPagesFiles, setTotalPagesFiles] = useState(0);
   const [dataLoaded, setDataLoaded] = useState(false);
+  const [moveFilePopUp, setMoveFilePopUp] = useState(false);
+  const [selectedFiles, setSelectedFiles] = useState<{
+    [key: string]: boolean;
+  }>({});
 
   const { loggedUser } = useLoggedUser();
   const theme = useTheme();
@@ -127,114 +132,150 @@ export const DetailsPlaylistModal: FC<DetailsPlaylistModalProps> = ({
     }
   }, [open, idPlaylist, dataLoaded, getPlaylist, loggedUser]);
 
-  return (
-    <SimpleFormModal
-      height={smDown ? theme.spacing(55) : theme.spacing(80)}
-      width={smDown ? '90%' : theme.spacing(80)}
-      open={open}
-      handlePopUpClose={handlePopUpClose}
-      title={title}
-    >
-      <Box sx={{ padding: theme.spacing(2) }}>
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            marginBottom: theme.spacing(2),
-          }}
-        >
-          <Typography
-            sx={{
-              fontSize: '18px',
-            }}
-          >
-            <strong>Nome: </strong>
-            {playlistDetails?.name ?? ''}
-          </Typography>
-          <Chip
-            label={playlistDetails.category?.name ?? ''}
-            color="success"
-            variant="filled"
-            size="medium"
-          />
-        </Box>
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-          }}
-        >
-          <Typography
-            sx={{
-              fontSize: '18px',
-            }}
-          >
-            <strong>Criado por: </strong>
-            {playlistDetails?.created_by ?? ''}
-          </Typography>
-          <Typography>
-            <strong>Criado em: </strong>
-            {formatBrDate(new Date(playlistDetails?.created_at ?? new Date()))}
-          </Typography>
-        </Box>
-        <Divider
-          sx={{
-            marginTop: theme.spacing(2),
-            marginBottom: theme.spacing(2),
-          }}
-        />
-        <Box>
-          <Typography variant="h5">
-            <strong>{filesTitle}</strong>
-          </Typography>
-          <List>
-            {files.map((file) => (
-              <ListItem key={file.id}>
-                <ListItemAvatar>
-                  <Avatar
-                    alt={file.originalName}
-                    src={file.path}
-                    sx={{
-                      width: theme.spacing(8),
-                      height: theme.spacing(8),
-                      '& img': {
-                        objectFit: 'contain',
-                        objectPosition: 'center',
-                        maxHeight: '100%',
-                        maxWidth: '100%',
-                      },
-                    }}
-                  />
-                </ListItemAvatar>
+  const handleFileToggle = (fileId: string) => {
+    setSelectedFiles((prevSelectedFiles) => {
+      const newSelectedFiles = {
+        ...prevSelectedFiles,
+        [fileId]: !prevSelectedFiles[fileId],
+      };
+      return newSelectedFiles;
+    });
+  };
 
-                <ListItemText
-                  sx={{
-                    marginLeft: theme.spacing(2),
-                    overflow: 'hidden',
-                    fontSize: smDown ? '8px' : '16px',
-                    textOverflow: 'ellipsis',
-                  }}
-                  primary={file.originalName}
-                />
-              </ListItem>
-            ))}
-          </List>
+  const handlePopUpOpen = (types: 'move-file', id?: string) => {
+    switch (types) {
+      case 'move-file':
+        if (Object.keys(selectedFiles).length > 0) {
+          setMoveFilePopUp(true);
+        } else {
+          showAlert('Selecione um arquivo para mover', false);
+        }
+
+        break;
+    }
+  };
+
+  const handlesPopUpClose = (types: 'move-file') => {
+    switch (types) {
+      case 'move-file':
+        setMoveFilePopUp(false);
+        break;
+    }
+  };
+
+  const iconMenuList: IconMenuItem[] = [
+    {
+      icon: <OpenWithIcon />,
+      title: 'Mover para',
+      handleClick: async () => handlePopUpOpen('move-file'),
+    },
+  ];
+  return (
+    <>
+      <MoveFileToAnotherPlaylistModal
+        handlePopUpClose={() => handlesPopUpClose('move-file')}
+        oldPlaylist={idPlaylist}
+        open={moveFilePopUp}
+        showAlert={showAlert}
+        title="Mover Arquivos para Playlist"
+        selectedFiles={selectedFiles}
+      />
+      <SimpleFormModal
+        height={smDown ? theme.spacing(55) : theme.spacing(80)}
+        width={smDown ? '90%' : theme.spacing(80)}
+        open={open}
+        handlePopUpClose={handlePopUpClose}
+        title={title}
+      >
+        <Box sx={{ padding: theme.spacing(2) }}>
           <Box
-            width="100%"
-            display="flex"
-            justifyContent="center"
-            marginTop={theme.spacing(2)}
+            sx={{
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              marginBottom: theme.spacing(2),
+            }}
           >
-            <Pagination
-              count={totalPagesFiles}
-              color="primary"
-              onChange={handleChange}
+            <Typography
+              sx={{
+                fontSize: '18px',
+              }}
+            >
+              <strong>Nome: </strong>
+              {playlistDetails?.name ?? ''}
+            </Typography>
+            <Chip
+              label={playlistDetails.category?.name ?? ''}
+              color="success"
+              variant="filled"
+              size="medium"
             />
           </Box>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+            }}
+          >
+            <Typography
+              sx={{
+                fontSize: '18px',
+              }}
+            >
+              <strong>Criado por: </strong>
+              {playlistDetails?.created_by ?? ''}
+            </Typography>
+            <Typography>
+              <strong>Criado em: </strong>
+              {formatBrDate(
+                new Date(playlistDetails?.created_at ?? new Date())
+              )}
+            </Typography>
+          </Box>
+          <Divider
+            sx={{
+              marginTop: theme.spacing(2),
+              marginBottom: theme.spacing(2),
+            }}
+          />
+          <Box>
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+              }}
+            >
+              <Typography variant="h5">
+                <strong>{filesTitle}</strong>
+              </Typography>
+              <ButtonFileMenu iconMenuItemList={iconMenuList} />
+            </Box>
+            <List>
+              {files.map((file) => (
+                <ContentFileItem
+                  contentFile={file}
+                  key={file.id}
+                  isSelected={!!selectedFiles[file.id]}
+                  onFileToggle={handleFileToggle}
+                />
+              ))}
+            </List>
+            <Box
+              width="100%"
+              display="flex"
+              justifyContent="center"
+              marginTop={theme.spacing(2)}
+            >
+              <Pagination
+                count={totalPagesFiles}
+                color="primary"
+                onChange={handleChange}
+              />
+            </Box>
+          </Box>
         </Box>
-      </Box>
-    </SimpleFormModal>
+      </SimpleFormModal>
+    </>
   );
 };
