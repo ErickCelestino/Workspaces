@@ -403,7 +403,6 @@ model Playlist_X_Scheduling {
 model Scheduling {
   scheduling_id String @id @default(uuid())
   user_id String
-  device_id String
   name String
   start_time DateTime
   end_time DateTime
@@ -414,8 +413,22 @@ model Scheduling {
   deleted_at DateTime?
 
   user User @relation(fields: [user_id], references: [user_id])
-  device Device @relation(fields: [device_id], references: [device_id])
   playlist_scheduling Playlist_X_Scheduling[]
+  scheduling_X_Device Scheduling_X_Device[]
+  @@schema("pure_tv")
+}
+
+model Scheduling_X_Device {
+  scheduling_id String
+  device_id String
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+  deleted_at DateTime?
+
+  scheduling Scheduling @relation(fields: [scheduling_id], references: [scheduling_id])
+  device Device @relation(fields: [device_id], references: [device_id])
+
+  @@id([device_id, scheduling_id])
   @@schema("pure_tv")
 }
 
@@ -425,8 +438,8 @@ model Device {
   created_at DateTime @default(now())
   updated_at DateTime @default(now())
   deleted_at DateTime?
-  scheduling Scheduling[]
 
+  scheduling_X_Device Scheduling_X_Device[]
   @@schema("pure_tv")
 }
 
