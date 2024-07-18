@@ -74,7 +74,7 @@ export class CreateScheduling
       return left(new EntityNotEmpty('Name'));
     }
 
-    if (priority < 0) {
+    if (parseInt(priority) < 0) {
       return left(new EntityNotNegativeNumber('Priority'));
     }
 

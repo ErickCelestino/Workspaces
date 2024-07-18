@@ -22,7 +22,7 @@ export class CreateSchedulingRepositoryImpl
         start_time: startTime,
         end_time: endTime,
         looping: lopping,
-        priority,
+        priority: parseInt(priority),
       },
     });
 

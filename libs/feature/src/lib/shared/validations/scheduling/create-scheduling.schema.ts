@@ -18,6 +18,8 @@ export const CreateSchedulingSchema = z
       message: EntityMinLength({ entity: 'nome', minOrMax: 2 }, 'PT-BR'),
     }),
     lopping: z.boolean(),
-    priority: z.number(),
+    priority: z.string().min(1, {
+      message: EntityMinLength({ entity: 'nome', minOrMax: 2 }, 'PT-BR'),
+    }),
   })
   .required();

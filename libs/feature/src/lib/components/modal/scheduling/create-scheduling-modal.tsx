@@ -1,4 +1,12 @@
-import { Box, TextField, useMediaQuery, useTheme } from '@mui/material';
+import {
+  Box,
+  Checkbox,
+  FormControlLabel,
+  MenuItem,
+  TextField,
+  useMediaQuery,
+  useTheme,
+} from '@mui/material';
 import { useLoggedUser } from '../../../contexts';
 import { FC, useState } from 'react';
 import { SimpleFormModal } from '../simple';
@@ -9,8 +17,14 @@ import {
   ErrorResponse,
 } from '@workspaces/domain';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { CreateSchedulingSchema, ValidationsError } from '../../../shared';
+import {
+  CreateSchedulingSchema,
+  Priority,
+  TimeTypes,
+  ValidationsError,
+} from '../../../shared';
 import axios, { AxiosError } from 'axios';
+import { FormButton } from '../../form';
 
 interface CreateSchedulingModalProps {
   open: boolean;
@@ -19,6 +33,16 @@ interface CreateSchedulingModalProps {
   showAlert: (message: string, success: boolean) => void;
   nameLabel?: string;
   successMessage?: string;
+  startTimeLabel?: string;
+  endTimeLabel?: string;
+  loopingLabel?: string;
+  priorityLabel?: string;
+}
+
+interface ComboBoxProps {
+  startTime: string;
+  endTime: string;
+  priority: string;
 }
 
 export const CreateSchedulingModal: FC<CreateSchedulingModalProps> = ({
@@ -27,12 +51,20 @@ export const CreateSchedulingModal: FC<CreateSchedulingModalProps> = ({
   title,
   open,
   nameLabel = 'Nome',
+  startTimeLabel = 'Tempo Inicial',
+  endTimeLabel = 'Tempo Final',
+  loopingLabel = 'Repetir',
+  priorityLabel = 'Prioridade',
   successMessage = 'Agendamento Cadastrada com Sucesso',
 }) => {
   const { loggedUser } = useLoggedUser();
   const theme = useTheme();
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
-  const [categoryId, setCategoryId] = useState('');
+  const [timeGroup, setTimeGroup] = useState<ComboBoxProps>({
+    startTime: '',
+    endTime: '',
+    priority: '0',
+  });
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
 
@@ -49,7 +81,7 @@ export const CreateSchedulingModal: FC<CreateSchedulingModalProps> = ({
       endTime: '',
       startTime: '',
       lopping: false,
-      priority: 0,
+      priority: '0',
     },
   });
 
@@ -69,15 +101,24 @@ export const CreateSchedulingModal: FC<CreateSchedulingModalProps> = ({
 
   const handleSchedulingData = async (data: CreateSchedulingBodyDto) => {
     setLoading(true);
+    console.log(data);
     await createScheduling({
       body: data,
       loggedUserId: loggedUser?.id ?? '',
     });
   };
 
+  const handleChangeTime = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setTimeGroup((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
   return (
     <SimpleFormModal
-      height={smDown ? theme.spacing(55) : theme.spacing(53)}
+      height={smDown ? theme.spacing(55) : theme.spacing(62)}
       width={smDown ? '90%' : theme.spacing(80)}
       open={open}
       handlePopUpClose={handlePopUpClose}
@@ -100,6 +141,85 @@ export const CreateSchedulingModal: FC<CreateSchedulingModalProps> = ({
           autoComplete="name"
           autoFocus
           {...register('name')}
+        />
+
+        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+          <TextField
+            select
+            sx={{
+              width: '48%',
+            }}
+            required
+            value={timeGroup.startTime}
+            margin="normal"
+            error={!!errors.startTime}
+            helperText={errors.startTime?.message}
+            id="startTime"
+            label={startTimeLabel}
+            {...register('startTime')}
+            onChange={handleChangeTime}
+          >
+            {TimeTypes.map((item, index) => (
+              <MenuItem key={index} value={item}>
+                {item}
+              </MenuItem>
+            ))}
+          </TextField>
+          <TextField
+            select
+            sx={{
+              width: '48%',
+            }}
+            required
+            value={timeGroup.endTime}
+            margin="normal"
+            error={!!errors.endTime}
+            helperText={errors.endTime?.message}
+            id="endTime"
+            label={endTimeLabel}
+            {...register('endTime')}
+            onChange={handleChangeTime}
+          >
+            {TimeTypes.map((item, index) => (
+              <MenuItem key={index} value={item}>
+                {item}
+              </MenuItem>
+            ))}
+          </TextField>
+        </Box>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+          <FormControlLabel
+            control={<Checkbox />}
+            label={loopingLabel}
+            id="lopping"
+            {...register('lopping')}
+          />
+          <TextField
+            select
+            sx={{
+              width: '48%',
+            }}
+            required
+            value={timeGroup.priority}
+            margin="normal"
+            error={!!errors.priority}
+            helperText={errors.priority?.message}
+            id="priority"
+            label={priorityLabel}
+            {...register('priority')}
+            onChange={handleChangeTime}
+          >
+            {Priority.map((item, index) => (
+              <MenuItem key={index} value={item}>
+                {item}
+              </MenuItem>
+            ))}
+          </TextField>
+        </Box>
+        <FormButton
+          buttonTitle="Cadastrar"
+          loading={loading}
+          success={success}
         />
       </Box>
     </SimpleFormModal>

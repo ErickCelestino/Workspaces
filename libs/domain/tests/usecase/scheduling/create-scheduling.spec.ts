@@ -117,7 +117,7 @@ describe('CreateScheduling', () => {
 
   it('should return EntityNotNegativeNumber when a pass incorrect Priority', async () => {
     const { sut, createSchedulingDto } = makeSut();
-    createSchedulingDto.body.priority = -1;
+    createSchedulingDto.body.priority = '-1';
     const result = await sut.execute(createSchedulingDto);
 
     expect(result.isRight()).toBe(false);

@@ -4,7 +4,7 @@ export interface Scheduling {
   startTime: string;
   endTime: string;
   lopping: boolean;
-  priority: number;
+  priority: string;
   createdAt: Date;
   createBy: string;
 }

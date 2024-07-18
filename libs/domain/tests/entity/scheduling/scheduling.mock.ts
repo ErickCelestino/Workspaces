@@ -8,10 +8,10 @@ export const SchedulingMock: Scheduling = {
   startTime: faker.date.recent().toISOString(),
   endTime: faker.date.recent().toISOString(),
   lopping: faker.datatype.boolean(),
-  priority: faker.number.int({
+  priority: `${faker.number.int({
     min: 1,
     max: 10,
-  }),
+  })}`,
   createBy: userMock.nickname,
   createdAt: faker.date.recent(),
 };
