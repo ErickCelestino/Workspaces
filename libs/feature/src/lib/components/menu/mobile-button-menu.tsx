@@ -22,8 +22,8 @@ export const MobileButtonMenu: FC<MobileButtonMenuProps> = ({
   const handleClose = () => setOpen(false);
 
   const fabStyle = {
-    position: 'absolute',
-    bottom: theme.spacing(2),
+    position: 'fixed',
+    bottom: theme.spacing(4),
     right: theme.spacing(2),
   };
   return (
