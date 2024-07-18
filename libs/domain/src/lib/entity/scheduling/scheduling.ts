@@ -5,5 +5,6 @@ export interface Scheduling {
   endTime: string;
   lopping: boolean;
   priority: number;
-  create_by: string;
+  createdAt: Date;
+  createBy: string;
 }

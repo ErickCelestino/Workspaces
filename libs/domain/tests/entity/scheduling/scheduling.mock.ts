@@ -12,5 +12,6 @@ export const SchedulingMock: Scheduling = {
     min: 1,
     max: 10,
   }),
-  create_by: userMock.nickname,
+  createBy: userMock.nickname,
+  createdAt: faker.date.recent(),
 };
