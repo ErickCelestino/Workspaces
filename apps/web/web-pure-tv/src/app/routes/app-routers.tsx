@@ -7,6 +7,7 @@ import {
   ListContanteFilesContainer,
   ListPlaylistContainer,
   ListPlaylistCategoryContainer,
+  ListSchedulingContainer,
 } from '@workspaces/feature';
 import { useEffect } from 'react';
 
@@ -48,6 +49,13 @@ export const AppRouters = () => {
           path: '/playlist-category',
         },
       ],
+      Agendamentos: [
+        {
+          label: 'Agendamentos',
+          icon: 'event_upcoming',
+          path: '/scheduling',
+        },
+      ],
     });
   }, [setDrawerOptions]);
 
@@ -62,6 +70,7 @@ export const AppRouters = () => {
         path="playlist-category"
         element={<ListPlaylistCategoryContainer />}
       />
+      <Route path="scheduling" element={<ListSchedulingContainer />} />
 
       <Route path="*" element={<Navigate to="/home" />} />
     </Routes>
