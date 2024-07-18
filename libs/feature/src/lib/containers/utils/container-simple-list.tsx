@@ -85,7 +85,7 @@ export const ContainerSimpleList: FC<ContainerSimpleListProps> = ({
           }}
         >
           <Box
-            width={smDown ? '100%' : '60%'}
+            width={smDown ? '100%' : '65%'}
             sx={{
               marginLeft: smDown ? -3 : '',
             }}
