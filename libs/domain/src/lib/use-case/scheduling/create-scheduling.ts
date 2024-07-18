@@ -5,6 +5,7 @@ import {
   EntityAlreadyExists,
   EntityNotCreated,
   EntityNotEmpty,
+  EntityNotNegativeNumber,
 } from '../../error';
 import {
   CreateSchedulingRepository,
@@ -15,7 +16,17 @@ import { Either, left, right } from '../../shared/either';
 import { ValidationUserId } from '../../utils';
 
 export class CreateScheduling
-  implements UseCase<CreateSchedulingDto, Either<EntityNotEmpty, string>>
+  implements
+    UseCase<
+      CreateSchedulingDto,
+      Either<
+        | EntityNotEmpty
+        | EntityNotNegativeNumber
+        | EntityAlreadyExists
+        | EntityNotCreated,
+        string
+      >
+    >
 {
   constructor(
     @Inject('FindUserByIdRepository')
@@ -28,8 +39,16 @@ export class CreateScheduling
 
   async execute(
     input: CreateSchedulingDto
-  ): Promise<Either<EntityNotEmpty, string>> {
-    const { loggedUserId, name, lopping, priority, startTime, endTime } = input;
+  ): Promise<
+    Either<
+      | EntityNotEmpty
+      | EntityNotNegativeNumber
+      | EntityAlreadyExists
+      | EntityNotCreated,
+      string
+    >
+  > {
+    const { loggedUserId, name, priority, startTime, endTime } = input;
 
     if (Object.keys(loggedUserId).length < 1) {
       return left(new EntityNotEmpty('User ID'));
@@ -39,16 +58,8 @@ export class CreateScheduling
       return left(new EntityNotEmpty('Name'));
     }
 
-    if (Object.keys(lopping).length < 1) {
-      return left(new EntityNotEmpty('Lopping'));
-    }
-
-    if (Object.keys(priority).length < 1) {
-      return left(new EntityNotEmpty('Priority'));
-    }
-
-    if (Object.keys(loggedUserId).length < 1) {
-      return left(new EntityNotEmpty('User ID'));
+    if (priority < 0) {
+      return left(new EntityNotNegativeNumber('Priority'));
     }
 
     if (Object.keys(startTime).length < 1) {

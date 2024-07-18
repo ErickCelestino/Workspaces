@@ -4,6 +4,7 @@ export * from './entity-not-associate.error';
 export * from './entity-not-created';
 export * from './entity-not-empty.error';
 export * from './entity-not-exists.error';
+export * from './entity-not-negative-number.erro';
 export * from './file-not-allowed';
 export * from './incorrect-password-or-email.error';
 export * from './insufficient-characters.error';
