@@ -14,12 +14,13 @@ export class CreateSchedulingRepositoryImpl
       loggedUserId,
       body: { name, priority, startTime, endTime, lopping },
     } = input;
+
     const schedulingResult = await this.prismaService.scheduling.create({
       data: {
         user_id: loggedUserId,
         name,
-        start_time: new Date(startTime),
-        end_time: new Date(endTime),
+        start_time: startTime,
+        end_time: endTime,
         looping: lopping,
         priority,
       },
