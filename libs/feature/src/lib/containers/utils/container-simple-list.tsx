@@ -93,14 +93,18 @@ export const ContainerSimpleList: FC<ContainerSimpleListProps> = ({
             <ScrollBox maxHeight="100%">{children}</ScrollBox>
           </Box>
         </Box>
-      </Box>
-      <Box
-        width={mdUp ? '97%' : '100%'}
-        display="flex"
-        justifyContent="center"
-        marginTop={theme.spacing(2)}
-      >
-        <Pagination count={totalPage} color="primary" onChange={handleChange} />
+        <Box
+          width={mdUp ? '97%' : '100%'}
+          display="flex"
+          justifyContent="center"
+          marginTop={theme.spacing(2)}
+        >
+          <Pagination
+            count={totalPage}
+            color="primary"
+            onChange={handleChange}
+          />
+        </Box>
       </Box>
     </Box>
   );
