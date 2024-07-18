@@ -38,7 +38,7 @@ export class FindSchedulingByNameRepositoryImpl
       endTime: filteredScheduling?.end_time.toISOString() ?? '',
       startTime: filteredScheduling?.start_time.toISOString() ?? '',
       lopping: filteredScheduling?.looping ?? false,
-      priority: filteredScheduling?.priority ?? 0,
+      priority: `${filteredScheduling?.priority}` ?? '',
       createBy: filteredScheduling?.user?.nick_name ?? '',
       createdAt: filteredScheduling?.created_at ?? new Date(),
     };

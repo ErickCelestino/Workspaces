@@ -25,6 +25,7 @@ import {
 } from '../../../shared';
 import axios, { AxiosError } from 'axios';
 import { FormButton } from '../../form';
+import { CreateSchedulingRequest } from '../../../services';
 
 interface CreateSchedulingModalProps {
   open: boolean;
@@ -70,6 +71,7 @@ export const CreateSchedulingModal: FC<CreateSchedulingModalProps> = ({
 
   const {
     handleSubmit,
+    reset,
     register,
     formState: { errors },
   } = useForm<CreateSchedulingBodyDto>({
@@ -87,8 +89,31 @@ export const CreateSchedulingModal: FC<CreateSchedulingModalProps> = ({
 
   const createScheduling = async (input: CreateSchedulingDto) => {
     try {
+      const result = await CreateSchedulingRequest(input);
+      if (result) {
+        setSuccess(true);
+        setLoading(false);
+        showAlert(successMessage, true);
+
+        setSuccess(false);
+        reset({
+          name: '',
+          endTime: '',
+          startTime: '',
+          lopping: false,
+          priority: '0',
+        });
+        setTimeGroup({
+          startTime: '',
+          endTime: '',
+          priority: '0',
+        });
+        handlePopUpClose();
+      }
     } catch (error) {
       console.error(error);
+      setSuccess(false);
+      setLoading(false);
       if (axios.isAxiosError(error)) {
         const axiosError = error as AxiosError<ErrorResponse>;
         const errors = ValidationsError(axiosError, 'Agendamento');
@@ -101,7 +126,6 @@ export const CreateSchedulingModal: FC<CreateSchedulingModalProps> = ({
 
   const handleSchedulingData = async (data: CreateSchedulingBodyDto) => {
     setLoading(true);
-    console.log(data);
     await createScheduling({
       body: data,
       loggedUserId: loggedUser?.id ?? '',

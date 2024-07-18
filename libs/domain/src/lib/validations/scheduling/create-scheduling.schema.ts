@@ -6,7 +6,7 @@ export const createSchedulingSchema = {
     startTime: z.string().min(1),
     endTime: z.string().min(1),
     lopping: z.boolean(),
-    priority: z.number().min(1),
+    priority: z.string().min(1),
   }),
   loggedUserId: z.string().min(1),
 };
