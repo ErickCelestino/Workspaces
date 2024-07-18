@@ -6,11 +6,10 @@ import {
   useTheme,
 } from '@mui/material';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
+import { ScrollBox, SearchBar } from '../../components';
 import { FC, ReactNode } from 'react';
 
-import { SearchBar } from '../search';
-
-interface ContainerCardListProps {
+interface ContainerSimpleListProps {
   children: ReactNode;
   totalPage: number;
   search: {
@@ -24,7 +23,7 @@ interface ContainerCardListProps {
   ) => Promise<void>;
 }
 
-export const ContainerCardList: FC<ContainerCardListProps> = ({
+export const ContainerSimpleList: FC<ContainerSimpleListProps> = ({
   children,
   totalPage,
   search,
@@ -33,17 +32,16 @@ export const ContainerCardList: FC<ContainerCardListProps> = ({
   const theme = useTheme();
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
   const mdUp = useMediaQuery(theme.breakpoints.up('md'));
-  const mdDown = useMediaQuery(theme.breakpoints.down('md'));
 
   return (
     <Box
       sx={{
         display: 'flex',
         justifyContent: 'center',
-        flexDirection: 'column',
+        alignItems: 'center',
       }}
     >
-      <Box width="97%">
+      <Box width="95%">
         <Box
           sx={{
             display: 'flex',
@@ -51,13 +49,7 @@ export const ContainerCardList: FC<ContainerCardListProps> = ({
             alignItems: 'center',
           }}
         >
-          <Box
-            sx={{
-              justifyContent: 'center',
-              width: mdUp ? '55%' : smDown ? '80%' : mdDown ? '95%' : '80%',
-              marginLeft: theme.spacing(2),
-            }}
-          >
+          <Box width={smDown ? '100%' : '55%'} marginRight={theme.spacing(2)}>
             <SearchBar
               onSearch={search.searchData}
               placeholder={search.placeholder}
@@ -83,9 +75,6 @@ export const ContainerCardList: FC<ContainerCardListProps> = ({
             </IconButton>
           )}
         </Box>
-      </Box>
-
-      <Box>
         <Box
           sx={{
             display: 'flex',
@@ -96,28 +85,22 @@ export const ContainerCardList: FC<ContainerCardListProps> = ({
           }}
         >
           <Box
-            display="flex"
-            justifyContent="center"
-            mt={theme.spacing(2)}
+            width={smDown ? '100%' : '60%'}
             sx={{
-              width: mdUp ? '100%' : smDown ? '94%' : mdDown ? '95%' : '80%',
+              marginLeft: smDown ? -3 : '',
             }}
           >
-            {children}
+            <ScrollBox maxHeight="100%">{children}</ScrollBox>
           </Box>
         </Box>
-        <Box
-          width={mdUp ? '97%' : '100%'}
-          display="flex"
-          justifyContent="center"
-          marginTop={theme.spacing(2)}
-        >
-          <Pagination
-            count={totalPage}
-            color="primary"
-            onChange={handleChange}
-          />
-        </Box>
+      </Box>
+      <Box
+        width={mdUp ? '97%' : '100%'}
+        display="flex"
+        justifyContent="center"
+        marginTop={theme.spacing(2)}
+      >
+        <Pagination count={totalPage} color="primary" onChange={handleChange} />
       </Box>
     </Box>
   );

@@ -5,3 +5,4 @@ export * from './protected-layout';
 export * from './scheduling';
 export * from './test-page';
 export * from './user';
+export * from './utils';
