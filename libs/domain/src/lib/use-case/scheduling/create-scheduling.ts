@@ -3,11 +3,14 @@ import { UseCase } from '../../base/use-case';
 import { CreateSchedulingDto } from '../../dto';
 import {
   EntityAlreadyExists,
+  EntityNotConverted,
   EntityNotCreated,
   EntityNotEmpty,
   EntityNotNegativeNumber,
+  StartTimeCannotBeGreaterEndTime,
 } from '../../error';
 import {
+  ConvertStringInTimeRepository,
   CreateSchedulingRepository,
   FindSchedulingByNameRepository,
   FindUserByIdRepository,
@@ -33,9 +36,15 @@ export class CreateScheduling
     private findUserByIdRepository: FindUserByIdRepository,
     @Inject('FindSchedulingByNameRepository')
     private findSchedulingByNameRepository: FindSchedulingByNameRepository,
+    @Inject('ConvertStringInTimeRepository')
+    private convertStringInTimeRepository: ConvertStringInTimeRepository,
     @Inject('CreateSchedulingRepository')
     private createSchedulingRepository: CreateSchedulingRepository
   ) {}
+
+  private isValidDate = (date: any) => {
+    return date instanceof Date && !isNaN(date.getTime());
+  };
 
   async execute(
     input: CreateSchedulingDto
@@ -50,7 +59,7 @@ export class CreateScheduling
   > {
     const {
       loggedUserId,
-      body: { name, priority, startTime, endTime },
+      body: { name, priority, startTime, endTime, lopping },
     } = input;
 
     if (Object.keys(loggedUserId).length < 1) {
@@ -73,6 +82,24 @@ export class CreateScheduling
       return left(new EntityNotEmpty('End Time'));
     }
 
+    const convertedStartTime = this.convertStringInTimeRepository.convert(
+      `${startTime}`
+    );
+    const convertedEndTime = this.convertStringInTimeRepository.convert(
+      `${endTime}`
+    );
+
+    if (
+      !this.isValidDate(convertedStartTime) ||
+      !this.isValidDate(convertedEndTime)
+    ) {
+      return left(new EntityNotConverted('Start Time or End Time'));
+    }
+
+    if (convertedStartTime > convertedEndTime) {
+      return left(new StartTimeCannotBeGreaterEndTime('Start Time'));
+    }
+
     await ValidationUserId(loggedUserId, this.findUserByIdRepository);
 
     const filteredScheduling = await this.findSchedulingByNameRepository.find({
@@ -84,9 +111,16 @@ export class CreateScheduling
       return left(new EntityAlreadyExists('Scheduling'));
     }
 
-    const createdSchedulingId = await this.createSchedulingRepository.create(
-      input
-    );
+    const createdSchedulingId = await this.createSchedulingRepository.create({
+      loggedUserId,
+      body: {
+        name,
+        priority,
+        startTime: convertedStartTime,
+        endTime: convertedEndTime,
+        lopping,
+      },
+    });
 
     if (Object.keys(createdSchedulingId).length < 1) {
       return left(new EntityNotCreated('Scheduling'));

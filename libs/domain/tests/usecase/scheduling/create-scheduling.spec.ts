@@ -1,4 +1,5 @@
 import {
+  ConvertStringInTimeRepository,
   CreateScheduling,
   CreateSchedulingDto,
   CreateSchedulingRepository,
@@ -11,6 +12,7 @@ import {
 } from '../../../src';
 import { SchedulingMock, userMock } from '../../entity';
 import {
+  ConvertStringInTimeRepositoryMock,
   CreateSchedulingRepositoryMock,
   FindSchedulingByNameRepositoryMock,
   FindUserByIdRepositoryMock,
@@ -21,6 +23,7 @@ interface SutTypes {
   createSchedulingDto: CreateSchedulingDto;
   findUserByIdRepository: FindUserByIdRepository;
   findSchedulingByNameRepository: FindSchedulingByNameRepository;
+  convertStringInTimeRepository: ConvertStringInTimeRepository;
   createSchedulingRepository: CreateSchedulingRepository;
 }
 
@@ -28,6 +31,7 @@ const makeSut = (): SutTypes => {
   const findUserByIdRepository = new FindUserByIdRepositoryMock();
   const findSchedulingByNameRepository =
     new FindSchedulingByNameRepositoryMock();
+  const convertStringInTimeRepository = new ConvertStringInTimeRepositoryMock();
   const createSchedulingRepository = new CreateSchedulingRepositoryMock();
 
   const createSchedulingDto: CreateSchedulingDto = {
@@ -44,6 +48,7 @@ const makeSut = (): SutTypes => {
   const sut = new CreateScheduling(
     findUserByIdRepository,
     findSchedulingByNameRepository,
+    convertStringInTimeRepository,
     createSchedulingRepository
   );
 
@@ -51,6 +56,7 @@ const makeSut = (): SutTypes => {
     sut,
     createSchedulingDto,
     findUserByIdRepository,
+    convertStringInTimeRepository,
     findSchedulingByNameRepository,
     createSchedulingRepository,
   };
@@ -122,6 +128,7 @@ describe('CreateScheduling', () => {
       createSchedulingRepository,
       findUserByIdRepository,
       createSchedulingDto,
+      convertStringInTimeRepository,
     } = makeSut();
 
     const mockEmptyRepository: FindSchedulingByNameRepository = {
@@ -131,6 +138,7 @@ describe('CreateScheduling', () => {
     const sut = new CreateScheduling(
       findUserByIdRepository,
       mockEmptyRepository,
+      convertStringInTimeRepository,
       createSchedulingRepository
     );
 
@@ -146,6 +154,7 @@ describe('CreateScheduling', () => {
       createSchedulingDto,
       findUserByIdRepository,
       findSchedulingByNameRepository,
+      convertStringInTimeRepository,
     } = makeSut();
 
     const mockEmptyRepository: CreateSchedulingRepository = {
@@ -155,6 +164,7 @@ describe('CreateScheduling', () => {
     const sut = new CreateScheduling(
       findUserByIdRepository,
       findSchedulingByNameRepository,
+      convertStringInTimeRepository,
       mockEmptyRepository
     );
 

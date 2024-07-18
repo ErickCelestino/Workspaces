@@ -1,7 +1,7 @@
 export interface CreateSchedulingBodyDto {
   name: string;
-  startTime: string;
-  endTime: string;
+  startTime: string | Date;
+  endTime: string | Date;
   lopping: boolean;
   priority: number;
 }

@@ -3,6 +3,7 @@ import { CreateSchedulingService } from './create-scheduling.service';
 import { CreateSchedulingController } from './create-scheduling.controller';
 import { CreateScheduling } from '@workspaces/domain';
 import {
+  ConvertStringInTimeRepositoryImpl,
   CreateSchedulingRepositoryImpl,
   FindSchedulingByNameRepositoryImpl,
   FindUserByIdRepositoryImpl,
@@ -25,6 +26,10 @@ import {
     {
       provide: 'FindSchedulingByNameRepository',
       useClass: FindSchedulingByNameRepositoryImpl,
+    },
+    {
+      provide: 'ConvertStringInTimeRepository',
+      useClass: ConvertStringInTimeRepositoryImpl,
     },
     {
       provide: 'CreateSchedulingRepository',
