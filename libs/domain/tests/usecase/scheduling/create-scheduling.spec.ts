@@ -7,7 +7,6 @@ import {
   EntityNotEmpty,
   EntityNotNegativeNumber,
   FindSchedulingByNameRepository,
-  FindUserById,
   FindUserByIdRepository,
 } from '../../../src';
 import { SchedulingMock, userMock } from '../../entity';
@@ -32,12 +31,14 @@ const makeSut = (): SutTypes => {
   const createSchedulingRepository = new CreateSchedulingRepositoryMock();
 
   const createSchedulingDto: CreateSchedulingDto = {
-    name: SchedulingMock.name,
     loggedUserId: userMock.userId,
-    lopping: SchedulingMock.lopping,
-    priority: SchedulingMock.priority,
-    startTime: SchedulingMock.startTime,
-    endTime: SchedulingMock.endTime,
+    body: {
+      name: SchedulingMock.name,
+      lopping: SchedulingMock.lopping,
+      priority: SchedulingMock.priority,
+      startTime: SchedulingMock.startTime,
+      endTime: SchedulingMock.endTime,
+    },
   };
 
   const sut = new CreateScheduling(
@@ -78,7 +79,7 @@ describe('CreateScheduling', () => {
 
   it('should return EntityNotEmpty when a pass incorrect Name', async () => {
     const { sut, createSchedulingDto } = makeSut();
-    createSchedulingDto.name = '';
+    createSchedulingDto.body.name = '';
     const result = await sut.execute(createSchedulingDto);
 
     expect(result.isRight()).toBe(false);
@@ -88,7 +89,7 @@ describe('CreateScheduling', () => {
 
   it('should return EntityNotEmpty when a pass incorrect End Time', async () => {
     const { sut, createSchedulingDto } = makeSut();
-    createSchedulingDto.endTime = '';
+    createSchedulingDto.body.endTime = '';
     const result = await sut.execute(createSchedulingDto);
 
     expect(result.isRight()).toBe(false);
@@ -98,7 +99,7 @@ describe('CreateScheduling', () => {
 
   it('should return EntityNotEmpty when a pass incorrect Start Time', async () => {
     const { sut, createSchedulingDto } = makeSut();
-    createSchedulingDto.startTime = '';
+    createSchedulingDto.body.startTime = '';
     const result = await sut.execute(createSchedulingDto);
 
     expect(result.isRight()).toBe(false);
@@ -108,7 +109,7 @@ describe('CreateScheduling', () => {
 
   it('should return EntityNotNegativeNumber when a pass incorrect Priority', async () => {
     const { sut, createSchedulingDto } = makeSut();
-    createSchedulingDto.priority = -1;
+    createSchedulingDto.body.priority = -1;
     const result = await sut.execute(createSchedulingDto);
 
     expect(result.isRight()).toBe(false);

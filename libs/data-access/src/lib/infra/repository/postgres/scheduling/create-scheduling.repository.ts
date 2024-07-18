@@ -10,7 +10,10 @@ export class CreateSchedulingRepositoryImpl
 {
   constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
   async create(input: CreateSchedulingDto): Promise<string> {
-    const { loggedUserId, name, startTime, endTime, lopping, priority } = input;
+    const {
+      loggedUserId,
+      body: { name, priority, startTime, endTime, lopping },
+    } = input;
     const schedulingResult = await this.prismaService.scheduling.create({
       data: {
         user_id: loggedUserId,

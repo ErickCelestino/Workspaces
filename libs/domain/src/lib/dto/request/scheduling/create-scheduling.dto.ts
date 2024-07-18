@@ -1,8 +1,6 @@
+import { CreateSchedulingBodyDto } from './create-scheduling-body.dto';
+
 export interface CreateSchedulingDto {
   loggedUserId: string;
-  name: string;
-  startTime: string;
-  endTime: string;
-  lopping: boolean;
-  priority: number;
+  body: CreateSchedulingBodyDto;
 }

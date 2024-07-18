@@ -48,7 +48,10 @@ export class CreateScheduling
       string
     >
   > {
-    const { loggedUserId, name, priority, startTime, endTime } = input;
+    const {
+      loggedUserId,
+      body: { name, priority, startTime, endTime },
+    } = input;
 
     if (Object.keys(loggedUserId).length < 1) {
       return left(new EntityNotEmpty('User ID'));
@@ -77,7 +80,7 @@ export class CreateScheduling
       loggedUserId,
     });
 
-    if (Object.keys(filteredScheduling).length > 0) {
+    if (Object.keys(filteredScheduling.id ?? filteredScheduling).length > 0) {
       return left(new EntityAlreadyExists('Scheduling'));
     }
 
