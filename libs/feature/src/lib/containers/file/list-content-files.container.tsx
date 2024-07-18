@@ -282,7 +282,7 @@ export const ListContanteFilesContainer = () => {
         title="Criar Diretório"
       />
 
-      <LayoutBase title="Listagem de Usuários" toolBar={<ToolbarPureTV />}>
+      <LayoutBase title="Listagem de Arquivos" toolBar={<ToolbarPureTV />}>
         <RightClickMenu iconMenuItemList={rightClickMenuList}>
           {smDown && <MobileButtonMenu iconMenuItemList={rightClickMenuList} />}
           <ContainerCardList

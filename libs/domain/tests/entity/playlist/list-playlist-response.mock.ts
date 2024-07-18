@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { ListPlaylistReponseDto as ListPlaylistResponseDto } from '../../../src';
+import { ListPlaylistResponseDto } from '../../../src';
 import { PlaylistMock } from './playlist.mock';
 
 export const ListPlaylistResponseMock: ListPlaylistResponseDto = {
