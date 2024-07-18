@@ -3,7 +3,7 @@ import { ConvertStringInTimeRepository } from '@workspaces/domain';
 export class ConvertStringInTimeRepositoryImpl
   implements ConvertStringInTimeRepository
 {
-  convert(input: string): Date {
+  async convert(input: string): Promise<Date> {
     const [hour, minute] = input.split(':').map(Number);
 
     const now = new Date();

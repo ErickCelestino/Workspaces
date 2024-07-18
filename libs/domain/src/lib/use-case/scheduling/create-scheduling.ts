@@ -26,7 +26,9 @@ export class CreateScheduling
         | EntityNotEmpty
         | EntityNotNegativeNumber
         | EntityAlreadyExists
-        | EntityNotCreated,
+        | EntityNotCreated
+        | EntityNotConverted
+        | StartTimeCannotBeGreaterEndTime,
         string
       >
     >
@@ -53,7 +55,9 @@ export class CreateScheduling
       | EntityNotEmpty
       | EntityNotNegativeNumber
       | EntityAlreadyExists
-      | EntityNotCreated,
+      | EntityNotCreated
+      | EntityNotConverted
+      | StartTimeCannotBeGreaterEndTime,
       string
     >
   > {
@@ -82,10 +86,10 @@ export class CreateScheduling
       return left(new EntityNotEmpty('End Time'));
     }
 
-    const convertedStartTime = this.convertStringInTimeRepository.convert(
+    const convertedStartTime = await this.convertStringInTimeRepository.convert(
       `${startTime}`
     );
-    const convertedEndTime = this.convertStringInTimeRepository.convert(
+    const convertedEndTime = await this.convertStringInTimeRepository.convert(
       `${endTime}`
     );
 

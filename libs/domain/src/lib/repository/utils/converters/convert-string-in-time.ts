@@ -1,3 +1,3 @@
 export interface ConvertStringInTimeRepository {
-  convert(input: string): Date;
+  convert(input: string): Promise<Date>;
 }

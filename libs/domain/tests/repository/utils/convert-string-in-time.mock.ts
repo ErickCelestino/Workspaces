@@ -4,7 +4,7 @@ export class ConvertStringInTimeRepositoryMock
   implements ConvertStringInTimeRepository
 {
   inputMock = '';
-  convert(input: string): Date {
+  async convert(input: string): Promise<Date> {
     this.inputMock = input;
     return new Date();
   }
