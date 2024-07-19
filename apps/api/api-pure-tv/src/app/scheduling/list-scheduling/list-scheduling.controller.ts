@@ -1,11 +1,13 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Query, UsePipes } from '@nestjs/common';
 import { ListSchedulingService } from './list-scheduling.service';
-import { ErrorMessageResult } from '@workspaces/domain';
+import { ErrorMessageResult, listSchedulingSchema } from '@workspaces/domain';
+import { ZodValidationPipe } from '../../pipes/zod-validation-pipe';
 
 @Controller('list-scheduling')
 export class ListSchedulingController {
   constructor(private readonly listSchedulingService: ListSchedulingService) {}
 
+  @UsePipes(new ZodValidationPipe(listSchedulingSchema))
   @Get()
   async list(
     @Query('filter') filter: string,
