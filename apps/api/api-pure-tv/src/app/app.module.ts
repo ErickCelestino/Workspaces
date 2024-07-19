@@ -34,8 +34,7 @@ import {
   DeletePlaylistFilesModule,
 } from './file-to-playlist';
 import { ListSimpleDirectoryModule, CreateDirectoryModule } from './directory';
-import { CreateSchedulingModule } from './create-scheduling/create-scheduling.module';
-import { ListSchedulingModule } from './list-scheduling/list-scheduling.module';
+import { CreateSchedulingModule, ListSchedulingModule } from './scheduling';
 
 @Module({
   imports: [

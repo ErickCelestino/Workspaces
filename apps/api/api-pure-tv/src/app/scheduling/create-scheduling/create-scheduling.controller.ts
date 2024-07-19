@@ -6,7 +6,7 @@ import {
   createSchedulingSchema,
   ErrorMessageResult,
 } from '@workspaces/domain';
-import { ZodValidationPipe } from '../pipes/zod-validation-pipe';
+import { ZodValidationPipe } from '../../pipes/zod-validation-pipe';
 
 @Controller('create-scheduling')
 export class CreateSchedulingController {
