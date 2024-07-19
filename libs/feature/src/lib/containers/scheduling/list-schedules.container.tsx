@@ -1,22 +1,27 @@
-import { Box } from '@mui/material';
+import { Box, List } from '@mui/material';
 import { LayoutBase } from '../../layout';
 import { CreateSchedulingModal, ToolbarPureTV } from '../../components';
 import { ContainerSimpleList } from '../utils';
 import { useCallback, useEffect, useState } from 'react';
-import { CrudType } from '@workspaces/domain';
+import {
+  CrudType,
+  ErrorResponse,
+  ListSchedulingDto,
+  Scheduling,
+} from '@workspaces/domain';
 import { useSnackbarAlert } from '../../hooks';
+import { ListSchedulingRequest } from '../../services';
+import axios, { AxiosError } from 'axios';
+import { ValidationsError } from '../../shared';
+import { useLoggedUser } from '../../contexts';
 
 export const ListSchedulingContainer = () => {
+  const { loggedUser } = useLoggedUser();
+  const [listSchedules, setListSchedules] = useState<Scheduling[]>([]);
   const [search, setSearch] = useState(false);
   const { showSnackbarAlert, SnackbarAlert } = useSnackbarAlert();
   const [totalPage, setTotalPage] = useState<number>(1);
   const [createSchedulingPopUp, setCreateSchedulingPopUp] = useState(false);
-
-  useEffect(() => {
-    if (!search) {
-      // More Implementation
-    }
-  }, [search]);
 
   const showAlert = useCallback(
     (message: string, success: boolean) => {
@@ -27,6 +32,43 @@ export const ListSchedulingContainer = () => {
     },
     [showSnackbarAlert]
   );
+
+  const handleData = useCallback(
+    async (data: ListSchedulingDto) => {
+      try {
+        const result = await ListSchedulingRequest({
+          loggedUserId: data.loggedUserId,
+          filter: data.filter,
+          skip: data.skip,
+          take: data.take,
+        });
+        if (result) {
+          setListSchedules(result.scheduling);
+          setTotalPage(result.totalPages);
+        }
+        return result;
+      } catch (error) {
+        console.error(error);
+        if (axios.isAxiosError(error)) {
+          const axiosError = error as AxiosError<ErrorResponse>;
+          const errors = ValidationsError(axiosError, 'Agendamento');
+          if (errors) {
+            showAlert(errors, false);
+          }
+        }
+      }
+    },
+    [showAlert]
+  );
+
+  useEffect(() => {
+    if (!search) {
+      handleData({
+        filter: '',
+        loggedUserId: loggedUser?.id ?? '',
+      });
+    }
+  }, [search]);
 
   const handlePopUpOpen = (types: CrudType, id?: string) => {
     switch (types) {
@@ -74,7 +116,11 @@ export const ListSchedulingContainer = () => {
           totalPage={totalPage}
           handleChange={handleChange}
         >
-          <Box>tes</Box>
+          <List>
+            {listSchedules.map((scheduling) => (
+              <Box>{scheduling.createBy}</Box>
+            ))}
+          </List>
         </ContainerSimpleList>
       </LayoutBase>
       {SnackbarAlert}
