@@ -34,6 +34,7 @@ import {
   DeletePlaylistFilesModule,
 } from './file-to-playlist';
 import { ListSimpleDirectoryModule, CreateDirectoryModule } from './directory';
+import { CreateSchedulingModule } from './create-scheduling/create-scheduling.module';
 
 @Module({
   imports: [
@@ -66,6 +67,7 @@ import { ListSimpleDirectoryModule, CreateDirectoryModule } from './directory';
     CreateDirectoryModule,
     MoveFilesToAnotherPlaylistModule,
     DeletePlaylistFilesModule,
+    CreateSchedulingModule,
   ],
   controllers: [AppController],
   providers: [AppService],

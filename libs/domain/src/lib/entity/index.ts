@@ -8,5 +8,6 @@ export * from './drawer';
 export * from './file';
 export * from './form';
 export * from './playlist';
+export * from './scheduling';
 export * from './user';
 export * from './utils';

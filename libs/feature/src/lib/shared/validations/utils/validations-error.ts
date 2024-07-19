@@ -3,10 +3,12 @@ import { AxiosError } from 'axios';
 import {
   ConnectionError,
   EntityAlreadyExists,
-  EntityExist,
   EntityNotAllowed,
+  EntityNotConverted,
   EntityNotCreated,
   EntityNotEmpty,
+  EntityNotNegativeNumber,
+  StartTimeCannotBeGreaterEndTime,
 } from '../../messages';
 
 export function ValidationsError(
@@ -25,6 +27,15 @@ export function ValidationsError(
 
     case 'EntityAlreadyExists':
       return EntityAlreadyExists(entitie, 'PT-BR');
+
+    case 'EntityNotConverted':
+      return EntityNotConverted(entitie, 'PT-BR');
+
+    case 'StartTimeCannotBeGreaterEndTime':
+      return StartTimeCannotBeGreaterEndTime('PT-BR');
+
+    case 'EntityNotNegativeNumber':
+      return EntityNotNegativeNumber(entitie, 'PT-BR');
 
     default:
       return ConnectionError('PT-BR');
