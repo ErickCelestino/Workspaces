@@ -1,2 +1,2 @@
 export * from './create-scheduling';
-export * from './list-scheduling';
+export * from './list-schedules';

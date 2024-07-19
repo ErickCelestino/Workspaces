@@ -1,2 +1,2 @@
-export * from './list-scheduling-response.mock';
+export * from './list-schedules-response.mock';
 export * from './scheduling.mock';

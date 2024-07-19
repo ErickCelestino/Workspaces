@@ -1,30 +1,27 @@
 import { Inject } from '@nestjs/common';
 import { UseCase } from '../../base/use-case';
-import { ListSchedulingDto, ListSchedulingReponseDto } from '../../dto';
+import { ListSchedulesDto, ListSchedulesReponseDto } from '../../dto';
 import { EntityNotEmpty } from '../../error';
 import { Either, left, right } from '../../shared/either';
 import {
   FindUserByIdRepository,
-  ListSchedulingRepository,
+  ListSchedulesRepository,
 } from '../../repository';
 import { ValidationUserId } from '../../utils';
 
-export class ListScheduling
+export class ListSchedules
   implements
-    UseCase<
-      ListSchedulingDto,
-      Either<EntityNotEmpty, ListSchedulingReponseDto>
-    >
+    UseCase<ListSchedulesDto, Either<EntityNotEmpty, ListSchedulesReponseDto>>
 {
   constructor(
     @Inject('FindUserByIdRepository')
     private findUserByIdRepository: FindUserByIdRepository,
-    @Inject('ListSchedulingRepository')
-    private listSchedulingRepository: ListSchedulingRepository
+    @Inject('ListSchedulesRepository')
+    private listSchedulingRepository: ListSchedulesRepository
   ) {}
   async execute(
-    input: ListSchedulingDto
-  ): Promise<Either<EntityNotEmpty, ListSchedulingReponseDto>> {
+    input: ListSchedulesDto
+  ): Promise<Either<EntityNotEmpty, ListSchedulesReponseDto>> {
     const { loggedUserId } = input;
 
     if (Object.keys(loggedUserId).length < 1) {

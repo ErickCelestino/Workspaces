@@ -1,2 +1,2 @@
 export * from './create-scheduling.schema';
-export * from './list-scheduling.schema';
+export * from './list-schedules.schema';

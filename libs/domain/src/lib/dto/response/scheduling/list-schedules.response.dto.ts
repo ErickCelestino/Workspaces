@@ -1,8 +1,8 @@
 import { Scheduling } from '../../../entity';
 
-export interface ListSchedulingReponseDto {
+export interface ListSchedulesReponseDto {
   total: number;
   filteredTotal: number;
   totalPages: number;
-  scheduling: Scheduling[];
+  schedules: Scheduling[];
 }

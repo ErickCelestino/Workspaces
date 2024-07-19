@@ -6,16 +6,16 @@ import { useCallback, useEffect, useState } from 'react';
 import {
   CrudType,
   ErrorResponse,
-  ListSchedulingDto,
+  ListSchedulesDto,
   Scheduling,
 } from '@workspaces/domain';
 import { useSnackbarAlert } from '../../hooks';
-import { ListSchedulingRequest } from '../../services';
+import { ListSchedulesRequest } from '../../services';
 import axios, { AxiosError } from 'axios';
 import { ValidationsError } from '../../shared';
 import { useLoggedUser } from '../../contexts';
 
-export const ListSchedulingContainer = () => {
+export const ListSchedulesContainer = () => {
   const { loggedUser } = useLoggedUser();
   const [listSchedules, setListSchedules] = useState<Scheduling[]>([]);
   const [search, setSearch] = useState(false);
@@ -34,16 +34,16 @@ export const ListSchedulingContainer = () => {
   );
 
   const handleData = useCallback(
-    async (data: ListSchedulingDto) => {
+    async (data: ListSchedulesDto) => {
       try {
-        const result = await ListSchedulingRequest({
+        const result = await ListSchedulesRequest({
           loggedUserId: data.loggedUserId,
           filter: data.filter,
           skip: data.skip,
           take: data.take,
         });
         if (result) {
-          setListSchedules(result.scheduling);
+          setListSchedules(result.schedules);
           setTotalPage(result.totalPages);
         }
         return result;

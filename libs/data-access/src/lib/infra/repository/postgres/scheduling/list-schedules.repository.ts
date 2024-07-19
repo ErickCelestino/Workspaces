@@ -1,15 +1,15 @@
 import { Inject } from '@nestjs/common';
 import {
-  ListSchedulingDto,
-  ListSchedulingReponseDto,
-  ListSchedulingRepository,
+  ListSchedulesDto,
+  ListSchedulesReponseDto,
+  ListSchedulesRepository,
   Scheduling,
 } from '@workspaces/domain';
 import { PrismaService } from 'nestjs-prisma';
 
-export class ListSchedulingRepositoryImpl implements ListSchedulingRepository {
+export class ListSchedulesRepositoryImpl implements ListSchedulesRepository {
   constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
-  async list(input: ListSchedulingDto): Promise<ListSchedulingReponseDto> {
+  async list(input: ListSchedulesDto): Promise<ListSchedulesReponseDto> {
     const { loggedUserId, filter } = input;
 
     const skip = input?.skip || 0;
@@ -74,7 +74,7 @@ export class ListSchedulingRepositoryImpl implements ListSchedulingRepository {
     });
 
     return {
-      scheduling: mappedScheduling,
+      schedules: mappedScheduling,
       filteredTotal,
       total,
       totalPages,

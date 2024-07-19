@@ -1,13 +1,10 @@
-import {
-  ListSchedulingDto,
-  ListSchedulingReponseDto,
-} from '@workspaces/domain';
+import { ListSchedulesDto, ListSchedulesReponseDto } from '@workspaces/domain';
 import { pureTvApi } from '../axios-config';
 
-export async function ListSchedulingRequest(input: ListSchedulingDto) {
+export async function ListSchedulesRequest(input: ListSchedulesDto) {
   const skip = input?.skip || 0;
   const take = input?.take || 6;
-  const result = await pureTvApi.get<ListSchedulingReponseDto>(
+  const result = await pureTvApi.get<ListSchedulesReponseDto>(
     'list-scheduling',
     {
       params: {

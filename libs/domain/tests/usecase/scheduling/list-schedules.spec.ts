@@ -1,33 +1,33 @@
 import {
   FindUserByIdRepositoryMock,
-  ListSchedulingRepositoryMock,
+  ListSchedulesRepositoryMock,
 } from '../../repository';
 import {
-  ListSchedulingRepository,
-  ListScheduling,
+  ListSchedulesRepository,
   FindUserByIdRepository,
-  ListSchedulingDto,
+  ListSchedulesDto,
   EntityNotEmpty,
+  ListSchedules,
 } from '../../../src';
-import { ListSchedulingReponseMock, userMock } from '../../entity';
+import { ListSchedulesReponseMock, userMock } from '../../entity';
 
 interface SutTypes {
-  sut: ListScheduling;
-  listSchedulingDto: ListSchedulingDto;
+  sut: ListSchedules;
+  listSchedulingDto: ListSchedulesDto;
   findUserByIdRepository: FindUserByIdRepository;
-  listSchedulingRepository: ListSchedulingRepository;
+  listSchedulingRepository: ListSchedulesRepository;
 }
 
 const makeSut = (): SutTypes => {
   const findUserByIdRepository = new FindUserByIdRepositoryMock();
-  const listSchedulingRepository = new ListSchedulingRepositoryMock();
+  const listSchedulingRepository = new ListSchedulesRepositoryMock();
 
-  const listSchedulingDto: ListSchedulingDto = {
+  const listSchedulingDto: ListSchedulesDto = {
     loggedUserId: userMock.userId,
     filter: '',
   };
 
-  const sut = new ListScheduling(
+  const sut = new ListSchedules(
     findUserByIdRepository,
     listSchedulingRepository
   );
@@ -48,7 +48,7 @@ describe('ListScheduling', () => {
 
     expect(result.isRight()).toBe(true);
     expect(result.isLeft()).toBe(false);
-    expect(result.value).toStrictEqual(ListSchedulingReponseMock);
+    expect(result.value).toStrictEqual(ListSchedulesReponseMock);
   });
 
   it('should return EntityNotEmpty  when a pass incorrect User ID', async () => {
