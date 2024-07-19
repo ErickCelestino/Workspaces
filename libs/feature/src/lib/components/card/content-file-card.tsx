@@ -69,7 +69,7 @@ export const ContentFileCard: FC<ListContentFilesProps> = ({
     >
       <CardMedia
         component="img"
-        image={fileImage}
+        image={fileImage ?? '/assets/images/Sem_Arquivo.png'}
         title={fileImageName}
         sx={{
           height: theme.spacing(15),

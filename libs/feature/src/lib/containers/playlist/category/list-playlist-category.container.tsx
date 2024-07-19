@@ -29,6 +29,7 @@ import { useLoggedUser } from '../../../contexts';
 import axios, { AxiosError } from 'axios';
 import { ValidationsError } from '../../../shared';
 import { ScrollBox } from '../../../components/scroll';
+import { ContainerSimpleList } from '../../utils';
 
 export const ListPlaylistCategoryContainer = () => {
   const { loggedUser } = useLoggedUser();
@@ -170,94 +171,34 @@ export const ListPlaylistCategoryContainer = () => {
         title="Deletar Categoria?"
         subTitle="Por favor, selecione alguma das alternativas"
       />
-      <LayoutBase title="Listagem Playlist" toolBar={<ToolbarPureTV />}>
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
+      <LayoutBase
+        title="Listagem de Categoria da Playlist"
+        toolBar={<ToolbarPureTV />}
+      >
+        <ContainerSimpleList
+          handleChange={handleChange}
+          search={{
+            placeholder: 'Buscar por categoria',
+            searchData: searchData,
+            createPopUp: () => handlePopUpOpen('create'),
           }}
+          totalPage={totalPage}
         >
-          <Box width="95%">
-            <Box
-              sx={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
-            >
-              <Box
-                width={smDown ? '100%' : '55%'}
-                marginRight={theme.spacing(2)}
-              >
-                <SearchBar
-                  onSearch={searchData}
-                  placeholder="Pesquisar Categoria"
-                />
-              </Box>
-              <IconButton
-                onClick={() => handlePopUpOpen('create')}
-                sx={{
-                  width: theme.spacing(8),
-                  height: theme.spacing(8),
-                }}
-              >
-                <AddCircleIcon
-                  sx={{
-                    width: theme.spacing(8),
-                    height: theme.spacing(8),
-                  }}
-                  color="primary"
-                  fontSize="large"
-                />
-              </IconButton>
-            </Box>
-            <Box
-              sx={{
-                display: 'flex',
-                justifyContent: 'center',
-                flexDirection: 'column',
-                alignItems: 'center',
-                width: '100%',
-              }}
-            >
-              <Box
-                width={smDown ? '100%' : '60%'}
-                sx={{
-                  marginLeft: smDown ? -3 : '',
-                }}
-              >
-                <ScrollBox maxHeight="100%">
-                  <List>
-                    {listPlaylistCategory.map((category) => (
-                      <PlaylistCategoryItem
-                        key={category.id}
-                        editPlaylistCategory={async () =>
-                          handlePopUpOpen('edit', category.id)
-                        }
-                        deletePlaylistCategory={async () =>
-                          handlePopUpOpen('delete', category.id)
-                        }
-                        category={category}
-                      />
-                    ))}
-                  </List>
-                </ScrollBox>
-              </Box>
-            </Box>
-            <Box
-              marginTop={theme.spacing(2)}
-              display="flex"
-              justifyContent="end"
-            >
-              <Pagination
-                count={totalPage}
-                color="primary"
-                onChange={handleChange}
+          <List>
+            {listPlaylistCategory.map((category) => (
+              <PlaylistCategoryItem
+                key={category.id}
+                editPlaylistCategory={async () =>
+                  handlePopUpOpen('edit', category.id)
+                }
+                deletePlaylistCategory={async () =>
+                  handlePopUpOpen('delete', category.id)
+                }
+                category={category}
               />
-            </Box>
-          </Box>
-        </Box>
+            ))}
+          </List>
+        </ContainerSimpleList>
       </LayoutBase>
       {SnackbarAlert}
     </>

@@ -26,7 +26,6 @@ import {
 } from '../../services';
 import { useLoggedUser } from '../../contexts';
 import {
-  ContainerCardList,
   ContentFileCard,
   CreateDirectoryModal,
   DeleteFileModal,
@@ -40,6 +39,7 @@ import axios, { AxiosError } from 'axios';
 import { useSnackbarAlert } from '../../hooks';
 import { DownloadError } from '../../shared';
 import { ValidationsError } from '../../shared/validations/utils';
+import { ContainerCardList } from '../utils';
 
 const onDownloadFile = async (input: DownloadContentFileResponseDto) => {
   try {

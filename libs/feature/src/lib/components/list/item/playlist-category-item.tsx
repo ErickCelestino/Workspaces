@@ -148,7 +148,7 @@ export const PlaylistCategoryItem: FC<PlaylistCategoryItemProps> = ({
           <ButtonFileMenu iconMenuItemList={iconMenuList} />
         </Box>
       </ListItem>
-      <Divider variant="inset" component="li" />
+      <Divider sx={{ width: '100%' }} />
     </Box>
   );
 };

@@ -11,7 +11,6 @@ import {
   ToolbarPureTV,
   PlaylistCard,
   DeletePlaylistModal,
-  ContainerCardList,
   AddFileToPlaylistModal,
   RightClickMenu,
   MobileButtonMenu,
@@ -32,6 +31,7 @@ import { ListPlaylistRequest } from '../../services';
 import axios, { AxiosError } from 'axios';
 import { ValidationsError } from '../../shared';
 import { useLoggedUser } from '../../contexts';
+import { ContainerCardList } from '../utils';
 
 export const ListPlaylistContainer = () => {
   const { showSnackbarAlert, SnackbarAlert } = useSnackbarAlert();

@@ -8,7 +8,7 @@ import {
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { FC, ReactNode } from 'react';
 
-import { SearchBar } from '../search';
+import { SearchBar } from '../../components';
 
 interface ContainerCardListProps {
   children: ReactNode;
