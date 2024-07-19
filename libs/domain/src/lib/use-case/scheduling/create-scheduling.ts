@@ -44,7 +44,7 @@ export class CreateScheduling
     private createSchedulingRepository: CreateSchedulingRepository
   ) {}
 
-  private isValidDate = (date: any) => {
+  private isValidDate = (date: unknown) => {
     return date instanceof Date && !isNaN(date.getTime());
   };
 
