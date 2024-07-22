@@ -1,7 +1,10 @@
-import { Box, List } from '@mui/material';
+import { Icon, List, useMediaQuery, useTheme } from '@mui/material';
+import AlarmAddIcon from '@mui/icons-material/AlarmAdd';
 import { LayoutBase } from '../../layout';
 import {
   CreateSchedulingModal,
+  MobileButtonMenu,
+  RightClickMenu,
   SchedulingItem,
   ToolbarPureTV,
 } from '../../components';
@@ -10,6 +13,7 @@ import { useCallback, useEffect, useState } from 'react';
 import {
   CrudType,
   ErrorResponse,
+  IconMenuItem,
   ListSchedulesDto,
   Scheduling,
 } from '@workspaces/domain';
@@ -21,6 +25,9 @@ import { useLoggedUser } from '../../contexts';
 
 export const ListSchedulesContainer = () => {
   const { loggedUser } = useLoggedUser();
+  const theme = useTheme();
+  const smDown = useMediaQuery(theme.breakpoints.down('sm'));
+
   const [listSchedules, setListSchedules] = useState<Scheduling[]>([]);
   const [search, setSearch] = useState(false);
   const { showSnackbarAlert, SnackbarAlert } = useSnackbarAlert();
@@ -126,6 +133,14 @@ export const ListSchedulesContainer = () => {
     }
   };
 
+  const rightClickMenuList: IconMenuItem[] = [
+    {
+      icon: <AlarmAddIcon />,
+      title: 'Novo Agendamento',
+      handleClick: async () => handlePopUpOpen('create'),
+    },
+  ];
+
   return (
     <>
       <CreateSchedulingModal
@@ -135,30 +150,33 @@ export const ListSchedulesContainer = () => {
         showAlert={showAlert}
       />
       <LayoutBase title="Listagem Agendamentos" toolBar={<ToolbarPureTV />}>
-        <ContainerSimpleList
-          search={{
-            placeholder: 'Pesquisar por agendamento',
-            searchData: searchData,
-            createPopUp: () => handlePopUpOpen('create'),
-          }}
-          totalPage={totalPage}
-          handleChange={handleChange}
-        >
-          <List>
-            {listSchedules.map((scheduling) => (
-              <SchedulingItem
-                editScheduling={async () =>
-                  handlePopUpOpen('edit', scheduling.id)
-                }
-                deleteScheduling={async () =>
-                  handlePopUpOpen('delete', scheduling.id)
-                }
-                key={scheduling.id}
-                scheduling={scheduling}
-              />
-            ))}
-          </List>
-        </ContainerSimpleList>
+        <RightClickMenu iconMenuItemList={rightClickMenuList}>
+          {smDown && <MobileButtonMenu iconMenuItemList={rightClickMenuList} />}
+          <ContainerSimpleList
+            search={{
+              placeholder: 'Pesquisar por agendamento',
+              searchData: searchData,
+              createPopUp: () => handlePopUpOpen('create'),
+            }}
+            totalPage={totalPage}
+            handleChange={handleChange}
+          >
+            <List>
+              {listSchedules.map((scheduling) => (
+                <SchedulingItem
+                  editScheduling={async () =>
+                    handlePopUpOpen('edit', scheduling.id)
+                  }
+                  deleteScheduling={async () =>
+                    handlePopUpOpen('delete', scheduling.id)
+                  }
+                  key={scheduling.id}
+                  scheduling={scheduling}
+                />
+              ))}
+            </List>
+          </ContainerSimpleList>
+        </RightClickMenu>
       </LayoutBase>
       {SnackbarAlert}
     </>
