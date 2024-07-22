@@ -3,6 +3,7 @@ import AlarmAddIcon from '@mui/icons-material/AlarmAdd';
 import { LayoutBase } from '../../layout';
 import {
   CreateSchedulingModal,
+  DeleteSchedulingModal,
   MobileButtonMenu,
   RightClickMenu,
   SchedulingItem,
@@ -33,6 +34,8 @@ export const ListSchedulesContainer = () => {
   const { showSnackbarAlert, SnackbarAlert } = useSnackbarAlert();
   const [totalPage, setTotalPage] = useState<number>(1);
   const [createSchedulingPopUp, setCreateSchedulingPopUp] = useState(false);
+  const [deleteSchedulingPopUp, setDeleteSchedulingPopUp] = useState(false);
+  const [selectedId, setSelectedId] = useState('');
 
   const showAlert = useCallback(
     (message: string, success: boolean) => {
@@ -90,7 +93,8 @@ export const ListSchedulesContainer = () => {
         // More Implementation
         break;
       case 'delete':
-        // More Implementation
+        setSelectedId(id ?? '');
+        setDeleteSchedulingPopUp(true);
         break;
     }
   };
@@ -99,6 +103,10 @@ export const ListSchedulesContainer = () => {
     switch (types) {
       case 'create':
         setCreateSchedulingPopUp(false);
+        break;
+
+      case 'delete':
+        setDeleteSchedulingPopUp(false);
         break;
     }
   };
@@ -148,6 +156,14 @@ export const ListSchedulesContainer = () => {
         title="Cadastrar Agendamento"
         handlePopUpClose={() => handlePopUpClose('create')}
         showAlert={showAlert}
+      />
+      <DeleteSchedulingModal
+        open={deleteSchedulingPopUp}
+        title="Cadastrar Agendamento"
+        handlePopUpClose={() => handlePopUpClose('delete')}
+        showAlert={showAlert}
+        idToDelete={selectedId}
+        subTitle="Deseja realmente deletar esse agendamento?"
       />
       <LayoutBase title="Listagem Agendamentos" toolBar={<ToolbarPureTV />}>
         <RightClickMenu iconMenuItemList={rightClickMenuList}>
