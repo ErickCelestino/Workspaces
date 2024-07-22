@@ -39,6 +39,7 @@ import {
   ListDirectoryModule,
 } from './directory';
 import { CreateSchedulingModule, ListSchedulesModule } from './scheduling';
+import { DeleteSchedulingModule } from './delete-scheduling/delete-scheduling.module';
 
 @Module({
   imports: [
@@ -74,6 +75,7 @@ import { CreateSchedulingModule, ListSchedulesModule } from './scheduling';
     ListDirectoryModule,
     CreateSchedulingModule,
     ListSchedulesModule,
+    DeleteSchedulingModule,
   ],
   controllers: [AppController],
   providers: [AppService],
