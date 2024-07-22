@@ -7,7 +7,7 @@ import {
   ListContanteFilesContainer,
   ListPlaylistContainer,
   ListPlaylistCategoryContainer,
-  ListSchedulingContainer,
+  ListSchedulesContainer,
 } from '@workspaces/feature';
 import { useEffect } from 'react';
 
@@ -70,7 +70,7 @@ export const AppRouters = () => {
         path="playlist-category"
         element={<ListPlaylistCategoryContainer />}
       />
-      <Route path="scheduling" element={<ListSchedulingContainer />} />
+      <Route path="scheduling" element={<ListSchedulesContainer />} />
 
       <Route path="*" element={<Navigate to="/home" />} />
     </Routes>
