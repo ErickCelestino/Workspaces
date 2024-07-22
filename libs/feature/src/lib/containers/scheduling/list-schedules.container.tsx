@@ -72,7 +72,7 @@ export const ListSchedulesContainer = () => {
         loggedUserId: loggedUser?.id ?? '',
       });
     }
-  }, [search]);
+  }, [handleData, loggedUser, search]);
 
   const handlePopUpOpen = (types: CrudType, id?: string) => {
     switch (types) {
@@ -98,7 +98,15 @@ export const ListSchedulesContainer = () => {
 
   const searchData = async (input: string) => {
     setSearch(true);
-    // More Implementation
+    const result = await handleData({
+      loggedUserId: loggedUser?.id ?? '',
+      filter: input,
+    });
+
+    if (result) {
+      setListSchedules(result.schedules);
+      setTotalPage(result.totalPages);
+    }
   };
 
   const handleChange = async (
@@ -106,8 +114,18 @@ export const ListSchedulesContainer = () => {
     value: number
   ) => {
     setSearch(true);
-    // More Implementation
+    const result = await ListSchedulesRequest({
+      loggedUserId: loggedUser?.id ?? '',
+      filter: '',
+      skip: (value - 1) * 6,
+    });
+
+    if (result) {
+      setListSchedules(result.schedules);
+      setTotalPage(result.totalPages);
+    }
   };
+
   return (
     <>
       <CreateSchedulingModal
