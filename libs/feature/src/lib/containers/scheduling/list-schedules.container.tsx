@@ -159,7 +159,7 @@ export const ListSchedulesContainer = () => {
       />
       <DeleteSchedulingModal
         open={deleteSchedulingPopUp}
-        title="Cadastrar Agendamento"
+        title="Deletar Agendamento"
         handlePopUpClose={() => handlePopUpClose('delete')}
         showAlert={showAlert}
         idToDelete={selectedId}
