@@ -5,7 +5,7 @@ export async function ListSchedulesRequest(input: ListSchedulesDto) {
   const skip = input?.skip || 0;
   const take = input?.take || 6;
   const result = await pureTvApi.get<ListSchedulesReponseDto>(
-    'list-scheduling',
+    'list-schedules',
     {
       params: {
         filter: input.filter,

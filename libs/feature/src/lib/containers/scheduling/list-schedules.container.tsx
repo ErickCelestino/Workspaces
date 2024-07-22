@@ -1,6 +1,10 @@
 import { Box, List } from '@mui/material';
 import { LayoutBase } from '../../layout';
-import { CreateSchedulingModal, ToolbarPureTV } from '../../components';
+import {
+  CreateSchedulingModal,
+  SchedulingItem,
+  ToolbarPureTV,
+} from '../../components';
 import { ContainerSimpleList } from '../utils';
 import { useCallback, useEffect, useState } from 'react';
 import {
@@ -75,6 +79,12 @@ export const ListSchedulesContainer = () => {
       case 'create':
         setCreateSchedulingPopUp(true);
         break;
+      case 'edit':
+        // More Implementation
+        break;
+      case 'delete':
+        // More Implementation
+        break;
     }
   };
 
@@ -118,7 +128,16 @@ export const ListSchedulesContainer = () => {
         >
           <List>
             {listSchedules.map((scheduling) => (
-              <Box>{scheduling.createBy}</Box>
+              <SchedulingItem
+                editScheduling={async () =>
+                  handlePopUpOpen('edit', scheduling.id)
+                }
+                deleteScheduling={async () =>
+                  handlePopUpOpen('delete', scheduling.id)
+                }
+                key={scheduling.id}
+                scheduling={scheduling}
+              />
             ))}
           </List>
         </ContainerSimpleList>
