@@ -1,1 +1,1 @@
-export * from './list-scheduling.container';
+export * from './list-schedules.container';
