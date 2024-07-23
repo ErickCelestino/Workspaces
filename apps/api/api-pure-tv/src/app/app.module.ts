@@ -40,6 +40,7 @@ import {
   DeleteSchedulingModule,
   EditSchedulingModule,
 } from './scheduling';
+import { FindSchedulingByIdModule } from './find-scheduling-by-id/find-scheduling-by-id.module';
 
 @Module({
   imports: [
@@ -76,6 +77,7 @@ import {
     ListSchedulesModule,
     DeleteSchedulingModule,
     EditSchedulingModule,
+    FindSchedulingByIdModule,
   ],
   controllers: [AppController],
   providers: [AppService],
