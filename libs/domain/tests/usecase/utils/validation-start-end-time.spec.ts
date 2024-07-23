@@ -16,8 +16,8 @@ const makeSut = (startTime: Date, endTime: Date) => {
 describe('ValidationStartEndTime', () => {
   it('should return undefined when a pass correct start and end time', async () => {
     const { sut } = makeSut(
-      new Date(SchedulingMock.startTime),
-      new Date(SchedulingMock.endTime)
+      new Date('2024-07-23T09:00:00'),
+      new Date('2024-07-23T10:00:00')
     );
 
     const result = await sut;
