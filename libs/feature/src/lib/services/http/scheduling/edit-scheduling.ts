@@ -1,4 +1,4 @@
-import { CreateSchedulingDto, EditSchedulingDto } from '@workspaces/domain';
+import { EditSchedulingDto } from '@workspaces/domain';
 import { pureTvApi } from '../axios-config';
 
 export async function EditSchedulingRequest(input: EditSchedulingDto) {
