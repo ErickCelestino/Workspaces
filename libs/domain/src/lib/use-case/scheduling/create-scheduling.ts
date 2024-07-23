@@ -16,7 +16,7 @@ import {
   FindUserByIdRepository,
 } from '../../repository';
 import { Either, left, right } from '../../shared/either';
-import { ValidationUserId } from '../../utils';
+import { ValidationStartEndTime, ValidationUserId } from '../../utils';
 
 export class CreateScheduling
   implements
@@ -93,17 +93,7 @@ export class CreateScheduling
       `${endTime}`
     );
 
-    if (
-      !this.isValidDate(convertedStartTime) ||
-      !this.isValidDate(convertedEndTime)
-    ) {
-      return left(new EntityNotConverted('Start Time or End Time'));
-    }
-
-    if (convertedStartTime > convertedEndTime) {
-      return left(new StartTimeCannotBeGreaterEndTime('Start Time'));
-    }
-
+    await ValidationStartEndTime(convertedStartTime, convertedEndTime);
     await ValidationUserId(loggedUserId, this.findUserByIdRepository);
 
     const filteredScheduling = await this.findSchedulingByNameRepository.find({
