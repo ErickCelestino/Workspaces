@@ -38,8 +38,8 @@ import {
   CreateSchedulingModule,
   ListSchedulesModule,
   DeleteSchedulingModule,
+  EditSchedulingModule,
 } from './scheduling';
-import { EditSchedulingModule } from './edit-scheduling/edit-scheduling.module';
 
 @Module({
   imports: [
