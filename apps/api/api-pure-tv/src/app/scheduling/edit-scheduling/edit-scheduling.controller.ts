@@ -1,11 +1,17 @@
-import { Body, Controller, Param, Put, Query } from '@nestjs/common';
+import { Body, Controller, Param, Put, Query, UsePipes } from '@nestjs/common';
 import { EditSchedulingService } from './edit-scheduling.service';
-import { EditSchedulingBodyDto, ErrorMessageResult } from '@workspaces/domain';
+import {
+  EditSchedulingBodyDto,
+  editSchedulingSchema,
+  ErrorMessageResult,
+} from '@workspaces/domain';
+import { ZodValidationPipe } from '../../pipes/zod-validation-pipe';
 
 @Controller('edit-scheduling')
 export class EditSchedulingController {
   constructor(private readonly editSchedulingService: EditSchedulingService) {}
 
+  @UsePipes(new ZodValidationPipe(editSchedulingSchema))
   @Put(':id')
   async edit(
     @Param('id') id: string,
