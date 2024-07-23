@@ -1,5 +1,6 @@
 import exp from 'constants';
 import {
+  ConvertStringInTimeRepository,
   EditScheduling,
   EditSchedulingDto,
   EditSchedulingRepository,
@@ -9,6 +10,7 @@ import {
 } from '../../../src';
 import { SchedulingMock, userMock } from '../../entity';
 import {
+  ConvertStringInTimeRepositoryMock,
   EditSchedulingRepositoryMock,
   FindSchedulingByIdRepositoryMock,
   FindUserByIdRepositoryMock,
@@ -19,18 +21,20 @@ interface SutTypes {
   editSchedulingDto: EditSchedulingDto;
   findUserByIdRepository: FindUserByIdRepository;
   findSchedulingByIdRepository: FindSchedulingByIdRepository;
+  convertStringInTimeRepository: ConvertStringInTimeRepository;
   editSchedulingRepository: EditSchedulingRepository;
 }
 
 const makeSut = (): SutTypes => {
   const findUserByIdRepository = new FindUserByIdRepositoryMock();
   const findSchedulingByIdRepository = new FindSchedulingByIdRepositoryMock();
+  const convertStringInTimeRepository = new ConvertStringInTimeRepositoryMock();
   const editSchedulingRepository = new EditSchedulingRepositoryMock();
 
   const editSchedulingDto: EditSchedulingDto = {
+    id: SchedulingMock.id,
     body: {
       endTime: SchedulingMock.endTime,
-      id: SchedulingMock.id,
       name: SchedulingMock.name,
       priority: SchedulingMock.priority,
       startTime: SchedulingMock.startTime,
@@ -42,6 +46,7 @@ const makeSut = (): SutTypes => {
   const sut = new EditScheduling(
     findUserByIdRepository,
     findSchedulingByIdRepository,
+    convertStringInTimeRepository,
     editSchedulingRepository
   );
 
@@ -50,6 +55,7 @@ const makeSut = (): SutTypes => {
     editSchedulingDto,
     findUserByIdRepository,
     findSchedulingByIdRepository,
+    convertStringInTimeRepository,
     editSchedulingRepository,
   };
 };
@@ -77,7 +83,7 @@ describe('EditScheduling', () => {
 
   it('should return EntityNotEmpty when pass incorrect Scheduling ID', async () => {
     const { sut, editSchedulingDto } = makeSut();
-    editSchedulingDto.body.id = '';
+    editSchedulingDto.id = '';
     const result = await sut.execute(editSchedulingDto);
 
     expect(result.isLeft()).toBe(true);

@@ -1,9 +1,14 @@
 import { Inject } from '@nestjs/common';
 import { UseCase } from '../../base/use-case';
 import { EditSchedulingDto } from '../../dto';
-import { EntityNotEmpty } from '../../error';
+import {
+  EntityNotConverted,
+  EntityNotEmpty,
+  StartTimeCannotBeGreaterEndTime,
+} from '../../error';
 import { Either, left, right } from '../../shared/either';
 import {
+  ConvertStringInTimeRepository,
   EditSchedulingRepository,
   FindSchedulingByIdRepository,
   FindUserByIdRepository,
@@ -18,14 +23,22 @@ export class EditScheduling
     private findUserByIdRepository: FindUserByIdRepository,
     @Inject('FindSchedulingByIdRepository')
     private findSchedulingByIdRepository: FindSchedulingByIdRepository,
+    @Inject('ConvertStringInTimeRepository')
+    private convertStringInTimeRepository: ConvertStringInTimeRepository,
     @Inject('EditSchedulingRepository')
     private editSchedulingRepository: EditSchedulingRepository
   ) {}
+
+  private isValidDate = (date: unknown) => {
+    return date instanceof Date && !isNaN(date.getTime());
+  };
+
   async execute(
     input: EditSchedulingDto
   ): Promise<Either<EntityNotEmpty, void>> {
     const {
-      body: { endTime, id, name, priority, startTime },
+      id,
+      body: { endTime, name, priority, startTime, lopping },
       loggedUserId,
     } = input;
 
@@ -53,10 +66,38 @@ export class EditScheduling
       return left(new EntityNotEmpty('priority'));
     }
 
+    const convertedStartTime = await this.convertStringInTimeRepository.convert(
+      `${startTime}`
+    );
+    const convertedEndTime = await this.convertStringInTimeRepository.convert(
+      `${endTime}`
+    );
+
+    if (
+      !this.isValidDate(convertedStartTime) ||
+      !this.isValidDate(convertedEndTime)
+    ) {
+      return left(new EntityNotConverted('Start Time or End Time'));
+    }
+
+    if (convertedStartTime > convertedEndTime) {
+      return left(new StartTimeCannotBeGreaterEndTime('Start Time'));
+    }
+
     await ValidationUserId(loggedUserId, this.findUserByIdRepository);
     await ValidationSchedulingId(id, this.findSchedulingByIdRepository);
 
-    await this.editSchedulingRepository.edit(input);
+    await this.editSchedulingRepository.edit({
+      body: {
+        name,
+        priority,
+        startTime: convertedStartTime,
+        endTime: convertedEndTime,
+        lopping,
+      },
+      id,
+      loggedUserId,
+    });
 
     return right(undefined);
   }

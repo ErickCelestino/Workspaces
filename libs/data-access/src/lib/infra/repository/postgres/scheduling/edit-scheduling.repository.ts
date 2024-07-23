@@ -10,7 +10,7 @@ export class EditSchedulingRepositoryImpl implements EditSchedulingRepository {
   async edit(input: EditSchedulingDto): Promise<void> {
     await this.prismaService.scheduling.update({
       where: {
-        scheduling_id: input.body.id,
+        scheduling_id: input.id,
       },
       data: {
         end_time: input.body.endTime,
@@ -19,7 +19,6 @@ export class EditSchedulingRepositoryImpl implements EditSchedulingRepository {
         start_time: input.body.startTime,
         updated_at: new Date(),
         priority: parseInt(input.body.priority),
-        scheduling_id: input.body.id,
       },
     });
   }
