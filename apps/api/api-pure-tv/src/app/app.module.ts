@@ -39,8 +39,8 @@ import {
   ListSchedulesModule,
   DeleteSchedulingModule,
   EditSchedulingModule,
+  FindSchedulingByIdModule,
 } from './scheduling';
-import { FindSchedulingByIdModule } from './find-scheduling-by-id/find-scheduling-by-id.module';
 
 @Module({
   imports: [
