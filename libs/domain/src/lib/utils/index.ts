@@ -1,4 +1,5 @@
 export * from './error-message-result';
+export * from './format-date-in-time';
 export * from './validation-directory-id';
 export * from './validation-playlist-category-id';
 export * from './validation-playlist-id';

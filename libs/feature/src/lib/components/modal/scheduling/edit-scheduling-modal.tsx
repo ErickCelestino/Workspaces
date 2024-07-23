@@ -4,6 +4,7 @@ import {
   EditSchedulingDto,
   ErrorResponse,
   FindSchedulingByIdDto,
+  ComboBoxScheduling,
 } from '@workspaces/domain';
 import { useForm } from 'react-hook-form';
 import {
@@ -69,6 +70,7 @@ export const EditSchedulingModal: React.FC<EditSchedulingModalProps> = ({
     endTime: '',
     priority: '0',
   });
+  const [looping, setLooping] = useState(false);
 
   const {
     handleSubmit,
@@ -102,14 +104,16 @@ export const EditSchedulingModal: React.FC<EditSchedulingModalProps> = ({
           name: result.name,
           endTime: result.endTime,
           startTime: result.startTime,
-          lopping: result.lopping,
           priority: result.priority,
         });
+        setLooping(result.lopping);
+
         setTimeGroup({
           endTime: result.endTime,
           startTime: result.startTime,
           priority: result.priority,
         });
+        setDataLoaded(true);
       } catch (error) {
         console.error(error);
         if (axios.isAxiosError(error)) {
@@ -156,6 +160,7 @@ export const EditSchedulingModal: React.FC<EditSchedulingModalProps> = ({
       }
     }
   };
+
   const handleSchedulingData = async (data: EditSchedulingBodyDto) => {
     setLoading(true);
     setSuccess(false);
@@ -180,9 +185,13 @@ export const EditSchedulingModal: React.FC<EditSchedulingModalProps> = ({
     }));
   };
 
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setLooping(event.target.checked);
+  };
+
   return (
     <SimpleFormModal
-      height={smDown ? theme.spacing(55) : theme.spacing(53)}
+      height={smDown ? theme.spacing(55) : theme.spacing(62)}
       width={smDown ? '90%' : theme.spacing(80)}
       open={open}
       handlePopUpClose={handlePopUpClose}
@@ -253,7 +262,7 @@ export const EditSchedulingModal: React.FC<EditSchedulingModalProps> = ({
         </Box>
         <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
           <FormControlLabel
-            control={<Checkbox />}
+            control={<Checkbox checked={looping} onChange={handleChange} />}
             label={loopingLabel}
             id="lopping"
             {...register('lopping')}

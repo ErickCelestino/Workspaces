@@ -15,6 +15,7 @@ import {
   CreateSchedulingBodyDto,
   CreateSchedulingDto,
   ErrorResponse,
+  ComboBoxScheduling,
 } from '@workspaces/domain';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {

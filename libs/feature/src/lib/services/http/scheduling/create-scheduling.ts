@@ -2,7 +2,6 @@ import { CreateSchedulingDto } from '@workspaces/domain';
 import { pureTvApi } from '../axios-config';
 
 export async function CreateSchedulingRequest(input: CreateSchedulingDto) {
-  console.log(input);
   const result = await pureTvApi.post(
     'create-scheduling',
     {
