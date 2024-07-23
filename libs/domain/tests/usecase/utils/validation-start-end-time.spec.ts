@@ -1,6 +1,5 @@
 import {
   EntityNotConverted,
-  EntityNotEmpty,
   StartTimeCannotBeGreaterEndTime,
   ValidationStartEndTime,
 } from '../../../src';
@@ -40,8 +39,8 @@ describe('ValidationStartEndTime', () => {
 
   it('should return StartTimeCannotBeGreaterEndTime when no pass start time greater end time', async () => {
     const { sut } = makeSut(
-      new Date(SchedulingMock.endTime),
-      new Date(SchedulingMock.startTime)
+      new Date('2024-07-23T10:00:00'),
+      new Date('2024-07-23T09:00:00')
     );
 
     const result = await sut;
