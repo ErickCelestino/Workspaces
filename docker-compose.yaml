@@ -1,5 +1,36 @@
 version: '3.8'
 services:
+  api-general:
+    build:
+      context: .
+      dockerfile: Dockerfile.api-general
+    ports:
+      - '${PORT_GENERAL}:${PORT_GENERAL}'
+    environment:
+      NODE_ENV: production
+    depends_on:
+      - postgres
+
+  api-pure-tv:
+    build:
+      context: .
+      dockerfile: Dockerfile.api-pure-tv
+    ports:
+      - '${PORT_BACK_PURE_TV}:${PORT_BACK_PURE_TV}'
+    environment:
+      NODE_ENV: production
+    depends_on:
+      - postgres
+
+  web-pure-tv:
+    build:
+      context: .
+      dockerfile: Dockerfile.web-pure-tv
+    ports:
+      - '${PORT_FRONT_PURE_TV}:80'
+    environment:
+      NODE_ENV: production
+
   postgres:
     image: 'postgres'
     environment:

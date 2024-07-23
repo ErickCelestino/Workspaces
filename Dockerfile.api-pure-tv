@@ -1,0 +1,24 @@
+FROM node:18-alpine AS builder
+
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm install
+
+COPY . .
+RUN npm run build:back-pure-tv
+
+FROM node:18-alpine
+
+WORKDIR /app
+
+
+COPY --from=builder /app/dist/apps/api/api-pure-tv ./dist
+COPY --from=builder /app/dist/libs ./dist
+COPY --from=builder /app/package*.json ./
+
+RUN npm install --production --ignore-scripts
+
+EXPOSE ${PORT_BACK_PURE_TV}
+
+CMD ["node", "dist/main"]
