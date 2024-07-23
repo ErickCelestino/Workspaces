@@ -1,11 +1,7 @@
 import { Inject } from '@nestjs/common';
 import { UseCase } from '../../base/use-case';
 import { EditSchedulingDto } from '../../dto';
-import {
-  EntityNotConverted,
-  EntityNotEmpty,
-  StartTimeCannotBeGreaterEndTime,
-} from '../../error';
+import { EntityNotEmpty } from '../../error';
 import { Either, left, right } from '../../shared/either';
 import {
   ConvertStringInTimeRepository,
@@ -13,7 +9,11 @@ import {
   FindSchedulingByIdRepository,
   FindUserByIdRepository,
 } from '../../repository';
-import { ValidationSchedulingId, ValidationUserId } from '../../utils';
+import {
+  ValidationSchedulingId,
+  ValidationStartEndTime,
+  ValidationUserId,
+} from '../../utils';
 
 export class EditScheduling
   implements UseCase<EditSchedulingDto, Either<EntityNotEmpty, void>>
@@ -28,10 +28,6 @@ export class EditScheduling
     @Inject('EditSchedulingRepository')
     private editSchedulingRepository: EditSchedulingRepository
   ) {}
-
-  private isValidDate = (date: unknown) => {
-    return date instanceof Date && !isNaN(date.getTime());
-  };
 
   async execute(
     input: EditSchedulingDto
@@ -73,17 +69,7 @@ export class EditScheduling
       `${endTime}`
     );
 
-    if (
-      !this.isValidDate(convertedStartTime) ||
-      !this.isValidDate(convertedEndTime)
-    ) {
-      return left(new EntityNotConverted('Start Time or End Time'));
-    }
-
-    if (convertedStartTime > convertedEndTime) {
-      return left(new StartTimeCannotBeGreaterEndTime('Start Time'));
-    }
-
+    await ValidationStartEndTime(convertedStartTime, convertedEndTime);
     await ValidationUserId(loggedUserId, this.findUserByIdRepository);
     await ValidationSchedulingId(id, this.findSchedulingByIdRepository);
 
