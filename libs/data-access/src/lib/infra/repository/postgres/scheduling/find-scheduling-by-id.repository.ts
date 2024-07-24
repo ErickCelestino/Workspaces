@@ -1,5 +1,9 @@
 import { Inject } from '@nestjs/common';
-import { FindSchedulingByIdRepository, Scheduling } from '@workspaces/domain';
+import {
+  FindSchedulingByIdRepository,
+  FormatDateInTime,
+  Scheduling,
+} from '@workspaces/domain';
 import { PrismaService } from 'nestjs-prisma';
 
 export class FindSchedulingByIdRepositoryImpl
@@ -31,8 +35,10 @@ export class FindSchedulingByIdRepositoryImpl
     const mappedScheduling: Scheduling = {
       id: filteredScheduling?.scheduling_id ?? '',
       name: filteredScheduling?.name ?? '',
-      endTime: filteredScheduling?.end_time.toISOString() ?? '',
-      startTime: filteredScheduling?.start_time.toISOString() ?? '',
+      endTime: FormatDateInTime(new Date(filteredScheduling?.end_time ?? '')),
+      startTime: FormatDateInTime(
+        new Date(filteredScheduling?.start_time ?? '')
+      ),
       lopping: filteredScheduling?.looping ?? false,
       priority: `${filteredScheduling?.priority}` ?? '',
       createBy: filteredScheduling?.user?.nick_name ?? '',

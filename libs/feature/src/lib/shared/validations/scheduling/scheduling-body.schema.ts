@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { EntityMaxLength, EntityMinLength } from '../../messages';
 
-export const CreateSchedulingSchema = z
+export const SchedulingBodySchema = z
   .object({
     name: z
       .string()

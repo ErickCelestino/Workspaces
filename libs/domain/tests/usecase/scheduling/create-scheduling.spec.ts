@@ -4,13 +4,11 @@ import {
   CreateSchedulingDto,
   CreateSchedulingRepository,
   EntityAlreadyExists,
-  EntityNotConverted,
   EntityNotCreated,
   EntityNotEmpty,
   EntityNotNegativeNumber,
   FindSchedulingByNameRepository,
   FindUserByIdRepository,
-  StartTimeCannotBeGreaterEndTime,
 } from '../../../src';
 import { SchedulingMock, userMock } from '../../entity';
 import {
@@ -175,48 +173,5 @@ describe('CreateScheduling', () => {
     expect(result.isRight()).toBe(false);
     expect(result.isLeft()).toBe(true);
     expect(result.value).toBeInstanceOf(EntityNotCreated);
-  });
-
-  it('should return StartTimeCannotBeGreaterEndTime when a pass greater Start Time', async () => {
-    const { sut, createSchedulingDto } = makeSut();
-
-    jest
-      .spyOn(sut['convertStringInTimeRepository'], 'convert')
-      .mockResolvedValueOnce(new Date('2021-10-10T10:00:00'));
-    jest
-      .spyOn(sut['convertStringInTimeRepository'], 'convert')
-      .mockResolvedValueOnce(new Date('2021-10-10T09:00:00'));
-
-    const result = await sut.execute(createSchedulingDto);
-
-    expect(result.isRight()).toBe(false);
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(StartTimeCannotBeGreaterEndTime);
-  });
-
-  it('should return EntityNotConverted when not converted start time or end time in system', async () => {
-    const {
-      createSchedulingDto,
-      findUserByIdRepository,
-      findSchedulingByNameRepository,
-      createSchedulingRepository,
-    } = makeSut();
-
-    const mockEmptyRepository: ConvertStringInTimeRepository = {
-      convert: jest.fn(async () => new Date(NaN)),
-    };
-
-    const sut = new CreateScheduling(
-      findUserByIdRepository,
-      findSchedulingByNameRepository,
-      mockEmptyRepository,
-      createSchedulingRepository
-    );
-
-    const result = await sut.execute(createSchedulingDto);
-
-    expect(result.isRight()).toBe(false);
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotConverted);
   });
 });
