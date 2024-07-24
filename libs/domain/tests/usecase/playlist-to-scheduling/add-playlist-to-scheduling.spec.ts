@@ -2,6 +2,7 @@ import {
   AddPlaylistsToScheduling,
   AddPlaylistsToSchedulingDto,
   AddPlaylistToSchedulingRepository,
+  EntityAlreadyExists,
   EntityNotCreated,
   EntityNotEmpty,
   FindPlaylistByIdRepository,
@@ -25,7 +26,7 @@ import {
 
 interface SutTypes {
   sut: AddPlaylistsToScheduling;
-  addPlaylisttToSchedulingDto: AddPlaylistsToSchedulingDto;
+  addPlaylistToSchedulingDto: AddPlaylistsToSchedulingDto;
   findUserByIdRepository: FindUserByIdRepository;
   findSchedulingByIdRepository: FindSchedulingByIdRepository;
   findPlaylistByIdRepository: FindPlaylistByIdRepository;
@@ -42,7 +43,7 @@ const makeSut = (): SutTypes => {
   const addPlaylistsToSchedulingRepository =
     new AddPlaylistsToSchedulingRepositoryMock();
 
-  const addPlaylisttToSchedulingDto: AddPlaylistsToSchedulingDto = {
+  const addPlaylistToSchedulingDto: AddPlaylistsToSchedulingDto = {
     loggedUserId: userMock.userId,
     schedulingId: SchedulingMock.id,
     playlistIds: [PlaylistMock.id],
@@ -58,7 +59,7 @@ const makeSut = (): SutTypes => {
 
   return {
     sut,
-    addPlaylisttToSchedulingDto,
+    addPlaylistToSchedulingDto,
     findUserByIdRepository,
     findSchedulingByIdRepository,
     findPlaylistByIdRepository,
@@ -69,9 +70,9 @@ const makeSut = (): SutTypes => {
 
 describe('AddPlaylistsToScheduling', () => {
   it('should return list id when pass correct AddPlaylistsToSchedulingDto', async () => {
-    const { sut, addPlaylisttToSchedulingDto } = makeSut();
+    const { sut, addPlaylistToSchedulingDto } = makeSut();
 
-    const result = await sut.execute(addPlaylisttToSchedulingDto);
+    const result = await sut.execute(addPlaylistToSchedulingDto);
 
     expect(result.isRight()).toBe(true);
     expect(result.isLeft()).toBe(false);
@@ -79,9 +80,9 @@ describe('AddPlaylistsToScheduling', () => {
   });
 
   it('should return EntityNotEmpty when pass incorrect User ID', async () => {
-    const { sut, addPlaylisttToSchedulingDto } = makeSut();
-    addPlaylisttToSchedulingDto.loggedUserId = '';
-    const result = await sut.execute(addPlaylisttToSchedulingDto);
+    const { sut, addPlaylistToSchedulingDto } = makeSut();
+    addPlaylistToSchedulingDto.loggedUserId = '';
+    const result = await sut.execute(addPlaylistToSchedulingDto);
 
     expect(result.isRight()).toBe(false);
     expect(result.isLeft()).toBe(true);
@@ -89,9 +90,9 @@ describe('AddPlaylistsToScheduling', () => {
   });
 
   it('should return EntityNotEmpty when pass incorrect Scheduling ID', async () => {
-    const { sut, addPlaylisttToSchedulingDto } = makeSut();
-    addPlaylisttToSchedulingDto.schedulingId = '';
-    const result = await sut.execute(addPlaylisttToSchedulingDto);
+    const { sut, addPlaylistToSchedulingDto } = makeSut();
+    addPlaylistToSchedulingDto.schedulingId = '';
+    const result = await sut.execute(addPlaylistToSchedulingDto);
 
     expect(result.isRight()).toBe(false);
     expect(result.isLeft()).toBe(true);
@@ -99,9 +100,9 @@ describe('AddPlaylistsToScheduling', () => {
   });
 
   it('should return EntityNotEmpty when pass incorrect Playlist IDs', async () => {
-    const { sut, addPlaylisttToSchedulingDto } = makeSut();
-    addPlaylisttToSchedulingDto.playlistIds = [];
-    const result = await sut.execute(addPlaylisttToSchedulingDto);
+    const { sut, addPlaylistToSchedulingDto } = makeSut();
+    addPlaylistToSchedulingDto.playlistIds = [];
+    const result = await sut.execute(addPlaylistToSchedulingDto);
 
     expect(result.isRight()).toBe(false);
     expect(result.isLeft()).toBe(true);
@@ -109,9 +110,9 @@ describe('AddPlaylistsToScheduling', () => {
   });
 
   it('should return EntityNotEmpty when pass incorrect Playlist ID', async () => {
-    const { sut, addPlaylisttToSchedulingDto } = makeSut();
-    addPlaylisttToSchedulingDto.playlistIds[0] = '';
-    const result = await sut.execute(addPlaylisttToSchedulingDto);
+    const { sut, addPlaylistToSchedulingDto } = makeSut();
+    addPlaylistToSchedulingDto.playlistIds[0] = '';
+    const result = await sut.execute(addPlaylistToSchedulingDto);
 
     expect(result.isRight()).toBe(false);
     expect(result.isLeft()).toBe(true);
@@ -124,7 +125,7 @@ describe('AddPlaylistsToScheduling', () => {
       findPlaylistByIdRepository,
       findSchedulingByIdRepository,
       findPlaylistToSchedulingByIdsRepository,
-      addPlaylisttToSchedulingDto,
+      addPlaylistToSchedulingDto,
     } = makeSut();
 
     const mockEmptyRepository: AddPlaylistToSchedulingRepository = {
@@ -139,10 +140,38 @@ describe('AddPlaylistsToScheduling', () => {
       mockEmptyRepository
     );
 
-    const result = await sut.execute(addPlaylisttToSchedulingDto);
+    const result = await sut.execute(addPlaylistToSchedulingDto);
 
     expect(result.isRight()).toBe(false);
     expect(result.isLeft()).toBe(true);
     expect(result.value).toBeInstanceOf(EntityNotCreated);
+  });
+
+  it('should return EntityAlreadyExists when a exist scheduling in database', async () => {
+    const {
+      findUserByIdRepository,
+      findPlaylistByIdRepository,
+      findSchedulingByIdRepository,
+      addPlaylistsToSchedulingRepository,
+      addPlaylistToSchedulingDto,
+    } = makeSut();
+
+    const mockEmptyRepository: FindPlaylistToSchedulingByIdsRepository = {
+      find: jest.fn(async () => PlaylistToSchedulingMock.id),
+    };
+
+    const sut = new AddPlaylistsToScheduling(
+      findUserByIdRepository,
+      findSchedulingByIdRepository,
+      findPlaylistByIdRepository,
+      mockEmptyRepository,
+      addPlaylistsToSchedulingRepository
+    );
+
+    const result = await sut.execute(addPlaylistToSchedulingDto);
+
+    expect(result.isRight()).toBe(false);
+    expect(result.isLeft()).toBe(true);
+    expect(result.value).toBeInstanceOf(EntityAlreadyExists);
   });
 });
