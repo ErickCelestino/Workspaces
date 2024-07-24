@@ -7,7 +7,11 @@ services:
     ports:
       - '${PORT_GENERAL}:${PORT_GENERAL}'
     environment:
-      NODE_ENV: production
+      - NODE_ENV=production
+      - DATABASE_URL=${DATABASE_URL}
+    env_file:
+      - .env
+    command: sh -c "npm run prisma:generate && npm run prisma:deploy && node /app/dist/main.js"
     depends_on:
       - postgres
 
@@ -18,7 +22,11 @@ services:
     ports:
       - '${PORT_BACK_PURE_TV}:${PORT_BACK_PURE_TV}'
     environment:
-      NODE_ENV: production
+      - NODE_ENV=production
+      - DATABASE_URL=${DATABASE_URL}
+    env_file:
+      - .env
+    command: sh -c "npm run prisma:generate && npm run prisma:deploy && node /app/dist/main.js"
     depends_on:
       - postgres
 
