@@ -1,1 +1,1 @@
-export * from './create-scheduling.schema';
+export * from './scheduling-body.schema';

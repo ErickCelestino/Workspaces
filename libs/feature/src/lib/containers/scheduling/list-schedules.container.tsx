@@ -4,6 +4,7 @@ import { LayoutBase } from '../../layout';
 import {
   CreateSchedulingModal,
   DeleteSchedulingModal,
+  EditSchedulingModal,
   MobileButtonMenu,
   RightClickMenu,
   SchedulingItem,
@@ -35,6 +36,7 @@ export const ListSchedulesContainer = () => {
   const [totalPage, setTotalPage] = useState<number>(1);
   const [createSchedulingPopUp, setCreateSchedulingPopUp] = useState(false);
   const [deleteSchedulingPopUp, setDeleteSchedulingPopUp] = useState(false);
+  const [editSchedulingPopUp, setEditSchedulingPopUp] = useState(false);
   const [selectedId, setSelectedId] = useState('');
 
   const showAlert = useCallback(
@@ -90,7 +92,8 @@ export const ListSchedulesContainer = () => {
         setCreateSchedulingPopUp(true);
         break;
       case 'edit':
-        // More Implementation
+        setSelectedId(id ?? '');
+        setEditSchedulingPopUp(true);
         break;
       case 'delete':
         setSelectedId(id ?? '');
@@ -104,9 +107,11 @@ export const ListSchedulesContainer = () => {
       case 'create':
         setCreateSchedulingPopUp(false);
         break;
-
       case 'delete':
         setDeleteSchedulingPopUp(false);
+        break;
+      case 'edit':
+        setEditSchedulingPopUp(false);
         break;
     }
   };
@@ -164,6 +169,13 @@ export const ListSchedulesContainer = () => {
         showAlert={showAlert}
         idToDelete={selectedId}
         subTitle="Deseja realmente deletar esse agendamento?"
+      />
+      <EditSchedulingModal
+        open={editSchedulingPopUp}
+        title="Editar Agendamento"
+        handlePopUpClose={() => handlePopUpClose('edit')}
+        showAlert={showAlert}
+        idToEdit={selectedId}
       />
       <LayoutBase title="Listagem Agendamentos" toolBar={<ToolbarPureTV />}>
         <RightClickMenu iconMenuItemList={rightClickMenuList}>

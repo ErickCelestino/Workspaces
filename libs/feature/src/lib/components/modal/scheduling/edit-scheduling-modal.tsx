@@ -1,3 +1,19 @@
+import { zodResolver } from '@hookform/resolvers/zod';
+import {
+  EditSchedulingBodyDto,
+  EditSchedulingDto,
+  ErrorResponse,
+  FindSchedulingByIdDto,
+  ComboBoxScheduling,
+} from '@workspaces/domain';
+import { useForm } from 'react-hook-form';
+import {
+  Priority,
+  SchedulingBodySchema,
+  TimeTypes,
+  ValidationsError,
+} from '../../../shared';
+import { useLoggedUser } from '../../../contexts';
 import {
   Box,
   Checkbox,
@@ -7,30 +23,19 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
-import { useLoggedUser } from '../../../contexts';
-import { FC, useState } from 'react';
-import { SimpleFormModal } from '../simple';
-import { useForm } from 'react-hook-form';
+import { useCallback, useEffect, useState } from 'react';
 import {
-  CreateSchedulingBodyDto,
-  CreateSchedulingDto,
-  ErrorResponse,
-  ComboBoxScheduling,
-} from '@workspaces/domain';
-import { zodResolver } from '@hookform/resolvers/zod';
-import {
-  SchedulingBodySchema,
-  Priority,
-  TimeTypes,
-  ValidationsError,
-} from '../../../shared';
+  FindSchedulingByIdRequest,
+  EditSchedulingRequest,
+} from '../../../services';
 import axios, { AxiosError } from 'axios';
+import { SimpleFormModal } from '../simple';
 import { FormButton } from '../../form';
-import { CreateSchedulingRequest } from '../../../services';
 
-interface CreateSchedulingModalProps {
+interface EditSchedulingModalProps {
   open: boolean;
   title: string;
+  idToEdit: string;
   handlePopUpClose: () => void;
   showAlert: (message: string, success: boolean) => void;
   nameLabel?: string;
@@ -41,11 +46,12 @@ interface CreateSchedulingModalProps {
   priorityLabel?: string;
 }
 
-export const CreateSchedulingModal: FC<CreateSchedulingModalProps> = ({
+export const EditSchedulingModal: React.FC<EditSchedulingModalProps> = ({
   handlePopUpClose,
   showAlert,
   title,
   open,
+  idToEdit,
   nameLabel = 'Nome',
   startTimeLabel = 'Tempo Inicial',
   endTimeLabel = 'Tempo Final',
@@ -56,20 +62,22 @@ export const CreateSchedulingModal: FC<CreateSchedulingModalProps> = ({
   const { loggedUser } = useLoggedUser();
   const theme = useTheme();
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [dataLoaded, setDataLoaded] = useState(false);
   const [timeGroup, setTimeGroup] = useState<ComboBoxScheduling>({
     startTime: '',
     endTime: '',
     priority: '0',
   });
-  const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
+  const [looping, setLooping] = useState(false);
 
   const {
     handleSubmit,
-    reset,
     register,
+    reset,
     formState: { errors },
-  } = useForm<CreateSchedulingBodyDto>({
+  } = useForm<EditSchedulingBodyDto>({
     mode: 'all',
     criteriaMode: 'all',
     resolver: zodResolver(SchedulingBodySchema),
@@ -82,33 +90,67 @@ export const CreateSchedulingModal: FC<CreateSchedulingModalProps> = ({
     },
   });
 
-  const createScheduling = async (input: CreateSchedulingDto) => {
-    try {
-      const result = await CreateSchedulingRequest(input);
-      if (result) {
-        setSuccess(true);
-        setLoading(false);
-        showAlert(successMessage, true);
+  useEffect(() => {
+    if (!open) {
+      setDataLoaded(false);
+    }
+  }, [open]);
 
-        setSuccess(false);
+  const getScheduling = useCallback(
+    async (input: FindSchedulingByIdDto) => {
+      try {
+        const result = await FindSchedulingByIdRequest(input);
         reset({
-          name: '',
-          endTime: '',
-          startTime: '',
-          lopping: false,
-          priority: '0',
+          name: result.name,
+          endTime: result.endTime,
+          startTime: result.startTime,
+          priority: result.priority,
         });
+        setLooping(result.lopping);
+
         setTimeGroup({
-          startTime: '',
-          endTime: '',
-          priority: '0',
+          endTime: result.endTime,
+          startTime: result.startTime,
+          priority: result.priority,
         });
-        handlePopUpClose();
+        setDataLoaded(true);
+      } catch (error) {
+        console.error(error);
+        if (axios.isAxiosError(error)) {
+          const axiosError = error as AxiosError<ErrorResponse>;
+          const errors = ValidationsError(axiosError, 'Agendamento');
+          if (errors) {
+            showAlert(errors, false);
+          }
+        }
       }
-    } catch (error) {
-      console.error(error);
-      setSuccess(false);
+    },
+    [showAlert, reset]
+  );
+
+  useEffect(() => {
+    if (open && idToEdit && !dataLoaded) {
+      const loggedUserId = loggedUser?.id ?? '';
+
+      getScheduling({
+        id: idToEdit,
+        loggedUserId: loggedUserId,
+      });
+    }
+  }, [loggedUser, idToEdit, dataLoaded, open, getScheduling]);
+
+  const editScheduling = async (input: EditSchedulingDto) => {
+    try {
+      await EditSchedulingRequest(input);
       setLoading(false);
+      setSuccess(true);
+      showAlert(successMessage, true);
+      setSuccess(false);
+      handlePopUpClose();
+    } catch (error) {
+      setLoading(false);
+      setSuccess(false);
+      console.error(error);
       if (axios.isAxiosError(error)) {
         const axiosError = error as AxiosError<ErrorResponse>;
         const errors = ValidationsError(axiosError, 'Agendamento');
@@ -119,10 +161,18 @@ export const CreateSchedulingModal: FC<CreateSchedulingModalProps> = ({
     }
   };
 
-  const handleSchedulingData = async (data: CreateSchedulingBodyDto) => {
+  const handleSchedulingData = async (data: EditSchedulingBodyDto) => {
     setLoading(true);
-    await createScheduling({
-      body: data,
+    setSuccess(false);
+    editScheduling({
+      body: {
+        name: data.name,
+        endTime: data.endTime,
+        startTime: data.startTime,
+        lopping: data.lopping,
+        priority: data.priority,
+      },
+      id: idToEdit,
       loggedUserId: loggedUser?.id ?? '',
     });
   };
@@ -133,6 +183,10 @@ export const CreateSchedulingModal: FC<CreateSchedulingModalProps> = ({
       ...prevState,
       [name]: value,
     }));
+  };
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setLooping(event.target.checked);
   };
 
   return (
@@ -152,6 +206,7 @@ export const CreateSchedulingModal: FC<CreateSchedulingModalProps> = ({
           margin="normal"
           required
           fullWidth
+          InputLabelProps={{ shrink: true, required: true }}
           error={!!errors.name}
           helperText={errors.name?.message}
           id="name"
@@ -161,7 +216,6 @@ export const CreateSchedulingModal: FC<CreateSchedulingModalProps> = ({
           autoFocus
           {...register('name')}
         />
-
         <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
           <TextField
             select
@@ -208,7 +262,7 @@ export const CreateSchedulingModal: FC<CreateSchedulingModalProps> = ({
         </Box>
         <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
           <FormControlLabel
-            control={<Checkbox />}
+            control={<Checkbox checked={looping} onChange={handleChange} />}
             label={loopingLabel}
             id="lopping"
             {...register('lopping')}
@@ -236,7 +290,7 @@ export const CreateSchedulingModal: FC<CreateSchedulingModalProps> = ({
           </TextField>
         </Box>
         <FormButton
-          buttonTitle="Cadastrar"
+          buttonTitle="Registrar"
           loading={loading}
           success={success}
         />

@@ -134,7 +134,7 @@ export const EditPlaylistModal: FC<EditPlaylistModalProps> = ({
     }
   }, [loggedUser, idToEdit, dataLoaded, open, getCategories, getPlaylist]);
 
-  const edtiPlaylist = async (input: EditPlaylistDto) => {
+  const editPlaylist = async (input: EditPlaylistDto) => {
     try {
       await EditPlaylistRequest(input);
       setLoading(false);
@@ -159,7 +159,7 @@ export const EditPlaylistModal: FC<EditPlaylistModalProps> = ({
   const handlePlaylistData = async (data: PlaylistBodyDto) => {
     setLoading(true);
     setSuccess(false);
-    edtiPlaylist({
+    editPlaylist({
       body: {
         name: data.name,
         playlistCategoryId: categoryId,

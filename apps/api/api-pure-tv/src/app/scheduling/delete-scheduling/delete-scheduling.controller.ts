@@ -1,6 +1,7 @@
-import { Controller, Delete, Param, Query } from '@nestjs/common';
+import { Controller, Delete, Param, Query, UsePipes } from '@nestjs/common';
 import { DeleteSchedulingService } from './delete-scheduling.service';
-import { ErrorMessageResult } from '@workspaces/domain';
+import { deleteSchedulingSchema, ErrorMessageResult } from '@workspaces/domain';
+import { ZodValidationPipe } from '../../pipes/zod-validation-pipe';
 
 @Controller('delete-scheduling')
 export class DeleteSchedulingController {
@@ -8,6 +9,7 @@ export class DeleteSchedulingController {
     private readonly deleteSchedulingService: DeleteSchedulingService
   ) {}
 
+  @UsePipes(new ZodValidationPipe(deleteSchedulingSchema))
   @Delete(':id')
   async delete(
     @Param('id') id: string,
