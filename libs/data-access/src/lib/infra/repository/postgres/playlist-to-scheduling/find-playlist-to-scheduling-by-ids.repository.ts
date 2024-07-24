@@ -20,6 +20,8 @@ export class FindPlaylistToSchedulingByIdsRepositoryImpl
         },
       });
 
-    return `${filteredPlaylistToScheduling?.playlist_id}-${filteredPlaylistToScheduling?.scheduling_id}`;
+    return filteredPlaylistToScheduling === null
+      ? ''
+      : `${filteredPlaylistToScheduling?.playlist_id}-${filteredPlaylistToScheduling?.scheduling_id}`;
   }
 }

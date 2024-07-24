@@ -9,7 +9,6 @@ import {
 import { Either, left, right } from '../../shared/either';
 import {
   AddPlaylistToSchedulingRepository,
-  FindFileInFileToPlaylistRepository,
   FindPlaylistByIdRepository,
   FindPlaylistToSchedulingByIdsRepository,
   FindSchedulingByIdRepository,
@@ -32,10 +31,10 @@ export class AddPlaylistsToScheduling
     private findSchedulingByIdRepository: FindSchedulingByIdRepository,
     @Inject('FindPlaylistByIdRepository')
     private findPlaylistByIdRepository: FindPlaylistByIdRepository,
-    @Inject('FindFileInFileToPlaylistRepository')
+    @Inject('FindPlaylistToSchedulingByIdsRepository')
     private findPlaylistToSchedulingByIdsRepository: FindPlaylistToSchedulingByIdsRepository,
-    @Inject('AddPlaylistsToSchedulingRepository')
-    private addPlaylistsToSchedulingRepository: AddPlaylistToSchedulingRepository
+    @Inject('AddPlaylistToSchedulingRepository')
+    private addPlaylistToSchedulingRepository: AddPlaylistToSchedulingRepository
   ) {}
 
   async execute(
@@ -81,7 +80,7 @@ export class AddPlaylistsToScheduling
       }
 
       const createdPlaylistScheduling =
-        await this.addPlaylistsToSchedulingRepository.add({
+        await this.addPlaylistToSchedulingRepository.add({
           schedulingId,
           playlistId,
         });
