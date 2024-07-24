@@ -5,14 +5,20 @@ import {
   EntityNotCreated,
   EntityNotEmpty,
   FindPlaylistByIdRepository,
+  FindPlaylistToSchedulingByIdsRepository,
   FindSchedulingByIdRepository,
-  FindUserById,
   FindUserByIdRepository,
 } from '../../../src';
-import { PlaylistMock, SchedulingMock, userMock } from '../../entity';
+import {
+  PlaylistMock,
+  PlaylistToSchedulingMock,
+  SchedulingMock,
+  userMock,
+} from '../../entity';
 import {
   AddPlaylistsToSchedulingRepositoryMock,
   FindPlaylistByIdRepositoryMock,
+  FindPlaylistToSchedulingByIdsRepositoryMock,
   FindSchedulingByIdRepositoryMock,
   FindUserByIdRepositoryMock,
 } from '../../repository';
@@ -23,6 +29,7 @@ interface SutTypes {
   findUserByIdRepository: FindUserByIdRepository;
   findSchedulingByIdRepository: FindSchedulingByIdRepository;
   findPlaylistByIdRepository: FindPlaylistByIdRepository;
+  findPlaylistToSchedulingByIdsRepository: FindPlaylistToSchedulingByIdsRepository;
   addPlaylistsToSchedulingRepository: AddPlaylistToSchedulingRepository;
 }
 
@@ -30,6 +37,8 @@ const makeSut = (): SutTypes => {
   const findUserByIdRepository = new FindUserByIdRepositoryMock();
   const findSchedulingByIdRepository = new FindSchedulingByIdRepositoryMock();
   const findPlaylistByIdRepository = new FindPlaylistByIdRepositoryMock();
+  const findPlaylistToSchedulingByIdsRepository =
+    new FindPlaylistToSchedulingByIdsRepositoryMock();
   const addPlaylistsToSchedulingRepository =
     new AddPlaylistsToSchedulingRepositoryMock();
 
@@ -43,6 +52,7 @@ const makeSut = (): SutTypes => {
     findUserByIdRepository,
     findSchedulingByIdRepository,
     findPlaylistByIdRepository,
+    findPlaylistToSchedulingByIdsRepository,
     addPlaylistsToSchedulingRepository
   );
 
@@ -52,6 +62,7 @@ const makeSut = (): SutTypes => {
     findUserByIdRepository,
     findSchedulingByIdRepository,
     findPlaylistByIdRepository,
+    findPlaylistToSchedulingByIdsRepository,
     addPlaylistsToSchedulingRepository,
   };
 };
@@ -64,9 +75,7 @@ describe('AddPlaylistsToScheduling', () => {
 
     expect(result.isRight()).toBe(true);
     expect(result.isLeft()).toBe(false);
-    expect(result.value).toStrictEqual([
-      `${PlaylistMock.id}-${SchedulingMock.id}`,
-    ]);
+    expect(result.value).toStrictEqual([PlaylistToSchedulingMock.id]);
   });
 
   it('should return EntityNotEmpty when pass incorrect User ID', async () => {
@@ -114,6 +123,7 @@ describe('AddPlaylistsToScheduling', () => {
       findUserByIdRepository,
       findPlaylistByIdRepository,
       findSchedulingByIdRepository,
+      findPlaylistToSchedulingByIdsRepository,
       addPlaylisttToSchedulingDto,
     } = makeSut();
 
@@ -125,6 +135,7 @@ describe('AddPlaylistsToScheduling', () => {
       findUserByIdRepository,
       findSchedulingByIdRepository,
       findPlaylistByIdRepository,
+      findPlaylistToSchedulingByIdsRepository,
       mockEmptyRepository
     );
 

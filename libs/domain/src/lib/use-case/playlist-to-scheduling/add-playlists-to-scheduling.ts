@@ -1,11 +1,17 @@
 import { Inject } from '@nestjs/common';
 import { UseCase } from '../../base/use-case';
 import { AddPlaylistsToSchedulingDto } from '../../dto';
-import { EntityNotCreated, EntityNotEmpty } from '../../error';
+import {
+  EntityAlreadyExists,
+  EntityNotCreated,
+  EntityNotEmpty,
+} from '../../error';
 import { Either, left, right } from '../../shared/either';
 import {
   AddPlaylistToSchedulingRepository,
+  FindFileInFileToPlaylistRepository,
   FindPlaylistByIdRepository,
+  FindPlaylistToSchedulingByIdsRepository,
   FindSchedulingByIdRepository,
   FindUserByIdRepository,
 } from '../../repository';
@@ -26,6 +32,8 @@ export class AddPlaylistsToScheduling
     private findSchedulingByIdRepository: FindSchedulingByIdRepository,
     @Inject('FindPlaylistByIdRepository')
     private findPlaylistByIdRepository: FindPlaylistByIdRepository,
+    @Inject('FindFileInFileToPlaylistRepository')
+    private findPlaylistToSchedulingByIdsRepository: FindPlaylistToSchedulingByIdsRepository,
     @Inject('AddPlaylistsToSchedulingRepository')
     private addPlaylistsToSchedulingRepository: AddPlaylistToSchedulingRepository
   ) {}
@@ -61,6 +69,16 @@ export class AddPlaylistsToScheduling
       }
 
       await ValidationPlaylistId(playlistId, this.findPlaylistByIdRepository);
+
+      const filteredPlaylistToScheduling =
+        await this.findPlaylistToSchedulingByIdsRepository.find({
+          playlistId,
+          schedulingId,
+        });
+
+      if (Object.keys(filteredPlaylistToScheduling).length > 0) {
+        return left(new EntityAlreadyExists('Playlist to Scheduling'));
+      }
 
       const createdPlaylistScheduling =
         await this.addPlaylistsToSchedulingRepository.add({

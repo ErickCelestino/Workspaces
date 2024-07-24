@@ -1,4 +1,4 @@
-export interface AddPlaylistToSchedulingDto {
+export interface PlaylistToSchedulingDto {
   schedulingId: string;
   playlistId: string;
 }
