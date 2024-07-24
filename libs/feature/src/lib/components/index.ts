@@ -1,5 +1,4 @@
 export * from './alert';
-export * from './card';
 export * from './combo-box';
 export * from './drawer';
 export * from './file';

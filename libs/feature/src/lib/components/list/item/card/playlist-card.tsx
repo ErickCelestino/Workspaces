@@ -17,9 +17,9 @@ import NoteAddIcon from '@mui/icons-material/NoteAdd';
 import DeleteIcon from '@mui/icons-material/Delete';
 import InfoIcon from '@mui/icons-material/Info';
 import { FC, useCallback, useEffect, useState } from 'react';
-import { ButtonFileMenu } from '../menu';
-import { FindFilesByPlaylistRequest } from '../../services';
-import { useLoggedUser } from '../../contexts';
+import { ButtonFileMenu } from '../../../menu';
+import { FindFilesByPlaylistRequest } from '../../../../services';
+import { useLoggedUser } from '../../../../contexts';
 
 interface ListPlaylistProps {
   name: string;

@@ -1,4 +1,9 @@
-import { Button, CircularProgress, useTheme } from '@mui/material';
+import {
+  Button,
+  CircularProgress,
+  useMediaQuery,
+  useTheme,
+} from '@mui/material';
 import { grey, green } from '@mui/material/colors';
 import { FC } from 'react';
 
@@ -14,6 +19,7 @@ export const FormButton: FC<FormButtonProps> = ({
   success = false,
 }) => {
   const theme = useTheme();
+  const smDown = useMediaQuery(theme.breakpoints.down('sm'));
 
   const buttonSx = {
     ...(success && {
@@ -35,8 +41,8 @@ export const FormButton: FC<FormButtonProps> = ({
           : {
               mt: theme.spacing(1),
               mb: theme.spacing(1),
-              height: theme.spacing(8),
-              fontSize: '1.3rem',
+              height: smDown ? theme.spacing(6) : theme.spacing(7),
+              fontSize: smDown ? '1rem' : '1.3rem',
               bgcolor: loading ? grey[500] : 'primay',
               '&:hover': {
                 bgcolor: loading ? grey[700] : 'primary',
