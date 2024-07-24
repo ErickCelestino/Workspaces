@@ -4,7 +4,7 @@ import {
   addPlaylistToSchedulingSchema,
   ErrorMessageResult,
 } from '@workspaces/domain';
-import { ZodValidationPipe } from '../pipes/zod-validation-pipe';
+import { ZodValidationPipe } from '../../pipes/zod-validation-pipe';
 
 @Controller('add-playlists-to-scheduling')
 export class AddPlaylistsToSchedulingController {
