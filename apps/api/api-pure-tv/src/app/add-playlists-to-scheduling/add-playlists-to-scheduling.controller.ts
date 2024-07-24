@@ -1,6 +1,10 @@
-import { Body, Controller, Post, Query } from '@nestjs/common';
+import { Body, Controller, Post, Query, UsePipes } from '@nestjs/common';
 import { AddPlaylistsToSchedulingService } from './add-playlists-to-scheduling.service';
-import { ErrorMessageResult } from '@workspaces/domain';
+import {
+  addPlaylistToSchedulingSchema,
+  ErrorMessageResult,
+} from '@workspaces/domain';
+import { ZodValidationPipe } from '../pipes/zod-validation-pipe';
 
 @Controller('add-playlists-to-scheduling')
 export class AddPlaylistsToSchedulingController {
@@ -8,6 +12,7 @@ export class AddPlaylistsToSchedulingController {
     private readonly addPlaylistsToSchedulingService: AddPlaylistsToSchedulingService
   ) {}
 
+  @UsePipes(new ZodValidationPipe(addPlaylistToSchedulingSchema))
   @Post()
   async add(
     @Query('loggedUserId') loggedUserId: string,
