@@ -1,5 +1,5 @@
 import { AddPlaylistToSchedulingDto } from '../../dto';
 
-export interface AddPlaylistsToSchedulingRepository {
+export interface AddPlaylistToSchedulingRepository {
   add(input: AddPlaylistToSchedulingDto): Promise<string>;
 }

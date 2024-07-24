@@ -4,7 +4,7 @@ import { AddPlaylistsToSchedulingDto } from '../../dto';
 import { EntityNotCreated, EntityNotEmpty } from '../../error';
 import { Either, left, right } from '../../shared/either';
 import {
-  AddPlaylistsToSchedulingRepository,
+  AddPlaylistToSchedulingRepository,
   FindPlaylistByIdRepository,
   FindSchedulingByIdRepository,
   FindUserByIdRepository,
@@ -27,7 +27,7 @@ export class AddPlaylistsToScheduling
     @Inject('FindPlaylistByIdRepository')
     private findPlaylistByIdRepository: FindPlaylistByIdRepository,
     @Inject('AddPlaylistsToSchedulingRepository')
-    private addPlaylistsToSchedulingRepository: AddPlaylistsToSchedulingRepository
+    private addPlaylistsToSchedulingRepository: AddPlaylistToSchedulingRepository
   ) {}
 
   async execute(
