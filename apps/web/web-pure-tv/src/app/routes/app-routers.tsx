@@ -7,6 +7,7 @@ import {
   ListContanteFilesContainer,
   ListPlaylistContainer,
   ListPlaylistCategoryContainer,
+  ListDirectoryContainer,
 } from '@workspaces/feature';
 import { useEffect } from 'react';
 
@@ -29,11 +30,18 @@ export const AppRouters = () => {
           path: '/list-user',
         },
       ],
-      Arquivos: [
+      // Arquivos: [
+      //   {
+      //     label: 'Arquivos',
+      //     icon: 'folder',
+      //     path: '/files',
+      //   },
+      // ],
+      Diretorios: [
         {
-          label: 'Arquivos',
+          label: 'Diretórios',
           icon: 'folder',
-          path: '/files',
+          path: '/directory',
         },
       ],
       Playlists: [
@@ -56,7 +64,8 @@ export const AppRouters = () => {
       <Route path="/home" element={<TestContainer />} />
       <Route path="/edit-user" element={<EditUserContainer />} />
       <Route path="list-user" element={<ListUserContainer />} />
-      <Route path="files" element={<ListContanteFilesContainer />} />
+      <Route path="/files" element={<ListContanteFilesContainer />} />
+      <Route path="/directory" element={<ListDirectoryContainer />} />
       <Route path="playlist" element={<ListPlaylistContainer />} />
       <Route
         path="playlist-category"

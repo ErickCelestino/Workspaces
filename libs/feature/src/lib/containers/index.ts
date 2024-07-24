@@ -1,3 +1,4 @@
+export * from './directory';
 export * from './file';
 export * from './login';
 export * from './playlist';
