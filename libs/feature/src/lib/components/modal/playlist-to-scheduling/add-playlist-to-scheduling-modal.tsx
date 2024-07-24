@@ -92,6 +92,7 @@ export const AddPlaylistToSchedulingModal: FC<
       getPlaylists({
         loggedUserId: loggedUser?.id ?? '',
         userInput: '',
+        take: 5,
       });
     }
   }, [open, idScheduling, dataLoaded, getPlaylists, loggedUser]);
@@ -151,7 +152,8 @@ export const AddPlaylistToSchedulingModal: FC<
     const result = await ListPlaylistRequest({
       loggedUserId: loggedUser?.id ?? '',
       userInput: '',
-      skip: (value - 1) * 6,
+      skip: (value - 1) * 5,
+      take: 5,
     });
 
     if (result) {
@@ -162,7 +164,7 @@ export const AddPlaylistToSchedulingModal: FC<
 
   return (
     <SimpleFormModal
-      height={smDown ? theme.spacing(80) : theme.spacing(85)}
+      height={smDown ? theme.spacing(73) : theme.spacing(72)}
       width={smDown ? '90%' : theme.spacing(80)}
       open={open}
       handlePopUpClose={handlePopUpClose}
@@ -172,7 +174,7 @@ export const AddPlaylistToSchedulingModal: FC<
         <Box>
           {listPlaylist.length > 0 ? (
             <>
-              <Typography mt={theme.spacing(1)} variant="h6">
+              <Typography mt={theme.spacing(0.5)} variant="h6">
                 {playlistTitle}
               </Typography>
               <ScrollBox>
@@ -200,7 +202,7 @@ export const AddPlaylistToSchedulingModal: FC<
                         <ListItemText primary={playlist.name} />
                         <Chip
                           sx={{
-                            marginTop: theme.spacing(1),
+                            marginTop: theme.spacing(0.5),
                             fontSize: theme.spacing(2),
                           }}
                           component="span"
@@ -234,13 +236,13 @@ export const AddPlaylistToSchedulingModal: FC<
         </Box>
         <Box
           sx={{
-            marginTop: theme.spacing(2),
+            marginTop: theme.spacing(1),
             display: 'flex',
             justifyContent: 'center',
             width: '100%',
           }}
         >
-          <Box width="60%">
+          <Box width={smDown ? '95%' : '60%'}>
             <FormButton
               buttonTitle="Adicionar Playlists"
               loading={loading}
