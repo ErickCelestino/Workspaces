@@ -1,5 +1,6 @@
 import { Inject } from '@nestjs/common';
 import {
+  FormatDateInTime,
   ListSchedulesDto,
   ListSchedulesReponseDto,
   ListSchedulesRepository,
@@ -9,12 +10,6 @@ import { PrismaService } from 'nestjs-prisma';
 
 export class ListSchedulesRepositoryImpl implements ListSchedulesRepository {
   constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
-
-  transformTime(time: Date) {
-    const horas: number = time.getHours();
-    const minutos: number = time.getMinutes();
-    return `${horas}:${minutos ? minutos === 0 : '00'}`;
-  }
 
   async list(input: ListSchedulesDto): Promise<ListSchedulesReponseDto> {
     const { loggedUserId, filter } = input;
@@ -72,11 +67,11 @@ export class ListSchedulesRepositoryImpl implements ListSchedulesRepository {
         id: scheduling.scheduling_id,
         createBy: scheduling.user.nick_name,
         createdAt: scheduling.created_at,
-        endTime: this.transformTime(scheduling.end_time),
+        endTime: FormatDateInTime(scheduling.end_time),
         lopping: scheduling.looping,
         name: scheduling.name,
         priority: `${scheduling.priority}`,
-        startTime: this.transformTime(scheduling.start_time),
+        startTime: FormatDateInTime(scheduling.start_time),
       };
     });
 
