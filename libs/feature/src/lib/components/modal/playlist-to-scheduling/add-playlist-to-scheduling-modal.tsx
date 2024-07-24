@@ -1,6 +1,17 @@
 import { FC, useCallback, useEffect, useState } from 'react';
 import { useLoggedUser } from '../../../contexts';
-import { Box, useMediaQuery, useTheme } from '@mui/material';
+import {
+  Box,
+  Checkbox,
+  Chip,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from '@mui/material';
 import { ErrorResponse, ListPlaylistDto, Playlist } from '@workspaces/domain';
 import { ListPlaylistRequest } from '../../../services';
 import axios, { AxiosError } from 'axios';
@@ -13,7 +24,7 @@ interface AddPlaylistToSchedulingModalProps {
   idScheduling: string;
   handlePopUpClose: () => void;
   showAlert: (message: string, success: boolean) => void;
-  nameLabel?: string;
+  playlistTitle?: string;
   successMessage?: string;
 }
 
@@ -25,7 +36,7 @@ export const AddPlaylistToSchedulingModal: FC<
   title,
   open,
   idScheduling,
-  nameLabel = 'Nome',
+  playlistTitle = 'Selecione as Playlists',
   successMessage = 'Playlists Adicionada com Sucesso',
 }) => {
   const { loggedUser } = useLoggedUser();
@@ -33,6 +44,7 @@ export const AddPlaylistToSchedulingModal: FC<
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
   const [dataLoaded, setDataLoaded] = useState(false);
   const [listPlaylist, setListPlaylist] = useState<Playlist[]>([]);
+  const [selectedPlaylists, setSelectedPlaylists] = useState<string[]>([]);
 
   useEffect(() => {
     if (!open) {
@@ -69,6 +81,19 @@ export const AddPlaylistToSchedulingModal: FC<
     }
   }, [open, idScheduling, dataLoaded, getPlaylists, loggedUser]);
 
+  const handlePlaylistToggle = (playlistId: string) => {
+    const currentIndex = selectedPlaylists.indexOf(playlistId);
+    const newChecked = [...selectedPlaylists];
+
+    if (currentIndex === -1) {
+      newChecked.push(playlistId);
+    } else {
+      newChecked.splice(currentIndex, 1);
+    }
+
+    setSelectedPlaylists(newChecked);
+  };
+
   return (
     <SimpleFormModal
       height={smDown ? theme.spacing(55) : theme.spacing(80)}
@@ -77,7 +102,51 @@ export const AddPlaylistToSchedulingModal: FC<
       handlePopUpClose={handlePopUpClose}
       title={title}
     >
-      <Box>te</Box>
+      <Box>
+        {listPlaylist.length > 0 ? (
+          <>
+            <Typography mt={theme.spacing(1)} variant="h6">
+              {playlistTitle}
+            </Typography>
+            <List>
+              {listPlaylist.map((playlist) => (
+                <ListItem key={playlist.id}>
+                  <ListItemIcon>
+                    <Checkbox
+                      edge="start"
+                      checked={selectedPlaylists.indexOf(playlist.id) !== -1}
+                      onChange={() => handlePlaylistToggle(playlist.id)}
+                    />
+                  </ListItemIcon>
+
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                      width: '100%',
+                    }}
+                  >
+                    <ListItemText primary={playlist.name} />
+                    <Chip
+                      sx={{
+                        marginTop: theme.spacing(1),
+                        fontSize: theme.spacing(2),
+                      }}
+                      component="span"
+                      label={playlist.category}
+                      color="secondary"
+                      variant="filled"
+                    />
+                  </Box>
+                </ListItem>
+              ))}
+            </List>
+          </>
+        ) : (
+          <Box>"Sem Playlists"</Box>
+        )}
+      </Box>
     </SimpleFormModal>
   );
 };
