@@ -7,9 +7,10 @@ import {
 } from '@workspaces/domain';
 import { FindSchedulingByIdRequest } from '../../../services';
 import axios, { AxiosError } from 'axios';
-import { ValidationsError } from '../../../shared';
+import { formatBrDate, ValidationsError } from '../../../shared';
 import { SimpleFormModal } from '../simple';
-import { Box, Typography, useMediaQuery, useTheme } from '@mui/material';
+import { Box, Chip, Typography, useMediaQuery, useTheme } from '@mui/material';
+import { DetailsSchedulingCard } from '../../card';
 
 interface DetailsSchedulingModalProps {
   open: boolean;
@@ -18,6 +19,12 @@ interface DetailsSchedulingModalProps {
   showAlert: (message: string, success: boolean) => void;
   subTitle?: string;
   idToDetails: string;
+  createByTitle?: string;
+  createAtTitle?: string;
+  startTimeTitle?: string;
+  endTimeTitle?: string;
+  loopingTitle?: string;
+  priorityTitle?: string;
 }
 
 export const DetailsSchedulingModal: FC<DetailsSchedulingModalProps> = ({
@@ -27,6 +34,12 @@ export const DetailsSchedulingModal: FC<DetailsSchedulingModalProps> = ({
   title,
   subTitle,
   idToDetails,
+  createByTitle = 'Criado por: ',
+  createAtTitle = 'Criado em: ',
+  startTimeTitle = 'Início: ',
+  endTimeTitle = 'Fim: ',
+  loopingTitle = 'Repetir: ',
+  priorityTitle = 'Prioridade: ',
 }) => {
   const { loggedUser } = useLoggedUser();
   const theme = useTheme();
@@ -81,15 +94,15 @@ export const DetailsSchedulingModal: FC<DetailsSchedulingModalProps> = ({
       handlePopUpClose={handlePopUpClose}
       title={title}
     >
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          flexDirection: 'column',
-        }}
-      >
-        <Typography>{schedulingDetails.name}</Typography>
-      </Box>
+      <DetailsSchedulingCard
+        createAtTitle={createAtTitle}
+        createByTitle={createByTitle}
+        endTimeTitle={endTimeTitle}
+        loopingTitle={loopingTitle}
+        priorityTitle={priorityTitle}
+        startTimeTitle={startTimeTitle}
+        schedulingDetails={schedulingDetails}
+      />
     </SimpleFormModal>
   );
 };
