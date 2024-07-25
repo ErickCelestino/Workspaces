@@ -8,7 +8,7 @@ import {
   FindSchedulingByIdRepository,
   FindUserByIdRepository,
 } from '../../repository';
-import { ValidationUserId } from '../../utils';
+import { ValidationSchedulingId, ValidationUserId } from '../../utils';
 
 export class FindSchedulingById
   implements UseCase<FindSchedulingByIdDto, Either<EntityNotEmpty, Scheduling>>
@@ -33,6 +33,7 @@ export class FindSchedulingById
     }
 
     await ValidationUserId(loggedUserId, this.findUserByIdRepository);
+    await ValidationSchedulingId(id, this.findSchedulingByIdRepository);
 
     const filteredScheduling = await this.findSchedulingByIdRepository.find(id);
 
