@@ -41,8 +41,10 @@ import {
   EditSchedulingModule,
   FindSchedulingByIdModule,
 } from './scheduling';
-import { AddPlaylistsToSchedulingModule } from './playlist-to-scheduling';
-import { ListPlaylistBySchedulingIdModule } from './list-playlist-by-scheduling-id/list-playlist-by-scheduling-id.module';
+import {
+  AddPlaylistsToSchedulingModule,
+  ListPlaylistBySchedulingIdModule,
+} from './playlist-to-scheduling';
 
 @Module({
   imports: [
