@@ -5,6 +5,7 @@ import {
   AddPlaylistToSchedulingModal,
   CreateSchedulingModal,
   DeleteSchedulingModal,
+  DetailsSchedulingModal,
   EditSchedulingModal,
   MobileButtonMenu,
   RightClickMenu,
@@ -38,6 +39,7 @@ export const ListSchedulesContainer = () => {
   const [createSchedulingPopUp, setCreateSchedulingPopUp] = useState(false);
   const [deleteSchedulingPopUp, setDeleteSchedulingPopUp] = useState(false);
   const [editSchedulingPopUp, setEditSchedulingPopUp] = useState(false);
+  const [detailsSchedulingPopUp, setDetailsSchedulingPopUp] = useState(false);
   const [addPlaylistToSchedulingPopUp, setAddPlaylistToSchedulingPopUp] =
     useState(false);
   const [selectedId, setSelectedId] = useState('');
@@ -106,6 +108,9 @@ export const ListSchedulesContainer = () => {
         setSelectedId(id ?? '');
         setAddPlaylistToSchedulingPopUp(true);
         break;
+      case 'details':
+        setSelectedId(id ?? '');
+        setDetailsSchedulingPopUp(true);
     }
   };
 
@@ -122,6 +127,9 @@ export const ListSchedulesContainer = () => {
         break;
       case 'add-playlist':
         setAddPlaylistToSchedulingPopUp(false);
+        break;
+      case 'details':
+        setDetailsSchedulingPopUp(false);
         break;
     }
   };
@@ -194,6 +202,13 @@ export const ListSchedulesContainer = () => {
         showAlert={showAlert}
         idScheduling={selectedId}
       />
+      <DetailsSchedulingModal
+        open={detailsSchedulingPopUp}
+        title="Detalhes Agendamento"
+        handlePopUpClose={() => handlePopUpClose('details')}
+        idToDetails={selectedId}
+        showAlert={showAlert}
+      />
       <LayoutBase title="Listagem Agendamentos" toolBar={<ToolbarPureTV />}>
         <RightClickMenu iconMenuItemList={rightClickMenuList}>
           {smDown && <MobileButtonMenu iconMenuItemList={rightClickMenuList} />}
@@ -217,6 +232,9 @@ export const ListSchedulesContainer = () => {
                   }
                   addPlaylistToScheduling={async () =>
                     handlePopUpOpen('add-playlist', scheduling.id)
+                  }
+                  detailsScheduling={async () =>
+                    handlePopUpOpen('details', scheduling.id)
                   }
                   key={scheduling.id}
                   scheduling={scheduling}
