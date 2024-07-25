@@ -33,11 +33,14 @@ export const DetailsSchedulingCard: FC<DetailsSchedulingCardProps> = ({
         marginTop: theme.spacing(1),
       }}
     >
-      <Typography variant="h4">{schedulingDetails.name}</Typography>
+      <Typography variant="h5">
+        <strong>{schedulingDetails.name}</strong>
+      </Typography>
       <Box
         sx={{
           display: 'flex',
           justifyContent: 'space-between',
+          marginTop: theme.spacing(1),
         }}
       >
         <Typography variant="body1">
