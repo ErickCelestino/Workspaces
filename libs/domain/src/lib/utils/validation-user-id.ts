@@ -1,11 +1,11 @@
 import { EntityNotEmpty, EntityNotExists } from '../error';
 import { FindUserByIdRepository } from '../repository';
-import { left, right } from '../shared/either';
+import { Either, left, right } from '../shared/either';
 
 export async function ValidationUserId(
   id: string,
   findUserByIdRepository: FindUserByIdRepository
-) {
+): Promise<Either<EntityNotEmpty | EntityNotExists, void>> {
   if (Object.keys(id).length < 1) {
     return left(new EntityNotEmpty('User ID'));
   }
