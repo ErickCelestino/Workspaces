@@ -16,11 +16,13 @@ import {
 import {
   AddPlaylistsToSchedulingDto,
   ErrorResponse,
+  ListPlaylistBySchedulingIdDto,
   ListPlaylistDto,
   Playlist,
 } from '@workspaces/domain';
 import {
   AddPlaylistToSchedulingRequest,
+  ListPlaylistBySchedulingIdRequest,
   ListPlaylistRequest,
 } from '../../../services';
 import axios, { AxiosError } from 'axios';
@@ -66,13 +68,15 @@ export const AddPlaylistToSchedulingModal: FC<
     }
   }, [open]);
 
+  const compareLists = (list1: Playlist[], list2: Playlist[]) => {
+    return list2.filter((playlist) => !list1.some((p) => p.id === playlist.id));
+  };
+
   const getPlaylists = useCallback(
     async (input: ListPlaylistDto) => {
       try {
         const result = await ListPlaylistRequest(input);
-        setListPlaylist(result.playlists);
-        setTotalPage(result.totalPages);
-        setDataLoaded(true);
+        return result;
       } catch (error) {
         console.error(error);
         if (axios.isAxiosError(error)) {
@@ -87,15 +91,52 @@ export const AddPlaylistToSchedulingModal: FC<
     [showAlert]
   );
 
+  const getPlaylistByScheduling = useCallback(
+    async (input: ListPlaylistBySchedulingIdDto) => {
+      try {
+        const result = await ListPlaylistBySchedulingIdRequest(input);
+        return result;
+      } catch (error) {
+        console.error(error);
+        if (axios.isAxiosError(error)) {
+          const axiosError = error as AxiosError<ErrorResponse>;
+          const errors = ValidationsError(axiosError, 'Playlist');
+          if (errors) {
+            showAlert(errors, false);
+          }
+        }
+      }
+    },
+    [showAlert]
+  );
+
+  const getFilteredPlaylist = useCallback(async () => {
+    const allPlaylist = await getPlaylists({
+      loggedUserId: loggedUser?.id ?? '',
+      userInput: '',
+      take: 5,
+    });
+    console.log(`teste: ${idScheduling}`);
+    const playlistInScheduling = await getPlaylistByScheduling({
+      id: idScheduling,
+      loggedUserId: loggedUser?.id ?? '',
+      filter: '',
+      take: 5,
+    });
+    const mappedPlaylist = compareLists(
+      playlistInScheduling?.playlists ?? [],
+      allPlaylist?.playlists ?? []
+    );
+    setListPlaylist(mappedPlaylist);
+    setTotalPage(allPlaylist?.totalPages ?? 1);
+    setDataLoaded(true);
+  }, [idScheduling, getPlaylistByScheduling, getPlaylists, loggedUser]);
+
   useEffect(() => {
     if (open && idScheduling && !dataLoaded) {
-      getPlaylists({
-        loggedUserId: loggedUser?.id ?? '',
-        userInput: '',
-        take: 5,
-      });
+      getFilteredPlaylist();
     }
-  }, [open, idScheduling, dataLoaded, getPlaylists, loggedUser]);
+  }, [open, idScheduling, dataLoaded, getFilteredPlaylist, loggedUser]);
 
   const handlePlaylistToggle = (playlistId: string) => {
     const currentIndex = selectedPlaylists.indexOf(playlistId);
