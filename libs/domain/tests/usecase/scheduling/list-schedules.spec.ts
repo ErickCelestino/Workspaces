@@ -8,6 +8,8 @@ import {
   ListSchedulesDto,
   EntityNotEmpty,
   ListSchedules,
+  UserList,
+  EntityNotExists,
 } from '../../../src';
 import { ListSchedulesReponseMock, userMock } from '../../entity';
 
@@ -59,5 +61,17 @@ describe('ListScheduling', () => {
     expect(result.isRight()).toBe(false);
     expect(result.isLeft()).toBe(true);
     expect(result.value).toBeInstanceOf(EntityNotEmpty);
+  });
+
+  it('should return EntityNotExists when a pass incorrect Logged User ID', async () => {
+    const { listSchedulingDto, sut } = makeSut();
+    jest
+      .spyOn(sut['findUserByIdRepository'], 'find')
+      .mockResolvedValueOnce({} as UserList);
+    const result = await sut.execute(listSchedulingDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
+    expect(result.value).toBeInstanceOf(EntityNotExists);
   });
 });
