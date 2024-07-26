@@ -16,7 +16,7 @@ export class DeletePlaylistCategory
   constructor(
     @Inject('FindUserByIdRepository')
     private findUserByIdRepository: FindUserByIdRepository,
-    @Inject('FindUserByIdRepository')
+    @Inject('findPlaylistCategoryByIdRepository')
     private findPlaylistCategoryByIdRepository: FindPlaylistCategoryByIdRepository,
     @Inject('DeletePlaylistCategoryRepository')
     private deletePlaylistRepository: DeletePlaylistCategoryRepository

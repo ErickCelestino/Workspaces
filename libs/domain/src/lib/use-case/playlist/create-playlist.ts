@@ -11,9 +11,10 @@ import { Either, left, right } from '../../shared/either';
 import {
   CreatePlaylistRepository,
   FindPlaylistByNameRepository,
+  FindPlaylistCategoryByIdRepository,
   FindUserByIdRepository,
 } from '../../repository';
-import { ValidationUserId } from '../../utils';
+import { ValidationPlaylistCategoryId, ValidationUserId } from '../../utils';
 
 export class CreatePlaylist
   implements
@@ -31,6 +32,8 @@ export class CreatePlaylist
   constructor(
     @Inject('FindUserByIdRepository')
     private findUserByIdRepository: FindUserByIdRepository,
+    @Inject('findPlaylistCategoryByIdRepository')
+    private findPlaylistCategoryByIdRepository: FindPlaylistCategoryByIdRepository,
     @Inject('FindPlaylistByNameRepository')
     private findPlaylistByNameRepository: FindPlaylistByNameRepository,
     @Inject('CreatePlaylistRepository')
@@ -58,7 +61,22 @@ export class CreatePlaylist
       return left(new EntityNotEmpty('Name'));
     }
 
-    await ValidationUserId(loggedUserId, this.findUserByIdRepository);
+    const userValidation = await ValidationUserId(
+      loggedUserId,
+      this.findUserByIdRepository
+    );
+
+    if (userValidation.isLeft()) {
+      return left(userValidation.value);
+    }
+    const playlistCategoryValidation = await ValidationPlaylistCategoryId(
+      playlistCategoryId,
+      this.findPlaylistCategoryByIdRepository
+    );
+
+    if (playlistCategoryValidation.isLeft()) {
+      return left(playlistCategoryValidation.value);
+    }
 
     const filteredPlaylist = await this.findPlaylistByNameRepository.find({
       loggedUserId,

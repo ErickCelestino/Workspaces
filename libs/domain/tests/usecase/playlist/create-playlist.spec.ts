@@ -5,25 +5,33 @@ import {
   EntityAlreadyExists,
   EntityNotCreated,
   EntityNotEmpty,
+  EntityNotExists,
   FindPlaylistByNameRepository,
+  FindPlaylistCategoryByIdRepository,
   FindUserByIdRepository,
+  PlaylistCategory,
+  UserList,
 } from '../../../src';
 import { PlaylistCategoryMock, PlaylistMock, userMock } from '../../entity';
 import {
   CreatePlaylistRepositoryMock,
   FindPlaylistByNameRepositoryMock,
+  FindPlaylistCategoryByIdRepositoryMock,
   FindUserByIdRepositoryMock,
 } from '../../repository';
 interface SutTypes {
   sut: CreatePlaylist;
   createPlaylistDto: CreatePlaylistDto;
   findUserByIdRepository: FindUserByIdRepository;
+  findPlaylistCategoryByIdRepository: FindPlaylistCategoryByIdRepository;
   findPlaylistByNameRepository: FindPlaylistByNameRepository;
   createPlaylistRepository: CreatePlaylistRepository;
 }
 
 const makeSut = (): SutTypes => {
   const findUserByIdRepository = new FindUserByIdRepositoryMock();
+  const findPlaylistCategoryByIdRepository =
+    new FindPlaylistCategoryByIdRepositoryMock();
   const findPlaylistByNameRepository = new FindPlaylistByNameRepositoryMock();
   const createPlaylistRepository = new CreatePlaylistRepositoryMock();
 
@@ -35,12 +43,14 @@ const makeSut = (): SutTypes => {
 
   const sut = new CreatePlaylist(
     findUserByIdRepository,
+    findPlaylistCategoryByIdRepository,
     findPlaylistByNameRepository,
     createPlaylistRepository
   );
 
   return {
     findUserByIdRepository,
+    findPlaylistCategoryByIdRepository,
     findPlaylistByNameRepository,
     createPlaylistRepository,
     createPlaylistDto,
@@ -90,22 +100,11 @@ describe('CreatePlaylist', () => {
   });
 
   it('should return EntityAlreadyExists if there is no user created in the database', async () => {
-    const {
-      createPlaylistDto,
-      findUserByIdRepository,
-      createPlaylistRepository,
-    } = makeSut();
+    const { createPlaylistDto, sut } = makeSut();
 
-    const mockEmptyRepository: FindPlaylistByNameRepository = {
-      find: jest.fn(async () => PlaylistMock),
-    };
-
-    const sut = new CreatePlaylist(
-      findUserByIdRepository,
-      mockEmptyRepository,
-      createPlaylistRepository
-    );
-
+    jest
+      .spyOn(sut['findPlaylistByNameRepository'], 'find')
+      .mockResolvedValueOnce(PlaylistMock);
     const result = await sut.execute(createPlaylistDto);
 
     expect(result.isLeft()).toBe(true);
@@ -113,25 +112,38 @@ describe('CreatePlaylist', () => {
   });
 
   it('should return EntityNotCreated if there is no user created in the database', async () => {
-    const {
-      createPlaylistDto,
-      findUserByIdRepository,
-      findPlaylistByNameRepository,
-    } = makeSut();
+    const { createPlaylistDto, sut } = makeSut();
 
-    const mockEmptyRepository: CreatePlaylistRepository = {
-      create: jest.fn(async () => ''),
-    };
-
-    const sut = new CreatePlaylist(
-      findUserByIdRepository,
-      findPlaylistByNameRepository,
-      mockEmptyRepository
-    );
-
+    jest
+      .spyOn(sut['createPlaylistRepository'], 'create')
+      .mockResolvedValueOnce('');
     const result = await sut.execute(createPlaylistDto);
 
     expect(result.isLeft()).toBe(true);
     expect(result.value).toBeInstanceOf(EntityNotCreated);
+  });
+
+  it('should return EntityNotExists when a pass incorrect Logged User ID', async () => {
+    const { createPlaylistDto, sut } = makeSut();
+    jest
+      .spyOn(sut['findUserByIdRepository'], 'find')
+      .mockResolvedValueOnce({} as UserList);
+    const result = await sut.execute(createPlaylistDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
+    expect(result.value).toBeInstanceOf(EntityNotExists);
+  });
+
+  it('should return EntityNotExists when a pass incorrect Logged User ID', async () => {
+    const { createPlaylistDto, sut } = makeSut();
+    jest
+      .spyOn(sut['findPlaylistCategoryByIdRepository'], 'find')
+      .mockResolvedValueOnce({} as PlaylistCategory);
+    const result = await sut.execute(createPlaylistDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
+    expect(result.value).toBeInstanceOf(EntityNotExists);
   });
 });
