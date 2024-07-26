@@ -1,7 +1,7 @@
 import { Inject } from '@nestjs/common';
 import { UseCase } from '../../base/use-case';
 import { DeletePlaylistToSchedulingDto } from '../../dto';
-import { EntityNotEmpty } from '../../error';
+import { EntityNotEmpty, EntityNotExists } from '../../error';
 import { Either, left, right } from '../../shared/either';
 import {
   DeletePlaylistToSchedulingRepository,
@@ -17,7 +17,10 @@ import {
 
 export class DeletePlaylistToScheduling
   implements
-    UseCase<DeletePlaylistToSchedulingDto, Either<EntityNotEmpty, void>>
+    UseCase<
+      DeletePlaylistToSchedulingDto,
+      Either<EntityNotEmpty | EntityNotExists, void>
+    >
 {
   constructor(
     @Inject('FindUserByIdRepository')
@@ -32,7 +35,7 @@ export class DeletePlaylistToScheduling
 
   async execute(
     input: DeletePlaylistToSchedulingDto
-  ): Promise<Either<EntityNotEmpty, void>> {
+  ): Promise<Either<EntityNotEmpty | EntityNotExists, void>> {
     const { playlistId, schedulingId, loggedUserId } = input;
 
     if (Object.keys(loggedUserId).length < 1) {
@@ -47,12 +50,29 @@ export class DeletePlaylistToScheduling
       return left(new EntityNotEmpty('Playlist ID'));
     }
 
-    await ValidationUserId(loggedUserId, this.findUserByIdRepository);
-    await ValidationSchedulingId(
+    const userValidation = await ValidationUserId(
+      loggedUserId,
+      this.findUserByIdRepository
+    );
+    if (userValidation.isLeft()) {
+      return userValidation;
+    }
+
+    const schedulingValidation = await ValidationSchedulingId(
       schedulingId,
       this.findSchedulingByIdRepository
     );
-    await ValidationPlaylistId(playlistId, this.findPlaylistByIdRepository);
+    if (schedulingValidation.isLeft()) {
+      return schedulingValidation as Either<EntityNotExists, void>;
+    }
+
+    const playlistValidation = await ValidationPlaylistId(
+      playlistId,
+      this.findPlaylistByIdRepository
+    );
+    if (playlistValidation.isLeft()) {
+      return playlistValidation as Either<EntityNotExists, void>;
+    }
 
     await this.deletePlaylistToSchedulingRepository.delete(input);
 
