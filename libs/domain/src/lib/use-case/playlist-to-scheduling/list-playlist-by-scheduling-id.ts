@@ -41,8 +41,23 @@ export class ListPlaylistBySchedulingId
       return left(new EntityNotEmpty('User ID'));
     }
 
-    await ValidationUserId(loggedUserId, this.findUserByIdRepository);
-    await ValidationSchedulingId(id, this.findSchedulingByIdRepository);
+    const userValidation = await ValidationUserId(
+      loggedUserId,
+      this.findUserByIdRepository
+    );
+
+    if (userValidation.isLeft()) {
+      return left(userValidation.value);
+    }
+
+    const schedulingValidation = await ValidationSchedulingId(
+      id,
+      this.findSchedulingByIdRepository
+    );
+
+    if (schedulingValidation.isLeft()) {
+      return left(schedulingValidation.value);
+    }
 
     const filteredPlaylistToScheduling =
       await this.listPlaylistBySchedulingIdRepository.list(input);
