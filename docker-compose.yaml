@@ -5,7 +5,7 @@ services:
       context: .
       dockerfile: Dockerfile.api-general
     ports:
-      - '${PORT_GENERAL}:${PORT_GENERAL}'
+      - '${NX_APP_BACK_GENERAL}:${NX_APP_BACK_GENERAL}'
     environment:
       - NODE_ENV=production
       - DATABASE_URL=${DATABASE_URL}
@@ -20,7 +20,7 @@ services:
       context: .
       dockerfile: Dockerfile.api-pure-tv
     ports:
-      - '${PORT_BACK_PURE_TV}:${PORT_BACK_PURE_TV}'
+      - '${NX_APP_BACK_PURE_TV}:${NX_APP_BACK_PURE_TV}'
     environment:
       - NODE_ENV=production
       - DATABASE_URL=${DATABASE_URL}
@@ -35,7 +35,7 @@ services:
       context: .
       dockerfile: Dockerfile.web-pure-tv
     ports:
-      - '${PORT_FRONT_PURE_TV}:80'
+      - '${NX_APP_FRONT_PURE_TV}:80'
     environment:
       NODE_ENV: production
 

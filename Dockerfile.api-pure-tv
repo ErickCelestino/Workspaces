@@ -7,6 +7,7 @@ RUN npm install
 
 COPY . .
 ARG DATABASE_URL
+RUN npm run prisma:generate
 RUN npm run build:back-pure-tv
 
 FROM node:18-alpine
@@ -22,6 +23,6 @@ COPY --from=builder /app/package*.json ./
 
 RUN npm install --production --ignore-scripts
 
-EXPOSE ${PORT_BACK_PURE_TV}
+EXPOSE ${NX_APP_BACK_PURE_TV}
 
 CMD ["node", "dist/api/main"]

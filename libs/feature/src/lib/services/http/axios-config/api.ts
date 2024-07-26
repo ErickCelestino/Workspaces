@@ -3,7 +3,7 @@ import axios from 'axios';
 import { getUserLocalStorage } from '../../utils';
 
 export const generalApi = axios.create({
-  baseURL: 'http://localhost:3001/api-general',
+  baseURL: `${process.env['NX_APP_DEFAULT_PROTOCOL']}${process.env['NX_APP_DEFAULT_HOST']}:${process.env['NX_APP_BACK_GENERAL']}/api-general`,
 });
 
 generalApi.interceptors.request.use(

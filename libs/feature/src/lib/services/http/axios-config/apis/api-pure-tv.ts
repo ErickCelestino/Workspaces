@@ -2,7 +2,7 @@ import axios from 'axios';
 import { getUserLocalStorage } from '../../../utils';
 
 export const pureTvApi = axios.create({
-  baseURL: 'http://localhost:3000/api-pure-tv',
+  baseURL: `${process.env['NX_APP_DEFAULT_PROTOCOL']}${process.env['NX_APP_DEFAULT_HOST']}:${process.env['NX_APP_BACK_PURE_TV']}/api-pure-tv`,
 });
 
 pureTvApi.interceptors.request.use(
