@@ -34,7 +34,7 @@ export class CreatePlaylistCategory
     @Inject('CreatePlaylistCategoryRepository')
     private createPlaylistCategoryRepository: CreatePlaylistCategoryRepository,
     @Inject('FindPlaylistCategoryByNameRepository')
-    private findPlaylistCategoryRepository: FindPlaylistCategoryByNameRepository
+    private findPlaylistCategoryByNameRepository: FindPlaylistCategoryByNameRepository
   ) {}
   async execute(
     input: CreatePlaylistCategoryDto
@@ -58,10 +58,17 @@ export class CreatePlaylistCategory
       return left(new EntityNotEmpty('description'));
     }
 
-    await ValidationUserId(loggedUserId, this.findUserByIdRepository);
+    const userValidation = await ValidationUserId(
+      loggedUserId,
+      this.findUserByIdRepository
+    );
+
+    if (userValidation.isLeft()) {
+      return left(userValidation.value);
+    }
 
     const filteredPlaylistCategory =
-      await this.findPlaylistCategoryRepository.find({
+      await this.findPlaylistCategoryByNameRepository.find({
         loggedUserId,
         name: body.name,
       });
