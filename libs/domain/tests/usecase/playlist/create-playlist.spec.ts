@@ -135,7 +135,7 @@ describe('CreatePlaylist', () => {
     expect(result.value).toBeInstanceOf(EntityNotExists);
   });
 
-  it('should return EntityNotExists when a pass incorrect Logged User ID', async () => {
+  it('should return EntityNotExists when a pass incorrect Playlist Category User ID', async () => {
     const { createPlaylistDto, sut } = makeSut();
     jest
       .spyOn(sut['findPlaylistCategoryByIdRepository'], 'find')
