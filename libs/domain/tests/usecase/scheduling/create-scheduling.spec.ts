@@ -4,11 +4,14 @@ import {
   CreateSchedulingDto,
   CreateSchedulingRepository,
   EntityAlreadyExists,
+  EntityNotConverted,
   EntityNotCreated,
   EntityNotEmpty,
+  EntityNotExists,
   EntityNotNegativeNumber,
   FindSchedulingByNameRepository,
   FindUserByIdRepository,
+  UserList,
 } from '../../../src';
 import { SchedulingMock, userMock } from '../../entity';
 import {
@@ -124,23 +127,10 @@ describe('CreateScheduling', () => {
   });
 
   it('should return EntityAlreadyExists when a exist scheduling in database', async () => {
-    const {
-      createSchedulingRepository,
-      findUserByIdRepository,
-      createSchedulingDto,
-      convertStringInTimeRepository,
-    } = makeSut();
-
-    const mockEmptyRepository: FindSchedulingByNameRepository = {
-      find: jest.fn(async () => SchedulingMock),
-    };
-
-    const sut = new CreateScheduling(
-      findUserByIdRepository,
-      mockEmptyRepository,
-      convertStringInTimeRepository,
-      createSchedulingRepository
-    );
+    const { createSchedulingDto, sut } = makeSut();
+    jest
+      .spyOn(sut['findSchedulingByNameRepository'], 'find')
+      .mockResolvedValueOnce(SchedulingMock);
 
     const result = await sut.execute(createSchedulingDto);
 
@@ -150,28 +140,39 @@ describe('CreateScheduling', () => {
   });
 
   it('should return EntityNotCreated when not created Scheduling in database', async () => {
-    const {
-      createSchedulingDto,
-      findUserByIdRepository,
-      findSchedulingByNameRepository,
-      convertStringInTimeRepository,
-    } = makeSut();
-
-    const mockEmptyRepository: CreateSchedulingRepository = {
-      create: jest.fn(async () => ''),
-    };
-
-    const sut = new CreateScheduling(
-      findUserByIdRepository,
-      findSchedulingByNameRepository,
-      convertStringInTimeRepository,
-      mockEmptyRepository
-    );
+    const { createSchedulingDto, sut } = makeSut();
+    jest
+      .spyOn(sut['createSchedulingRepository'], 'create')
+      .mockResolvedValueOnce('');
 
     const result = await sut.execute(createSchedulingDto);
 
     expect(result.isRight()).toBe(false);
     expect(result.isLeft()).toBe(true);
     expect(result.value).toBeInstanceOf(EntityNotCreated);
+  });
+
+  it('should return EntityNotExists when a pass incorrect Logged User ID', async () => {
+    const { createSchedulingDto, sut } = makeSut();
+    jest
+      .spyOn(sut['findUserByIdRepository'], 'find')
+      .mockResolvedValueOnce({} as UserList);
+    const result = await sut.execute(createSchedulingDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
+    expect(result.value).toBeInstanceOf(EntityNotExists);
+  });
+
+  it('should return EntityNotExists when a pass incorrect Start or End Time', async () => {
+    const { createSchedulingDto, sut } = makeSut();
+    jest
+      .spyOn(sut['convertStringInTimeRepository'], 'convert')
+      .mockResolvedValueOnce(new Date(''));
+    const result = await sut.execute(createSchedulingDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
+    expect(result.value).toBeInstanceOf(EntityNotConverted);
   });
 });
