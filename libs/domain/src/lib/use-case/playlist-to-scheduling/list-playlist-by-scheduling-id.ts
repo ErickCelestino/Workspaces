@@ -1,27 +1,36 @@
 import { Inject } from '@nestjs/common';
 import { UseCase } from '../../base/use-case';
-import { FindSchedulingByIdDto } from '../../dto';
-import { Scheduling } from '../../entity';
-import { EntityNotEmpty, EntityNotExists } from '../../error';
+import {
+  ListPlaylistBySchedulingIdDto,
+  ListPlaylistReponseDto,
+} from '../../dto';
+import { EntityNotEmpty } from '../../error';
 import { Either, left, right } from '../../shared/either';
 import {
   FindSchedulingByIdRepository,
   FindUserByIdRepository,
+  ListPlaylistBySchedulingIdRepository,
 } from '../../repository';
 import { ValidationSchedulingId, ValidationUserId } from '../../utils';
 
-export class FindSchedulingById
-  implements UseCase<FindSchedulingByIdDto, Either<EntityNotEmpty, Scheduling>>
+export class ListPlaylistBySchedulingId
+  implements
+    UseCase<
+      ListPlaylistBySchedulingIdDto,
+      Either<EntityNotEmpty, ListPlaylistReponseDto>
+    >
 {
   constructor(
     @Inject('FindUserByIdRepository')
     private findUserByIdRepository: FindUserByIdRepository,
     @Inject('FindSchedulingByIdRepository')
-    private findSchedulingByIdRepository: FindSchedulingByIdRepository
+    private findSchedulingByIdRepository: FindSchedulingByIdRepository,
+    @Inject('ListPlaylistBySchedulingIdRepository')
+    private listPlaylistBySchedulingIdRepository: ListPlaylistBySchedulingIdRepository
   ) {}
   async execute(
-    input: FindSchedulingByIdDto
-  ): Promise<Either<EntityNotEmpty, Scheduling>> {
+    input: ListPlaylistBySchedulingIdDto
+  ): Promise<Either<EntityNotEmpty, ListPlaylistReponseDto>> {
     const { id, loggedUserId } = input;
 
     if (Object.keys(id).length < 1) {
@@ -35,12 +44,9 @@ export class FindSchedulingById
     await ValidationUserId(loggedUserId, this.findUserByIdRepository);
     await ValidationSchedulingId(id, this.findSchedulingByIdRepository);
 
-    const filteredScheduling = await this.findSchedulingByIdRepository.find(id);
+    const filteredPlaylistToScheduling =
+      await this.listPlaylistBySchedulingIdRepository.list(input);
 
-    if (Object.keys(filteredScheduling).length < 1) {
-      return left(new EntityNotExists('Scheduling'));
-    }
-
-    return right(filteredScheduling);
+    return right(filteredPlaylistToScheduling);
   }
 }

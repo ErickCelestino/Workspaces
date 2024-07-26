@@ -8,6 +8,7 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
+import InfoIcon from '@mui/icons-material/Info';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
@@ -26,6 +27,7 @@ interface SchedulingItemProps {
   editScheduling: () => Promise<void>;
   deleteScheduling: () => Promise<void>;
   addPlaylistToScheduling: () => Promise<void>;
+  detailsScheduling: () => Promise<void>;
 }
 
 export const SchedulingItem: React.FC<SchedulingItemProps> = ({
@@ -39,6 +41,7 @@ export const SchedulingItem: React.FC<SchedulingItemProps> = ({
   editScheduling,
   deleteScheduling,
   addPlaylistToScheduling,
+  detailsScheduling,
 }) => {
   const theme = useTheme();
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
@@ -58,6 +61,11 @@ export const SchedulingItem: React.FC<SchedulingItemProps> = ({
       icon: <PlaylistAddIcon />,
       title: 'Adicionar Playlist',
       handleClick: addPlaylistToScheduling,
+    },
+    {
+      icon: <InfoIcon />,
+      title: 'Detalhes',
+      handleClick: detailsScheduling,
     },
   ];
   return (
