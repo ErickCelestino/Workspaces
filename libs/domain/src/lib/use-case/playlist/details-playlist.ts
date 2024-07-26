@@ -38,10 +38,23 @@ export class DetailsPlaylist
     if (Object.keys(playlistId).length < 1) {
       return left(new EntityNotEmpty('Playlist ID'));
     }
+    const userValidation = await ValidationUserId(
+      loggedUserId,
+      this.findUserByIdRepository
+    );
 
-    await ValidationUserId(loggedUserId, this.findUserByIdRepository);
-    await ValidationPlaylistId(playlistId, this.findPlaylistByIdRepository);
+    if (userValidation.isLeft()) {
+      return left(userValidation.value);
+    }
 
+    const playlitValidation = await ValidationPlaylistId(
+      playlistId,
+      this.findPlaylistByIdRepository
+    );
+
+    if (playlitValidation.isLeft()) {
+      return left(playlitValidation.value);
+    }
     const playlistResult = await this.detailsPlaylistRepository.details(input);
 
     if (Object.keys(playlistResult?.id ?? playlistResult).length < 1) {

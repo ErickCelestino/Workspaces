@@ -7,6 +7,7 @@ import {
   FindPlaylistByIdRepository,
   FindUserByIdRepository,
   PlaylistResponseDto,
+  UserList,
 } from '../../../src';
 import { PlaylistMock, PlaylistResponseMock, userMock } from '../../entity';
 import {
@@ -79,27 +80,39 @@ describe('DetailsPlaylist', () => {
     expect(result.value).toBeInstanceOf(EntityNotEmpty);
   });
   it('should return EntityNotExists if there is no playlist created in the database', async () => {
-    const {
-      detailsPlaylistDto,
-      findUserByIdRepository,
-      findPlaylistByIdRepository,
-    } = makeSut();
+    const { detailsPlaylistDto, sut } = makeSut();
 
-    const mockEmptyItem = {} as PlaylistResponseDto;
-
-    const mockEmptyRepository: DetailsPlaylistRepository = {
-      details: jest.fn(async () => mockEmptyItem),
-    };
-
-    const sut = new DetailsPlaylist(
-      findUserByIdRepository,
-      findPlaylistByIdRepository,
-      mockEmptyRepository
-    );
+    jest
+      .spyOn(sut['detailsPlaylistRepository'], 'details')
+      .mockResolvedValueOnce({} as PlaylistResponseDto);
 
     const result = await sut.execute(detailsPlaylistDto);
 
     expect(result.isLeft()).toBe(true);
+    expect(result.value).toBeInstanceOf(EntityNotExists);
+  });
+
+  it('should return EntityNotExists when a pass incorrect Logged User ID', async () => {
+    const { detailsPlaylistDto, sut } = makeSut();
+    jest
+      .spyOn(sut['findUserByIdRepository'], 'find')
+      .mockResolvedValueOnce({} as UserList);
+    const result = await sut.execute(detailsPlaylistDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
+    expect(result.value).toBeInstanceOf(EntityNotExists);
+  });
+
+  it('should return EntityNotExists when a pass incorrect Playlist ID', async () => {
+    const { detailsPlaylistDto, sut } = makeSut();
+    jest
+      .spyOn(sut['findPlaylistByIdRepository'], 'find')
+      .mockResolvedValueOnce({} as PlaylistResponseDto);
+    const result = await sut.execute(detailsPlaylistDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
     expect(result.value).toBeInstanceOf(EntityNotExists);
   });
 });
