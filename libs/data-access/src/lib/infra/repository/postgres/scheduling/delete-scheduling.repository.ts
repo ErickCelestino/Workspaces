@@ -10,6 +10,12 @@ export class DeleteSchedulingRepositoryImpl
 {
   constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
   async delete(input: DeleteSchedulingDto): Promise<void> {
+    await this.prismaService.playlist_X_Scheduling.deleteMany({
+      where: {
+        scheduling_id: input.id,
+      },
+    });
+
     await this.prismaService.scheduling.delete({
       where: {
         scheduling_id: input.id,
