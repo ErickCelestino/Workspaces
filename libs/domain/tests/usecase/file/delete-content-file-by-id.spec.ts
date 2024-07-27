@@ -9,6 +9,8 @@ import {
   FindContentFileByIdRepository,
   ContentFile,
   DeleteFileByNameRepository,
+  UserList,
+  Directory,
 } from '../../../src';
 import { ContentFileMock, DirectoryMock, userMock } from '../../entity';
 import {
@@ -102,31 +104,38 @@ describe('DeleteContentFileById', () => {
   });
 
   it('should return EntityNotExists if there is no content file created in the database', async () => {
-    const {
-      deleteContentFileByIdDto,
-      findUserByIdRepository,
-      deleteContentFileByIdRepository,
-      findDirectoryByIdRepository,
-      deleteFileByNameRepository,
-    } = makeSut();
-
-    const mockEmptyItem = {} as ContentFile;
-
-    const mockEmptyRepository: FindContentFileByIdRepository = {
-      find: jest.fn(async () => mockEmptyItem),
-    };
-
-    const sut = new DeleteContentFileById(
-      deleteContentFileByIdRepository,
-      findUserByIdRepository,
-      findDirectoryByIdRepository,
-      mockEmptyRepository,
-      deleteFileByNameRepository
-    );
+    const { deleteContentFileByIdDto, sut } = makeSut();
+    jest
+      .spyOn(sut['findContentFileByIdRepository'], 'find')
+      .mockResolvedValueOnce({} as ContentFile);
 
     const result = await sut.execute(deleteContentFileByIdDto);
 
     expect(result.isLeft()).toBe(true);
+    expect(result.value).toBeInstanceOf(EntityNotExists);
+  });
+
+  it('should return EntityNotExists when a pass incorrect Logged User ID', async () => {
+    const { deleteContentFileByIdDto, sut } = makeSut();
+    jest
+      .spyOn(sut['findUserByIdRepository'], 'find')
+      .mockResolvedValueOnce({} as UserList);
+    const result = await sut.execute(deleteContentFileByIdDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
+    expect(result.value).toBeInstanceOf(EntityNotExists);
+  });
+
+  it('should return EntityNotExists when a pass incorrect Directory ID', async () => {
+    const { deleteContentFileByIdDto, sut } = makeSut();
+    jest
+      .spyOn(sut['findDirectoryByIdRepository'], 'find')
+      .mockResolvedValueOnce({} as Directory);
+    const result = await sut.execute(deleteContentFileByIdDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
     expect(result.value).toBeInstanceOf(EntityNotExists);
   });
 });
