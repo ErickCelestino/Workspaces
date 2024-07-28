@@ -51,11 +51,32 @@ export class EditContentFile
       return left(new EntityNotEmpty('name'));
     }
 
-    await ValidationUserId(loggedUserId, this.findUserByIdRepository);
+    const userValidation = await ValidationUserId(
+      loggedUserId,
+      this.findUserByIdRepository
+    );
 
-    await ValidationDirectoryId(directoryId, this.findDirectoryByIdRepository);
+    if (userValidation.isLeft()) {
+      return left(userValidation.value);
+    }
 
-    await ValidationContentFileId(idToEdit, this.findContentFileByIdRepository);
+    const directoryValidation = await ValidationDirectoryId(
+      directoryId,
+      this.findDirectoryByIdRepository
+    );
+
+    if (directoryValidation.isLeft()) {
+      return left(directoryValidation.value);
+    }
+
+    const contentFileValidation = await ValidationContentFileId(
+      idToEdit,
+      this.findContentFileByIdRepository
+    );
+
+    if (contentFileValidation.isLeft()) {
+      return left(contentFileValidation.value);
+    }
 
     await this.editContentFileRepository.edit(input);
 
