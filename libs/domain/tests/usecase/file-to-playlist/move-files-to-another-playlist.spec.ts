@@ -22,7 +22,6 @@ import {
 } from '../../entity';
 import {
   FindContentFileByIdRepositoryMock,
-  FindFileInFileToPlaylistRepositoryMock,
   FindPlaylistByIdRepositoryMock,
   FindUserByIdRepositoryMock,
   MoveFileToAnotherPlaylistRepositoryMock,
@@ -152,23 +151,11 @@ describe('MoveFilesToAnotherPlaylist', () => {
   });
 
   it('should return EntityNotCreated if there is no file to new playlist created in the database', async () => {
-    const {
-      findContentFileByIdRepository,
-      findUserByIdRepository,
-      moveFilesToAnotherPlaylistDto,
-      findPlaylistByIdRepository,
-      moveFileToAnotherPlaylistRepository,
-    } = makeSut();
+    const { moveFilesToAnotherPlaylistDto, sut } = makeSut();
 
-    const mockEmptyRepository = new FindFileInFileToPlaylistRepositoryMock();
-
-    const sut = new MoveFilesToAnotherPlaylist(
-      findUserByIdRepository,
-      findContentFileByIdRepository,
-      findPlaylistByIdRepository,
-      mockEmptyRepository,
-      moveFileToAnotherPlaylistRepository
-    );
+    jest
+      .spyOn(sut['findFileInFileToPlaylistRepository'], 'find')
+      .mockResolvedValueOnce('');
 
     const result = await sut.execute(moveFilesToAnotherPlaylistDto);
 
