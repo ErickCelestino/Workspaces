@@ -55,7 +55,7 @@ export class DeletePlaylistToScheduling
       this.findUserByIdRepository
     );
     if (userValidation.isLeft()) {
-      return userValidation;
+      return left(userValidation.value);
     }
 
     const schedulingValidation = await ValidationSchedulingId(
@@ -63,7 +63,7 @@ export class DeletePlaylistToScheduling
       this.findSchedulingByIdRepository
     );
     if (schedulingValidation.isLeft()) {
-      return schedulingValidation as Either<EntityNotExists, void>;
+      return left(schedulingValidation.value);
     }
 
     const playlistValidation = await ValidationPlaylistId(
@@ -71,7 +71,7 @@ export class DeletePlaylistToScheduling
       this.findPlaylistByIdRepository
     );
     if (playlistValidation.isLeft()) {
-      return playlistValidation as Either<EntityNotExists, void>;
+      return left(playlistValidation.value);
     }
 
     await this.deletePlaylistToSchedulingRepository.delete(input);

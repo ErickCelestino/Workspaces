@@ -3,9 +3,13 @@ import {
   DeletePlaylistToSchedulingDto,
   DeletePlaylistToSchedulingRepository,
   EntityNotEmpty,
+  EntityNotExists,
   FindPlaylistByIdRepository,
   FindSchedulingByIdRepository,
   FindUserByIdRepository,
+  PlaylistResponseDto,
+  Scheduling,
+  UserList,
 } from '../../../src';
 import { PlaylistMock, SchedulingMock, userMock } from '../../entity';
 import {
@@ -93,5 +97,41 @@ describe('DeletePlaylistToScheduling', () => {
     expect(result.isRight()).toBe(false);
     expect(result.isLeft()).toBe(true);
     expect(result.value).toBeInstanceOf(EntityNotEmpty);
+  });
+
+  it('should return EntityNotExists when a pass incorrect Logged User ID', async () => {
+    const { deletePlaylistToSchedulingDto, sut } = makeSut();
+    jest
+      .spyOn(sut['findUserByIdRepository'], 'find')
+      .mockResolvedValueOnce({} as UserList);
+    const result = await sut.execute(deletePlaylistToSchedulingDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
+    expect(result.value).toBeInstanceOf(EntityNotExists);
+  });
+
+  it('should return EntityNotExists when a pass incorrect Scheduling ID', async () => {
+    const { deletePlaylistToSchedulingDto, sut } = makeSut();
+    jest
+      .spyOn(sut['findSchedulingByIdRepository'], 'find')
+      .mockResolvedValueOnce({} as Scheduling);
+    const result = await sut.execute(deletePlaylistToSchedulingDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
+    expect(result.value).toBeInstanceOf(EntityNotExists);
+  });
+
+  it('should return EntityNotExists when a pass incorrect Playlist ID', async () => {
+    const { deletePlaylistToSchedulingDto, sut } = makeSut();
+    jest
+      .spyOn(sut['findPlaylistByIdRepository'], 'find')
+      .mockResolvedValueOnce({} as PlaylistResponseDto);
+    const result = await sut.execute(deletePlaylistToSchedulingDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
+    expect(result.value).toBeInstanceOf(EntityNotExists);
   });
 });
