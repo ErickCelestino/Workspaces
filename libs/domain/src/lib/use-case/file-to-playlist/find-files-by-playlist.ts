@@ -41,8 +41,23 @@ export class FindFilesByPlaylist
       return left(new EntityNotEmpty('Playlist ID'));
     }
 
-    await ValidationUserId(loggedUserId, this.findUserByIdRepository);
-    await ValidationPlaylistId(idPlaylist, this.findPlaylistByIdRepository);
+    const userValidation = await ValidationUserId(
+      loggedUserId,
+      this.findUserByIdRepository
+    );
+
+    if (userValidation.isLeft()) {
+      return left(userValidation.value);
+    }
+
+    const playlitValidation = await ValidationPlaylistId(
+      idPlaylist,
+      this.findPlaylistByIdRepository
+    );
+
+    if (playlitValidation.isLeft()) {
+      return left(playlitValidation.value);
+    }
 
     const resultedFiles = await this.findFilesByPlaylistRepository.find(input);
 

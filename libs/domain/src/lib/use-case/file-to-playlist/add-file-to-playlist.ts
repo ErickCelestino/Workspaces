@@ -5,7 +5,6 @@ import {
   EntityAlreadyExists,
   EntityNotCreated,
   EntityNotEmpty,
-  EntityNotExists,
 } from '../../error';
 import { Either, left, right } from '../../shared/either';
 import {
@@ -49,14 +48,28 @@ export class AddFileToPlaylist
       return left(new EntityNotEmpty('Playlist ID'));
     }
 
-    await ValidationUserId(loggedUserId, this.findUserByIdRepository);
+    const userValidation = await ValidationUserId(
+      loggedUserId,
+      this.findUserByIdRepository
+    );
+
+    if (userValidation.isLeft()) {
+      return left(userValidation.value);
+    }
 
     for (const file of filesId) {
       if (Object.keys(file).length < 1) {
         return left(new EntityNotEmpty('File ID'));
       }
 
-      await ValidationContentFileId(file, this.findContentFileByIdRepository);
+      const contentFileValidation = await ValidationContentFileId(
+        file,
+        this.findContentFileByIdRepository
+      );
+
+      if (contentFileValidation.isLeft()) {
+        return left(contentFileValidation.value);
+      }
 
       const filteredFile = await this.findFileInFileToPlaylistRepository.find({
         fileId: file,
@@ -67,7 +80,14 @@ export class AddFileToPlaylist
       }
     }
 
-    await ValidationPlaylistId(playlistId, this.findPlaylistByIdRepository);
+    const playlitValidation = await ValidationPlaylistId(
+      playlistId,
+      this.findPlaylistByIdRepository
+    );
+
+    if (playlitValidation.isLeft()) {
+      return left(playlitValidation.value);
+    }
 
     const createdResult = await this.addFileToPlaylistRepository.add(input);
 

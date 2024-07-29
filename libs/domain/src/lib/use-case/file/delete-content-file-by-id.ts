@@ -49,9 +49,23 @@ export class DeleteContentFileById
       return left(new EntityNotEmpty('ID to delete'));
     }
 
-    await ValidationUserId(loggedUserId, this.findUserByIdRepository);
+    const userValidation = await ValidationUserId(
+      loggedUserId,
+      this.findUserByIdRepository
+    );
 
-    await ValidationDirectoryId(directoryId, this.findDirectoryByIdRepository);
+    if (userValidation.isLeft()) {
+      return left(userValidation.value);
+    }
+
+    const directoryValidation = await ValidationDirectoryId(
+      directoryId,
+      this.findDirectoryByIdRepository
+    );
+
+    if (directoryValidation.isLeft()) {
+      return left(directoryValidation.value);
+    }
 
     const filteredContentFile = await this.findContentFileByIdRepository.find(
       idToDelete

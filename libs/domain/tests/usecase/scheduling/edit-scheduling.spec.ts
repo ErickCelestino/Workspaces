@@ -4,9 +4,13 @@ import {
   EditScheduling,
   EditSchedulingDto,
   EditSchedulingRepository,
+  EntityNotConverted,
   EntityNotEmpty,
+  EntityNotExists,
   FindSchedulingByIdRepository,
   FindUserByIdRepository,
+  Scheduling,
+  UserList,
 } from '../../../src';
 import { SchedulingMock, userMock } from '../../entity';
 import {
@@ -129,5 +133,41 @@ describe('EditScheduling', () => {
     expect(result.isLeft()).toBe(true);
     expect(result.isRight()).toBe(false);
     expect(result.value).toBeInstanceOf(EntityNotEmpty);
+  });
+
+  it('should return EntityNotExists when a pass incorrect Logged User ID', async () => {
+    const { editSchedulingDto, sut } = makeSut();
+    jest
+      .spyOn(sut['findUserByIdRepository'], 'find')
+      .mockResolvedValueOnce({} as UserList);
+    const result = await sut.execute(editSchedulingDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
+    expect(result.value).toBeInstanceOf(EntityNotExists);
+  });
+
+  it('should return EntityNotExists when a pass incorrect Scheduling ID', async () => {
+    const { editSchedulingDto, sut } = makeSut();
+    jest
+      .spyOn(sut['findSchedulingByIdRepository'], 'find')
+      .mockResolvedValueOnce({} as Scheduling);
+    const result = await sut.execute(editSchedulingDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
+    expect(result.value).toBeInstanceOf(EntityNotExists);
+  });
+
+  it('should return EntityNotExists when a pass incorrect Start or End Time', async () => {
+    const { editSchedulingDto, sut } = makeSut();
+    jest
+      .spyOn(sut['convertStringInTimeRepository'], 'convert')
+      .mockResolvedValueOnce(new Date(''));
+    const result = await sut.execute(editSchedulingDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
+    expect(result.value).toBeInstanceOf(EntityNotConverted);
   });
 });

@@ -1,5 +1,6 @@
 import {
   ContentFile,
+  Directory,
   DownloadContentFile,
   DownloadContentFileDto,
   DownloadContentFileRepository,
@@ -8,6 +9,7 @@ import {
   FindContentFileByIdRepository,
   FindDirectoryByIdRepository,
   FindUserByIdRepository,
+  UserList,
 } from '../../../src';
 import { ContentFileMock, DirectoryMock, userMock } from '../../entity';
 import {
@@ -97,25 +99,10 @@ describe('DownloadContentFile', () => {
   });
 
   it('should return EntityNotExists if there is no content file created in the database', async () => {
-    const {
-      downloadContentFileDto,
-      findUserByIdRepository,
-      downloadContentFileRepository,
-      findDirectoryByIdRepository,
-    } = makeSut();
-
-    const mockEmptyItem = {} as ContentFile;
-
-    const mockEmptyRepository: FindContentFileByIdRepository = {
-      find: jest.fn(async () => mockEmptyItem),
-    };
-
-    const sut = new DownloadContentFile(
-      findUserByIdRepository,
-      findDirectoryByIdRepository,
-      mockEmptyRepository,
-      downloadContentFileRepository
-    );
+    const { downloadContentFileDto, sut } = makeSut();
+    jest
+      .spyOn(sut['findContentFileByIdRepository'], 'find')
+      .mockResolvedValueOnce({} as ContentFile);
 
     const result = await sut.execute(downloadContentFileDto);
 
@@ -124,27 +111,38 @@ describe('DownloadContentFile', () => {
   });
 
   it('should return EntityNotExists if there is no generate url for download file', async () => {
-    const {
-      downloadContentFileDto,
-      findUserByIdRepository,
-      findContentFileByIdRepository,
-      findDirectoryByIdRepository,
-    } = makeSut();
-
-    const mockEmptyRepository: DownloadContentFileRepository = {
-      download: jest.fn(async () => ''),
-    };
-
-    const sut = new DownloadContentFile(
-      findUserByIdRepository,
-      findDirectoryByIdRepository,
-      findContentFileByIdRepository,
-      mockEmptyRepository
-    );
+    const { downloadContentFileDto, sut } = makeSut();
+    jest
+      .spyOn(sut['downloadContentFileRepository'], 'download')
+      .mockResolvedValueOnce('');
 
     const result = await sut.execute(downloadContentFileDto);
 
     expect(result.isLeft()).toBe(true);
+    expect(result.value).toBeInstanceOf(EntityNotExists);
+  });
+
+  it('should return EntityNotExists when a pass incorrect Logged User ID', async () => {
+    const { downloadContentFileDto, sut } = makeSut();
+    jest
+      .spyOn(sut['findUserByIdRepository'], 'find')
+      .mockResolvedValueOnce({} as UserList);
+    const result = await sut.execute(downloadContentFileDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
+    expect(result.value).toBeInstanceOf(EntityNotExists);
+  });
+
+  it('should return EntityNotExists when a pass incorrect Directory ID', async () => {
+    const { downloadContentFileDto, sut } = makeSut();
+    jest
+      .spyOn(sut['findDirectoryByIdRepository'], 'find')
+      .mockResolvedValueOnce({} as Directory);
+    const result = await sut.execute(downloadContentFileDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
     expect(result.value).toBeInstanceOf(EntityNotExists);
   });
 });

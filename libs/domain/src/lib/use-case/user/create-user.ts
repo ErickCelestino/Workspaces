@@ -68,7 +68,7 @@ export class CreateUser
 
     const filterResult = await this.filterNicknameRepository.filter(nickname);
 
-    if (Object.keys(filterResult?.userId).length > 0) {
+    if (Object.keys(filterResult?.userId ?? filterResult).length > 0) {
       return left(new EntityAlreadyExists(nickname));
     }
 

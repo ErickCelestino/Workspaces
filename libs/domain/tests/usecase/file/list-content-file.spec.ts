@@ -6,6 +6,9 @@ import {
   ListContentFile,
   ListContentFileDto,
   ListContentFileRepository,
+  UserList,
+  EntityNotExists,
+  Directory,
 } from '../../../src';
 import {
   DirectoryMock,
@@ -89,5 +92,29 @@ describe('ListContentFile', () => {
     expect(result.isLeft()).toBe(true);
     expect(result.isRight()).toBe(false);
     expect(result.value).toBeInstanceOf(EntityNotEmpty);
+  });
+
+  it('should return EntityNotExists when a pass incorrect Logged User ID', async () => {
+    const { listContentFileDto, sut } = makeSut();
+    jest
+      .spyOn(sut['findUserByIdRepository'], 'find')
+      .mockResolvedValueOnce({} as UserList);
+    const result = await sut.execute(listContentFileDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
+    expect(result.value).toBeInstanceOf(EntityNotExists);
+  });
+
+  it('should return EntityNotExists when a pass incorrect Directory ID', async () => {
+    const { listContentFileDto, sut } = makeSut();
+    jest
+      .spyOn(sut['findDirectoryByIdRepository'], 'find')
+      .mockResolvedValueOnce({} as Directory);
+    const result = await sut.execute(listContentFileDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
+    expect(result.value).toBeInstanceOf(EntityNotExists);
   });
 });

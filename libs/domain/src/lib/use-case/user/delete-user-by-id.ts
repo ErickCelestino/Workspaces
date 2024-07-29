@@ -66,7 +66,14 @@ export class DeleteUserById
       return left(new NotPermissionError(loggedUserString));
     }
 
-    await ValidationUserId(loggedUser, this.findUserByIdRepository);
+    const userValidation = await ValidationUserId(
+      loggedUser,
+      this.findUserByIdRepository
+    );
+
+    if (userValidation.isLeft()) {
+      return left(userValidation.value);
+    }
 
     await this.deleteUserByIdRepository.delete(input);
 

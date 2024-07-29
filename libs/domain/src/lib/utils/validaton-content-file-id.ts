@@ -1,11 +1,11 @@
 import { EntityNotEmpty, EntityNotExists } from '../error';
 import { FindContentFileByIdRepository } from '../repository';
-import { left, right } from '../shared/either';
+import { Either, left, right } from '../shared/either';
 
 export async function ValidationContentFileId(
   id: string,
   findContentFileByIdRepository: FindContentFileByIdRepository
-) {
+): Promise<Either<EntityNotEmpty | EntityNotExists, void>> {
   if (Object.keys(id).length < 1) {
     return left(new EntityNotEmpty('File ID'));
   }

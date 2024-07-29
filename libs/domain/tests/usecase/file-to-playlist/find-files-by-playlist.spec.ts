@@ -1,10 +1,13 @@
 import {
   EntityNotEmpty,
+  EntityNotExists,
   FindFilesByPlaylist,
   FindFilesByPlaylistDto,
   FindFilesByPlaylistRepository,
   FindPlaylistByIdRepository,
   FindUserByIdRepository,
+  PlaylistResponseDto,
+  UserList,
 } from '../../../src';
 import { ContentFileMock, PlaylistMock, userMock } from '../../entity';
 import {
@@ -79,5 +82,29 @@ describe('FindFilesByPlaylist', () => {
     expect(result.isRight()).toBe(false);
     expect(result.isLeft()).toBe(true);
     expect(result.value).toBeInstanceOf(EntityNotEmpty);
+  });
+
+  it('should return EntityNotExists when a pass incorrect Logged User ID', async () => {
+    const { findFilesByPlaylistDto, sut } = makeSut();
+    jest
+      .spyOn(sut['findUserByIdRepository'], 'find')
+      .mockResolvedValueOnce({} as UserList);
+    const result = await sut.execute(findFilesByPlaylistDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
+    expect(result.value).toBeInstanceOf(EntityNotExists);
+  });
+
+  it('should return EntityNotExists when a pass incorrect Playlist ID', async () => {
+    const { findFilesByPlaylistDto, sut } = makeSut();
+    jest
+      .spyOn(sut['findPlaylistByIdRepository'], 'find')
+      .mockResolvedValueOnce({} as PlaylistResponseDto);
+    const result = await sut.execute(findFilesByPlaylistDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
+    expect(result.value).toBeInstanceOf(EntityNotExists);
   });
 });

@@ -1,7 +1,7 @@
 import { Inject } from '@nestjs/common';
 import { UseCase } from '../../../base/use-case';
 import { DeletePlaylistCategoryDto } from '../../../dto';
-import { EntityNotEmpty, EntityNotExists } from '../../../error';
+import { EntityNotEmpty } from '../../../error';
 import {
   DeletePlaylistCategoryRepository,
   FindPlaylistCategoryByIdRepository,
@@ -16,7 +16,7 @@ export class DeletePlaylistCategory
   constructor(
     @Inject('FindUserByIdRepository')
     private findUserByIdRepository: FindUserByIdRepository,
-    @Inject('FindUserByIdRepository')
+    @Inject('FindPlaylistCategoryByIdRepository')
     private findPlaylistCategoryByIdRepository: FindPlaylistCategoryByIdRepository,
     @Inject('DeletePlaylistCategoryRepository')
     private deletePlaylistRepository: DeletePlaylistCategoryRepository
@@ -34,12 +34,23 @@ export class DeletePlaylistCategory
       return left(new EntityNotEmpty('Logged User ID'));
     }
 
-    await ValidationUserId(loggedUserId, this.findUserByIdRepository);
+    const userValidation = await ValidationUserId(
+      loggedUserId,
+      this.findUserByIdRepository
+    );
 
-    await ValidationPlaylistCategoryId(
+    if (userValidation.isLeft()) {
+      return left(userValidation.value);
+    }
+
+    const playlistCategoryValidation = await ValidationPlaylistCategoryId(
       id,
       this.findPlaylistCategoryByIdRepository
     );
+
+    if (playlistCategoryValidation.isLeft()) {
+      return left(playlistCategoryValidation.value);
+    }
 
     await this.deletePlaylistRepository.delete(id);
 
