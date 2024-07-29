@@ -11,7 +11,7 @@ export class FindUserById
 {
   constructor(
     @Inject('FindUserByIdRepository')
-    private findUserById: FindUserByIdRepository
+    private findUserByIdRepository: FindUserByIdRepository
   ) {}
   async execute(
     input: string
@@ -21,7 +21,7 @@ export class FindUserById
       return left(new EntityNotEmpty(idString));
     }
 
-    const userFiltered = await this.findUserById.find(input);
+    const userFiltered = await this.findUserByIdRepository.find(input);
 
     if (Object.keys(userFiltered).length < 1) {
       return left(new EntityNotExists(idString));
