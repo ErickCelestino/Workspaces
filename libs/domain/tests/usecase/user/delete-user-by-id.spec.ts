@@ -6,6 +6,7 @@ import {
   EntityNotExists,
   FindUserByIdRepository,
   NotPermissionError,
+  UserList,
   VerifyUserStatusByIdRepository,
 } from '../../../src';
 import { userMock } from '../../entity';
@@ -91,21 +92,11 @@ describe('DeleteUserById', () => {
   });
 
   it('should return NotPermissionError when a logged user passed it does not have permission in database', async () => {
-    const {
-      deleteUserByIdDto,
-      deleteUserByIdRepository,
-      findUserByIdRepository,
-    } = makeSut();
+    const { deleteUserByIdDto, sut } = makeSut();
+    jest
+      .spyOn(sut['verifyUserStatusByIdRepository'], 'verify')
+      .mockResolvedValueOnce('DEFAULT');
 
-    const mockEmptyRepository: VerifyUserStatusByIdRepository = {
-      verify: jest.fn(async () => 'DEFAULT'),
-    };
-
-    const sut = new DeleteUserById(
-      deleteUserByIdRepository,
-      findUserByIdRepository,
-      mockEmptyRepository
-    );
     deleteUserByIdDto.id = 'any_id';
     const result = await sut.execute(deleteUserByIdDto);
 
@@ -114,24 +105,25 @@ describe('DeleteUserById', () => {
   });
 
   it('should return NotPermissionError when a logged user passed is empty return from database', async () => {
-    const {
-      deleteUserByIdDto,
-      deleteUserByIdRepository,
-      findUserByIdRepository,
-    } = makeSut();
-
-    const mockEmptyRepository: VerifyUserStatusByIdRepository = {
-      verify: jest.fn(async () => ''),
-    };
-
-    const sut = new DeleteUserById(
-      deleteUserByIdRepository,
-      findUserByIdRepository,
-      mockEmptyRepository
-    );
+    const { deleteUserByIdDto, sut } = makeSut();
+    jest
+      .spyOn(sut['verifyUserStatusByIdRepository'], 'verify')
+      .mockResolvedValueOnce('');
     const result = await sut.execute(deleteUserByIdDto);
 
     expect(result.isLeft()).toBe(true);
+    expect(result.value).toBeInstanceOf(EntityNotExists);
+  });
+
+  it('should return EntityNotExists when a pass incorrect Logged User ID', async () => {
+    const { deleteUserByIdDto, sut } = makeSut();
+    jest
+      .spyOn(sut['findUserByIdRepository'], 'find')
+      .mockResolvedValueOnce({} as UserList);
+    const result = await sut.execute(deleteUserByIdDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
     expect(result.value).toBeInstanceOf(EntityNotExists);
   });
 });

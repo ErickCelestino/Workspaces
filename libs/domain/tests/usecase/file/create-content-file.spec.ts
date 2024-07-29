@@ -8,6 +8,9 @@ import {
   EntityNotCreated,
   FileNotAllowed,
   FindUrlFileRepository,
+  UserList,
+  EntityNotExists,
+  Directory,
 } from '../../../src';
 import { ContentFileMock, DirectoryMock, userMock } from '../../entity';
 import {
@@ -108,23 +111,10 @@ describe('CreateContentFile', () => {
   });
 
   it('should return EntityNotCreated if there is no content video created in the database', async () => {
-    const {
-      findDirectoryByIdRepository,
-      findUserByIdRepository,
-      CreateContentFileDto,
-      findUrlFileRespository,
-    } = makeSut();
-
-    const mockEmptyRepository: CreateContentFileRepository = {
-      create: jest.fn(async () => ''),
-    };
-
-    const sut = new CreateContentFile(
-      mockEmptyRepository,
-      findUserByIdRepository,
-      findDirectoryByIdRepository,
-      findUrlFileRespository
-    );
+    const { sut, CreateContentFileDto } = makeSut();
+    jest
+      .spyOn(sut['createContentFileRepository'], 'create')
+      .mockResolvedValueOnce('');
 
     const result = await sut.execute(CreateContentFileDto);
 
@@ -140,5 +130,29 @@ describe('CreateContentFile', () => {
     expect(result.isLeft()).toBe(true);
     expect(result.isRight()).toBe(false);
     expect(result.value).toBeInstanceOf(FileNotAllowed);
+  });
+
+  it('should return EntityNotExists when a pass incorrect Logged User ID', async () => {
+    const { CreateContentFileDto, sut } = makeSut();
+    jest
+      .spyOn(sut['findUserByIdRepository'], 'find')
+      .mockResolvedValueOnce({} as UserList);
+    const result = await sut.execute(CreateContentFileDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
+    expect(result.value).toBeInstanceOf(EntityNotExists);
+  });
+
+  it('should return EntityNotExists when a pass incorrect Directory ID', async () => {
+    const { CreateContentFileDto, sut } = makeSut();
+    jest
+      .spyOn(sut['findDirectoryByIdRepository'], 'find')
+      .mockResolvedValueOnce({} as Directory);
+    const result = await sut.execute(CreateContentFileDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
+    expect(result.value).toBeInstanceOf(EntityNotExists);
   });
 });

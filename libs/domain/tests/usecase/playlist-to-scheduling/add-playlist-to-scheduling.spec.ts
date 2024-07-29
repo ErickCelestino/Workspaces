@@ -5,10 +5,14 @@ import {
   EntityAlreadyExists,
   EntityNotCreated,
   EntityNotEmpty,
+  EntityNotExists,
   FindPlaylistByIdRepository,
   FindPlaylistToSchedulingByIdsRepository,
   FindSchedulingByIdRepository,
   FindUserByIdRepository,
+  PlaylistResponseDto,
+  Scheduling,
+  UserList,
 } from '../../../src';
 import {
   PlaylistMock,
@@ -120,25 +124,10 @@ describe('AddPlaylistsToScheduling', () => {
   });
 
   it('should return EntityAlreadyExists when a exist scheduling in database', async () => {
-    const {
-      findUserByIdRepository,
-      findPlaylistByIdRepository,
-      findSchedulingByIdRepository,
-      findPlaylistToSchedulingByIdsRepository,
-      addPlaylistToSchedulingDto,
-    } = makeSut();
-
-    const mockEmptyRepository: AddPlaylistToSchedulingRepository = {
-      add: jest.fn(async () => ''),
-    };
-
-    const sut = new AddPlaylistsToScheduling(
-      findUserByIdRepository,
-      findSchedulingByIdRepository,
-      findPlaylistByIdRepository,
-      findPlaylistToSchedulingByIdsRepository,
-      mockEmptyRepository
-    );
+    const { sut, addPlaylistToSchedulingDto } = makeSut();
+    jest
+      .spyOn(sut['addPlaylistToSchedulingRepository'], 'add')
+      .mockResolvedValueOnce('');
 
     const result = await sut.execute(addPlaylistToSchedulingDto);
 
@@ -148,30 +137,51 @@ describe('AddPlaylistsToScheduling', () => {
   });
 
   it('should return EntityAlreadyExists when a exist scheduling in database', async () => {
-    const {
-      findUserByIdRepository,
-      findPlaylistByIdRepository,
-      findSchedulingByIdRepository,
-      addPlaylistsToSchedulingRepository,
-      addPlaylistToSchedulingDto,
-    } = makeSut();
-
-    const mockEmptyRepository: FindPlaylistToSchedulingByIdsRepository = {
-      find: jest.fn(async () => PlaylistToSchedulingMock.id),
-    };
-
-    const sut = new AddPlaylistsToScheduling(
-      findUserByIdRepository,
-      findSchedulingByIdRepository,
-      findPlaylistByIdRepository,
-      mockEmptyRepository,
-      addPlaylistsToSchedulingRepository
-    );
+    const { sut, addPlaylistToSchedulingDto } = makeSut();
+    jest
+      .spyOn(sut['findPlaylistToSchedulingByIdsRepository'], 'find')
+      .mockResolvedValueOnce(PlaylistToSchedulingMock.id);
 
     const result = await sut.execute(addPlaylistToSchedulingDto);
 
     expect(result.isRight()).toBe(false);
     expect(result.isLeft()).toBe(true);
     expect(result.value).toBeInstanceOf(EntityAlreadyExists);
+  });
+
+  it('should return EntityNotExists when a pass incorrect Logged User ID', async () => {
+    const { addPlaylistToSchedulingDto, sut } = makeSut();
+    jest
+      .spyOn(sut['findUserByIdRepository'], 'find')
+      .mockResolvedValueOnce({} as UserList);
+    const result = await sut.execute(addPlaylistToSchedulingDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
+    expect(result.value).toBeInstanceOf(EntityNotExists);
+  });
+
+  it('should return EntityNotExists when a pass incorrect Scheduling ID', async () => {
+    const { addPlaylistToSchedulingDto, sut } = makeSut();
+    jest
+      .spyOn(sut['findSchedulingByIdRepository'], 'find')
+      .mockResolvedValueOnce({} as Scheduling);
+    const result = await sut.execute(addPlaylistToSchedulingDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
+    expect(result.value).toBeInstanceOf(EntityNotExists);
+  });
+
+  it('should return EntityNotExists when a pass incorrect Playlist ID', async () => {
+    const { addPlaylistToSchedulingDto, sut } = makeSut();
+    jest
+      .spyOn(sut['findPlaylistByIdRepository'], 'find')
+      .mockResolvedValueOnce({} as PlaylistResponseDto);
+    const result = await sut.execute(addPlaylistToSchedulingDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
+    expect(result.value).toBeInstanceOf(EntityNotExists);
   });
 });

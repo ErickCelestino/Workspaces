@@ -22,7 +22,7 @@ export class ValidateUser
 {
   constructor(
     @Inject('FilterByEmailOrNicknameRepository')
-    private filterEmail: FilterByEmailOrNicknameRepository,
+    private filterByEmailOrNicknameRepository: FilterByEmailOrNicknameRepository,
     @Inject('ValidateHashRepository')
     private validateHashRespository: ValidateHashRepository
   ) {}
@@ -40,7 +40,8 @@ export class ValidateUser
       return left(new InsufficientCharacters('Password'));
     }
 
-    const filteredUserEmail = await this.filterEmail.filter(email);
+    const filteredUserEmail =
+      await this.filterByEmailOrNicknameRepository.filter(email);
 
     if (Object.keys(filteredUserEmail).length < 1) {
       return left(new EntityNotExists('User'));
@@ -48,13 +49,7 @@ export class ValidateUser
 
     const filteredAuth: Auth[] = filteredUserEmail.auth.map((auth) => {
       if (auth.status != 'DEFAULT') {
-        return {
-          authId: '',
-          userId: '',
-          email: '',
-          status: '',
-          password: '',
-        };
+        return {} as Auth;
       }
       return auth;
     });

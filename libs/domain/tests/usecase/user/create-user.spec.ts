@@ -15,7 +15,7 @@ import {
 import { userMock } from '../../entity';
 import {
   CreateUserRepositoryMock,
-  FilterByEmailOrNicknameRepositoryMock,
+  FilterByEmailOrNicknameEmptyRepositoryMock,
   FindAppByIdRepositoryMock,
 } from '../../repository';
 
@@ -30,7 +30,8 @@ interface SutTypes {
 
 const makeSut = (): SutTypes => {
   const createUserRepository = new CreateUserRepositoryMock();
-  const filterNickNameRepository = new FilterByEmailOrNicknameRepositoryMock();
+  const filterNickNameRepository =
+    new FilterByEmailOrNicknameEmptyRepositoryMock();
   const findAppByIdRepository = new FindAppByIdRepositoryMock();
 
   const createUserDto: CreateUserDto = {

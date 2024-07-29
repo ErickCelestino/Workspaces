@@ -32,8 +32,14 @@ export class FindSchedulingById
       return left(new EntityNotEmpty('User ID'));
     }
 
-    await ValidationUserId(loggedUserId, this.findUserByIdRepository);
-    await ValidationSchedulingId(id, this.findSchedulingByIdRepository);
+    const userValidation = await ValidationUserId(
+      loggedUserId,
+      this.findUserByIdRepository
+    );
+
+    if (userValidation.isLeft()) {
+      return left(userValidation.value);
+    }
 
     const filteredScheduling = await this.findSchedulingByIdRepository.find(id);
 

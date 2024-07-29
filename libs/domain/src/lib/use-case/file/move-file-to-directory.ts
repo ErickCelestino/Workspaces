@@ -49,14 +49,32 @@ export class MoveFileToDirectory
       return left(new EntityNotEmpty('logged user ID'));
     }
 
-    await ValidationUserId(loggedUserId, this.findUserByIdRepository);
+    const userValidation = await ValidationUserId(
+      loggedUserId,
+      this.findUserByIdRepository
+    );
 
-    await ValidationDirectoryId(
-      idToMoveDirectory,
+    if (userValidation.isLeft()) {
+      return left(userValidation.value);
+    }
+
+    const directoryValidation = await ValidationDirectoryId(
+      idToMove,
       this.findDirectoryByIdRepository
     );
 
-    await ValidationContentFileId(idToMove, this.findContentFileByIdRepository);
+    if (directoryValidation.isLeft()) {
+      return left(directoryValidation.value);
+    }
+
+    const contentFileValidation = await ValidationContentFileId(
+      idToMove,
+      this.findContentFileByIdRepository
+    );
+
+    if (contentFileValidation.isLeft()) {
+      return left(contentFileValidation.value);
+    }
 
     await this.moveFileToDirectoryRepository.move(input);
 

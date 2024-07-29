@@ -8,6 +8,7 @@ import {
 } from '../../error';
 import { EditUserRepository, FindUserByIdRepository } from '../../repository';
 import { Either, left, right } from '../../shared/either';
+import { ValidationUserId } from '../../utils';
 
 export class EditUser
   implements
@@ -40,10 +41,13 @@ export class EditUser
       return left(new EntityNotEmpty('status'));
     }
 
-    const userFinded = await this.findUserByIdRepository.find(id);
+    const userValidation = await ValidationUserId(
+      id,
+      this.findUserByIdRepository
+    );
 
-    if (Object.keys(userFinded).length < 1) {
-      return left(new EntityNotExists('user'));
+    if (userValidation.isLeft()) {
+      return left(userValidation.value);
     }
 
     await this.editUserRepository.edit(input);

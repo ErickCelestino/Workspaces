@@ -63,16 +63,46 @@ export class MoveFilesToAnotherPlaylist
       return left(new EntityNotEmpty('Old Playlist ID'));
     }
 
-    await ValidationUserId(loggedUserId, this.findUserByIdRepository);
-    await ValidationPlaylistId(newPlaylistId, this.findPlaylistByIdRepository);
-    await ValidationPlaylistId(oldPlaylistId, this.findPlaylistByIdRepository);
+    const userValidation = await ValidationUserId(
+      loggedUserId,
+      this.findUserByIdRepository
+    );
+
+    if (userValidation.isLeft()) {
+      return left(userValidation.value);
+    }
+
+    const newPlaylitValidation = await ValidationPlaylistId(
+      newPlaylistId,
+      this.findPlaylistByIdRepository
+    );
+
+    if (newPlaylitValidation.isLeft()) {
+      return left(newPlaylitValidation.value);
+    }
+
+    const oldPlaylitValidation = await ValidationPlaylistId(
+      oldPlaylistId,
+      this.findPlaylistByIdRepository
+    );
+
+    if (oldPlaylitValidation.isLeft()) {
+      return left(oldPlaylitValidation.value);
+    }
 
     for (const file of filesId) {
       if (Object.keys(file).length < 1) {
         return left(new EntityNotEmpty('File ID'));
       }
 
-      await ValidationContentFileId(file, this.findContentFileByIdRepository);
+      const contentFileValidation = await ValidationContentFileId(
+        file,
+        this.findContentFileByIdRepository
+      );
+
+      if (contentFileValidation.isLeft()) {
+        return left(contentFileValidation.value);
+      }
 
       const filteredOldPlaylist =
         await this.findFileInFileToPlaylistRepository.find({

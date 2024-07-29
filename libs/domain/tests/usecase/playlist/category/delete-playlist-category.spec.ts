@@ -1,6 +1,9 @@
 import {
   EntityNotEmpty,
+  EntityNotExists,
   FindPlaylistCategoryByIdRepository,
+  PlaylistCategory,
+  UserList,
 } from '../../../../src';
 import {
   DeletePlaylistCategory,
@@ -78,5 +81,29 @@ describe('DeletePlaylistCategory', () => {
     expect(result.isLeft()).toBe(true);
     expect(result.isRight()).toBe(false);
     expect(result.value).toBeInstanceOf(EntityNotEmpty);
+  });
+
+  it('should return EntityNotExists when a pass incorrect Logged User ID', async () => {
+    const { deletePlaylistCategoryDto, sut } = makeSut();
+    jest
+      .spyOn(sut['findUserByIdRepository'], 'find')
+      .mockResolvedValueOnce({} as UserList);
+    const result = await sut.execute(deletePlaylistCategoryDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
+    expect(result.value).toBeInstanceOf(EntityNotExists);
+  });
+
+  it('should return EntityNotExists when a pass incorrect Playlist Category User ID', async () => {
+    const { deletePlaylistCategoryDto, sut } = makeSut();
+    jest
+      .spyOn(sut['findPlaylistCategoryByIdRepository'], 'find')
+      .mockResolvedValueOnce({} as PlaylistCategory);
+    const result = await sut.execute(deletePlaylistCategoryDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
+    expect(result.value).toBeInstanceOf(EntityNotExists);
   });
 });

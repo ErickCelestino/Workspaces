@@ -53,15 +53,37 @@ export class DeletePlaylistFiles
       return left(new EntityNotEmpty('Playlist ID'));
     }
 
-    await ValidationUserId(loggedUserId, this.findUserByIdRepository);
-    await ValidationPlaylistId(playlistId, this.findPlaylistByIdRepository);
+    const userValidation = await ValidationUserId(
+      loggedUserId,
+      this.findUserByIdRepository
+    );
+
+    if (userValidation.isLeft()) {
+      return left(userValidation.value);
+    }
+
+    const playlitValidation = await ValidationPlaylistId(
+      playlistId,
+      this.findPlaylistByIdRepository
+    );
+
+    if (playlitValidation.isLeft()) {
+      return left(playlitValidation.value);
+    }
 
     for (const file of filesId) {
       if (Object.keys(file).length < 1) {
         return left(new EntityNotEmpty('File ID'));
       }
 
-      await ValidationContentFileId(file, this.findContentFileByIdRepository);
+      const contentFileValidation = await ValidationContentFileId(
+        file,
+        this.findContentFileByIdRepository
+      );
+
+      if (contentFileValidation.isLeft()) {
+        return left(contentFileValidation.value);
+      }
 
       const filteredPlaylist =
         await this.findFileInFileToPlaylistRepository.find({

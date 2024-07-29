@@ -4,6 +4,9 @@ import {
   FindPlaylistCategoryByIdRepository,
   FindUserByIdRepository,
   EntityNotEmpty,
+  UserList,
+  EntityNotExists,
+  PlaylistCategory,
 } from '../../../../src';
 import { EditPlaylistCategoryDto } from '../../../../src/lib/dto/request/playlist/category/edit-playlist-category.dto';
 import { PlaylistCategoryMock, userMock } from '../../../entity';
@@ -101,5 +104,29 @@ describe('EditPlaylistCategory', () => {
     expect(result.isLeft()).toBe(true);
     expect(result.isRight()).toBe(false);
     expect(result.value).toBeInstanceOf(EntityNotEmpty);
+  });
+
+  it('should return EntityNotExists when a pass incorrect Logged User ID', async () => {
+    const { editPlaylistCategoryDto, sut } = makeSut();
+    jest
+      .spyOn(sut['findUserByIdRepository'], 'find')
+      .mockResolvedValueOnce({} as UserList);
+    const result = await sut.execute(editPlaylistCategoryDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
+    expect(result.value).toBeInstanceOf(EntityNotExists);
+  });
+
+  it('should return EntityNotExists when a pass incorrect Playlist Category User ID', async () => {
+    const { editPlaylistCategoryDto, sut } = makeSut();
+    jest
+      .spyOn(sut['findPlaylistCategoryByIdRepository'], 'find')
+      .mockResolvedValueOnce({} as PlaylistCategory);
+    const result = await sut.execute(editPlaylistCategoryDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
+    expect(result.value).toBeInstanceOf(EntityNotExists);
   });
 });

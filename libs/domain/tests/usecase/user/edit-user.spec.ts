@@ -55,16 +55,8 @@ describe('EditUser', () => {
   });
 
   it('should return EntityNotEmpty if this id is empty', async () => {
-    const { sut } = makeSut();
-
-    const teste = {} as string;
-
-    const editUserDto: EditUserDto = {
-      id: teste,
-      birthDate: new Date(),
-      name: userMock.name,
-      status: 'ACTIVE',
-    };
+    const { sut, editUserDto } = makeSut();
+    editUserDto.id = '';
 
     const result = await sut.execute(editUserDto);
 
@@ -73,14 +65,8 @@ describe('EditUser', () => {
   });
 
   it('should return EntityNotEmpty if this status is empty', async () => {
-    const { sut } = makeSut();
-    const statusEmpty = {} as StatusUser;
-    const editUserDto: EditUserDto = {
-      id: userMock.userId,
-      birthDate: new Date(),
-      name: userMock.name,
-      status: statusEmpty,
-    };
+    const { sut, editUserDto } = makeSut();
+    editUserDto.status = {} as StatusUser;
 
     const result = await sut.execute(editUserDto);
 
@@ -89,14 +75,8 @@ describe('EditUser', () => {
   });
 
   it('should return InsufficientCharacters when a incorrect name', async () => {
-    const { sut } = makeSut();
-
-    const editUserDto: EditUserDto = {
-      id: userMock.userId,
-      birthDate: new Date(),
-      name: '',
-      status: 'ACTIVE',
-    };
+    const { sut, editUserDto } = makeSut();
+    editUserDto.name = '';
 
     const result = await sut.execute(editUserDto);
 
@@ -104,20 +84,15 @@ describe('EditUser', () => {
     expect(result.value).toBeInstanceOf(InsufficientCharacters);
   });
 
-  it('should return EntityNotExists when a not exist user in database', async () => {
-    const { editUserDto, editUserRepository } = makeSut();
-
-    const mockResult = {} as UserList;
-
-    const mockEmptyRepository: FindUserByIdRepository = {
-      find: jest.fn(async () => mockResult),
-    };
-
-    const sut = new EditUser(editUserRepository, mockEmptyRepository);
-
+  it('should return EntityNotExists when a pass incorrect Logged User ID', async () => {
+    const { editUserDto, sut } = makeSut();
+    jest
+      .spyOn(sut['findUserByIdRepository'], 'find')
+      .mockResolvedValueOnce({} as UserList);
     const result = await sut.execute(editUserDto);
 
     expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
     expect(result.value).toBeInstanceOf(EntityNotExists);
   });
 });

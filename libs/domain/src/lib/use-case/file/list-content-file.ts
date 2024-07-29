@@ -43,9 +43,23 @@ export class ListContentFile
       return left(new EntityNotEmpty(`${loggedUserString} ID`));
     }
 
-    await ValidationUserId(loggedUserId, this.findUserByIdRepository);
+    const userValidation = await ValidationUserId(
+      loggedUserId,
+      this.findUserByIdRepository
+    );
 
-    await ValidationDirectoryId(directoryId, this.findDirectoryByIdRepository);
+    if (userValidation.isLeft()) {
+      return left(userValidation.value);
+    }
+
+    const directoryValidation = await ValidationDirectoryId(
+      directoryId,
+      this.findDirectoryByIdRepository
+    );
+
+    if (directoryValidation.isLeft()) {
+      return left(directoryValidation.value);
+    }
 
     const resultList = await this.listContentFileRepository.list(input);
 

@@ -1,9 +1,11 @@
 import {
   EntityNotEmpty,
+  EntityNotExists,
   FindUserByIdRepository,
   ListPlaylistCategory,
   ListPlaylistCategoryDto,
   ListPlaylistCategoryRepository,
+  UserList,
 } from '../../../../src';
 import { ListPlaylistCategoryReponseMock, userMock } from '../../../entity';
 import {
@@ -60,5 +62,17 @@ describe('ListPlaylistCategory', () => {
     expect(result.isLeft()).toBe(true);
     expect(result.isRight()).toBe(false);
     expect(result.value).toBeInstanceOf(EntityNotEmpty);
+  });
+
+  it('should return EntityNotExists when a pass incorrect Logged User ID', async () => {
+    const { listPlaylistCategoryDto, sut } = makeSut();
+    jest
+      .spyOn(sut['findUserByIdRepository'], 'find')
+      .mockResolvedValueOnce({} as UserList);
+    const result = await sut.execute(listPlaylistCategoryDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
+    expect(result.value).toBeInstanceOf(EntityNotExists);
   });
 });

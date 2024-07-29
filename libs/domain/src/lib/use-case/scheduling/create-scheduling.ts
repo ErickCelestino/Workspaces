@@ -89,8 +89,23 @@ export class CreateScheduling
       `${endTime}`
     );
 
-    await ValidationStartEndTime(convertedStartTime, convertedEndTime);
-    await ValidationUserId(loggedUserId, this.findUserByIdRepository);
+    const startEndTimeValidation = await ValidationStartEndTime(
+      convertedStartTime,
+      convertedEndTime
+    );
+
+    if (startEndTimeValidation.isLeft()) {
+      return left(startEndTimeValidation.value);
+    }
+
+    const userValidation = await ValidationUserId(
+      loggedUserId,
+      this.findUserByIdRepository
+    );
+
+    if (userValidation.isLeft()) {
+      return left(userValidation.value);
+    }
 
     const filteredScheduling = await this.findSchedulingByNameRepository.find({
       name,

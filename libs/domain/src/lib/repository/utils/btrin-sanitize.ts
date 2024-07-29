@@ -1,3 +1,3 @@
 export interface BtrinSanitizeRepository {
-  btrin(input: string): string | undefined;
+  btrin(input: string): Promise<string | undefined>;
 }
