@@ -5,6 +5,7 @@ import { CreatePlaylist } from '@workspaces/domain';
 import {
   CreatePlaylistRepositoryImpl,
   FindPlaylistByNameRepositoryImpl,
+  FindPlaylistCategoryByIdRepositoryImpl,
   FindUserByIdRepositoryImpl,
   PrismaService,
 } from '@workspaces/data-access';
@@ -25,6 +26,10 @@ import {
     {
       provide: 'FindPlaylistByNameRepository',
       useClass: FindPlaylistByNameRepositoryImpl,
+    },
+    {
+      provide: 'FindPlaylistCategoryByIdRepository',
+      useClass: FindPlaylistCategoryByIdRepositoryImpl,
     },
     {
       provide: 'CreatePlaylistRepository',

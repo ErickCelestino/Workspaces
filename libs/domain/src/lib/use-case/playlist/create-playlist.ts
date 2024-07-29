@@ -32,7 +32,7 @@ export class CreatePlaylist
   constructor(
     @Inject('FindUserByIdRepository')
     private findUserByIdRepository: FindUserByIdRepository,
-    @Inject('findPlaylistCategoryByIdRepository')
+    @Inject('FindPlaylistCategoryByIdRepository')
     private findPlaylistCategoryByIdRepository: FindPlaylistCategoryByIdRepository,
     @Inject('FindPlaylistByNameRepository')
     private findPlaylistByNameRepository: FindPlaylistByNameRepository,

@@ -1,7 +1,7 @@
 import { Inject } from '@nestjs/common';
 import { UseCase } from '../../../base/use-case';
 import { DeletePlaylistCategoryDto } from '../../../dto';
-import { EntityNotEmpty, EntityNotExists } from '../../../error';
+import { EntityNotEmpty } from '../../../error';
 import {
   DeletePlaylistCategoryRepository,
   FindPlaylistCategoryByIdRepository,
@@ -16,7 +16,7 @@ export class DeletePlaylistCategory
   constructor(
     @Inject('FindUserByIdRepository')
     private findUserByIdRepository: FindUserByIdRepository,
-    @Inject('findPlaylistCategoryByIdRepository')
+    @Inject('FindPlaylistCategoryByIdRepository')
     private findPlaylistCategoryByIdRepository: FindPlaylistCategoryByIdRepository,
     @Inject('DeletePlaylistCategoryRepository')
     private deletePlaylistRepository: DeletePlaylistCategoryRepository
