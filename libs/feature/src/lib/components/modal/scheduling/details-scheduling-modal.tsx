@@ -3,7 +3,6 @@ import { useLoggedUser } from '../../../contexts';
 import {
   ErrorResponse,
   FindSchedulingByIdDto,
-  ListPlaylist,
   ListPlaylistBySchedulingIdDto,
   Playlist,
   Scheduling,

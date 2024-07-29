@@ -13,12 +13,15 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import {
   ContentFile,
+  CrudType,
   ErrorResponse,
   FindFilesByPlaylistDto,
+  IconMenuItem,
   Playlist,
 } from '@workspaces/domain';
 import { FC, useCallback, useState } from 'react';
@@ -27,6 +30,7 @@ import { FindFilesByPlaylistRequest } from '../../services';
 import axios, { AxiosError } from 'axios';
 import { ValidationsError } from '../../shared';
 import { ScrollBox } from '../scroll';
+import { ButtonFileMenu } from '../menu';
 
 interface PlaylistItemProps {
   playlists: Playlist[];
@@ -46,6 +50,7 @@ export const ListSimplePlaylist: FC<PlaylistItemProps> = ({
 }) => {
   const { loggedUser } = useLoggedUser();
   const theme = useTheme();
+  const [deletePlaylistPopUp, setDeletePlaylistPopUp] = useState(false);
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
   const [listFiles, setListFiles] = useState<{ [key: string]: ContentFile[] }>(
     {}
@@ -53,6 +58,18 @@ export const ListSimplePlaylist: FC<PlaylistItemProps> = ({
   const [openSubItems, setOpenSubItems] = useState<{ [key: string]: boolean }>(
     {}
   );
+  const [selectedId, setSelectedId] = useState('');
+
+  const handlePopUpOpen = (types: CrudType, id?: string) => {
+    switch (types) {
+      case 'delete':
+        setSelectedId(id ?? '');
+        setDeletePlaylistPopUp(true);
+        break;
+    }
+  };
+
+  const iconMenuList: IconMenuItem[] = [];
 
   const getFilesByPlaylist = useCallback(
     async (input: FindFilesByPlaylistDto) => {
@@ -113,6 +130,16 @@ export const ListSimplePlaylist: FC<PlaylistItemProps> = ({
                     )}
                   </ListItemButton>
                 </ListItemButton>
+                <ButtonFileMenu
+                  iconMenuItemList={[
+                    {
+                      icon: <DeleteIcon />,
+                      title: 'Deletar',
+                      handleClick: async () =>
+                        handlePopUpOpen('delete', playlist.id),
+                    },
+                  ]}
+                />
               </ListItem>
               <Box
                 sx={{
