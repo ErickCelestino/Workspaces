@@ -5,8 +5,10 @@ import {
   EntityAlreadyExists,
   EntityNotCreated,
   EntityNotEmpty,
+  EntityNotExists,
   FindPlaylistCategoryByNameRepository,
   FindUserByIdRepository,
+  UserList,
 } from '../../../../src';
 import { PlaylistCategoryMock, userMock } from '../../../entity';
 import {
@@ -94,21 +96,11 @@ describe('CreatePlaylistCategory', () => {
   });
 
   it('should return EntityNotCreated if there is no playlist category created in the database', async () => {
-    const {
-      creatPlaylistCategoryDto,
-      findUserByIdRepository,
-      findPlaylistCategoryByNameRepository,
-    } = makeSut();
+    const { creatPlaylistCategoryDto, sut } = makeSut();
 
-    const mockEmptyRepository: CreatePlaylistCategoryRepository = {
-      create: jest.fn(async () => ''),
-    };
-
-    const sut = new CreatePlaylistCategory(
-      findUserByIdRepository,
-      mockEmptyRepository,
-      findPlaylistCategoryByNameRepository
-    );
+    jest
+      .spyOn(sut['createPlaylistCategoryRepository'], 'create')
+      .mockResolvedValueOnce('');
 
     const result = await sut.execute(creatPlaylistCategoryDto);
 
@@ -117,25 +109,27 @@ describe('CreatePlaylistCategory', () => {
   });
 
   it('should return EntityAlreadyExists if there is playlist category created in the database', async () => {
-    const {
-      creatPlaylistCategoryDto,
-      findUserByIdRepository,
-      createPlaylistCategoryRepository,
-    } = makeSut();
+    const { creatPlaylistCategoryDto, sut } = makeSut();
 
-    const mockEmptyRepository: FindPlaylistCategoryByNameRepository = {
-      find: jest.fn(async () => PlaylistCategoryMock),
-    };
-
-    const sut = new CreatePlaylistCategory(
-      findUserByIdRepository,
-      createPlaylistCategoryRepository,
-      mockEmptyRepository
-    );
+    jest
+      .spyOn(sut['findPlaylistCategoryByNameRepository'], 'find')
+      .mockResolvedValueOnce(PlaylistCategoryMock);
 
     const result = await sut.execute(creatPlaylistCategoryDto);
 
     expect(result.isLeft()).toBe(true);
     expect(result.value).toBeInstanceOf(EntityAlreadyExists);
+  });
+
+  it('should return EntityNotExists when a pass incorrect Logged User ID', async () => {
+    const { creatPlaylistCategoryDto, sut } = makeSut();
+    jest
+      .spyOn(sut['findUserByIdRepository'], 'find')
+      .mockResolvedValueOnce({} as UserList);
+    const result = await sut.execute(creatPlaylistCategoryDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
+    expect(result.value).toBeInstanceOf(EntityNotExists);
   });
 });

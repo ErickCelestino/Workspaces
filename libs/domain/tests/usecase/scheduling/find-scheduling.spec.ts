@@ -7,6 +7,7 @@ import {
   FindSchedulingByIdRepository,
   FindUserByIdRepository,
   Scheduling,
+  UserList,
 } from '../../../src';
 import { SchedulingMock, userMock } from '../../entity';
 import {
@@ -74,23 +75,28 @@ describe('FindSchedulingById', () => {
     expect(result.value).toBeInstanceOf(EntityNotEmpty);
   });
 
-  it('should return EntityAlreadyExists when a exist scheduling in database', async () => {
-    const { findUserByIdRepository, findSchedulingByIdDto } = makeSut();
-
-    const returnMock = {} as Scheduling;
-    const mockEmptyRepository: FindSchedulingByIdRepository = {
-      find: jest.fn(async () => returnMock),
-    };
-
-    const sut = new FindSchedulingById(
-      findUserByIdRepository,
-      mockEmptyRepository
-    );
+  it('should return EntityNotExists when a exist scheduling in database', async () => {
+    const { sut, findSchedulingByIdDto } = makeSut();
+    jest
+      .spyOn(sut['findSchedulingByIdRepository'], 'find')
+      .mockResolvedValueOnce({} as Scheduling);
 
     const result = await sut.execute(findSchedulingByIdDto);
 
     expect(result.isRight()).toBe(false);
     expect(result.isLeft()).toBe(true);
+    expect(result.value).toBeInstanceOf(EntityNotExists);
+  });
+
+  it('should return EntityNotExists when a pass incorrect Logged User ID', async () => {
+    const { findSchedulingByIdDto, sut } = makeSut();
+    jest
+      .spyOn(sut['findUserByIdRepository'], 'find')
+      .mockResolvedValueOnce({} as UserList);
+    const result = await sut.execute(findSchedulingByIdDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
     expect(result.value).toBeInstanceOf(EntityNotExists);
   });
 });

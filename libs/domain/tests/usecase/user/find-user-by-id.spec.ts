@@ -45,13 +45,10 @@ describe('FindUserById', () => {
   });
 
   it('should return EntityNotExists when not exist user id in database', async () => {
-    const mockEmptyItem = {} as UserList;
-
-    const mockEmptyRepository: FindUserByIdRepository = {
-      find: jest.fn(async () => mockEmptyItem),
-    };
-
-    const sut = new FindUserById(mockEmptyRepository);
+    const { sut } = makeSut();
+    jest
+      .spyOn(sut['findUserByIdRepository'], 'find')
+      .mockResolvedValueOnce({} as UserList);
 
     const result = await sut.execute(listUserMock[0].userId);
 

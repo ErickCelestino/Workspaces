@@ -54,11 +54,23 @@ export class AddPlaylistsToScheduling
       return left(new EntityNotEmpty('Playlist ID'));
     }
 
-    await ValidationUserId(loggedUserId, this.findUserByIdRepository);
-    await ValidationSchedulingId(
+    const userValidation = await ValidationUserId(
+      loggedUserId,
+      this.findUserByIdRepository
+    );
+
+    if (userValidation.isLeft()) {
+      return left(userValidation.value);
+    }
+
+    const schedulingValidation = await ValidationSchedulingId(
       schedulingId,
       this.findSchedulingByIdRepository
     );
+
+    if (schedulingValidation.isLeft()) {
+      return left(schedulingValidation.value);
+    }
 
     const playlistToSchedulingList = [];
 
@@ -67,7 +79,14 @@ export class AddPlaylistsToScheduling
         return left(new EntityNotEmpty('Playlist ID'));
       }
 
-      await ValidationPlaylistId(playlistId, this.findPlaylistByIdRepository);
+      const playlitValidation = await ValidationPlaylistId(
+        playlistId,
+        this.findPlaylistByIdRepository
+      );
+
+      if (playlitValidation.isLeft()) {
+        return left(playlitValidation.value);
+      }
 
       const filteredPlaylistToScheduling =
         await this.findPlaylistToSchedulingByIdsRepository.find({

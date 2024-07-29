@@ -3,6 +3,7 @@ import { UseCase } from '../../base/use-case';
 import { Either, left, right } from '../../shared/either';
 import { BtrinSanitizeRepository, ListUserRepository } from '../../repository';
 import { ListUserDto, ListUserResponseDto } from '../../dto';
+import { SyntaxError } from '../../error';
 
 export class ListUser
   implements UseCase<ListUserDto, Either<SyntaxError, ListUserResponseDto>>
@@ -17,7 +18,9 @@ export class ListUser
   async execute(
     input: ListUserDto
   ): Promise<Either<SyntaxError, ListUserResponseDto>> {
-    const sanitizedInput = this.btrinSanitizeRepository.btrin(input.input);
+    const sanitizedInput = await this.btrinSanitizeRepository.btrin(
+      input.input
+    );
     if (sanitizedInput === undefined) {
       return left(new SyntaxError());
     }

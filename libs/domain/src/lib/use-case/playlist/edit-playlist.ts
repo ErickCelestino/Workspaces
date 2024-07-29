@@ -43,7 +43,14 @@ export class EditPlaylist
       return left(new EntityNotEmpty('Playlist'));
     }
 
-    await ValidationUserId(loggedUserId, this.findUserByIdRepository);
+    const userValidation = await ValidationUserId(
+      loggedUserId,
+      this.findUserByIdRepository
+    );
+
+    if (userValidation.isLeft()) {
+      return left(userValidation.value);
+    }
 
     const filteredCategory = await this.findPlaylistCategoryByIdRepository.find(
       body.playlistCategoryId
@@ -53,7 +60,14 @@ export class EditPlaylist
       return left(new EntityNotExists('Category'));
     }
 
-    await ValidationPlaylistId(id, this.findPlaylistByIdRepository);
+    const playlitValidation = await ValidationPlaylistId(
+      id,
+      this.findPlaylistByIdRepository
+    );
+
+    if (playlitValidation.isLeft()) {
+      return left(playlitValidation.value);
+    }
 
     await this.editPlaylistRepository.edit(input);
 

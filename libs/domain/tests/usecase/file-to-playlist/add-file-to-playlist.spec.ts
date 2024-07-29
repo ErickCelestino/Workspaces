@@ -2,13 +2,17 @@ import {
   AddFileToPlaylist,
   AddFileToPlaylistDto,
   AddFileToPlaylistRepository,
+  ContentFile,
   EntityAlreadyExists,
   EntityNotCreated,
   EntityNotEmpty,
+  EntityNotExists,
   FindContentFileByIdRepository,
   FindFileInFileToPlaylistRepository,
   FindPlaylistByIdRepository,
   FindUserByIdRepository,
+  PlaylistResponseDto,
+  UserList,
 } from '../../../src';
 import {
   ContentFileMock,
@@ -109,25 +113,10 @@ describe('AddFileToPlaylist', () => {
   });
 
   it('should return EntityNotCreated if there is no file to playlist created in the database', async () => {
-    const {
-      findContentFileByIdRepository,
-      findUserByIdRepository,
-      addtFileToPlaylistDto,
-      findPlaylistByIdRepository,
-      findFileInFileToPlaylistRepository,
-    } = makeSut();
-
-    const mockEmptyRepository: AddFileToPlaylistRepository = {
-      add: jest.fn(async () => []),
-    };
-
-    const sut = new AddFileToPlaylist(
-      findUserByIdRepository,
-      findContentFileByIdRepository,
-      findFileInFileToPlaylistRepository,
-      findPlaylistByIdRepository,
-      mockEmptyRepository
-    );
+    const { addtFileToPlaylistDto, sut } = makeSut();
+    jest
+      .spyOn(sut['addFileToPlaylistRepository'], 'add')
+      .mockResolvedValueOnce([]);
 
     const result = await sut.execute(addtFileToPlaylistDto);
 
@@ -136,29 +125,50 @@ describe('AddFileToPlaylist', () => {
   });
 
   it('should return EntityAlreadyExists if there is exist file in file to playlist in the database', async () => {
-    const {
-      findContentFileByIdRepository,
-      findUserByIdRepository,
-      addtFileToPlaylistDto,
-      findPlaylistByIdRepository,
-      addFileToPlaylistRepository,
-    } = makeSut();
-
-    const mockEmptyRepository: FindFileInFileToPlaylistRepository = {
-      find: jest.fn(async () => ContentFileMock.id),
-    };
-
-    const sut = new AddFileToPlaylist(
-      findUserByIdRepository,
-      findContentFileByIdRepository,
-      mockEmptyRepository,
-      findPlaylistByIdRepository,
-      addFileToPlaylistRepository
-    );
+    const { sut, addtFileToPlaylistDto } = makeSut();
+    jest
+      .spyOn(sut['findFileInFileToPlaylistRepository'], 'find')
+      .mockResolvedValueOnce(ContentFileMock.id);
 
     const result = await sut.execute(addtFileToPlaylistDto);
 
     expect(result.isLeft()).toBe(true);
     expect(result.value).toBeInstanceOf(EntityAlreadyExists);
+  });
+
+  it('should return EntityNotExists when a pass incorrect Logged User ID', async () => {
+    const { addtFileToPlaylistDto, sut } = makeSut();
+    jest
+      .spyOn(sut['findUserByIdRepository'], 'find')
+      .mockResolvedValueOnce({} as UserList);
+    const result = await sut.execute(addtFileToPlaylistDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
+    expect(result.value).toBeInstanceOf(EntityNotExists);
+  });
+
+  it('should return EntityNotExists when a pass incorrect File ID', async () => {
+    const { addtFileToPlaylistDto, sut } = makeSut();
+    jest
+      .spyOn(sut['findContentFileByIdRepository'], 'find')
+      .mockResolvedValueOnce({} as ContentFile);
+    const result = await sut.execute(addtFileToPlaylistDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
+    expect(result.value).toBeInstanceOf(EntityNotExists);
+  });
+
+  it('should return EntityNotExists when a pass incorrect Playlist ID', async () => {
+    const { addtFileToPlaylistDto, sut } = makeSut();
+    jest
+      .spyOn(sut['findPlaylistByIdRepository'], 'find')
+      .mockResolvedValueOnce({} as PlaylistResponseDto);
+    const result = await sut.execute(addtFileToPlaylistDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
+    expect(result.value).toBeInstanceOf(EntityNotExists);
   });
 });

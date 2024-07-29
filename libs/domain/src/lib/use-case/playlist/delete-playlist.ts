@@ -37,9 +37,23 @@ export class DeletePlaylist
       return left(new EntityNotEmpty('Logged User'));
     }
 
-    await ValidationUserId(loggedUserId, this.findUserByIdRepository);
+    const userValidation = await ValidationUserId(
+      loggedUserId,
+      this.findUserByIdRepository
+    );
 
-    await ValidationPlaylistId(id, this.findPlaylistByIdRepository);
+    if (userValidation.isLeft()) {
+      return left(userValidation.value);
+    }
+
+    const playlitValidation = await ValidationPlaylistId(
+      id,
+      this.findPlaylistByIdRepository
+    );
+
+    if (playlitValidation.isLeft()) {
+      return left(playlitValidation.value);
+    }
 
     await this.deleteFileByPlaylistRepository.delete(id);
 

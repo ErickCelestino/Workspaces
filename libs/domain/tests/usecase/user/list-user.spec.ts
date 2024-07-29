@@ -3,6 +3,7 @@ import {
   ListUser,
   ListUserDto,
   ListUserRepository,
+  SyntaxError,
 } from '../../../src';
 import {
   BtrinSanitizeRepositoryMock,
@@ -40,18 +41,22 @@ describe('ListUser', () => {
 
     const result = await sut.execute(listUserDto);
 
-    expect(result.isRight());
+    expect(result.isRight()).toBe(true);
+    expect(result.isLeft()).toBe(false);
     expect(result.value);
   });
 
   it('should left SyntaxError if sent an input with any syntax error not sanitized', async () => {
-    const { sut, listUserDto, btrinSanitizeRepository } = makeSut();
+    const { sut, listUserDto } = makeSut();
 
-    btrinSanitizeRepository.btrin = () => undefined;
+    jest
+      .spyOn(sut['btrinSanitizeRepository'], 'btrin')
+      .mockResolvedValueOnce(undefined);
 
     const result = await sut.execute(listUserDto);
 
     expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
     expect(result.value).toBeInstanceOf(SyntaxError);
   });
 });

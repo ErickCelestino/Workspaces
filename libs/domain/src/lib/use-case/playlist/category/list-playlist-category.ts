@@ -37,7 +37,14 @@ export class ListPlaylistCategory
       return left(new EntityNotEmpty('logged User ID'));
     }
 
-    await ValidationUserId(loggedUserId, this.findUserByIdRepository);
+    const userValidation = await ValidationUserId(
+      loggedUserId,
+      this.findUserByIdRepository
+    );
+
+    if (userValidation.isLeft()) {
+      return left(userValidation.value);
+    }
 
     const listCategory = await this.listPlaylistCategoryRepository.list(input);
 

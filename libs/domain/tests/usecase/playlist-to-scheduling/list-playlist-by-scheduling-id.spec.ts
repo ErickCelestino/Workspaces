@@ -1,16 +1,16 @@
-import { DescriptionOutlined } from '@mui/icons-material';
 import {
   EntityNotEmpty,
+  EntityNotExists,
   FindSchedulingByIdRepository,
   FindUserByIdRepository,
   ListPlaylistBySchedulingId,
   ListPlaylistBySchedulingIdDto,
   ListPlaylistBySchedulingIdRepository,
-  ListPlaylistReponseDto,
+  Scheduling,
+  UserList,
 } from '../../../src';
 import {
   ListPlaylistReponseMock,
-  ListSchedulesReponseMock,
   SchedulingMock,
   userMock,
 } from '../../entity';
@@ -84,5 +84,29 @@ describe('ListPlaylistBySchedulingId', () => {
     expect(result.isRight()).toBe(false);
     expect(result.isLeft()).toBe(true);
     expect(result.value).toBeInstanceOf(EntityNotEmpty);
+  });
+
+  it('should return EntityNotExists when a pass incorrect Logged User ID', async () => {
+    const { listPlaylistBySchedulingIdDto, sut } = makeSut();
+    jest
+      .spyOn(sut['findUserByIdRepository'], 'find')
+      .mockResolvedValueOnce({} as UserList);
+    const result = await sut.execute(listPlaylistBySchedulingIdDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
+    expect(result.value).toBeInstanceOf(EntityNotExists);
+  });
+
+  it('should return EntityNotExists when a pass incorrect Scheduling ID', async () => {
+    const { listPlaylistBySchedulingIdDto, sut } = makeSut();
+    jest
+      .spyOn(sut['findSchedulingByIdRepository'], 'find')
+      .mockResolvedValueOnce({} as Scheduling);
+    const result = await sut.execute(listPlaylistBySchedulingIdDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
+    expect(result.value).toBeInstanceOf(EntityNotExists);
   });
 });
