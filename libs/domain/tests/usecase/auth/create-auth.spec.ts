@@ -8,12 +8,13 @@ import {
   FindUserByIdRepository,
   InsufficientCharacters,
   HashGeneratorRepository,
+  UserList,
 } from '../../../src';
 import { userMock } from '../../entity';
 import { authMock } from '../../entity/user/auth.mock';
 import {
   CreateAuthRepositoryMock,
-  FilterByEmailOrNicknameRepositoryMock,
+  FilterByEmailOrNicknameEmptyRepositoryMock,
   FindUserByIdRepositoryMock,
   HashGeneratorRepositoryMock,
 } from '../../repository';
@@ -23,7 +24,7 @@ interface SutTypes {
   createAuthDto: CreateAuthDto;
   createAuthRepository: CreateAuthRepository;
   findUserByIdRepository: FindUserByIdRepository;
-  filterEmailRepository: FilterByEmailOrNicknameRepository;
+  filterByEmailOrNicknameRepository: FilterByEmailOrNicknameRepository;
   hashGenerator: HashGeneratorRepository;
 }
 
@@ -31,7 +32,8 @@ const makeSut = (): SutTypes => {
   const createAuthRepository = new CreateAuthRepositoryMock();
   const findUserByIdRepository = new FindUserByIdRepositoryMock();
   const hashGenerator = new HashGeneratorRepositoryMock();
-  const filterEmailRepository = new FilterByEmailOrNicknameRepositoryMock();
+  const filterByEmailOrNicknameRepository =
+    new FilterByEmailOrNicknameEmptyRepositoryMock();
   const createAuthDto: CreateAuthDto = {
     email: authMock.email,
     password: 'any_password',
@@ -39,7 +41,7 @@ const makeSut = (): SutTypes => {
   };
 
   const sut = new CreateAuth(
-    filterEmailRepository,
+    filterByEmailOrNicknameRepository,
     findUserByIdRepository,
     hashGenerator,
     createAuthRepository
@@ -50,7 +52,7 @@ const makeSut = (): SutTypes => {
     createAuthDto,
     createAuthRepository,
     findUserByIdRepository,
-    filterEmailRepository,
+    filterByEmailOrNicknameRepository,
     hashGenerator,
   };
 };
@@ -99,29 +101,28 @@ describe('CreateAuth', () => {
   });
 
   it('should return EntityAlreadyExists if send email already exist in database', async () => {
-    const { createAuthRepository, findUserByIdRepository, hashGenerator } =
-      makeSut();
+    const { sut, createAuthDto } = makeSut();
+    createAuthDto.email = authMock.email;
 
-    const createAuthDto: CreateAuthDto = {
-      userId: 'invalid_id',
-      email: authMock.email,
-      password: 'valid_password',
-    };
-
-    const mockEmptyRepository: FilterByEmailOrNicknameRepository = {
-      filter: jest.fn(async () => userMock),
-    };
-
-    const sut = new CreateAuth(
-      mockEmptyRepository,
-      findUserByIdRepository,
-      hashGenerator,
-      createAuthRepository
-    );
+    jest
+      .spyOn(sut['filterByEmailOrNicknameRepository'], 'filter')
+      .mockResolvedValueOnce(userMock);
 
     const result = await sut.execute(createAuthDto);
 
     expect(result.isLeft()).toBe(true);
     expect(result.value).toBeInstanceOf(EntityAlreadyExists);
+  });
+
+  it('should return EntityNotExists when a pass incorrect Logged User ID', async () => {
+    const { createAuthDto, sut } = makeSut();
+    jest
+      .spyOn(sut['findUserByIdRepository'], 'find')
+      .mockResolvedValueOnce({} as UserList);
+    const result = await sut.execute(createAuthDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
+    expect(result.value).toBeInstanceOf(EntityNotExists);
   });
 });

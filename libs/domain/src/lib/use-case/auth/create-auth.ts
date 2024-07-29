@@ -24,7 +24,7 @@ export class CreateAuth
 {
   constructor(
     @Inject('FilterByEmailOrNicknameRepository')
-    private filterByEmailRepository: FilterByEmailOrNicknameRepository,
+    private filterByEmailOrNicknameRepository: FilterByEmailOrNicknameRepository,
     @Inject('FindUserByIdRepository')
     private findUserByIdRepository: FindUserByIdRepository,
     @Inject('HashGeneratorRepository')
@@ -50,12 +50,21 @@ export class CreateAuth
       return left(new EntityNotExists('User'));
     }
 
-    const filteredEmail = await this.filterByEmailRepository.filter(email);
+    const filteredEmail = await this.filterByEmailOrNicknameRepository.filter(
+      email
+    );
 
-    if (Object.keys(filteredEmail?.userId).length > 0) {
+    if (Object.keys(filteredEmail?.userId ?? filteredEmail).length > 0) {
       return left(new EntityAlreadyExists(email));
     }
-    await ValidationUserId(userId, this.findUserByIdRepository);
+    const userValidation = await ValidationUserId(
+      userId,
+      this.findUserByIdRepository
+    );
+
+    if (userValidation.isLeft()) {
+      return left(userValidation.value);
+    }
 
     const hashedPassword = await this.hashGenerator.hash(password);
 

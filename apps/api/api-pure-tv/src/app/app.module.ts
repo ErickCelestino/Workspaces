@@ -41,6 +41,10 @@ import {
   EditSchedulingModule,
   FindSchedulingByIdModule,
 } from './scheduling';
+import {
+  AddPlaylistsToSchedulingModule,
+  ListPlaylistBySchedulingIdModule,
+} from './playlist-to-scheduling';
 
 @Module({
   imports: [
@@ -78,6 +82,8 @@ import {
     DeleteSchedulingModule,
     EditSchedulingModule,
     FindSchedulingByIdModule,
+    AddPlaylistsToSchedulingModule,
+    ListPlaylistBySchedulingIdModule,
   ],
   controllers: [AppController],
   providers: [AppService],

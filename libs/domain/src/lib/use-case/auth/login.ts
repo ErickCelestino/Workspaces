@@ -1,7 +1,11 @@
 import { Inject } from '@nestjs/common';
 import { UseCase } from '../../base/use-case';
 import { LoginDto, SignInDto } from '../../dto';
-import { EntityNotExists, IncorrectPassword } from '../../error';
+import {
+  EntityNotEmpty,
+  EntityNotExists,
+  IncorrectPassword,
+} from '../../error';
 import {
   FilterByEmailOrNicknameRepository,
   SignInRepository,
@@ -10,28 +14,34 @@ import { Either, left, right } from '../../shared/either';
 import { AccessToken } from '../../entity';
 
 export class Login
-  implements UseCase<LoginDto, Either<EntityNotExists, AccessToken>>
+  implements
+    UseCase<
+      LoginDto,
+      Either<EntityNotEmpty | IncorrectPassword | EntityNotExists, AccessToken>
+    >
 {
   constructor(
     @Inject('SignInRepository')
     private signInRepository: SignInRepository,
     @Inject('FilterByEmailOrNicknameRepository')
-    private filterEmail: FilterByEmailOrNicknameRepository
+    private filterEmailRepository: FilterByEmailOrNicknameRepository
   ) {}
 
   async execute(
     input: LoginDto
-  ): Promise<Either<EntityNotExists, AccessToken>> {
+  ): Promise<
+    Either<EntityNotEmpty | IncorrectPassword | EntityNotExists, AccessToken>
+  > {
     const { email, error } = input;
     if (Object.keys(error).length > 0) {
       return left(new IncorrectPassword());
     }
 
     if (Object.keys(email).length < 1) {
-      return left(new EntityNotExists('email'));
+      return left(new EntityNotEmpty('email'));
     }
 
-    const filteredUserEmail = await this.filterEmail.filter(email);
+    const filteredUserEmail = await this.filterEmailRepository.filter(email);
 
     if (Object.keys(filteredUserEmail).length < 1) {
       return left(new EntityNotExists('User'));

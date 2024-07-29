@@ -2,8 +2,10 @@ import { Icon, List, useMediaQuery, useTheme } from '@mui/material';
 import AlarmAddIcon from '@mui/icons-material/AlarmAdd';
 import { LayoutBase } from '../../layout';
 import {
+  AddPlaylistToSchedulingModal,
   CreateSchedulingModal,
   DeleteSchedulingModal,
+  DetailsSchedulingModal,
   EditSchedulingModal,
   MobileButtonMenu,
   RightClickMenu,
@@ -37,6 +39,9 @@ export const ListSchedulesContainer = () => {
   const [createSchedulingPopUp, setCreateSchedulingPopUp] = useState(false);
   const [deleteSchedulingPopUp, setDeleteSchedulingPopUp] = useState(false);
   const [editSchedulingPopUp, setEditSchedulingPopUp] = useState(false);
+  const [detailsSchedulingPopUp, setDetailsSchedulingPopUp] = useState(false);
+  const [addPlaylistToSchedulingPopUp, setAddPlaylistToSchedulingPopUp] =
+    useState(false);
   const [selectedId, setSelectedId] = useState('');
 
   const showAlert = useCallback(
@@ -86,7 +91,7 @@ export const ListSchedulesContainer = () => {
     }
   }, [handleData, loggedUser, search]);
 
-  const handlePopUpOpen = (types: CrudType, id?: string) => {
+  const handlePopUpOpen = (types: CrudType | 'add-playlist', id?: string) => {
     switch (types) {
       case 'create':
         setCreateSchedulingPopUp(true);
@@ -99,10 +104,17 @@ export const ListSchedulesContainer = () => {
         setSelectedId(id ?? '');
         setDeleteSchedulingPopUp(true);
         break;
+      case 'add-playlist':
+        setSelectedId(id ?? '');
+        setAddPlaylistToSchedulingPopUp(true);
+        break;
+      case 'details':
+        setSelectedId(id ?? '');
+        setDetailsSchedulingPopUp(true);
     }
   };
 
-  const handlePopUpClose = (types: CrudType) => {
+  const handlePopUpClose = (types: CrudType | 'add-playlist') => {
     switch (types) {
       case 'create':
         setCreateSchedulingPopUp(false);
@@ -112,6 +124,12 @@ export const ListSchedulesContainer = () => {
         break;
       case 'edit':
         setEditSchedulingPopUp(false);
+        break;
+      case 'add-playlist':
+        setAddPlaylistToSchedulingPopUp(false);
+        break;
+      case 'details':
+        setDetailsSchedulingPopUp(false);
         break;
     }
   };
@@ -177,6 +195,20 @@ export const ListSchedulesContainer = () => {
         showAlert={showAlert}
         idToEdit={selectedId}
       />
+      <AddPlaylistToSchedulingModal
+        open={addPlaylistToSchedulingPopUp}
+        title="Adicionar Playlist ao Agendamento"
+        handlePopUpClose={() => handlePopUpClose('add-playlist')}
+        showAlert={showAlert}
+        idScheduling={selectedId}
+      />
+      <DetailsSchedulingModal
+        open={detailsSchedulingPopUp}
+        title="Detalhes Agendamento"
+        handlePopUpClose={() => handlePopUpClose('details')}
+        idToDetails={selectedId}
+        showAlert={showAlert}
+      />
       <LayoutBase title="Listagem Agendamentos" toolBar={<ToolbarPureTV />}>
         <RightClickMenu iconMenuItemList={rightClickMenuList}>
           {smDown && <MobileButtonMenu iconMenuItemList={rightClickMenuList} />}
@@ -197,6 +229,12 @@ export const ListSchedulesContainer = () => {
                   }
                   deleteScheduling={async () =>
                     handlePopUpOpen('delete', scheduling.id)
+                  }
+                  addPlaylistToScheduling={async () =>
+                    handlePopUpOpen('add-playlist', scheduling.id)
+                  }
+                  detailsScheduling={async () =>
+                    handlePopUpOpen('details', scheduling.id)
                   }
                   key={scheduling.id}
                   scheduling={scheduling}

@@ -54,9 +54,23 @@ export class CreateContentFile
       return left(new EntityNotEmpty('File'));
     }
 
-    await ValidationUserId(loggedUserId, this.findUserByIdRepository);
+    const userValidation = await ValidationUserId(
+      loggedUserId,
+      this.findUserByIdRepository
+    );
 
-    await ValidationDirectoryId(directoryId, this.findDirectoryByIdRepository);
+    if (userValidation.isLeft()) {
+      return left(userValidation.value);
+    }
+
+    const directoryValidation = await ValidationDirectoryId(
+      directoryId,
+      this.findDirectoryByIdRepository
+    );
+
+    if (directoryValidation.isLeft()) {
+      return left(directoryValidation.value);
+    }
 
     let error = false;
     for (const item of file) {

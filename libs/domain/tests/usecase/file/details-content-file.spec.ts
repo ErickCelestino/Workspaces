@@ -2,11 +2,13 @@ import {
   ContentFile,
   DetailsContentFile,
   DetailsContentFileDto,
+  Directory,
   EntityNotEmpty,
   EntityNotExists,
   FindContentFileByIdRepository,
   FindDirectoryByIdRepository,
   FindUserByIdRepository,
+  UserList,
 } from '../../../src';
 import { ContentFileMock, DirectoryMock, userMock } from '../../entity';
 import {
@@ -88,27 +90,38 @@ describe('DetailsContentFile', () => {
   });
 
   it('should return EntityNotExists if there is no content file created in the database', async () => {
-    const {
-      detailsContentFileByIdDto,
-      findUserByIdRepository,
-      findDirectoryByIdRepository,
-    } = makeSut();
-
-    const mockEmptyItem = {} as ContentFile;
-
-    const mockEmptyRepository: FindContentFileByIdRepository = {
-      find: jest.fn(async () => mockEmptyItem),
-    };
-
-    const sut = new DetailsContentFile(
-      findUserByIdRepository,
-      findDirectoryByIdRepository,
-      mockEmptyRepository
-    );
+    const { detailsContentFileByIdDto, sut } = makeSut();
+    jest
+      .spyOn(sut['findContentFileByIdRepository'], 'find')
+      .mockResolvedValueOnce({} as ContentFile);
 
     const result = await sut.execute(detailsContentFileByIdDto);
 
     expect(result.isLeft()).toBe(true);
+    expect(result.value).toBeInstanceOf(EntityNotExists);
+  });
+
+  it('should return EntityNotExists when a pass incorrect Logged User ID', async () => {
+    const { detailsContentFileByIdDto, sut } = makeSut();
+    jest
+      .spyOn(sut['findUserByIdRepository'], 'find')
+      .mockResolvedValueOnce({} as UserList);
+    const result = await sut.execute(detailsContentFileByIdDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
+    expect(result.value).toBeInstanceOf(EntityNotExists);
+  });
+
+  it('should return EntityNotExists when a pass incorrect Directory ID', async () => {
+    const { detailsContentFileByIdDto, sut } = makeSut();
+    jest
+      .spyOn(sut['findDirectoryByIdRepository'], 'find')
+      .mockResolvedValueOnce({} as Directory);
+    const result = await sut.execute(detailsContentFileByIdDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
     expect(result.value).toBeInstanceOf(EntityNotExists);
   });
 });

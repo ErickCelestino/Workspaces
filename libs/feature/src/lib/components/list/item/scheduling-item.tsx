@@ -8,8 +8,10 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
+import InfoIcon from '@mui/icons-material/Info';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
 import { IconMenuItem, Scheduling } from '@workspaces/domain';
 import { formatBrDate } from '../../../shared';
 import { ButtonFileMenu } from '../../menu';
@@ -24,6 +26,8 @@ interface SchedulingItemProps {
   titlePriority?: string;
   editScheduling: () => Promise<void>;
   deleteScheduling: () => Promise<void>;
+  addPlaylistToScheduling: () => Promise<void>;
+  detailsScheduling: () => Promise<void>;
 }
 
 export const SchedulingItem: React.FC<SchedulingItemProps> = ({
@@ -36,6 +40,8 @@ export const SchedulingItem: React.FC<SchedulingItemProps> = ({
   titlePriority = 'Prioridade',
   editScheduling,
   deleteScheduling,
+  addPlaylistToScheduling,
+  detailsScheduling,
 }) => {
   const theme = useTheme();
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
@@ -50,6 +56,16 @@ export const SchedulingItem: React.FC<SchedulingItemProps> = ({
       icon: <DeleteIcon />,
       title: 'Deletar',
       handleClick: deleteScheduling,
+    },
+    {
+      icon: <PlaylistAddIcon />,
+      title: 'Adicionar Playlist',
+      handleClick: addPlaylistToScheduling,
+    },
+    {
+      icon: <InfoIcon />,
+      title: 'Detalhes',
+      handleClick: detailsScheduling,
     },
   ];
   return (

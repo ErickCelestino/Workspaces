@@ -1,2 +1,1 @@
-export * from './content-file-card';
-export * from './playlist-card';
+export * from './details-scheduling-card';

@@ -13,7 +13,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import DriveFileMoveIcon from '@mui/icons-material/DriveFileMove';
 import { FC } from 'react';
 import { IconMenuItem } from '@workspaces/domain';
-import { ButtonFileMenu } from '../menu';
+import { ButtonFileMenu } from '../../../menu';
 
 interface ListContentFilesProps {
   fileImage: string;
