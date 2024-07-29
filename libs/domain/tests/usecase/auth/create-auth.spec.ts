@@ -14,7 +14,7 @@ import { userMock } from '../../entity';
 import { authMock } from '../../entity/user/auth.mock';
 import {
   CreateAuthRepositoryMock,
-  FilterByEmailOrNicknameRepositoryMock,
+  FilterByEmailOrNicknameEmptyRepositoryMock,
   FindUserByIdRepositoryMock,
   HashGeneratorRepositoryMock,
 } from '../../repository';
@@ -33,7 +33,7 @@ const makeSut = (): SutTypes => {
   const findUserByIdRepository = new FindUserByIdRepositoryMock();
   const hashGenerator = new HashGeneratorRepositoryMock();
   const filterByEmailOrNicknameRepository =
-    new FilterByEmailOrNicknameRepositoryMock();
+    new FilterByEmailOrNicknameEmptyRepositoryMock();
   const createAuthDto: CreateAuthDto = {
     email: authMock.email,
     password: 'any_password',

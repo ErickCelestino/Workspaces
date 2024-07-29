@@ -54,7 +54,7 @@ export class CreateAuth
       email
     );
 
-    if (Object.keys(filteredEmail?.userId).length > 0) {
+    if (Object.keys(filteredEmail?.userId ?? filteredEmail).length > 0) {
       return left(new EntityAlreadyExists(email));
     }
     const userValidation = await ValidationUserId(
