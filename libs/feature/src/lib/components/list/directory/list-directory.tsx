@@ -1,4 +1,5 @@
 import {
+  Box,
   Icon,
   List,
   ListItemButton,
@@ -113,22 +114,24 @@ export const ListDirectory = () => {
         showAlert={showAlert}
         title="Novo Diretório"
       />
-      <RightClickMenu iconMenuItemList={rightClickMenuList}>
-        <List component={'nav'}>
-          {listDirectory.map((directory, index) => (
-            <ListItemButton
-              key={index}
-              selected={selectedDirectory === directory.id}
-              onClick={() => handleDirectoryClick(directory.id)}
-            >
-              <ListItemIcon>
-                <Icon>folder</Icon>
-              </ListItemIcon>
-              <ListItemText primary={directory.name} />
-            </ListItemButton>
-          ))}
-        </List>
-      </RightClickMenu>
+      <Box display="flex" justifyContent="center">
+        <RightClickMenu iconMenuItemList={rightClickMenuList}>
+          <List component={'nav'}>
+            {listDirectory.map((directory, index) => (
+              <ListItemButton
+                key={index}
+                selected={selectedDirectory === directory.id}
+                onClick={() => handleDirectoryClick(directory.id)}
+              >
+                <ListItemIcon>
+                  <Icon>folder</Icon>
+                </ListItemIcon>
+                <ListItemText primary={directory.name} />
+              </ListItemButton>
+            ))}
+          </List>
+        </RightClickMenu>
+      </Box>
       {SnackbarAlert}
     </>
   );

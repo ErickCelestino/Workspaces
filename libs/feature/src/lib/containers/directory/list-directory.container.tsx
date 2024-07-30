@@ -6,7 +6,6 @@ import {
   ListDirectoryDto,
 } from '@workspaces/domain';
 import {
-  ContainerCardList,
   CreateDirectoryModal,
   DirectoryCard,
   MobileButtonMenu,
@@ -29,6 +28,7 @@ import { ListDirectoryRequest, setItemLocalStorage } from '../../services';
 import axios, { AxiosError } from 'axios';
 import { ValidationsError } from '../../shared';
 import { useNavigate } from 'react-router-dom';
+import { ContainerCardList } from '../utils';
 
 export const ListDirectoryContainer = () => {
   const theme = useTheme();

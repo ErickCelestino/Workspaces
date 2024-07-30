@@ -287,6 +287,7 @@ export const ListContanteFilesContainer = () => {
         title="Criar Diretório"
       />
       <LayoutBase title="Listagem de Arquivos" toolBar={<ToolbarPureTV />}>
+        {smDown && <ListDirectory />}
         {smDown && <MobileButtonMenu iconMenuItemList={rightClickMenuList} />}
         <ContainerCardList
           search={{
@@ -296,7 +297,7 @@ export const ListContanteFilesContainer = () => {
           totalPage={totalPage}
           handleChange={handleChange}
         >
-          <ListDirectory />
+          {!smDown && <ListDirectory />}
           {fileList.length > 0 ? (
             <Grid justifyContent="center" container spacing={2}>
               {fileList.map((file, index) => (
