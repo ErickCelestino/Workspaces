@@ -73,6 +73,7 @@ model User {
   playlist Playlist[]
   scheduling Scheduling[]
   playlistCategory Playlist_Category[]
+  device Device[]
 
   @@schema("general")
 }
@@ -434,14 +435,38 @@ model Scheduling_X_Device {
 model Device {
   device_id String @id @default(uuid())
   name String
+  user_id String
+  physical_device_id String
+  device_model String
+  so_version String
+  ip_address String
+  connection_status String
   created_at DateTime @default(now())
   updated_at DateTime @default(now())
   deleted_at DateTime?
 
   scheduling_X_Device Scheduling_X_Device[]
+  location_device Location_Device[]
+  user User @relation(fields: [user_id], references: [user_id])
   @@schema("pure_tv")
 }
 
+model Location_Device {
+  location_device_id String @id @default(uuid())
+  device_id String
+  latitude String
+  longitude String
+  coutry String
+  state String
+  city String
+  capture_date DateTime
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+  deleted_at DateTime?
+
+  device Device @relation(fields: [device_id], references: [device_id])
+  @@schema("pure_tv")
+}
 
 model Summons {
   summons_id String @id @default(uuid())
