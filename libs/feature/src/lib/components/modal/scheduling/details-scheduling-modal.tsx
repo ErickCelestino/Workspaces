@@ -135,6 +135,14 @@ export const DetailsSchedulingModal: FC<DetailsSchedulingModalProps> = ({
     setPlaylistList(result.playlists);
   };
 
+  const updatePlaylistList = async () => {
+    await getPlaylist({
+      id: idToDetails,
+      filter: '',
+      loggedUserId: loggedUser?.id ?? '',
+    });
+  };
+
   return (
     <SimpleFormModal
       height={theme.spacing(70)}
@@ -156,6 +164,8 @@ export const DetailsSchedulingModal: FC<DetailsSchedulingModalProps> = ({
         {playlistList.length > 0 ? (
           <Box>
             <ListSimplePlaylist
+              updatePlaylist={updatePlaylistList}
+              schedulingId={idToDetails}
               showAlert={showAlert}
               playlists={playlistList}
               totalPages={totalPages}

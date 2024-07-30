@@ -4,7 +4,7 @@ import { pureTvApi } from '../axios-config';
 export async function DeletePlaylistToSchedulingRequest(
   input: DeletePlaylistToSchedulingDto
 ) {
-  const result = await pureTvApi.post(
+  const result = await pureTvApi.delete(
     `delete-playlist-to-scheduling/${input.playlistId}`,
     {
       params: {

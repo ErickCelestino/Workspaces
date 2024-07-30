@@ -7,7 +7,6 @@ import {
   ListItem,
   ListItemAvatar,
   ListItemButton,
-  ListItemIcon,
   ListItemText,
   Pagination,
   useMediaQuery,
@@ -21,7 +20,6 @@ import {
   CrudType,
   ErrorResponse,
   FindFilesByPlaylistDto,
-  IconMenuItem,
   Playlist,
 } from '@workspaces/domain';
 import { FC, useCallback, useState } from 'react';
@@ -31,8 +29,10 @@ import axios, { AxiosError } from 'axios';
 import { ValidationsError } from '../../shared';
 import { ScrollBox } from '../scroll';
 import { ButtonFileMenu } from '../menu';
+import { DeletePlaylistToSchedulingModal } from '../modal';
 
 interface PlaylistItemProps {
+  schedulingId: string;
   playlists: Playlist[];
   totalPages: number;
   showAlert: (message: string, success: boolean) => void;
@@ -40,24 +40,23 @@ interface PlaylistItemProps {
     event: React.ChangeEvent<unknown>,
     value: number
   ) => Promise<void>;
+  updatePlaylist: () => void;
 }
 
 export const ListSimplePlaylist: FC<PlaylistItemProps> = ({
   playlists,
+  schedulingId,
   totalPages,
   showAlert,
   handleChange,
+  updatePlaylist,
 }) => {
   const { loggedUser } = useLoggedUser();
   const theme = useTheme();
   const [deletePlaylistPopUp, setDeletePlaylistPopUp] = useState(false);
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
-  const [listFiles, setListFiles] = useState<{ [key: string]: ContentFile[] }>(
-    {}
-  );
-  const [openSubItems, setOpenSubItems] = useState<{ [key: string]: boolean }>(
-    {}
-  );
+  const [listFiles, setListFiles] = useState<Record<string, ContentFile[]>>({});
+  const [openSubItems, setOpenSubItems] = useState<Record<string, boolean>>({});
   const [selectedId, setSelectedId] = useState('');
 
   const handlePopUpOpen = (types: CrudType, id?: string) => {
@@ -68,8 +67,6 @@ export const ListSimplePlaylist: FC<PlaylistItemProps> = ({
         break;
     }
   };
-
-  const iconMenuList: IconMenuItem[] = [];
 
   const getFilesByPlaylist = useCallback(
     async (input: FindFilesByPlaylistDto) => {
@@ -108,6 +105,16 @@ export const ListSimplePlaylist: FC<PlaylistItemProps> = ({
 
   return (
     <div>
+      <DeletePlaylistToSchedulingModal
+        updatePlaylist={updatePlaylist}
+        open={deletePlaylistPopUp}
+        handlePopUpClose={() => setDeletePlaylistPopUp(false)}
+        idPlaylist={selectedId}
+        idScheduling={schedulingId}
+        showAlert={showAlert}
+        title="Deletar Playlist"
+        subTitle="Deseja realmente deletar a playlist?"
+      />
       <ScrollBox maxHeight={theme.spacing(32)}>
         <List>
           {playlists.map((playlist) => (
@@ -155,9 +162,9 @@ export const ListSimplePlaylist: FC<PlaylistItemProps> = ({
                   timeout="auto"
                   unmountOnExit
                 >
-                  <List component="div" disablePadding>
+                  <List key={playlist.id} component="div" disablePadding>
                     {listFiles[playlist.id]?.map((file) => (
-                      <div>
+                      <div key={file.id}>
                         <ListItem
                           sx={{
                             width: '100%',

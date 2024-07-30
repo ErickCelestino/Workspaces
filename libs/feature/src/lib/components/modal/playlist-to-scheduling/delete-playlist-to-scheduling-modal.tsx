@@ -9,12 +9,13 @@ import { useLoggedUser } from '../../../contexts';
 interface DeletePlaylistToSchedulingModalProps {
   open: boolean;
   title: string;
-  subtTitle: string;
+  subTitle: string;
   idScheduling: string;
   idPlaylist: string;
   handlePopUpClose: () => void;
   showAlert: (message: string, success: boolean) => void;
   successMessage?: string;
+  updatePlaylist: () => void;
 }
 
 export const DeletePlaylistToSchedulingModal: FC<
@@ -22,8 +23,9 @@ export const DeletePlaylistToSchedulingModal: FC<
 > = ({
   handlePopUpClose,
   showAlert,
+  updatePlaylist,
   title,
-  subtTitle,
+  subTitle,
   open,
   idScheduling,
   idPlaylist,
@@ -38,6 +40,8 @@ export const DeletePlaylistToSchedulingModal: FC<
         schedulingId: idScheduling,
       });
       showAlert(successMessage, true);
+      updatePlaylist();
+      handlePopUpClose();
     } catch (error) {
       console.error(error);
       if (axios.isAxiosError(error)) {
@@ -56,7 +60,7 @@ export const DeletePlaylistToSchedulingModal: FC<
       title={title}
       onClose={handlePopUpClose}
       onSuccess={deletePlaylistToScheduling}
-      subTitle={subtTitle}
+      subTitle={subTitle}
     />
   );
 };
