@@ -14,7 +14,7 @@ import {
 } from '../../repository';
 import { ValidationUserId } from '../../utils';
 
-export class CrateDevice
+export class CreateDevice
   implements
     UseCase<
       CreateDeviceDto,
