@@ -23,6 +23,7 @@
     "prisma:deploy": "prisma migrate deploy",
     "prisma:studio": "prisma studio",
     "docker": "docker-compose up",
+    "docker:postgres": "docker-compose -f docker-compose-postgres.yaml up",
     "docker:ze": "docker compose up",
     "prepare": "husky"
   },
