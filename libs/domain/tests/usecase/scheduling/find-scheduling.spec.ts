@@ -1,4 +1,3 @@
-import { EntityExist } from '../../../../feature/src/lib/shared';
 import {
   EntityNotEmpty,
   EntityNotExists,

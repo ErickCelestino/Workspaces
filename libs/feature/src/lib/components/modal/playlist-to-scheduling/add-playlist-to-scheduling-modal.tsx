@@ -116,7 +116,6 @@ export const AddPlaylistToSchedulingModal: FC<
       userInput: '',
       take: 5,
     });
-    console.log(`teste: ${idScheduling}`);
     const playlistInScheduling = await getPlaylistByScheduling({
       id: idScheduling,
       loggedUserId: loggedUser?.id ?? '',
@@ -159,6 +158,7 @@ export const AddPlaylistToSchedulingModal: FC<
         setLoading(false);
         setSuccess(true);
         showAlert(successMessage, true);
+        handlePopUpClose();
         setSuccess(false);
       }
     } catch (error) {
