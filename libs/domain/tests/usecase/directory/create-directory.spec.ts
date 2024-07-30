@@ -4,7 +4,6 @@ import {
   EntityNotEmpty,
   FindDirectoryByNameRepository,
   FindUserByIdRepository,
-  UserList,
 } from '../../../src';
 import { CreateDirectory } from '../../../src/lib/use-case';
 import { DirectoryMock, userMock } from '../../entity';

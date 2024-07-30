@@ -10,7 +10,7 @@ import {
   UserList,
 } from '../../../src';
 import {
-  ListPlaylistReponseMock,
+  ListPlaylistResponseMock,
   SchedulingMock,
   userMock,
 } from '../../entity';
@@ -63,7 +63,7 @@ describe('ListPlaylistBySchedulingId', () => {
 
     expect(result.isRight()).toBe(true);
     expect(result.isLeft()).toBe(false);
-    expect(result.value).toStrictEqual(ListPlaylistReponseMock);
+    expect(result.value).toStrictEqual(ListPlaylistResponseMock);
   });
 
   it('should return EntityNotEmpty when pass incorrect User ID', async () => {
