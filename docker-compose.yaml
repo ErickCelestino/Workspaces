@@ -3,7 +3,7 @@ services:
   api-general:
     build:
       context: .
-      dockerfile: Dockerfile.api-general
+      dockerfile: ./configs/docker/Dockerfile.api-general
     ports:
       - '${NX_APP_BACK_GENERAL}:${NX_APP_BACK_GENERAL}'
     environment:
@@ -18,7 +18,7 @@ services:
   api-pure-tv:
     build:
       context: .
-      dockerfile: Dockerfile.api-pure-tv
+      dockerfile: ./configs/docker/Dockerfile.api-pure-tv
     ports:
       - '${NX_APP_BACK_PURE_TV}:${NX_APP_BACK_PURE_TV}'
     environment:
@@ -33,7 +33,7 @@ services:
   web-pure-tv:
     build:
       context: .
-      dockerfile: Dockerfile.web-pure-tv
+      dockerfile: ./configs/docker/Dockerfile.web-pure-tv
     ports:
       - '${NX_APP_FRONT_PURE_TV}:80'
     environment:
