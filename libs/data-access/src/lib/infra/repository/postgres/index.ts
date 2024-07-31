@@ -1,4 +1,5 @@
 export * from './app';
+export * from './device';
 export * from './directory';
 export * from './file';
 export * from './file-to-playlist';
