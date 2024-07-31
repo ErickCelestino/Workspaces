@@ -12,8 +12,6 @@ services:
     env_file:
       - .env
     command: sh -c "npm run prisma:generate && npm run prisma:deploy && node /app/dist/main.js"
-    depends_on:
-      - postgres
 
   api-pure-tv:
     build:
@@ -27,8 +25,6 @@ services:
     env_file:
       - .env
     command: sh -c "npm run prisma:generate && npm run prisma:deploy && node /app/dist/main.js"
-    depends_on:
-      - postgres
 
   web-pure-tv:
     build:
