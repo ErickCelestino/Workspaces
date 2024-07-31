@@ -28,11 +28,10 @@ export class FindUserByIdRepositoryImpl implements FindUserByIdRepository {
     });
 
     const mappedUser: UserList = {
-      name: userResult?.name == null ? '' : userResult.name,
-      nickname: userResult?.nick_name == null ? '' : userResult.nick_name,
-      birthDate:
-        userResult?.birth_date == null ? new Date() : userResult.birth_date,
-      userId: userResult?.user_id == null ? '' : userResult.user_id,
+      name: userResult?.name ?? '',
+      nickname: userResult?.nick_name ?? '',
+      birthDate: userResult?.birth_date ?? new Date(),
+      userId: userResult?.user_id ?? '',
       email: userResult?.auth[0]?.email ?? '',
       status: userResult?.status ?? '',
       type: userResult?.type ?? '',

@@ -2,7 +2,7 @@ import { Inject } from '@nestjs/common';
 import { CreateDeviceDto, CreateDeviceRepository } from '@workspaces/domain';
 import { PrismaService } from 'nestjs-prisma';
 
-export class CrateDeviceRepositoryImpl implements CreateDeviceRepository {
+export class CreateDeviceRepositoryImpl implements CreateDeviceRepository {
   constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
   async create(input: CreateDeviceDto): Promise<string> {
     const { name, loggedUserId } = input;
