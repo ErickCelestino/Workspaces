@@ -1,9 +1,9 @@
 import {
   ListPlaylistBySchedulingIdDto,
   ListPlaylistBySchedulingIdRepository,
-  ListPlaylistReponseDto,
+  ListPlaylistResponseDto,
 } from '../../../src';
-import { ListPlaylistReponseMock } from '../../entity';
+import { ListPlaylistResponseMock } from '../../entity';
 
 export class ListPlaylistBySchedulingIdRepositoryMock
   implements ListPlaylistBySchedulingIdRepository
@@ -11,8 +11,8 @@ export class ListPlaylistBySchedulingIdRepositoryMock
   inputMock = {} as ListPlaylistBySchedulingIdDto;
   async list(
     input: ListPlaylistBySchedulingIdDto
-  ): Promise<ListPlaylistReponseDto> {
+  ): Promise<ListPlaylistResponseDto> {
     this.inputMock = input;
-    return ListPlaylistReponseMock;
+    return ListPlaylistResponseMock;
   }
 }
