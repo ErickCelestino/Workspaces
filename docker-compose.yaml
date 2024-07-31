@@ -33,4 +33,7 @@ services:
     ports:
       - '${NX_APP_FRONT_PURE_TV}:80'
     environment:
-      NODE_ENV: production
+      - NODE_ENV=production
+      - NX_APP_BACK_PURE_TV= ${NX_APP_BACK_PURE_TV}
+      - NX_APP_BACK_GENERAL= ${NX_APP_BACK_GENERAL}
+      - NX_APP_FRONT_PURE_TV= ${NX_APP_FRONT_PURE_TV}
