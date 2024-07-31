@@ -11,8 +11,8 @@ module.exports = composePlugins(
   }),
   (config) => {
     config.devServer = {
-      host: process.env['DEFAULT_HOST'] || 'localhost',
-      port: process.env['PORT_FRONT_PURE_TV'] || 4200,
+      host: process.env['NX_APP_DEFAULT_HOST'] || 'localhost',
+      port: process.env['NX_APP_FRONT_PURE_TV'] || 4200,
       historyApiFallback: true,
     };
     return config;
