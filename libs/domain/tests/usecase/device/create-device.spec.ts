@@ -34,7 +34,9 @@ export const makeSut = (): SutTypes => {
 
   const createDeviceDto: CreateDeviceDto = {
     loggedUserId: userMock.userId,
-    name: DeviceMock.id,
+    body: {
+      name: DeviceMock.id,
+    },
   };
 
   const sut = new CreateDevice(
@@ -75,7 +77,7 @@ describe('CreateDevice', () => {
 
   it('should return EntityNotEmpty when a pass incorrect Name', async () => {
     const { sut, createDeviceDto } = makeSut();
-    createDeviceDto.name = '';
+    createDeviceDto.body.name = '';
     const result = await sut.execute(createDeviceDto);
 
     expect(result.isRight()).toBe(false);

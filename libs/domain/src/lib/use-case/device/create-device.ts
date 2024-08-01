@@ -34,7 +34,10 @@ export class CreateDevice
   ): Promise<
     Either<EntityNotEmpty | EntityAlreadyExists | EntityNotCreated, string>
   > {
-    const { loggedUserId, name } = input;
+    const {
+      loggedUserId,
+      body: { name },
+    } = input;
 
     if (Object.keys(loggedUserId).length < 1) {
       return left(new EntityNotEmpty('User ID'));

@@ -1,4 +1,6 @@
+import { CreateDeviceBodyDto } from './create-device-body.dto';
+
 export interface CreateDeviceDto {
-  name: string;
+  body: CreateDeviceBodyDto;
   loggedUserId: string;
 }

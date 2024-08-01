@@ -13,7 +13,7 @@ export class CreateDeviceController {
   ) {
     const result = await this.createDeviceService.create({
       loggedUserId,
-      name: body.name,
+      body: body,
     });
 
     if (result.isRight()) return { deviceId: result.value };
