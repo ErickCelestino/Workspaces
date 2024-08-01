@@ -58,7 +58,7 @@ export class CreateDevice
       loggedUserId,
     });
 
-    if (Object.keys(filteredDevice).length > 0) {
+    if (Object.keys(filteredDevice?.id ?? filteredDevice).length > 0) {
       return left(new EntityAlreadyExists('Device'));
     }
 

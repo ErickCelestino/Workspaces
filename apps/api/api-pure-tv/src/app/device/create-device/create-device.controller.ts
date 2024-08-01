@@ -16,7 +16,7 @@ export class CreateDeviceController {
       name: body.name,
     });
 
-    if (result.isRight()) return result.value;
+    if (result.isRight()) return { deviceId: result.value };
     else await ErrorMessageResult(result.value.name, result.value.message);
   }
 }
