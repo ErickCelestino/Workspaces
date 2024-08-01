@@ -124,7 +124,7 @@ export const ListContanteFilesContainer = () => {
     setFileList(result?.files ?? []);
     setDirectoryId(directoryId);
     setTotalPage(result?.totalPages ?? 0);
-  }, [loggedUser, handleData]);
+  }, [handleData, loggedUser?.id]);
 
   const handlePopUpClose = (types: FileContentType) => {
     switch (types) {
@@ -214,6 +214,7 @@ export const ListContanteFilesContainer = () => {
     event: React.ChangeEvent<unknown>,
     value: number
   ) => {
+    setSearch(true);
     const result = await ListContentFilesRequest({
       userInput: '',
       directoryId: directoryId,
@@ -221,6 +222,7 @@ export const ListContanteFilesContainer = () => {
       skip: (value - 1) * 8,
     });
     setFileList(result.files);
+    setTotalPage(result.totalPages);
   };
 
   const searchData = async (input: string) => {
@@ -238,18 +240,13 @@ export const ListContanteFilesContainer = () => {
     if (!search) {
       getData();
     }
-  }, [getData, search]);
+  }, [directoryId, getData, search]);
 
   const rightClickMenuList: IconMenuItem[] = [
     {
       icon: <Icon>create_new_folder</Icon>,
       title: 'Nova Pasta',
       handleClick: async () => handleDirectoryPopUpOpen('create'),
-    },
-    {
-      title: 'teste',
-      handleClick: async () => console.log(directoryId),
-      icon: <Icon>create_new_folder</Icon>,
     },
   ];
 
@@ -287,7 +284,6 @@ export const ListContanteFilesContainer = () => {
         title="Criar Diretório"
       />
       <LayoutBase title="Listagem de Arquivos" toolBar={<ToolbarPureTV />}>
-        {smDown && <ListDirectory />}
         {smDown && <MobileButtonMenu iconMenuItemList={rightClickMenuList} />}
         <ContainerCardList
           search={{
@@ -296,8 +292,9 @@ export const ListContanteFilesContainer = () => {
           }}
           totalPage={totalPage}
           handleChange={handleChange}
+          mobileBackButtom
         >
-          {!smDown && <ListDirectory />}
+          {!smDown && <ListDirectory getDataInput={getData} />}
           {fileList.length > 0 ? (
             <Grid justifyContent="center" container spacing={2}>
               {fileList.map((file, index) => (

@@ -51,7 +51,20 @@ export class ListContentFileRepositoryImpl
         skip: parseInt(skip.toString()),
         take: parseInt(take.toString()),
       }),
-      this.prismaService.content_Files.count(),
+      this.prismaService.content_Files.count({
+        where: {
+          user_id: input.loggedUserId,
+          directory_id: input.directoryId,
+          ...(input.userInput !== ''
+            ? {
+                original_name: {
+                  contains: input.userInput,
+                  mode: 'insensitive',
+                },
+              }
+            : {}),
+        },
+      }),
     ]);
 
     const totalPages = Math.ceil(total / take);
@@ -69,6 +82,11 @@ export class ListContentFileRepositoryImpl
       };
     });
 
+    console.log(`total: ${total}`);
+    console.log(`totalPages: ${totalPages}`);
+    console.log(`files: ${files}`);
+    console.log(files);
+    console.log(`take: ${take}`);
     return {
       total,
       totalPages,

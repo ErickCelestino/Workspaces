@@ -8,11 +8,12 @@ import {
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { FC, ReactNode } from 'react';
 
-import { SearchBar } from '../../components';
+import { MobileBackButtom, SearchBar } from '../../components';
 
 interface ContainerCardListProps {
   children: ReactNode;
   totalPage: number;
+  mobileBackButtom?: boolean;
   search: {
     placeholder: string;
     searchData: (input: string) => Promise<void>;
@@ -27,6 +28,7 @@ interface ContainerCardListProps {
 export const ContainerCardList: FC<ContainerCardListProps> = ({
   children,
   totalPage,
+  mobileBackButtom = false,
   search,
   handleChange,
 }) => {
@@ -51,6 +53,7 @@ export const ContainerCardList: FC<ContainerCardListProps> = ({
             alignItems: 'center',
           }}
         >
+          {smDown && mobileBackButtom && <MobileBackButtom />}
           <Box
             sx={{
               justifyContent: 'center',
