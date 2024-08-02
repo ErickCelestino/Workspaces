@@ -6,18 +6,31 @@ import {
   ToolbarPureTV,
 } from '../../components';
 import { LayoutBase } from '../../layout';
-import { CrudType, IconMenuItem } from '@workspaces/domain';
-import { useCallback, useState } from 'react';
+import {
+  CrudType,
+  Device,
+  ErrorResponse,
+  IconMenuItem,
+  ListDeviceDto,
+} from '@workspaces/domain';
+import { useCallback, useEffect, useState } from 'react';
 import { useSnackbarAlert } from '../../hooks';
 import { ContainerCardList } from '../utils';
+import { ListDeviceRequest } from '../../services';
+import axios, { AxiosError } from 'axios';
+import { ValidationsError } from '../../shared';
+import { useLoggedUser } from '../../contexts';
 
 export const ListDeviceContainer = () => {
   const theme = useTheme();
+  const { loggedUser } = useLoggedUser();
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
   const { showSnackbarAlert, SnackbarAlert } = useSnackbarAlert();
 
   const [createDevicePopUp, setCreateDevicePopUp] = useState(false);
+  const [listDevice, setListDevice] = useState<Device[]>([]);
   const [totalPage, setTotalPage] = useState<number>(1);
+  const [search, setSearch] = useState(false);
 
   const showAlert = useCallback(
     (message: string, success: boolean) => {
@@ -49,10 +62,65 @@ export const ListDeviceContainer = () => {
     event: React.ChangeEvent<unknown>,
     value: number
   ) => {
-    // More Implementation
+    setSearch(true);
+    const result = await ListDeviceRequest({
+      filter: '',
+      loggedUserId: loggedUser?.id ?? '',
+      skip: (value - 1) * 6,
+    });
+    setTotalPage(result.totalPages);
+    setListDevice(result.devices);
   };
 
-  const searchData = async (input: string) => {};
+  const handleData = useCallback(
+    async (data: ListDeviceDto) => {
+      try {
+        const result = await ListDeviceRequest({
+          loggedUserId: data.loggedUserId,
+          filter: data.filter,
+          skip: data.skip,
+          take: data.take,
+        });
+        return result;
+      } catch (error) {
+        console.error(error);
+        if (axios.isAxiosError(error)) {
+          const axiosError = error as AxiosError<ErrorResponse>;
+          const errors = ValidationsError(axiosError, 'Dispositivo');
+          if (errors) {
+            showAlert(errors, false);
+          }
+        }
+      }
+    },
+    [showAlert]
+  );
+
+  const getData = useCallback(async () => {
+    const result = await handleData({
+      loggedUserId: loggedUser?.id ?? '',
+      filter: '',
+    });
+    setTotalPage(result?.totalPages ?? 0);
+    setListDevice(result?.devices ?? []);
+  }, [loggedUser, handleData]);
+
+  const searchData = async (input: string) => {
+    setSearch(true);
+    const result = await handleData({
+      loggedUserId: loggedUser?.id ?? '',
+      filter: input,
+    });
+
+    setTotalPage(result?.totalPages ?? 0);
+    setListDevice(result?.devices ?? []);
+  };
+
+  useEffect(() => {
+    if (!search) {
+      getData();
+    }
+  }, [getData, search]);
 
   return (
     <>
