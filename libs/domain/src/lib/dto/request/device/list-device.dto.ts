@@ -1,5 +1,5 @@
 export interface ListDeviceDto {
-  userInput: string;
+  filter: string;
   loggedUserId: string;
   take?: number;
   skip?: number;

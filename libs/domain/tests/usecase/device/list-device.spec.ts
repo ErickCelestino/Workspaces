@@ -26,7 +26,7 @@ export const makeSut = (): SutTypes => {
 
   const listDeviceDto: ListDeviceDto = {
     loggedUserId: userMock.userId,
-    userInput: '',
+    filter: '',
   };
 
   const sut = new ListDevice(finUserByIdRepository, listDeviceRepository);
