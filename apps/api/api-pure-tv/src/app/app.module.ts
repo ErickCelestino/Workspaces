@@ -46,8 +46,7 @@ import {
   ListPlaylistBySchedulingIdModule,
   DeletePlaylistToSchedulingModule,
 } from './playlist-to-scheduling';
-import { CreateDeviceModule } from './device';
-import { ListDeviceModule } from './list-device/list-device.module';
+import { CreateDeviceModule, ListDeviceModule } from './device';
 
 @Module({
   imports: [

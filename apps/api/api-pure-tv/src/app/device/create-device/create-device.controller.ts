@@ -1,11 +1,13 @@
-import { Body, Controller, Post, Query } from '@nestjs/common';
+import { Body, Controller, Post, Query, UsePipes } from '@nestjs/common';
 import { CreateDeviceService } from './create-device.service';
-import { ErrorMessageResult } from '@workspaces/domain';
+import { createDeviceSchema, ErrorMessageResult } from '@workspaces/domain';
+import { ZodValidationPipe } from '../../pipes/zod-validation-pipe';
 
 @Controller('create-device')
 export class CreateDeviceController {
   constructor(private readonly createDeviceService: CreateDeviceService) {}
 
+  @UsePipes(new ZodValidationPipe(createDeviceSchema))
   @Post()
   async create(
     @Query('loggedUserId') loggedUserId: string,
