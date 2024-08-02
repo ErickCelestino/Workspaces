@@ -1,6 +1,6 @@
 import { Playlist } from '../../../entity';
 
-export interface ListPlaylistReponseDto {
+export interface ListPlaylistResponseDto {
   total: number;
   filteredTotal: number;
   totalPages: number;

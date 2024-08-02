@@ -18,5 +18,9 @@ export async function DownloadContentFileRequest(
       },
     }
   );
+
+  console.log('directoryId');
+  console.log(directoryId);
+  console.log(result);
   return result.data;
 }

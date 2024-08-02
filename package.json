@@ -25,6 +25,7 @@
     "docker": "docker-compose up",
     "docker:postgres": "docker-compose -f docker-compose-postgres.yaml up",
     "docker:ze": "docker compose up",
+    "docker:postgres_ze": "docker compose -f docker-compose-postgres.yaml up",
     "prepare": "husky"
   },
   "private": true,

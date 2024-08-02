@@ -30,9 +30,9 @@ import {
   CreateDirectoryModal,
   DeleteFileModal,
   DetailsFileModal,
+  ListDirectory,
   MobileButtonMenu,
   MoveFileToDirectoryModal,
-  RightClickMenu,
   ToolbarPureTV,
 } from '../../components';
 import axios, { AxiosError } from 'axios';
@@ -117,14 +117,14 @@ export const ListContanteFilesContainer = () => {
   const getData = useCallback(async () => {
     const directoryId = getItemLocalStorage('di');
     const result = await handleData({
-      directoryId,
+      directoryId: directoryId ?? '',
       loggedUserId: loggedUser?.id ?? '',
       userInput: '',
     });
     setFileList(result?.files ?? []);
     setDirectoryId(directoryId);
     setTotalPage(result?.totalPages ?? 0);
-  }, [loggedUser, handleData]);
+  }, [handleData, loggedUser?.id]);
 
   const handlePopUpClose = (types: FileContentType) => {
     switch (types) {
@@ -214,6 +214,7 @@ export const ListContanteFilesContainer = () => {
     event: React.ChangeEvent<unknown>,
     value: number
   ) => {
+    setSearch(true);
     const result = await ListContentFilesRequest({
       userInput: '',
       directoryId: directoryId,
@@ -221,6 +222,7 @@ export const ListContanteFilesContainer = () => {
       skip: (value - 1) * 8,
     });
     setFileList(result.files);
+    setTotalPage(result.totalPages);
   };
 
   const searchData = async (input: string) => {
@@ -238,7 +240,7 @@ export const ListContanteFilesContainer = () => {
     if (!search) {
       getData();
     }
-  }, [getData, search]);
+  }, [directoryId, getData, search]);
 
   const rightClickMenuList: IconMenuItem[] = [
     {
@@ -281,49 +283,48 @@ export const ListContanteFilesContainer = () => {
         handlePopUpClose={() => handleDirectoryPopUpClose('create')}
         title="Criar Diretório"
       />
-
-      <LayoutBase title="Listagem de Usuários" toolBar={<ToolbarPureTV />}>
-        <RightClickMenu iconMenuItemList={rightClickMenuList}>
-          {smDown && <MobileButtonMenu iconMenuItemList={rightClickMenuList} />}
-          <ContainerCardList
-            search={{
-              searchData: searchData,
-              placeholder: 'Pesquisar Arquivo',
-            }}
-            totalPage={totalPage}
-            handleChange={handleChange}
-          >
-            {fileList.length > 0 ? (
-              <Grid justifyContent="center" container spacing={2}>
-                {fileList.map((file, index) => (
-                  <Grid item md={6} lg={4} xl={3} key={index}>
-                    <ContentFileCard
-                      deleteFile={() => handleFile(file.id, 'delete')}
-                      detailsFile={() => handleFile(file.id, 'details')}
-                      downloadFile={() => handleFile(file.id, 'download')}
-                      moveFile={() => handleFile(file.id, 'moveFile')}
-                      fileImage={file.path}
-                      fileImageName={file.fileName}
-                      name={file.originalName}
-                      key={file.id}
-                    />
-                  </Grid>
-                ))}
-              </Grid>
-            ) : (
-              <Box
-                marginTop={theme.spacing(2)}
-                width="100%"
-                display="flex"
-                justifyContent="center"
-              >
-                <Typography variant="h4">
-                  Não foram encontrados registros
-                </Typography>
-              </Box>
-            )}
-          </ContainerCardList>
-        </RightClickMenu>
+      <LayoutBase title="Listagem de Arquivos" toolBar={<ToolbarPureTV />}>
+        {smDown && <MobileButtonMenu iconMenuItemList={rightClickMenuList} />}
+        <ContainerCardList
+          search={{
+            searchData: searchData,
+            placeholder: 'Pesquisar Arquivo',
+          }}
+          totalPage={totalPage}
+          handleChange={handleChange}
+          mobileBackButtom
+        >
+          {!smDown && <ListDirectory getDataInput={getData} />}
+          {fileList.length > 0 ? (
+            <Grid justifyContent="center" container spacing={2}>
+              {fileList.map((file, index) => (
+                <Grid item md={6} lg={4} xl={3} key={index}>
+                  <ContentFileCard
+                    deleteFile={() => handleFile(file.id, 'delete')}
+                    detailsFile={() => handleFile(file.id, 'details')}
+                    downloadFile={() => handleFile(file.id, 'download')}
+                    moveFile={() => handleFile(file.id, 'moveFile')}
+                    fileImage={file.path}
+                    fileImageName={file.fileName}
+                    name={file.originalName}
+                    key={file.id}
+                  />
+                </Grid>
+              ))}
+            </Grid>
+          ) : (
+            <Box
+              marginTop={theme.spacing(2)}
+              width="100%"
+              display="flex"
+              justifyContent="center"
+            >
+              <Typography variant="h4">
+                Não foram encontrados registros
+              </Typography>
+            </Box>
+          )}
+        </ContainerCardList>
       </LayoutBase>
       {SnackbarAlert}
     </>

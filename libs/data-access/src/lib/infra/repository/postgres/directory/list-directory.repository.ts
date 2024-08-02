@@ -1,15 +1,15 @@
 import { Inject } from '@nestjs/common';
 import {
-  ListPlaylistDto,
-  ListPlaylistResponseDto,
-  ListPlaylistRepository,
-  Playlist,
+  Directory,
+  ListDirectoryDto,
+  ListDirectoryRepository,
+  ListDirectoryResponseDto,
 } from '@workspaces/domain';
 import { PrismaService } from 'nestjs-prisma';
 
-export class ListPlaylistRepositoryImpl implements ListPlaylistRepository {
+export class ListDirectoryRepositoryImpl implements ListDirectoryRepository {
   constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
-  async list(input: ListPlaylistDto): Promise<ListPlaylistResponseDto> {
+  async list(input: ListDirectoryDto): Promise<ListDirectoryResponseDto> {
     const { loggedUserId, userInput } = input;
 
     const skip = input?.skip || 0;
@@ -27,12 +27,12 @@ export class ListPlaylistRepositoryImpl implements ListPlaylistRepository {
         : {}),
     };
 
-    const [playlists, filteredTotal, total] =
+    const [directories, filteredTotal, total] =
       await this.prismaService.$transaction([
-        this.prismaService.playlist.findMany({
+        this.prismaService.directory.findMany({
           where: whereClause,
           select: {
-            playlist_id: true,
+            directory_id: true,
             created_at: true,
             name: true,
             user: {
@@ -40,19 +40,14 @@ export class ListPlaylistRepositoryImpl implements ListPlaylistRepository {
                 nick_name: true,
               },
             },
-            category: {
-              select: {
-                name: true,
-              },
-            },
           },
           skip: parseInt(skip.toString()),
           take: parseInt(take.toString()),
         }),
-        this.prismaService.playlist.count({
+        this.prismaService.directory.count({
           where: whereClause,
         }),
-        this.prismaService.playlist.count({
+        this.prismaService.directory.count({
           where: {
             user_id: loggedUserId,
           },
@@ -61,13 +56,10 @@ export class ListPlaylistRepositoryImpl implements ListPlaylistRepository {
 
     const totalPages = Math.ceil(filteredTotal / take);
 
-    const mappedPlaylist: Playlist[] = playlists.map((playlist) => {
+    const mappedDirectory: Directory[] = directories.map((directory) => {
       return {
-        category: playlist.category.name,
-        created_at: playlist.created_at,
-        created_by: playlist.user.nick_name,
-        id: playlist.playlist_id,
-        name: playlist.name,
+        id: directory.directory_id,
+        name: directory.name,
       };
     });
 
@@ -75,7 +67,7 @@ export class ListPlaylistRepositoryImpl implements ListPlaylistRepository {
       filteredTotal,
       total,
       totalPages,
-      playlists: mappedPlaylist,
+      directories: mappedDirectory,
     };
   }
 }

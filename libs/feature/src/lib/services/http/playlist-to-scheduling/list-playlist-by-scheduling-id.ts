@@ -1,6 +1,6 @@
 import {
   ListPlaylistBySchedulingIdDto,
-  ListPlaylistReponseDto,
+  ListPlaylistResponseDto,
 } from '@workspaces/domain';
 import { pureTvApi } from '../axios-config';
 
@@ -9,7 +9,7 @@ export async function ListPlaylistBySchedulingIdRequest(
 ) {
   const skip = input?.skip || 0;
   const take = input?.take || 6;
-  const result = await pureTvApi.get<ListPlaylistReponseDto>(
+  const result = await pureTvApi.get<ListPlaylistResponseDto>(
     `list-playlist-by-scheduling-id/${input.id}`,
     {
       params: {

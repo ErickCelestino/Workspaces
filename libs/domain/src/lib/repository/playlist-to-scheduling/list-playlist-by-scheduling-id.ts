@@ -1,9 +1,8 @@
 import {
   ListPlaylistBySchedulingIdDto,
-  ListPlaylistReponseDto,
-  ListSchedulesReponseDto,
+  ListPlaylistResponseDto,
 } from '../../dto';
 
 export interface ListPlaylistBySchedulingIdRepository {
-  list(input: ListPlaylistBySchedulingIdDto): Promise<ListPlaylistReponseDto>;
+  list(input: ListPlaylistBySchedulingIdDto): Promise<ListPlaylistResponseDto>;
 }
