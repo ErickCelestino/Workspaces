@@ -4,11 +4,9 @@ import {
   CreateDeviceRepository,
   CreateDeviceDto,
   FindUserByIdRepository,
-  FindUserById,
   EntityNotEmpty,
   UserList,
   EntityNotExists,
-  Device,
   EntityAlreadyExists,
   EntityNotCreated,
 } from '../../../src';

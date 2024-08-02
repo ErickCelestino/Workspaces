@@ -4,5 +4,5 @@ export interface ListDeviceResponseDto {
   total: number;
   filteredTotal: number;
   totalPages: number;
-  directories: Device[];
+  devices: Device[];
 }
