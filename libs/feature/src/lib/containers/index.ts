@@ -1,3 +1,4 @@
+export * from './device';
 export * from './file';
 export * from './login';
 export * from './playlist';

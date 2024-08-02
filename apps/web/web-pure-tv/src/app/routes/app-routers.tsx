@@ -8,6 +8,7 @@ import {
   ListPlaylistContainer,
   ListPlaylistCategoryContainer,
   ListSchedulesContainer,
+  ListDeviceContainer,
 } from '@workspaces/feature';
 import { useEffect } from 'react';
 
@@ -56,6 +57,13 @@ export const AppRouters = () => {
           path: '/scheduling',
         },
       ],
+      Dispositivos: [
+        {
+          label: 'Dispositivos',
+          icon: 'important_devices',
+          path: '/device',
+        },
+      ],
     });
   }, [setDrawerOptions]);
 
@@ -71,6 +79,7 @@ export const AppRouters = () => {
         element={<ListPlaylistCategoryContainer />}
       />
       <Route path="scheduling" element={<ListSchedulesContainer />} />
+      <Route path="device" element={<ListDeviceContainer />} />
 
       <Route path="*" element={<Navigate to="/home" />} />
     </Routes>

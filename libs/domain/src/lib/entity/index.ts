@@ -3,6 +3,7 @@ export * from './app';
 export * from './auth';
 export * from './combo-box';
 export * from './config';
+export * from './device';
 export * from './directory';
 export * from './drawer';
 export * from './file';
