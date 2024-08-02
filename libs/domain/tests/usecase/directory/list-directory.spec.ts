@@ -1,8 +1,10 @@
 import {
+  EntityNotExists,
   FindUserByIdRepository,
   ListDirectory,
   ListDirectoryDto,
   ListDirectoryRepository,
+  UserList,
 } from '../../../src';
 import { userMock } from '../../entity';
 import {
@@ -56,5 +58,17 @@ describe('ListDirectory', () => {
 
     expect(result.isLeft()).toBe(true);
     expect(result.isRight()).toBe(false);
+  });
+
+  it('should return EntityNotExists when a pass incorrect userInput', async () => {
+    const { listDirectoryDto, sut } = makeSut();
+    jest
+      .spyOn(sut['findUserByIdRepository'], 'find')
+      .mockResolvedValueOnce({} as UserList);
+    const result = await sut.execute(listDirectoryDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
+    expect(result.value).toBeInstanceOf(EntityNotExists);
   });
 });

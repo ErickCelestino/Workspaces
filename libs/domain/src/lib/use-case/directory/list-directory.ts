@@ -34,7 +34,14 @@ export class ListDirectory
       return left(new EntityNotEmpty('logged User ID'));
     }
 
-    await ValidationUserId(loggedUserId, this.findUserByIdRepository);
+    const userValidation = await ValidationUserId(
+      loggedUserId,
+      this.findUserByIdRepository
+    );
+
+    if (userValidation.isLeft()) {
+      return left(userValidation.value);
+    }
 
     const listDirectory = await this.listDirectoryRepository.list(input);
 
