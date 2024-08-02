@@ -79,6 +79,7 @@ export const CreateDeviceModal: FC<CreateDeviceModalProps> = ({
     if (result) {
       setLoading(false);
       setSuccess(true);
+      setSuccess(false);
       reset({
         name: '',
       });
@@ -91,7 +92,7 @@ export const CreateDeviceModal: FC<CreateDeviceModalProps> = ({
     <SimpleFormModal
       open={open}
       handlePopUpClose={handlePopUpClose}
-      height={smDown ? theme.spacing(45) : theme.spacing(50)}
+      height={theme.spacing(43)}
       width={smDown ? '90%' : theme.spacing(90)}
       title={title}
     >
@@ -113,7 +114,21 @@ export const CreateDeviceModal: FC<CreateDeviceModalProps> = ({
           autoFocus
           {...register('name')}
         />
-        <FormButton buttonTitle="Criar" loading={loading} success={success} />
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            mt: 2,
+          }}
+        >
+          <Box width="80%">
+            <FormButton
+              buttonTitle="Criar"
+              loading={loading}
+              success={success}
+            />
+          </Box>
+        </Box>
       </Box>
     </SimpleFormModal>
   );

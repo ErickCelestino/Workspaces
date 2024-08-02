@@ -69,7 +69,7 @@ export const ListDeviceContainer = () => {
             handleChange={handleChange}
             search={{
               searchData: searchData,
-              placeholder: 'Pesquisar Playlist',
+              placeholder: 'Pesquisar Dispositivo',
               createPopUp: () => handlePopUpOpen('create'),
             }}
             totalPage={totalPage}
