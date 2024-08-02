@@ -33,7 +33,6 @@ import {
   MoveFilesToAnotherPlaylistModule,
   DeletePlaylistFilesModule,
 } from './file-to-playlist';
-import { ListSimpleDirectoryModule, CreateDirectoryModule } from './directory';
 import {
   CreateSchedulingModule,
   ListSchedulesModule,
@@ -47,6 +46,11 @@ import {
   DeletePlaylistToSchedulingModule,
 } from './playlist-to-scheduling';
 import { CreateDeviceModule } from './device';
+import {
+  ListSimpleDirectoryModule,
+  CreateDirectoryModule,
+  ListDirectoryModule,
+} from './directory';
 
 @Module({
   imports: [
@@ -79,6 +83,7 @@ import { CreateDeviceModule } from './device';
     CreateDirectoryModule,
     MoveFilesToAnotherPlaylistModule,
     DeletePlaylistFilesModule,
+    ListDirectoryModule,
     CreateSchedulingModule,
     ListSchedulesModule,
     DeleteSchedulingModule,
@@ -88,6 +93,7 @@ import { CreateDeviceModule } from './device';
     ListPlaylistBySchedulingIdModule,
     DeletePlaylistToSchedulingModule,
     CreateDeviceModule,
+    ListDirectoryModule,
   ],
   controllers: [AppController],
   providers: [AppService],
