@@ -1,4 +1,4 @@
-import { Icon, useMediaQuery, useTheme } from '@mui/material';
+import { Box, Icon, Typography, useMediaQuery, useTheme } from '@mui/material';
 import {
   CreateDeviceModal,
   MobileButtonMenu,
@@ -142,7 +142,20 @@ export const ListDeviceContainer = () => {
             }}
             totalPage={totalPage}
           >
-            {' '}
+            {listDevice.length > 0 ? (
+              listDevice.map((device) => <div>{device.id}</div>)
+            ) : (
+              <Box
+                marginTop={theme.spacing(2)}
+                width="100%"
+                display="flex"
+                justifyContent="center"
+              >
+                <Typography variant="h4">
+                  Não foram encontrados registros
+                </Typography>
+              </Box>
+            )}
           </ContainerCardList>
         </RightClickMenu>
       </LayoutBase>

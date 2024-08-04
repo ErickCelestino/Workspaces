@@ -8,6 +8,7 @@ import {
   useTheme,
 } from '@mui/material';
 import {
+  ErrorResponse,
   FindFilesByPlaylistDto,
   IconMenuItem,
   ImageCardItem,
@@ -20,6 +21,8 @@ import { FC, useCallback, useEffect, useState } from 'react';
 import { ButtonFileMenu } from '../../../menu';
 import { FindFilesByPlaylistRequest } from '../../../../services';
 import { useLoggedUser } from '../../../../contexts';
+import { ValidationsError } from '../../../../shared';
+import axios, { AxiosError } from 'axios';
 
 interface ListPlaylistProps {
   name: string;
@@ -32,6 +35,7 @@ interface ListPlaylistProps {
   deletePlaylist: () => Promise<void>;
   addFile: () => Promise<void>;
   detailsPlaylist: () => Promise<void>;
+  showAlert: (message: string, success: boolean) => void;
 }
 
 export const PlaylistCard: FC<ListPlaylistProps> = ({
@@ -45,6 +49,7 @@ export const PlaylistCard: FC<ListPlaylistProps> = ({
   deletePlaylist,
   addFile,
   detailsPlaylist,
+  showAlert,
 }) => {
   const theme = useTheme();
   const { loggedUser } = useLoggedUser();
@@ -75,19 +80,33 @@ export const PlaylistCard: FC<ListPlaylistProps> = ({
     },
   ];
 
-  const getImage = useCallback(async (input: FindFilesByPlaylistDto) => {
-    try {
-      const result = await FindFilesByPlaylistRequest({
-        idPlaylist: input.idPlaylist,
-        loggedUserId: input.loggedUserId,
-      });
+  const getImage = useCallback(
+    async (input: FindFilesByPlaylistDto) => {
+      try {
+        const result = await FindFilesByPlaylistRequest({
+          idPlaylist: input.idPlaylist,
+          loggedUserId: input.loggedUserId,
+        });
 
-      setImageData({
-        image: result.files[0].path,
-        imageName: result.files[0].originalName,
-      });
-    } catch (error) {}
-  }, []);
+        if (result) {
+          setImageData({
+            image: result?.files[0]?.path,
+            imageName: result?.files[0]?.originalName,
+          });
+        }
+      } catch (error) {
+        console.error(error);
+        if (axios.isAxiosError(error)) {
+          const axiosError = error as AxiosError<ErrorResponse>;
+          const errors = ValidationsError(axiosError, 'Imagem');
+          if (errors) {
+            showAlert(errors, false);
+          }
+        }
+      }
+    },
+    [showAlert]
+  );
 
   useEffect(() => {
     getImage({

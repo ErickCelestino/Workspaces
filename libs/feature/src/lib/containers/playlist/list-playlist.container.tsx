@@ -242,6 +242,7 @@ export const ListPlaylistContainer = () => {
                       }
                       idPlaylist={playlist.id}
                       name={playlist.name}
+                      showAlert={showAlert}
                     />
                   </Grid>
                 ))}
