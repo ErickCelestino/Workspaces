@@ -3,6 +3,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { FC } from 'react';
 import { IconMenuItem } from '@workspaces/domain';
 import { SimpleCardItem } from '../../../card';
+import { useAppThemeContext } from 'libs/feature/src/lib/contexts';
 
 interface DeviceCardProps {
   name: string;
@@ -19,6 +20,7 @@ export const DeviceCard: FC<DeviceCardProps> = ({
   editTitle = 'Editar',
   deleteTitle = 'Deletar',
 }) => {
+  const { themeName } = useAppThemeContext();
   const iconMenuList: IconMenuItem[] = [
     {
       icon: <DeleteIcon />,
@@ -36,7 +38,10 @@ export const DeviceCard: FC<DeviceCardProps> = ({
     <SimpleCardItem
       iconMenuList={iconMenuList}
       imageData={{
-        image: '',
+        image:
+          themeName == 'dark'
+            ? '/assets/images/Pure_Device_White.svg'
+            : '/assets/images/Pure_Device_Black.svg',
         imageName: 'device',
       }}
       name={name}
