@@ -282,7 +282,7 @@ export const ListContanteFilesContainer = () => {
         title="Criar Diretório"
       />
 
-      <LayoutBase title="Listagem de Usuários" toolBar={<ToolbarPureTV />}>
+      <LayoutBase title="Listagem de Arquivos" toolBar={<ToolbarPureTV />}>
         <RightClickMenu iconMenuItemList={rightClickMenuList}>
           {smDown && <MobileButtonMenu iconMenuItemList={rightClickMenuList} />}
           <ContainerCardList
@@ -294,22 +294,24 @@ export const ListContanteFilesContainer = () => {
             handleChange={handleChange}
           >
             {fileList.length > 0 ? (
-              <Grid justifyContent="center" container spacing={2}>
-                {fileList.map((file, index) => (
-                  <Grid item md={6} lg={4} xl={3} key={index}>
-                    <ContentFileCard
-                      deleteFile={() => handleFile(file.id, 'delete')}
-                      detailsFile={() => handleFile(file.id, 'details')}
-                      downloadFile={() => handleFile(file.id, 'download')}
-                      moveFile={() => handleFile(file.id, 'moveFile')}
-                      fileImage={file.path}
-                      fileImageName={file.fileName}
-                      name={file.originalName}
-                      key={file.id}
-                    />
-                  </Grid>
-                ))}
-              </Grid>
+              <Box display="flex" justifyContent="center" alignItems="center">
+                <Grid container spacing={2}>
+                  {fileList.map((file, index) => (
+                    <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+                      <ContentFileCard
+                        deleteFile={() => handleFile(file.id, 'delete')}
+                        detailsFile={() => handleFile(file.id, 'details')}
+                        downloadFile={() => handleFile(file.id, 'download')}
+                        moveFile={() => handleFile(file.id, 'moveFile')}
+                        fileImage={file.path}
+                        fileImageName={file.fileName}
+                        name={file.originalName}
+                        key={file.id}
+                      />
+                    </Grid>
+                  ))}
+                </Grid>
+              </Box>
             ) : (
               <Box
                 marginTop={theme.spacing(2)}

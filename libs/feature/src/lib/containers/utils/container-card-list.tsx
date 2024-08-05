@@ -41,6 +41,7 @@ export const ContainerCardList: FC<ContainerCardListProps> = ({
         display: 'flex',
         justifyContent: 'center',
         flexDirection: 'column',
+        width: '100%',
       }}
     >
       <Box width="100%">

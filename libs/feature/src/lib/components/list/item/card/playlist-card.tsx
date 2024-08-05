@@ -118,9 +118,10 @@ export const PlaylistCard: FC<ListPlaylistProps> = ({
   return (
     <Card
       sx={{
-        width: theme.spacing(40),
         height: theme.spacing(28),
-        margin: theme.spacing(2),
+        maxWidth: 345,
+        minWidth: theme.spacing(40),
+        margin: 'auto',
       }}
     >
       <CardMedia

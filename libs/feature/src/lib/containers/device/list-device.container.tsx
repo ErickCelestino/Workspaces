@@ -155,22 +155,24 @@ export const ListDeviceContainer = () => {
             totalPage={totalPage}
           >
             {listDevice.length > 0 ? (
-              <Grid container spacing={2}>
-                {listDevice.map((device, index) => (
-                  <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
-                    <DeviceCard
-                      name={device.name}
-                      editDevice={async () =>
-                        handlePopUpOpen('edit', device.id)
-                      }
-                      deleteDevice={async () =>
-                        handlePopUpOpen('delete', device.id)
-                      }
-                      key={device.id}
-                    />
-                  </Grid>
-                ))}
-              </Grid>
+              <Box>
+                <Grid container spacing={2}>
+                  {listDevice.map((device, index) => (
+                    <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+                      <DeviceCard
+                        name={device.name}
+                        editDevice={async () =>
+                          handlePopUpOpen('edit', device.id)
+                        }
+                        deleteDevice={async () =>
+                          handlePopUpOpen('delete', device.id)
+                        }
+                        key={device.id}
+                      />
+                    </Grid>
+                  ))}
+                </Grid>
+              </Box>
             ) : (
               <Box
                 marginTop={theme.spacing(2)}

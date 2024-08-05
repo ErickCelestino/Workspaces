@@ -144,7 +144,7 @@ export const ListPlaylistContainer = () => {
     const result = await ListPlaylistRequest({
       userInput: '',
       loggedUserId: loggedUser?.id ?? '',
-      skip: (value - 1) * 6,
+      skip: (value - 1) * 8,
     });
     setTotalPage(result.totalPages);
     setListPlaylist(result.playlists);
@@ -224,29 +224,31 @@ export const ListPlaylistContainer = () => {
             totalPage={totalPage}
           >
             {listPlaylist.length > 0 ? (
-              <Grid container spacing={2}>
-                {listPlaylist.map((playlist, index) => (
-                  <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
-                    <PlaylistCard
-                      editPlaylist={async () =>
-                        handlePopUpOpen('edit', playlist.id)
-                      }
-                      deletePlaylist={async () =>
-                        handlePopUpOpen('delete', playlist.id)
-                      }
-                      addFile={async () =>
-                        handlePopUpOpen('add-file', playlist.id)
-                      }
-                      detailsPlaylist={async () =>
-                        handlePopUpOpen('details', playlist.id)
-                      }
-                      idPlaylist={playlist.id}
-                      name={playlist.name}
-                      showAlert={showAlert}
-                    />
-                  </Grid>
-                ))}
-              </Grid>
+              <Box display="flex" justifyContent="center" alignItems="center">
+                <Grid container spacing={2}>
+                  {listPlaylist.map((playlist, index) => (
+                    <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+                      <PlaylistCard
+                        editPlaylist={async () =>
+                          handlePopUpOpen('edit', playlist.id)
+                        }
+                        deletePlaylist={async () =>
+                          handlePopUpOpen('delete', playlist.id)
+                        }
+                        addFile={async () =>
+                          handlePopUpOpen('add-file', playlist.id)
+                        }
+                        detailsPlaylist={async () =>
+                          handlePopUpOpen('details', playlist.id)
+                        }
+                        idPlaylist={playlist.id}
+                        name={playlist.name}
+                        showAlert={showAlert}
+                      />
+                    </Grid>
+                  ))}
+                </Grid>
+              </Box>
             ) : (
               <Box
                 marginTop={theme.spacing(2)}
