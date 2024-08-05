@@ -216,12 +216,14 @@ export const ListContanteFilesContainer = () => {
     event: React.ChangeEvent<unknown>,
     value: number
   ) => {
+    setSearch(true);
     const result = await ListContentFilesRequest({
       userInput: '',
       directoryId: directoryId,
       loggedUserId: loggedUser?.id ?? '',
       skip: (value - 1) * 8,
     });
+    setTotalPage(result.totalPages);
     setFileList(result.files);
   };
 
