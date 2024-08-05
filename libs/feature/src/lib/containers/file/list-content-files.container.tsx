@@ -121,9 +121,11 @@ export const ListContanteFilesContainer = () => {
       loggedUserId: loggedUser?.id ?? '',
       userInput: '',
     });
-    setFileList(result?.files ?? []);
-    setDirectoryId(directoryId);
-    setTotalPage(result?.totalPages ?? 0);
+    if (result) {
+      setFileList(result?.files ?? []);
+      setDirectoryId(directoryId);
+      setTotalPage(result?.totalPages ?? 0);
+    }
   }, [loggedUser, handleData]);
 
   const handlePopUpClose = (types: FileContentType) => {
@@ -294,10 +296,15 @@ export const ListContanteFilesContainer = () => {
             handleChange={handleChange}
           >
             {fileList.length > 0 ? (
-              <Box display="flex" justifyContent="center" alignItems="center">
-                <Grid container spacing={2}>
+              <Box display="flex" justifyContent="center" width="100%">
+                <Grid
+                  container
+                  display="flex"
+                  justifyContent="center"
+                  spacing={2}
+                >
                   {fileList.map((file, index) => (
-                    <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+                    <Grid item key={index}>
                       <ContentFileCard
                         deleteFile={() => handleFile(file.id, 'delete')}
                         detailsFile={() => handleFile(file.id, 'details')}

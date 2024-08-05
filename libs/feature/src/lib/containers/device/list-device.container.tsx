@@ -155,10 +155,15 @@ export const ListDeviceContainer = () => {
             totalPage={totalPage}
           >
             {listDevice.length > 0 ? (
-              <Box>
-                <Grid container spacing={2}>
+              <Box display="flex" justifyContent="center" width="100%">
+                <Grid
+                  display="flex"
+                  justifyContent="center"
+                  container
+                  spacing={2}
+                >
                   {listDevice.map((device, index) => (
-                    <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+                    <Grid item key={index}>
                       <DeviceCard
                         name={device.name}
                         editDevice={async () =>
