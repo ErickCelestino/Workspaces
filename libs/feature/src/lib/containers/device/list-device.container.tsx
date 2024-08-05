@@ -1,6 +1,14 @@
-import { Box, Icon, Typography, useMediaQuery, useTheme } from '@mui/material';
+import {
+  Box,
+  Grid,
+  Icon,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from '@mui/material';
 import {
   CreateDeviceModal,
+  DeviceCard,
   MobileButtonMenu,
   RightClickMenu,
   ToolbarPureTV,
@@ -47,6 +55,10 @@ export const ListDeviceContainer = () => {
       case 'create':
         setCreateDevicePopUp(true);
         break;
+      case 'edit':
+        break;
+      case 'delete':
+        break;
     }
   };
 
@@ -66,7 +78,7 @@ export const ListDeviceContainer = () => {
     const result = await ListDeviceRequest({
       filter: '',
       loggedUserId: loggedUser?.id ?? '',
-      skip: (value - 1) * 6,
+      skip: (value - 1) * 8,
     });
     setTotalPage(result.totalPages);
     setListDevice(result.devices);
@@ -143,7 +155,22 @@ export const ListDeviceContainer = () => {
             totalPage={totalPage}
           >
             {listDevice.length > 0 ? (
-              listDevice.map((device) => <div>{device.id}</div>)
+              <Grid container spacing={2}>
+                {listDevice.map((device, index) => (
+                  <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+                    <DeviceCard
+                      name={device.name}
+                      editDevice={async () =>
+                        handlePopUpOpen('edit', device.id)
+                      }
+                      deleteDevice={async () =>
+                        handlePopUpOpen('delete', device.id)
+                      }
+                      key={device.id}
+                    />
+                  </Grid>
+                ))}
+              </Grid>
             ) : (
               <Box
                 marginTop={theme.spacing(2)}

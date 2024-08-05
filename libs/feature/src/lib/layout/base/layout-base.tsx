@@ -54,7 +54,6 @@ export const LayoutBase: FC<ILayoutBasePros> = ({
   return (
     <Box height="100%" display="flex" flexDirection="column" gap={1}>
       <Box
-        padding={smDown ? 0 : 1}
         display="flex"
         alignItems="center"
         gap={1}
