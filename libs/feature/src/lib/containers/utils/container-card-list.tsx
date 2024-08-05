@@ -41,9 +41,10 @@ export const ContainerCardList: FC<ContainerCardListProps> = ({
         display: 'flex',
         justifyContent: 'center',
         flexDirection: 'column',
+        width: '100%',
       }}
     >
-      <Box width="97%">
+      <Box width="100%">
         <Box
           sx={{
             display: 'flex',
@@ -85,7 +86,7 @@ export const ContainerCardList: FC<ContainerCardListProps> = ({
         </Box>
       </Box>
 
-      <Box>
+      <Box width="100%">
         <Box
           sx={{
             display: 'flex',
@@ -107,7 +108,7 @@ export const ContainerCardList: FC<ContainerCardListProps> = ({
           </Box>
         </Box>
         <Box
-          width={mdUp ? '97%' : '100%'}
+          width="100%"
           display="flex"
           justifyContent="center"
           marginTop={theme.spacing(2)}

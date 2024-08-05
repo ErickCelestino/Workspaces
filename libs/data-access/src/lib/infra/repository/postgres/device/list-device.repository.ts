@@ -1,17 +1,15 @@
 import { Inject } from '@nestjs/common';
 import {
-  FormatDateInTime,
-  ListSchedulesDto,
-  ListSchedulesReponseDto,
-  ListSchedulesRepository,
-  Scheduling,
+  Device,
+  ListDeviceDto,
+  ListDeviceRepository,
+  ListDeviceResponseDto,
 } from '@workspaces/domain';
 import { PrismaService } from 'nestjs-prisma';
 
-export class ListSchedulesRepositoryImpl implements ListSchedulesRepository {
+export class ListDeviceRepositoryImpl implements ListDeviceRepository {
   constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
-
-  async list(input: ListSchedulesDto): Promise<ListSchedulesReponseDto> {
+  async list(input: ListDeviceDto): Promise<ListDeviceResponseDto> {
     const { loggedUserId, filter } = input;
 
     const skip = input?.skip || 0;
@@ -29,18 +27,14 @@ export class ListSchedulesRepositoryImpl implements ListSchedulesRepository {
         : {}),
     };
 
-    const [scheduling, filteredTotal, total] =
+    const [devices, filteredTotal, total] =
       await this.prismaService.$transaction([
-        this.prismaService.scheduling.findMany({
+        this.prismaService.device.findMany({
           where: whereClause,
           select: {
-            scheduling_id: true,
+            device_id: true,
             created_at: true,
             name: true,
-            start_time: true,
-            end_time: true,
-            looping: true,
-            priority: true,
             user: {
               select: {
                 nick_name: true,
@@ -50,10 +44,10 @@ export class ListSchedulesRepositoryImpl implements ListSchedulesRepository {
           skip: parseInt(skip.toString()),
           take: parseInt(take.toString()),
         }),
-        this.prismaService.scheduling.count({
+        this.prismaService.device.count({
           where: whereClause,
         }),
-        this.prismaService.scheduling.count({
+        this.prismaService.device.count({
           where: {
             user_id: loggedUserId,
           },
@@ -62,21 +56,15 @@ export class ListSchedulesRepositoryImpl implements ListSchedulesRepository {
 
     const totalPages = Math.ceil(filteredTotal / take);
 
-    const mappedScheduling: Scheduling[] = scheduling.map((scheduling) => {
-      return {
-        id: scheduling.scheduling_id,
-        createBy: scheduling.user.nick_name,
-        createdAt: scheduling.created_at,
-        endTime: FormatDateInTime(scheduling.end_time),
-        lopping: scheduling.looping,
-        name: scheduling.name,
-        priority: `${scheduling.priority}`,
-        startTime: FormatDateInTime(scheduling.start_time),
-      };
-    });
+    const mappedDevices: Device[] = devices.map((device) => ({
+      createdAt: device.created_at ?? new Date(),
+      createdBy: device.user?.nick_name ?? '',
+      id: device.device_id ?? '',
+      name: device.name ?? '',
+    }));
 
     return {
-      schedules: mappedScheduling,
+      devices: mappedDevices,
       filteredTotal,
       total,
       totalPages,

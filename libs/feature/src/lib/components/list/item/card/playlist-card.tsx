@@ -1,13 +1,5 @@
 import {
-  Box,
-  Card,
-  CardActions,
-  CardContent,
-  CardMedia,
-  Typography,
-  useTheme,
-} from '@mui/material';
-import {
+  ErrorResponse,
   FindFilesByPlaylistDto,
   IconMenuItem,
   ImageCardItem,
@@ -17,9 +9,11 @@ import NoteAddIcon from '@mui/icons-material/NoteAdd';
 import DeleteIcon from '@mui/icons-material/Delete';
 import InfoIcon from '@mui/icons-material/Info';
 import { FC, useCallback, useEffect, useState } from 'react';
-import { ButtonFileMenu } from '../../../menu';
 import { FindFilesByPlaylistRequest } from '../../../../services';
 import { useLoggedUser } from '../../../../contexts';
+import { ValidationsError } from '../../../../shared';
+import axios, { AxiosError } from 'axios';
+import { SimpleCardItem } from '../../../card';
 
 interface ListPlaylistProps {
   name: string;
@@ -32,6 +26,7 @@ interface ListPlaylistProps {
   deletePlaylist: () => Promise<void>;
   addFile: () => Promise<void>;
   detailsPlaylist: () => Promise<void>;
+  showAlert: (message: string, success: boolean) => void;
 }
 
 export const PlaylistCard: FC<ListPlaylistProps> = ({
@@ -45,8 +40,8 @@ export const PlaylistCard: FC<ListPlaylistProps> = ({
   deletePlaylist,
   addFile,
   detailsPlaylist,
+  showAlert,
 }) => {
-  const theme = useTheme();
   const { loggedUser } = useLoggedUser();
   const [imageData, setImageData] = useState<ImageCardItem>(
     {} as ImageCardItem
@@ -75,19 +70,33 @@ export const PlaylistCard: FC<ListPlaylistProps> = ({
     },
   ];
 
-  const getImage = useCallback(async (input: FindFilesByPlaylistDto) => {
-    try {
-      const result = await FindFilesByPlaylistRequest({
-        idPlaylist: input.idPlaylist,
-        loggedUserId: input.loggedUserId,
-      });
+  const getImage = useCallback(
+    async (input: FindFilesByPlaylistDto) => {
+      try {
+        const result = await FindFilesByPlaylistRequest({
+          idPlaylist: input.idPlaylist,
+          loggedUserId: input.loggedUserId,
+        });
 
-      setImageData({
-        image: result.files[0].path,
-        imageName: result.files[0].originalName,
-      });
-    } catch (error) {}
-  }, []);
+        if (result) {
+          setImageData({
+            image: result?.files[0]?.path,
+            imageName: result?.files[0]?.originalName,
+          });
+        }
+      } catch (error) {
+        console.error(error);
+        if (axios.isAxiosError(error)) {
+          const axiosError = error as AxiosError<ErrorResponse>;
+          const errors = ValidationsError(axiosError, 'Imagem');
+          if (errors) {
+            showAlert(errors, false);
+          }
+        }
+      }
+    },
+    [showAlert]
+  );
 
   useEffect(() => {
     getImage({
@@ -97,50 +106,13 @@ export const PlaylistCard: FC<ListPlaylistProps> = ({
   }, [idPlaylist, loggedUser, getImage]);
 
   return (
-    <Card
-      sx={{
-        width: theme.spacing(40),
-        height: theme.spacing(28),
-        margin: theme.spacing(2),
+    <SimpleCardItem
+      iconMenuList={iconMenuList}
+      imageData={{
+        image: imageData.image ?? '',
+        imageName: imageData.imageName,
       }}
-    >
-      <CardMedia
-        component="img"
-        image={imageData.image ?? '/assets/images/Sem_Arquivo.png'}
-        title={imageData.imageName}
-        sx={{
-          height: theme.spacing(15),
-          objectFit: 'contain',
-          objectPosition: 'center',
-          margin: 'auto',
-        }}
-      />
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-        }}
-      >
-        <CardContent>
-          <Box>
-            <Typography
-              component="div"
-              variant="body2"
-              overflow="hidden"
-              noWrap
-              width={theme.spacing(20)}
-              textOverflow="ellipsis"
-              fontSize={14}
-            >
-              {name}
-            </Typography>
-          </Box>
-        </CardContent>
-        <CardActions>
-          <ButtonFileMenu iconMenuItemList={iconMenuList} />
-        </CardActions>
-      </Box>
-    </Card>
+      name={name}
+    />
   );
 };

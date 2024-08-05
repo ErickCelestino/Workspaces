@@ -1,23 +1,44 @@
-import { Icon, useMediaQuery, useTheme } from '@mui/material';
+import {
+  Box,
+  Grid,
+  Icon,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from '@mui/material';
 import {
   CreateDeviceModal,
+  DeviceCard,
   MobileButtonMenu,
   RightClickMenu,
   ToolbarPureTV,
 } from '../../components';
 import { LayoutBase } from '../../layout';
-import { CrudType, IconMenuItem } from '@workspaces/domain';
-import { useCallback, useState } from 'react';
+import {
+  CrudType,
+  Device,
+  ErrorResponse,
+  IconMenuItem,
+  ListDeviceDto,
+} from '@workspaces/domain';
+import { useCallback, useEffect, useState } from 'react';
 import { useSnackbarAlert } from '../../hooks';
 import { ContainerCardList } from '../utils';
+import { ListDeviceRequest } from '../../services';
+import axios, { AxiosError } from 'axios';
+import { ValidationsError } from '../../shared';
+import { useLoggedUser } from '../../contexts';
 
 export const ListDeviceContainer = () => {
   const theme = useTheme();
+  const { loggedUser } = useLoggedUser();
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
   const { showSnackbarAlert, SnackbarAlert } = useSnackbarAlert();
 
   const [createDevicePopUp, setCreateDevicePopUp] = useState(false);
+  const [listDevice, setListDevice] = useState<Device[]>([]);
   const [totalPage, setTotalPage] = useState<number>(1);
+  const [search, setSearch] = useState(false);
 
   const showAlert = useCallback(
     (message: string, success: boolean) => {
@@ -34,6 +55,10 @@ export const ListDeviceContainer = () => {
       case 'create':
         setCreateDevicePopUp(true);
         break;
+      case 'edit':
+        break;
+      case 'delete':
+        break;
     }
   };
 
@@ -49,10 +74,65 @@ export const ListDeviceContainer = () => {
     event: React.ChangeEvent<unknown>,
     value: number
   ) => {
-    // More Implementation
+    setSearch(true);
+    const result = await ListDeviceRequest({
+      filter: '',
+      loggedUserId: loggedUser?.id ?? '',
+      skip: (value - 1) * 8,
+    });
+    setTotalPage(result.totalPages);
+    setListDevice(result.devices);
   };
 
-  const searchData = async (input: string) => {};
+  const handleData = useCallback(
+    async (data: ListDeviceDto) => {
+      try {
+        const result = await ListDeviceRequest({
+          loggedUserId: data.loggedUserId,
+          filter: data.filter,
+          skip: data.skip,
+          take: data.take,
+        });
+        return result;
+      } catch (error) {
+        console.error(error);
+        if (axios.isAxiosError(error)) {
+          const axiosError = error as AxiosError<ErrorResponse>;
+          const errors = ValidationsError(axiosError, 'Dispositivo');
+          if (errors) {
+            showAlert(errors, false);
+          }
+        }
+      }
+    },
+    [showAlert]
+  );
+
+  const getData = useCallback(async () => {
+    const result = await handleData({
+      loggedUserId: loggedUser?.id ?? '',
+      filter: '',
+    });
+    setTotalPage(result?.totalPages ?? 0);
+    setListDevice(result?.devices ?? []);
+  }, [loggedUser, handleData]);
+
+  const searchData = async (input: string) => {
+    setSearch(true);
+    const result = await handleData({
+      loggedUserId: loggedUser?.id ?? '',
+      filter: input,
+    });
+
+    setTotalPage(result?.totalPages ?? 0);
+    setListDevice(result?.devices ?? []);
+  };
+
+  useEffect(() => {
+    if (!search) {
+      getData();
+    }
+  }, [getData, search]);
 
   return (
     <>
@@ -74,7 +154,42 @@ export const ListDeviceContainer = () => {
             }}
             totalPage={totalPage}
           >
-            {' '}
+            {listDevice.length > 0 ? (
+              <Box display="flex" justifyContent="center" width="100%">
+                <Grid
+                  display="flex"
+                  justifyContent="center"
+                  container
+                  spacing={2}
+                >
+                  {listDevice.map((device, index) => (
+                    <Grid item key={index}>
+                      <DeviceCard
+                        name={device.name}
+                        editDevice={async () =>
+                          handlePopUpOpen('edit', device.id)
+                        }
+                        deleteDevice={async () =>
+                          handlePopUpOpen('delete', device.id)
+                        }
+                        key={device.id}
+                      />
+                    </Grid>
+                  ))}
+                </Grid>
+              </Box>
+            ) : (
+              <Box
+                marginTop={theme.spacing(2)}
+                width="100%"
+                display="flex"
+                justifyContent="center"
+              >
+                <Typography variant="h4">
+                  Não foram encontrados registros
+                </Typography>
+              </Box>
+            )}
           </ContainerCardList>
         </RightClickMenu>
       </LayoutBase>

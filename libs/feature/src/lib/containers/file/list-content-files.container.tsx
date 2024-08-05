@@ -121,9 +121,11 @@ export const ListContanteFilesContainer = () => {
       loggedUserId: loggedUser?.id ?? '',
       userInput: '',
     });
-    setFileList(result?.files ?? []);
-    setDirectoryId(directoryId);
-    setTotalPage(result?.totalPages ?? 0);
+    if (result) {
+      setFileList(result?.files ?? []);
+      setDirectoryId(directoryId);
+      setTotalPage(result?.totalPages ?? 0);
+    }
   }, [loggedUser, handleData]);
 
   const handlePopUpClose = (types: FileContentType) => {
@@ -214,12 +216,14 @@ export const ListContanteFilesContainer = () => {
     event: React.ChangeEvent<unknown>,
     value: number
   ) => {
+    setSearch(true);
     const result = await ListContentFilesRequest({
       userInput: '',
       directoryId: directoryId,
       loggedUserId: loggedUser?.id ?? '',
       skip: (value - 1) * 8,
     });
+    setTotalPage(result.totalPages);
     setFileList(result.files);
   };
 
@@ -282,7 +286,7 @@ export const ListContanteFilesContainer = () => {
         title="Criar Diretório"
       />
 
-      <LayoutBase title="Listagem de Usuários" toolBar={<ToolbarPureTV />}>
+      <LayoutBase title="Listagem de Arquivos" toolBar={<ToolbarPureTV />}>
         <RightClickMenu iconMenuItemList={rightClickMenuList}>
           {smDown && <MobileButtonMenu iconMenuItemList={rightClickMenuList} />}
           <ContainerCardList
@@ -294,22 +298,29 @@ export const ListContanteFilesContainer = () => {
             handleChange={handleChange}
           >
             {fileList.length > 0 ? (
-              <Grid justifyContent="center" container spacing={2}>
-                {fileList.map((file, index) => (
-                  <Grid item md={6} lg={4} xl={3} key={index}>
-                    <ContentFileCard
-                      deleteFile={() => handleFile(file.id, 'delete')}
-                      detailsFile={() => handleFile(file.id, 'details')}
-                      downloadFile={() => handleFile(file.id, 'download')}
-                      moveFile={() => handleFile(file.id, 'moveFile')}
-                      fileImage={file.path}
-                      fileImageName={file.fileName}
-                      name={file.originalName}
-                      key={file.id}
-                    />
-                  </Grid>
-                ))}
-              </Grid>
+              <Box display="flex" justifyContent="center" width="100%">
+                <Grid
+                  container
+                  display="flex"
+                  justifyContent="center"
+                  spacing={2}
+                >
+                  {fileList.map((file, index) => (
+                    <Grid item key={index}>
+                      <ContentFileCard
+                        deleteFile={() => handleFile(file.id, 'delete')}
+                        detailsFile={() => handleFile(file.id, 'details')}
+                        downloadFile={() => handleFile(file.id, 'download')}
+                        moveFile={() => handleFile(file.id, 'moveFile')}
+                        fileImage={file.path}
+                        fileImageName={file.fileName}
+                        name={file.originalName}
+                        key={file.id}
+                      />
+                    </Grid>
+                  ))}
+                </Grid>
+              </Box>
             ) : (
               <Box
                 marginTop={theme.spacing(2)}

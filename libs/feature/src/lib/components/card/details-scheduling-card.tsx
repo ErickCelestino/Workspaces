@@ -1,4 +1,4 @@
-import { Box, Chip, Typography, useMediaQuery, useTheme } from '@mui/material';
+import { Box, Chip, Typography, useTheme } from '@mui/material';
 import { Scheduling } from '@workspaces/domain';
 import { FC } from 'react';
 import { formatBrDate } from '../../shared';
@@ -83,8 +83,8 @@ export const DetailsSchedulingCard: FC<DetailsSchedulingCardProps> = ({
           <strong>{loopingTitle}</strong>
           <Chip
             sx={{ marginLeft: theme.spacing(1) }}
-            label={schedulingDetails.lopping == true ? 'Sim' : 'Não'}
-            color={schedulingDetails.lopping == true ? 'success' : 'error'}
+            label={schedulingDetails.lopping === true ? 'Sim' : 'Não'}
+            color={schedulingDetails.lopping === true ? 'success' : 'error'}
             variant="filled"
           />
           <Typography marginLeft={theme.spacing(1)} variant="body1">
