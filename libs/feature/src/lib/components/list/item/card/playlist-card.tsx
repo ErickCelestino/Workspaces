@@ -1,13 +1,4 @@
 import {
-  Box,
-  Card,
-  CardActions,
-  CardContent,
-  CardMedia,
-  Typography,
-  useTheme,
-} from '@mui/material';
-import {
   ErrorResponse,
   FindFilesByPlaylistDto,
   IconMenuItem,
@@ -18,11 +9,11 @@ import NoteAddIcon from '@mui/icons-material/NoteAdd';
 import DeleteIcon from '@mui/icons-material/Delete';
 import InfoIcon from '@mui/icons-material/Info';
 import { FC, useCallback, useEffect, useState } from 'react';
-import { ButtonFileMenu } from '../../../menu';
 import { FindFilesByPlaylistRequest } from '../../../../services';
 import { useLoggedUser } from '../../../../contexts';
 import { ValidationsError } from '../../../../shared';
 import axios, { AxiosError } from 'axios';
+import { SimpleCardItem } from '../../../card';
 
 interface ListPlaylistProps {
   name: string;
@@ -51,7 +42,6 @@ export const PlaylistCard: FC<ListPlaylistProps> = ({
   detailsPlaylist,
   showAlert,
 }) => {
-  const theme = useTheme();
   const { loggedUser } = useLoggedUser();
   const [imageData, setImageData] = useState<ImageCardItem>(
     {} as ImageCardItem
@@ -116,51 +106,13 @@ export const PlaylistCard: FC<ListPlaylistProps> = ({
   }, [idPlaylist, loggedUser, getImage]);
 
   return (
-    <Card
-      sx={{
-        height: theme.spacing(28),
-        maxWidth: 345,
-        minWidth: theme.spacing(40),
-        margin: 'auto',
+    <SimpleCardItem
+      iconMenuList={iconMenuList}
+      imageData={{
+        image: imageData.image ?? '',
+        imageName: imageData.imageName,
       }}
-    >
-      <CardMedia
-        component="img"
-        image={imageData.image ?? '/assets/images/Sem_Arquivo.png'}
-        title={imageData.imageName}
-        sx={{
-          height: theme.spacing(15),
-          objectFit: 'contain',
-          objectPosition: 'center',
-          margin: 'auto',
-        }}
-      />
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-        }}
-      >
-        <CardContent>
-          <Box>
-            <Typography
-              component="div"
-              variant="body2"
-              overflow="hidden"
-              noWrap
-              width={theme.spacing(20)}
-              textOverflow="ellipsis"
-              fontSize={14}
-            >
-              {name}
-            </Typography>
-          </Box>
-        </CardContent>
-        <CardActions>
-          <ButtonFileMenu iconMenuItemList={iconMenuList} />
-        </CardActions>
-      </Box>
-    </Card>
+      name={name}
+    />
   );
 };
