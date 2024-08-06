@@ -3,7 +3,7 @@ import { FC, useState } from 'react';
 import { useLoggedUser } from '../../../contexts';
 import { useForm } from 'react-hook-form';
 import {
-  CreateDeviceBodyDto,
+  DeviceBodyDto,
   CreateDeviceDto,
   ErrorResponse,
 } from '@workspaces/domain';
@@ -42,7 +42,7 @@ export const CreateDeviceModal: FC<CreateDeviceModalProps> = ({
     register,
     reset,
     formState: { errors },
-  } = useForm<CreateDeviceBodyDto>({
+  } = useForm<DeviceBodyDto>({
     mode: 'all',
     criteriaMode: 'all',
     resolver: zodResolver(CreateDeviceFormSchema),
@@ -69,7 +69,7 @@ export const CreateDeviceModal: FC<CreateDeviceModalProps> = ({
     }
   };
 
-  const handleDeviceData = async (data: CreateDeviceBodyDto) => {
+  const handleDeviceData = async (data: DeviceBodyDto) => {
     setLoading(true);
     setSuccess(false);
     const result = await createDevice({
