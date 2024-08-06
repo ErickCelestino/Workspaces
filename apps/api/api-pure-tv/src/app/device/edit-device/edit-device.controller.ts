@@ -17,7 +17,7 @@ export class EditDeviceController {
     const result = await this.editDeviceService.edit({
       id,
       loggedUserId,
-      name: body.name,
+      name: body?.name ?? '',
     });
 
     if (result.isRight()) return { deviceId: result.value };

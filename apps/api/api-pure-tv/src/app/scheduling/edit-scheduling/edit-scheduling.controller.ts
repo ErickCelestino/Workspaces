@@ -19,7 +19,13 @@ export class EditSchedulingController {
     @Body() body: EditSchedulingBodyDto
   ) {
     const result = await this.editSchedulingService.edit({
-      body,
+      body: {
+        endTime: body?.endTime ?? '',
+        startTime: body?.startTime ?? '',
+        lopping: body?.lopping ?? false,
+        name: body?.name ?? '',
+        priority: body?.priority ?? 0,
+      },
       id,
       loggedUserId,
     });
