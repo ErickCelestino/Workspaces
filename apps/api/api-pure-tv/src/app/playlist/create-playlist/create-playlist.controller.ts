@@ -16,7 +16,7 @@ export class CreatePlaylistController {
   ) {
     const result = await this.createPlaylistService.create({
       loggedUserId,
-      name: input.name,
+      name: input?.name ?? '',
       playlistCategoryId,
     });
 

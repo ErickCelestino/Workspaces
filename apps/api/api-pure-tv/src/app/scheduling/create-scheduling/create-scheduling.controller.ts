@@ -21,7 +21,13 @@ export class CreateSchedulingController {
     @Body() body: CreateSchedulingBodyDto
   ) {
     const result = await this.createSchedulingService.create({
-      body,
+      body: {
+        endTime: body?.endTime ?? '',
+        startTime: body?.startTime ?? '',
+        lopping: body?.lopping ?? false,
+        name: body?.name ?? '',
+        priority: body?.priority ?? 0,
+      },
       loggedUserId,
     });
 

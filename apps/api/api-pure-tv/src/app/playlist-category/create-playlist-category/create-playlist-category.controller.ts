@@ -20,7 +20,10 @@ export class CreatePlaylistCategoryController {
     @Body() body: PlaylistCategoryBodyDto
   ) {
     const result = await this.createPlaylistCategoryService.create({
-      body,
+      body: {
+        description: body?.description ?? '',
+        name: body?.name ?? '',
+      },
       loggedUserId,
     });
 

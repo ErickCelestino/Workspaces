@@ -21,7 +21,7 @@ export class AddPlaylistsToSchedulingController {
   ) {
     const result = await this.addPlaylistsToSchedulingService.add({
       loggedUserId,
-      playlistIds: body.playlistIds,
+      playlistIds: body?.playlistIds ?? [],
       schedulingId,
     });
 

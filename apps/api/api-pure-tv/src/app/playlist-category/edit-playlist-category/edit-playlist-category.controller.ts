@@ -22,7 +22,10 @@ export class EditPlaylistCategoryController {
   ) {
     const result = await this.editPlaylistCategoryService.edit({
       id: idToEdit,
-      body,
+      body: {
+        description: body?.description ?? '',
+        name: body?.name ?? '',
+      },
       loggedUserId,
     });
 

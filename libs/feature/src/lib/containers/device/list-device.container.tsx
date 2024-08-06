@@ -10,6 +10,7 @@ import {
   CreateDeviceModal,
   DeleteDeviceModal,
   DeviceCard,
+  EditDeviceModal,
   MobileButtonMenu,
   RightClickMenu,
   ToolbarPureTV,
@@ -38,6 +39,7 @@ export const ListDeviceContainer = () => {
 
   const [createDevicePopUp, setCreateDevicePopUp] = useState(false);
   const [deleteDevicePopUp, setDeleteDevicePopUp] = useState(false);
+  const [editDevicePopUp, setEditDevicePopUp] = useState(false);
   const [listDevice, setListDevice] = useState<Device[]>([]);
   const [totalPage, setTotalPage] = useState<number>(1);
   const [search, setSearch] = useState(false);
@@ -59,6 +61,8 @@ export const ListDeviceContainer = () => {
         setCreateDevicePopUp(true);
         break;
       case 'edit':
+        setSelectedId(id ?? '');
+        setEditDevicePopUp(true);
         break;
       case 'delete':
         setSelectedId(id ?? '');
@@ -154,6 +158,13 @@ export const ListDeviceContainer = () => {
         handlePopUpClose={() => setDeleteDevicePopUp(false)}
         showAlert={showAlert}
         idToDelete={selectedId}
+      />
+      <EditDeviceModal
+        open={editDevicePopUp}
+        title="Editar Dispositivo"
+        handlePopUpClose={() => setEditDevicePopUp(false)}
+        showAlert={showAlert}
+        idToEdit={selectedId}
       />
       <LayoutBase title="Listagem Dispositivos" toolBar={<ToolbarPureTV />}>
         <RightClickMenu iconMenuItemList={rightClickMenuList}>

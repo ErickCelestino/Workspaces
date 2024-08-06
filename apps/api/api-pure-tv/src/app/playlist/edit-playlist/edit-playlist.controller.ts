@@ -19,7 +19,10 @@ export class EditPlaylistController {
     @Body() body: PlaylistBodyDto
   ) {
     const result = await this.editPlaylistService.edit({
-      body,
+      body: {
+        name: body?.name ?? '',
+        playlistCategoryId: body?.playlistCategoryId ?? '',
+      },
       id,
       loggedUserId,
     });
