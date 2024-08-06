@@ -1,11 +1,13 @@
-import { Controller, Delete, Param, Query } from '@nestjs/common';
+import { Controller, Delete, Param, Query, UsePipes } from '@nestjs/common';
 import { DeleteDeviceService } from './delete-device.service';
-import { ErrorMessageResult } from '@workspaces/domain';
+import { deleteDeviceByIdSchema, ErrorMessageResult } from '@workspaces/domain';
+import { ZodValidationPipe } from '../../pipes/zod-validation-pipe';
 
 @Controller('delete-device')
 export class DeleteDeviceController {
   constructor(private readonly deleteDeviceService: DeleteDeviceService) {}
 
+  @UsePipes(new ZodValidationPipe(deleteDeviceByIdSchema))
   @Delete(':id')
   async delete(
     @Param('id') id: string,
