@@ -1,79 +1,73 @@
 import {
-  DeleteDevice,
-  DeleteDeviceDto,
-  DeleteDeviceRepository,
   Device,
   EntityNotEmpty,
   EntityNotExists,
+  FindDeviceById,
+  FindDeviceByIdDto,
   FindDeviceByIdRepository,
   FindUserByIdRepository,
   UserList,
 } from '../../../src';
 import { DeviceMock, userMock } from '../../entity';
 import {
-  DeleteDeviceRepositoryMock,
   FindDeviceByIdRepositoryMock,
   FindUserByIdRepositoryMock,
 } from '../../repository';
 
-interface sutTypes {
-  sut: DeleteDevice;
-  deleteDeviceDto: DeleteDeviceDto;
+interface SutTypes {
+  sut: FindDeviceById;
+  findDeviceByIdDto: FindDeviceByIdDto;
   findUserByIdRepository: FindUserByIdRepository;
   findDeviceByIdRepository: FindDeviceByIdRepository;
-  deleteDeviceRepository: DeleteDeviceRepository;
 }
 
-const makeSut = (): sutTypes => {
+const makeSut = (): SutTypes => {
   const findUserByIdRepository = new FindUserByIdRepositoryMock();
   const findDeviceByIdRepository = new FindDeviceByIdRepositoryMock();
-  const deleteDeviceRepository = new DeleteDeviceRepositoryMock();
 
-  const deleteDeviceDto: DeleteDeviceDto = {
+  const findDeviceByIdDto: FindDeviceByIdDto = {
     id: DeviceMock.id,
     loggedUserId: userMock.userId,
   };
 
-  const sut = new DeleteDevice(
+  const sut = new FindDeviceById(
     findUserByIdRepository,
-    findDeviceByIdRepository,
-    deleteDeviceRepository
+    findDeviceByIdRepository
   );
 
   return {
     sut,
-    deleteDeviceDto,
+    findDeviceByIdDto,
     findUserByIdRepository,
     findDeviceByIdRepository,
-    deleteDeviceRepository,
   };
 };
 
-describe('DeleteDevice', () => {
-  it('should return void when pass correct DeleteDeviceDto', async () => {
-    const { sut, deleteDeviceDto } = makeSut();
+describe('FindDeviceById', () => {
+  it('should return Device when pass correct FindDeviceByIdDto', async () => {
+    const { sut, findDeviceByIdDto } = makeSut();
 
-    const result = await sut.execute(deleteDeviceDto);
+    const result = await sut.execute(findDeviceByIdDto);
 
     expect(result.isRight()).toBe(true);
     expect(result.isLeft()).toBe(false);
-    expect(result.value).toBe(undefined);
+    expect(result.value).toEqual(DeviceMock);
   });
 
-  it('should return EntityNotEmpty when pass incorrect id', async () => {
-    const { sut, deleteDeviceDto } = makeSut();
-    deleteDeviceDto.id = '';
-    const result = await sut.execute(deleteDeviceDto);
+  it('should return EntityNotEmpty when pass incorrect Logged User ID', async () => {
+    const { sut, findDeviceByIdDto } = makeSut();
+    findDeviceByIdDto.loggedUserId = '';
+    const result = await sut.execute(findDeviceByIdDto);
 
     expect(result.isRight()).toBe(false);
     expect(result.isLeft()).toBe(true);
     expect(result.value).toBeInstanceOf(EntityNotEmpty);
   });
 
-  it('should return EntityNotEmpty when pass incorrect Logged User ID', async () => {
-    const { sut, deleteDeviceDto } = makeSut();
-    deleteDeviceDto.loggedUserId = '';
-    const result = await sut.execute(deleteDeviceDto);
+  it('should return EntityNotEmpty when pass incorrect Device ID', async () => {
+    const { sut, findDeviceByIdDto } = makeSut();
+    findDeviceByIdDto.id = '';
+    const result = await sut.execute(findDeviceByIdDto);
 
     expect(result.isRight()).toBe(false);
     expect(result.isLeft()).toBe(true);
@@ -81,11 +75,11 @@ describe('DeleteDevice', () => {
   });
 
   it('should return EntityNotExists when a exist User in system', async () => {
-    const { deleteDeviceDto, sut } = makeSut();
+    const { findDeviceByIdDto, sut } = makeSut();
     jest
       .spyOn(sut['findUserByIdRepository'], 'find')
       .mockResolvedValueOnce({} as UserList);
-    const result = await sut.execute(deleteDeviceDto);
+    const result = await sut.execute(findDeviceByIdDto);
 
     expect(result.isLeft()).toBe(true);
     expect(result.isRight()).toBe(false);
@@ -93,11 +87,11 @@ describe('DeleteDevice', () => {
   });
 
   it('should return EntityNotExists when a exist device in system', async () => {
-    const { deleteDeviceDto, sut } = makeSut();
+    const { findDeviceByIdDto, sut } = makeSut();
     jest
       .spyOn(sut['findDeviceByIdRepository'], 'find')
       .mockResolvedValueOnce({} as Device);
-    const result = await sut.execute(deleteDeviceDto);
+    const result = await sut.execute(findDeviceByIdDto);
 
     expect(result.isLeft()).toBe(true);
     expect(result.isRight()).toBe(false);
