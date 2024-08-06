@@ -80,7 +80,7 @@ describe('DeleteDevice', () => {
     expect(result.value).toBeInstanceOf(EntityNotEmpty);
   });
 
-  it('should return EntityAlreadyExists when a exist device in system', async () => {
+  it('should return EntityAlreadyExists when a exist User in system', async () => {
     const { deleteDeviceDto, sut } = makeSut();
     jest
       .spyOn(sut['findUserByIdRepository'], 'find')
