@@ -1,11 +1,13 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import { Controller, Get, Param, Query, UsePipes } from '@nestjs/common';
 import { FindDeviceByIdService } from './find-device-by-id.service';
-import { ErrorMessageResult } from '@workspaces/domain';
+import { ErrorMessageResult, findDeviceByIdSchema } from '@workspaces/domain';
+import { ZodValidationPipe } from '../../pipes/zod-validation-pipe';
 
 @Controller('find-device-by-id')
 export class FindDeviceByIdController {
   constructor(private readonly findDeviceByIdService: FindDeviceByIdService) {}
 
+  @UsePipes(new ZodValidationPipe(findDeviceByIdSchema))
   @Get(':id')
   async find(
     @Param('id') id: string,
