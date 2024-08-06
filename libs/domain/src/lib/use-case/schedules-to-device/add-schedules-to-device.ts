@@ -1,0 +1,91 @@
+import { Inject } from '@nestjs/common';
+import { UseCase } from '../../base/use-case';
+import { AddSchedulesToDeviceDto } from '../../dto';
+import { EntityNotCreated, EntityNotEmpty } from '../../error';
+import { Either, left, right } from '../../shared/either';
+import {
+  AddSchedulingToDeviceRepository,
+  FindDeviceByIdRepository,
+  FindSchedulingByIdRepository,
+  FindUserByIdRepository,
+} from '../../repository';
+import {
+  ValidationDeviceId,
+  ValidationSchedulingId,
+  ValidationUserId,
+} from '../../utils';
+
+export class AddSchedulesToDevice
+  implements UseCase<AddSchedulesToDeviceDto, Either<EntityNotEmpty, string[]>>
+{
+  constructor(
+    @Inject('FindUserByIdRepository')
+    private findUserByIdRepository: FindUserByIdRepository,
+    @Inject('FindDeviceByIdRepository')
+    private findDeviceByIdRepository: FindDeviceByIdRepository,
+    @Inject('FindSchedulingByIdRepository')
+    private findSchedulingByIdRepository: FindSchedulingByIdRepository,
+    @Inject('AddSchedulingToDeviceRepository')
+    private addSchedulingToDeviceRepository: AddSchedulingToDeviceRepository
+  ) {}
+  async execute(
+    input: AddSchedulesToDeviceDto
+  ): Promise<Either<EntityNotEmpty, string[]>> {
+    const { idDevice, loggedUserId, schedulesIds } = input;
+
+    if (Object.keys(loggedUserId).length < 1) {
+      return left(new EntityNotEmpty('loggedUserId'));
+    }
+
+    if (Object.keys(idDevice).length < 1) {
+      return left(new EntityNotEmpty('Device ID'));
+    }
+
+    const userValidation = await ValidationUserId(
+      loggedUserId,
+      this.findUserByIdRepository
+    );
+
+    if (userValidation.isLeft()) {
+      return left(userValidation.value);
+    }
+    const ids = [];
+    const deviceValidation = await ValidationDeviceId(
+      idDevice,
+      this.findDeviceByIdRepository
+    );
+
+    if (deviceValidation.isLeft()) {
+      return left(deviceValidation.value);
+    }
+
+    for (const scheduleId of schedulesIds) {
+      if (Object.keys(scheduleId).length < 1) {
+        return left(new EntityNotEmpty('Scheduling ID'));
+      }
+
+      const schedulingValidation = await ValidationSchedulingId(
+        scheduleId,
+        this.findSchedulingByIdRepository
+      );
+
+      if (schedulingValidation.isLeft()) {
+        return left(schedulingValidation.value);
+      }
+
+      const createdScheduling = await this.addSchedulingToDeviceRepository.add({
+        idDevice: idDevice,
+        idSchedule: scheduleId,
+        loggedUserId: loggedUserId,
+      });
+
+      if (Object.keys(createdScheduling).length < 1) {
+        return left(new EntityNotCreated('Scheduling'));
+      }
+
+      ids.push(createdScheduling);
+    }
+
+    return right(ids);
+  }
+}
