@@ -50,6 +50,7 @@ import {
   CreateDeviceModule,
   ListDeviceModule,
   DeleteDeviceModule,
+  EditDeviceModule,
 } from './device';
 
 @Module({
@@ -94,6 +95,7 @@ import {
     CreateDeviceModule,
     ListDeviceModule,
     DeleteDeviceModule,
+    EditDeviceModule,
   ],
   controllers: [AppController],
   providers: [AppService],
