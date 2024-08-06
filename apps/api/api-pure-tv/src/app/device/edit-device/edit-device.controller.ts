@@ -1,11 +1,13 @@
-import { Body, Controller, Param, Put, Query } from '@nestjs/common';
+import { Body, Controller, Param, Put, Query, UsePipes } from '@nestjs/common';
 import { EditDeviceService } from './edit-device.service';
-import { ErrorMessageResult } from '@workspaces/domain';
+import { editDeviceSchema, ErrorMessageResult } from '@workspaces/domain';
+import { ZodValidationPipe } from '../../pipes/zod-validation-pipe';
 
 @Controller('edit-device')
 export class EditDeviceController {
   constructor(private readonly editDeviceService: EditDeviceService) {}
 
+  @UsePipes(new ZodValidationPipe(editDeviceSchema))
   @Put(':id')
   async edit(
     @Param('id') id: string,
