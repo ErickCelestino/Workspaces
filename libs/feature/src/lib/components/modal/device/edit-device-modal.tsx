@@ -12,7 +12,8 @@ import { useLoggedUser } from '../../../contexts';
 import { Box, TextField, useMediaQuery, useTheme } from '@mui/material';
 import axios, { AxiosError } from 'axios';
 import { SimpleFormModal } from '../simple';
-import { EditDeviceRequest } from '../../../services';
+import { EditDeviceRequest, FindDeviceByIdRequest } from '../../../services';
+import { FormButton } from '../../form';
 
 interface EditDeviceModalProps {
   idToEdit: string;
@@ -63,12 +64,11 @@ export const EditDeviceModal: FC<EditDeviceModalProps> = ({
   const getDevice = useCallback(
     async (input: FindDeviceByIdDto) => {
       try {
-        // const result = await FindPlaylistByIdRequest(input);
-        // reset({
-        //   name: result.name,
-        //   playlistCategoryId: result.category.id,
-        // });
-        // setCategoryId(result.category.id);
+        const result = await FindDeviceByIdRequest(input);
+        reset({
+          name: result.name,
+        });
+        setDataLoaded(true);
       } catch (error) {
         console.error(error);
         if (axios.isAxiosError(error)) {
@@ -106,6 +106,17 @@ export const EditDeviceModal: FC<EditDeviceModalProps> = ({
     }
   };
 
+  useEffect(() => {
+    if (open && idToEdit && !dataLoaded) {
+      const loggedUserId = loggedUser?.id ?? '';
+
+      getDevice({
+        id: idToEdit,
+        loggedUserId: loggedUserId,
+      });
+    }
+  }, [loggedUser, idToEdit, dataLoaded, open, getDevice]);
+
   const handlePlaylistData = async (data: DeviceBodyDto) => {
     setLoading(true);
     setSuccess(false);
@@ -142,6 +153,12 @@ export const EditDeviceModal: FC<EditDeviceModalProps> = ({
           autoComplete="name"
           autoFocus
           {...register('name')}
+        />
+
+        <FormButton
+          buttonTitle="Registrar"
+          loading={loading}
+          success={success}
         />
       </Box>
     </SimpleFormModal>
