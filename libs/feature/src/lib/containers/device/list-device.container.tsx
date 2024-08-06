@@ -8,6 +8,7 @@ import {
 } from '@mui/material';
 import {
   CreateDeviceModal,
+  DeleteDeviceModal,
   DeviceCard,
   MobileButtonMenu,
   RightClickMenu,
@@ -36,9 +37,11 @@ export const ListDeviceContainer = () => {
   const { showSnackbarAlert, SnackbarAlert } = useSnackbarAlert();
 
   const [createDevicePopUp, setCreateDevicePopUp] = useState(false);
+  const [deleteDevicePopUp, setDeleteDevicePopUp] = useState(false);
   const [listDevice, setListDevice] = useState<Device[]>([]);
   const [totalPage, setTotalPage] = useState<number>(1);
   const [search, setSearch] = useState(false);
+  const [selectedId, setSelectedId] = useState<string>('');
 
   const showAlert = useCallback(
     (message: string, success: boolean) => {
@@ -58,6 +61,8 @@ export const ListDeviceContainer = () => {
       case 'edit':
         break;
       case 'delete':
+        setSelectedId(id ?? '');
+        setDeleteDevicePopUp(true);
         break;
     }
   };
@@ -141,6 +146,14 @@ export const ListDeviceContainer = () => {
         title="Novo Dispositivo"
         handlePopUpClose={() => setCreateDevicePopUp(false)}
         showAlert={showAlert}
+      />
+      <DeleteDeviceModal
+        open={deleteDevicePopUp}
+        title="Deletar Dispositivo"
+        subTitle="Por favor, selecione alguma das alternativas"
+        handlePopUpClose={() => setDeleteDevicePopUp(false)}
+        showAlert={showAlert}
+        idToDelete={selectedId}
       />
       <LayoutBase title="Listagem Dispositivos" toolBar={<ToolbarPureTV />}>
         <RightClickMenu iconMenuItemList={rightClickMenuList}>
