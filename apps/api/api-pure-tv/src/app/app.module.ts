@@ -51,6 +51,7 @@ import {
   ListDeviceModule,
   DeleteDeviceModule,
   EditDeviceModule,
+  FindDeviceByIdModule,
 } from './device';
 
 @Module({
@@ -96,6 +97,7 @@ import {
     ListDeviceModule,
     DeleteDeviceModule,
     EditDeviceModule,
+    FindDeviceByIdModule,
   ],
   controllers: [AppController],
   providers: [AppService],
