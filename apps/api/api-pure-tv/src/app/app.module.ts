@@ -53,7 +53,10 @@ import {
   EditDeviceModule,
   FindDeviceByIdModule,
 } from './device';
-import { AddSchedulesToDeviceModule } from './schedules-to-device';
+import {
+  AddSchedulesToDeviceModule,
+  FindSchedulesByDeviceIdModule,
+} from './schedules-to-device';
 
 @Module({
   imports: [
@@ -100,6 +103,7 @@ import { AddSchedulesToDeviceModule } from './schedules-to-device';
     EditDeviceModule,
     FindDeviceByIdModule,
     AddSchedulesToDeviceModule,
+    FindSchedulesByDeviceIdModule,
   ],
   controllers: [AppController],
   providers: [AppService],
