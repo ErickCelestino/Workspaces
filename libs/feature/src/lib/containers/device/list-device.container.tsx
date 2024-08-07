@@ -7,6 +7,7 @@ import {
   useTheme,
 } from '@mui/material';
 import {
+  AddSchedulesToDeviceModal,
   CreateDeviceModal,
   DeleteDeviceModal,
   DeviceCard,
@@ -40,6 +41,8 @@ export const ListDeviceContainer = () => {
   const [createDevicePopUp, setCreateDevicePopUp] = useState(false);
   const [deleteDevicePopUp, setDeleteDevicePopUp] = useState(false);
   const [editDevicePopUp, setEditDevicePopUp] = useState(false);
+  const [addSchedulesToDevicePopUp, setAddSchedulesToDevicePopUp] =
+    useState(false);
   const [listDevice, setListDevice] = useState<Device[]>([]);
   const [totalPage, setTotalPage] = useState<number>(1);
   const [search, setSearch] = useState(false);
@@ -55,7 +58,7 @@ export const ListDeviceContainer = () => {
     [showSnackbarAlert]
   );
 
-  const handlePopUpOpen = (types: CrudType, id?: string) => {
+  const handlePopUpOpen = (types: CrudType | 'add', id?: string) => {
     switch (types) {
       case 'create':
         setCreateDevicePopUp(true);
@@ -67,6 +70,10 @@ export const ListDeviceContainer = () => {
       case 'delete':
         setSelectedId(id ?? '');
         setDeleteDevicePopUp(true);
+        break;
+      case 'add':
+        setSelectedId(id ?? '');
+        setAddSchedulesToDevicePopUp(true);
         break;
     }
   };
@@ -166,6 +173,13 @@ export const ListDeviceContainer = () => {
         showAlert={showAlert}
         idToEdit={selectedId}
       />
+      <AddSchedulesToDeviceModal
+        open={addSchedulesToDevicePopUp}
+        title="Adicionar Agendamento"
+        handlePopUpClose={() => setAddSchedulesToDevicePopUp(false)}
+        showAlert={showAlert}
+        idDevice={selectedId}
+      />
       <LayoutBase title="Listagem Dispositivos" toolBar={<ToolbarPureTV />}>
         <RightClickMenu iconMenuItemList={rightClickMenuList}>
           {smDown && <MobileButtonMenu iconMenuItemList={rightClickMenuList} />}
@@ -195,6 +209,9 @@ export const ListDeviceContainer = () => {
                         }
                         deleteDevice={async () =>
                           handlePopUpOpen('delete', device.id)
+                        }
+                        addSchedulesToDevice={async () =>
+                          handlePopUpOpen('add', device.id)
                         }
                         key={device.id}
                       />
