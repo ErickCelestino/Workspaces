@@ -10,16 +10,16 @@ export class AddSchedulingToDeviceRepositoryImpl
 {
   constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
   async add(input: AddSchedulingToDeviceDto): Promise<string> {
-    const { idDevice, idSchedule } = input;
+    const { idDevice, idScheduing } = input;
 
     const createdSchedulingToDevice =
       await this.prismaService.scheduling_X_Device.create({
         data: {
           device_id: idDevice,
-          scheduling_id: idSchedule,
+          scheduling_id: idScheduing,
         },
       });
 
-    return createdSchedulingToDevice.device_id;
+    return `${createdSchedulingToDevice.scheduling_id}-${createdSchedulingToDevice.device_id}`;
   }
 }

@@ -39,7 +39,6 @@ export class AddSchedulesToDevice
     input: AddSchedulesToDeviceDto
   ): Promise<Either<EntityNotEmpty, string[]>> {
     const { idDevice, loggedUserId, schedulesIds } = input;
-
     if (Object.keys(loggedUserId).length < 1) {
       return left(new EntityNotEmpty('loggedUserId'));
     }
@@ -91,12 +90,12 @@ export class AddSchedulesToDevice
         });
 
       if (Object.keys(filteredSchedulingToDevice).length > 0) {
-        return left(new EntityAlreadyExists('Scheduling to Device'));
+        return left(new EntityAlreadyExists('Scheduling'));
       }
 
       const createdScheduling = await this.addSchedulingToDeviceRepository.add({
         idDevice: idDevice,
-        idSchedule: scheduleId,
+        idScheduing: scheduleId,
         loggedUserId: loggedUserId,
       });
 

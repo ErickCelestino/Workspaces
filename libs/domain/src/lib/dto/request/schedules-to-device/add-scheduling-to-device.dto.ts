@@ -1,5 +1,5 @@
 export interface AddSchedulingToDeviceDto {
   idDevice: string;
-  idSchedule: string;
+  idScheduing: string;
   loggedUserId: string;
 }

@@ -5,7 +5,7 @@ import {
 } from '@workspaces/domain';
 import { PrismaService } from 'nestjs-prisma';
 
-export class FindSchedulingToDeviceRepositoryImpl
+export class FindSchedulingToDeviceByIdsRepositoryImpl
   implements FindSchedulingToDeviceByIdsRepository
 {
   constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
@@ -18,6 +18,8 @@ export class FindSchedulingToDeviceRepositoryImpl
         },
       });
 
-    return `${filteredSchedulingToDevice[0].scheduling_id}-${filteredSchedulingToDevice[0].device_id}`;
+    return filteredSchedulingToDevice[0]?.device_id
+      ? `${filteredSchedulingToDevice[0].scheduling_id}-${filteredSchedulingToDevice[0].device_id}`
+      : '';
   }
 }
