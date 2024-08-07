@@ -1,6 +1,18 @@
 import { FC, useCallback, useEffect, useState } from 'react';
 import { useLoggedUser } from '../../../contexts';
-import { Box, useMediaQuery, useTheme } from '@mui/material';
+import {
+  Box,
+  Checkbox,
+  Chip,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Pagination,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from '@mui/material';
 import {
   AddSchedulesToDeviceDto,
   ErrorResponse,
@@ -14,6 +26,8 @@ import {
 import axios, { AxiosError } from 'axios';
 import { ValidationsError } from '../../../shared';
 import { SimpleFormModal } from '../simple';
+import { ScrollBox } from '../../scroll';
+import { FormButton } from '../../form';
 
 interface AddSchedulesToDeviceModalProps {
   open: boolean;
@@ -123,6 +137,18 @@ export const AddSchedulesToDeviceModal: FC<AddSchedulesToDeviceModalProps> = ({
     });
   };
 
+  const handleChange = async (
+    event: React.ChangeEvent<unknown>,
+    value: number
+  ) => {
+    const result = await ListSchedulesRequest({
+      loggedUserId: loggedUser?.id ?? '',
+      filter: '',
+      skip: (value - 1) * 5,
+      take: 5,
+    });
+  };
+
   return (
     <SimpleFormModal
       height={smDown ? theme.spacing(73) : theme.spacing(72)}
@@ -131,7 +157,77 @@ export const AddSchedulesToDeviceModal: FC<AddSchedulesToDeviceModalProps> = ({
       handlePopUpClose={handlePopUpClose}
       title={title}
     >
-      <Box component="form" onSubmit={handleAddSchedules}></Box>
+      <Box component="form" onSubmit={handleAddSchedules}>
+        <Box>
+          {listSchedules.length > 0 ? (
+            <>
+              <Typography mt={theme.spacing(0.5)} variant="h6">
+                {schedulesTitle}
+              </Typography>
+              <ScrollBox>
+                <List>
+                  {listSchedules.map((scheduling) => (
+                    <ListItem key={scheduling.id}>
+                      <ListItemIcon>
+                        <Checkbox
+                          edge="start"
+                          checked={
+                            selectedSchedules.indexOf(scheduling.id) !== -1
+                          }
+                          onChange={() => handleSchedulingToggle(scheduling.id)}
+                        />
+                      </ListItemIcon>
+
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          flexDirection: 'row',
+                          justifyContent: 'space-between',
+                          width: '100%',
+                        }}
+                      >
+                        <ListItemText primary={scheduling.name} />
+                      </Box>
+                    </ListItem>
+                  ))}
+                </List>
+              </ScrollBox>
+              <Box
+                sx={{
+                  marginTop: 'auto',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  width: '100%',
+                }}
+              >
+                <Pagination
+                  count={totalPage}
+                  color="primary"
+                  onChange={handleChange}
+                />
+              </Box>
+            </>
+          ) : (
+            <Box>"Sem Playlists"</Box>
+          )}
+        </Box>
+        <Box
+          sx={{
+            marginTop: theme.spacing(1),
+            display: 'flex',
+            justifyContent: 'center',
+            width: '100%',
+          }}
+        >
+          <Box width={smDown ? '95%' : '60%'}>
+            <FormButton
+              buttonTitle="Adicionar Agendamentos"
+              loading={loading}
+              success={success}
+            />
+          </Box>
+        </Box>
+      </Box>
     </SimpleFormModal>
   );
 };
