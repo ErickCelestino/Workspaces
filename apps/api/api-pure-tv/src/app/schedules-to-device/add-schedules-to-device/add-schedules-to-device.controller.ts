@@ -1,6 +1,10 @@
-import { Body, Controller, Post, Query } from '@nestjs/common';
+import { Body, Controller, Post, Query, UsePipes } from '@nestjs/common';
 import { AddSchedulesToDeviceService } from './add-schedules-to-device.service';
-import { ErrorMessageResult } from '@workspaces/domain';
+import {
+  addSchedulesToDeviceSchema,
+  ErrorMessageResult,
+} from '@workspaces/domain';
+import { ZodValidationPipe } from '../../pipes/zod-validation-pipe';
 
 @Controller('add-schedules-to-device')
 export class AddSchedulesToDeviceController {
@@ -8,10 +12,11 @@ export class AddSchedulesToDeviceController {
     private readonly addSchedulesToDeviceService: AddSchedulesToDeviceService
   ) {}
 
+  @UsePipes(new ZodValidationPipe(addSchedulesToDeviceSchema))
   @Post()
   async add(
-    @Query('loggedUserId') loggedUserId: string,
     @Query('idDevice') idDevice: string,
+    @Query('loggedUserId') loggedUserId: string,
     @Body() body: { schedulesIds: string[] }
   ) {
     const result = await this.addSchedulesToDeviceService.add({
