@@ -41,6 +41,10 @@ export class AddSchedulesToDevice
       return left(new EntityNotEmpty('Device ID'));
     }
 
+    if (schedulesIds.length < 1) {
+      return left(new EntityNotEmpty('Schedules'));
+    }
+
     const userValidation = await ValidationUserId(
       loggedUserId,
       this.findUserByIdRepository
@@ -80,7 +84,7 @@ export class AddSchedulesToDevice
       });
 
       if (Object.keys(createdScheduling).length < 1) {
-        return left(new EntityNotCreated('Scheduling'));
+        return left(new EntityNotCreated('Scheduling in Device'));
       }
 
       ids.push(createdScheduling);
