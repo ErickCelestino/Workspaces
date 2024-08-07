@@ -1,6 +1,10 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import { Controller, Get, Param, Query, UsePipes } from '@nestjs/common';
 import { FindSchedulesByDeviceIdService } from './find-schedules-by-device-id.service';
-import { ErrorMessageResult } from '@workspaces/domain';
+import {
+  ErrorMessageResult,
+  findSchedulesByDeviceIdSchema,
+} from '@workspaces/domain';
+import { ZodValidationPipe } from '../../pipes/zod-validation-pipe';
 
 @Controller('find-schedules-by-device-id')
 export class FindSchedulesByDeviceIdController {
@@ -8,6 +12,7 @@ export class FindSchedulesByDeviceIdController {
     private readonly findSchedulesByDeviceIdService: FindSchedulesByDeviceIdService
   ) {}
 
+  @UsePipes(new ZodValidationPipe(findSchedulesByDeviceIdSchema))
   @Get(':id')
   async find(
     @Param('id') idDevice: string,
