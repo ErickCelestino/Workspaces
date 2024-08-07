@@ -1,12 +1,17 @@
 import { Inject } from '@nestjs/common';
 import { UseCase } from '../../base/use-case';
 import { AddSchedulesToDeviceDto } from '../../dto';
-import { EntityNotCreated, EntityNotEmpty } from '../../error';
+import {
+  EntityAlreadyExists,
+  EntityNotCreated,
+  EntityNotEmpty,
+} from '../../error';
 import { Either, left, right } from '../../shared/either';
 import {
   AddSchedulingToDeviceRepository,
   FindDeviceByIdRepository,
   FindSchedulingByIdRepository,
+  FindSchedulingToDeviceByIdsRepository,
   FindUserByIdRepository,
 } from '../../repository';
 import {
@@ -25,6 +30,8 @@ export class AddSchedulesToDevice
     private findDeviceByIdRepository: FindDeviceByIdRepository,
     @Inject('FindSchedulingByIdRepository')
     private findSchedulingByIdRepository: FindSchedulingByIdRepository,
+    @Inject('FindSchedulingToDeviceByIdsRepository')
+    private findSchedulingToDeviceByIdsRepository: FindSchedulingToDeviceByIdsRepository,
     @Inject('AddSchedulingToDeviceRepository')
     private addSchedulingToDeviceRepository: AddSchedulingToDeviceRepository
   ) {}
@@ -75,6 +82,16 @@ export class AddSchedulesToDevice
 
       if (schedulingValidation.isLeft()) {
         return left(schedulingValidation.value);
+      }
+
+      const filteredSchedulingToDevice =
+        await this.findSchedulingToDeviceByIdsRepository.find({
+          idDevice,
+          idScheduling: scheduleId,
+        });
+
+      if (Object.keys(filteredSchedulingToDevice).length > 0) {
+        return left(new EntityAlreadyExists('Scheduling to Device'));
       }
 
       const createdScheduling = await this.addSchedulingToDeviceRepository.add({
