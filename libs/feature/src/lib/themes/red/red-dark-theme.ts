@@ -1,19 +1,18 @@
 import { createTheme } from '@mui/material';
-import { green, purple } from '@mui/material/colors';
 
-export const DarkTheme = createTheme({
+export const RedDarkTheme = createTheme({
   palette: {
     mode: 'dark',
     primary: {
-      main: '#C897EF',
-      dark: purple[800],
-      light: purple[500],
+      main: '#F41A43',
+      dark: '#FD496E',
+      light: '#F41A43',
       contrastText: '#ffffff',
     },
     secondary: {
-      main: green[500],
-      dark: green[400],
-      light: green[300],
+      main: '#24153C',
+      dark: '#342B5E',
+      light: '#3B376F',
       contrastText: '#ffffff',
     },
     background: {
