@@ -1,6 +1,6 @@
 import { createTheme } from '@mui/material';
 
-export const RedLighTheme = createTheme({
+export const RedLightTheme = createTheme({
   palette: {
     primary: {
       main: '#F41A43',
