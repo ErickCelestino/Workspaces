@@ -272,7 +272,7 @@ export const AddPlaylistToSchedulingModal: FC<
               </Box>
             </>
           ) : (
-            <Box>"Sem Playlists"</Box>
+            <Box>Sem Playlists</Box>
           )}
         </Box>
         <Box

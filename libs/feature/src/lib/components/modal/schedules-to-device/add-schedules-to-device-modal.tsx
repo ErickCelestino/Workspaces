@@ -3,7 +3,6 @@ import { useLoggedUser } from '../../../contexts';
 import {
   Box,
   Checkbox,
-  Chip,
   List,
   ListItem,
   ListItemIcon,
@@ -16,11 +15,13 @@ import {
 import {
   AddSchedulesToDeviceDto,
   ErrorResponse,
+  FindSchedulesByDeviceIdDto,
   ListSchedulesDto,
   Scheduling,
 } from '@workspaces/domain';
 import {
   AddSchedulesToDeviceRequest,
+  FindSchedulesByDeviceIdRequest,
   ListSchedulesRequest,
 } from '../../../services';
 import axios, { AxiosError } from 'axios';
@@ -63,6 +64,10 @@ export const AddSchedulesToDeviceModal: FC<AddSchedulesToDeviceModalProps> = ({
       setDataLoaded(false);
     }
   }, [open]);
+
+  const compareLists = (list1: Scheduling[], list2: Scheduling[]) => {
+    return list2.filter((device) => !list1.some((p) => p.id === device.id));
+  };
 
   const getSchedules = useCallback(
     async (input: ListSchedulesDto) => {
@@ -147,7 +152,56 @@ export const AddSchedulesToDeviceModal: FC<AddSchedulesToDeviceModalProps> = ({
       skip: (value - 1) * 5,
       take: 5,
     });
+
+    if (result) {
+      setListSchedules(result.schedules);
+      setTotalPage(result.totalPages);
+    }
   };
+
+  const getSchedulesToDevice = useCallback(
+    async (input: FindSchedulesByDeviceIdDto) => {
+      try {
+        const result = await FindSchedulesByDeviceIdRequest(input);
+        return result;
+      } catch (error) {
+        console.error(error);
+        if (axios.isAxiosError(error)) {
+          const axiosError = error as AxiosError<ErrorResponse>;
+          const errors = ValidationsError(axiosError, 'Agendamento');
+          if (errors) {
+            showAlert(errors, false);
+          }
+        }
+      }
+    },
+    [showAlert]
+  );
+
+  const getFilteredScheduling = useCallback(async () => {
+    const allSchedules = await getSchedules({
+      loggedUserId: loggedUser?.id ?? '',
+      filter: '',
+      take: 5,
+    });
+    const deviceInScheduling = await getSchedulesToDevice({
+      idDevice: idDevice,
+      loggedUserId: loggedUser?.id ?? '',
+    });
+    const mappedSchedules = compareLists(
+      deviceInScheduling ?? [],
+      allSchedules?.schedules ?? []
+    );
+    setListSchedules(mappedSchedules);
+    setTotalPage(allSchedules?.totalPages ?? 1);
+    setDataLoaded(true);
+  }, [idDevice, getSchedulesToDevice, getSchedules, loggedUser]);
+
+  useEffect(() => {
+    if (open && idDevice && !dataLoaded) {
+      getFilteredScheduling();
+    }
+  }, [open, idDevice, dataLoaded, getFilteredScheduling, loggedUser]);
 
   return (
     <SimpleFormModal
@@ -208,7 +262,7 @@ export const AddSchedulesToDeviceModal: FC<AddSchedulesToDeviceModalProps> = ({
               </Box>
             </>
           ) : (
-            <Box>"Sem Playlists"</Box>
+            <Box>Sem Agendamento</Box>
           )}
         </Box>
         <Box
