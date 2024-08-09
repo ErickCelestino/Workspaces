@@ -1,16 +1,12 @@
-import {
-  Box,
-  Pagination,
-  Typography,
-  useMediaQuery,
-  useTheme,
-} from '@mui/material';
+import { Box, Pagination, useMediaQuery, useTheme } from '@mui/material';
+import PersonOffIcon from '@mui/icons-material/PersonOff';
 import {
   FormDeleteUser,
   UserListItem,
   SearchBar,
   SimpleModal,
   ToolbarPureTV,
+  EmptyListResponse,
 } from '../../components';
 import { LayoutBase } from '../../layout';
 import { useEffect, useState } from 'react';
@@ -122,20 +118,20 @@ export const ListUserContainer = () => {
                     email={`Email: ${user.email}`}
                     nickname={`Nickname: ${user.nickname}`}
                     status={`Status: ${user.status}`}
-                    statusColor={user.status == 'ACTIVE' ? 'success' : 'error'}
+                    statusColor={user.status === 'ACTIVE' ? 'success' : 'error'}
                   />
                 ))
               ) : (
-                <Box
-                  marginTop={theme.spacing(2)}
-                  width="100%"
-                  display="flex"
-                  justifyContent="center"
-                >
-                  <Typography variant="h4">
-                    Não foram encontrados registros
-                  </Typography>
-                </Box>
+                <EmptyListResponse
+                  message="Sem Usuários"
+                  icon={
+                    <PersonOffIcon
+                      sx={{
+                        fontSize: theme.spacing(10),
+                      }}
+                    />
+                  }
+                />
               )}
             </Box>
             <Box

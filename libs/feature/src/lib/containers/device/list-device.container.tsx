@@ -1,17 +1,12 @@
-import {
-  Box,
-  Grid,
-  Icon,
-  Typography,
-  useMediaQuery,
-  useTheme,
-} from '@mui/material';
+import { Box, Grid, Icon, useMediaQuery, useTheme } from '@mui/material';
+import DesktopAccessDisabledIcon from '@mui/icons-material/DesktopAccessDisabled';
 import {
   AddSchedulesToDeviceModal,
   CreateDeviceModal,
   DeleteDeviceModal,
   DeviceCard,
   EditDeviceModal,
+  EmptyListResponse,
   MobileButtonMenu,
   RightClickMenu,
   ToolbarPureTV,
@@ -220,16 +215,16 @@ export const ListDeviceContainer = () => {
                 </Grid>
               </Box>
             ) : (
-              <Box
-                marginTop={theme.spacing(2)}
-                width="100%"
-                display="flex"
-                justifyContent="center"
-              >
-                <Typography variant="h4">
-                  Não foram encontrados registros
-                </Typography>
-              </Box>
+              <EmptyListResponse
+                message="Sem Dispositivos"
+                icon={
+                  <DesktopAccessDisabledIcon
+                    sx={{
+                      fontSize: theme.spacing(10),
+                    }}
+                  />
+                }
+              />
             )}
           </ContainerCardList>
         </RightClickMenu>

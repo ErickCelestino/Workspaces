@@ -1,18 +1,11 @@
-import {
-  Box,
-  IconButton,
-  List,
-  Pagination,
-  useMediaQuery,
-  useTheme,
-} from '@mui/material';
-import AddCircleIcon from '@mui/icons-material/AddCircle';
+import { List, useTheme } from '@mui/material';
+import DoNotTouchIcon from '@mui/icons-material/DoNotTouch';
 import {
   CreatePlaylistCategoryModal,
   DeletePlaylistCategoryModal,
   EditPlaylistCategoryModal,
+  EmptyListResponse,
   PlaylistCategoryItem,
-  SearchBar,
   ToolbarPureTV,
 } from '../../../components';
 import { LayoutBase } from '../../../layout';
@@ -28,11 +21,12 @@ import { ListPlaylistCategoryRequest } from '../../../services';
 import { useLoggedUser } from '../../../contexts';
 import axios, { AxiosError } from 'axios';
 import { ValidationsError } from '../../../shared';
-import { ScrollBox } from '../../../components/scroll';
 import { ContainerSimpleList } from '../../utils';
 
 export const ListPlaylistCategoryContainer = () => {
   const { loggedUser } = useLoggedUser();
+  const theme = useTheme();
+
   const [listPlaylistCategory, setListPlaylistCategory] = useState<
     PlaylistCategory[]
   >([]);
@@ -43,8 +37,6 @@ export const ListPlaylistCategoryContainer = () => {
   const [editCategoryPopUp, setEditCategoryPopUp] = useState(false);
   const [deleteCategoryPopUp, setDeleteCategoryPopUp] = useState(false);
   const { showSnackbarAlert, SnackbarAlert } = useSnackbarAlert();
-  const theme = useTheme();
-  const smDown = useMediaQuery(theme.breakpoints.down('sm'));
 
   const showAlert = useCallback(
     (message: string, success: boolean) => {
@@ -185,18 +177,31 @@ export const ListPlaylistCategoryContainer = () => {
           totalPage={totalPage}
         >
           <List>
-            {listPlaylistCategory.map((category) => (
-              <PlaylistCategoryItem
-                key={category.id}
-                editPlaylistCategory={async () =>
-                  handlePopUpOpen('edit', category.id)
+            {listPlaylistCategory.length > 0 ? (
+              listPlaylistCategory.map((category) => (
+                <PlaylistCategoryItem
+                  key={category.id}
+                  editPlaylistCategory={async () =>
+                    handlePopUpOpen('edit', category.id)
+                  }
+                  deletePlaylistCategory={async () =>
+                    handlePopUpOpen('delete', category.id)
+                  }
+                  category={category}
+                />
+              ))
+            ) : (
+              <EmptyListResponse
+                message="Sem Categorias"
+                icon={
+                  <DoNotTouchIcon
+                    sx={{
+                      fontSize: theme.spacing(10),
+                    }}
+                  />
                 }
-                deletePlaylistCategory={async () =>
-                  handlePopUpOpen('delete', category.id)
-                }
-                category={category}
               />
-            ))}
+            )}
           </List>
         </ContainerSimpleList>
       </LayoutBase>
