@@ -1,5 +1,5 @@
-import { DeleteSchedulesToDeviceDto } from '../../dto';
+import { DeleteSchedulingToDeviceDto } from '../../dto';
 
 export interface DeleteSchedulingToDeviceRepository {
-  delete(input: DeleteSchedulesToDeviceDto): Promise<string>;
+  delete(input: DeleteSchedulingToDeviceDto): Promise<string>;
 }

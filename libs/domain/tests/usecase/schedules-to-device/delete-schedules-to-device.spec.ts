@@ -23,7 +23,6 @@ import {
 import {
   DeleteSchedulingToDeviceRepositoryMock,
   FindDeviceByIdRepositoryMock,
-  FindSchedulesByDeviceIdRepositoryMock,
   FindSchedulingByIdRepositoryMock,
   FindSchedulingToDeviceByIdsRepositoryMock,
   FindUserByIdRepositoryMock,

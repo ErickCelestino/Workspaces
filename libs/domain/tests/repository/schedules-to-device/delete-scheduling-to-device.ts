@@ -1,6 +1,5 @@
 import {
-  DeleteSchedulesToDeviceDto,
-  DeleteSchedulingRepository,
+  DeleteSchedulingToDeviceDto,
   DeleteSchedulingToDeviceRepository,
 } from '../../../src';
 import { SchedulesToDeviceMock } from '../../entity/schedules-to-device/schedules-to-device.mock';
@@ -8,8 +7,8 @@ import { SchedulesToDeviceMock } from '../../entity/schedules-to-device/schedule
 export class DeleteSchedulingToDeviceRepositoryMock
   implements DeleteSchedulingToDeviceRepository
 {
-  inputMock = {} as DeleteSchedulesToDeviceDto;
-  async delete(input: DeleteSchedulesToDeviceDto): Promise<string> {
+  inputMock = {} as DeleteSchedulingToDeviceDto;
+  async delete(input: DeleteSchedulingToDeviceDto): Promise<string> {
     this.inputMock = input;
     return SchedulesToDeviceMock.id;
   }

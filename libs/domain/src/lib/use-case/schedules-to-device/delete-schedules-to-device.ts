@@ -73,13 +73,13 @@ export class DeleteSchedulesToDevice
     }
     const ids = [];
 
-    for (const scheduleId of schedulesIds) {
-      if (Object.keys(scheduleId).length < 1) {
+    for (const schedulingId of schedulesIds) {
+      if (Object.keys(schedulingId).length < 1) {
         return left(new EntityNotEmpty('Scheduling ID'));
       }
 
       const schedulingValidation = await ValidationSchedulingId(
-        scheduleId,
+        schedulingId,
         this.findSchedulingByIdRepository
       );
 
@@ -90,7 +90,7 @@ export class DeleteSchedulesToDevice
       const filteredSchedulingToDevice =
         await this.findSchedulingToDeviceByIdsRepository.find({
           idDevice,
-          idScheduling: scheduleId,
+          idScheduling: schedulingId,
         });
 
       if (Object.keys(filteredSchedulingToDevice).length > 0) {
@@ -100,8 +100,7 @@ export class DeleteSchedulesToDevice
       const deletedScheduling =
         await this.deleteSchedulingToDeviceRepository.delete({
           idDevice,
-          schedulesIds,
-          loggedUserId,
+          schedulingId,
         });
 
       if (Object.keys(deletedScheduling).length < 1) {
