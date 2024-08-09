@@ -12,9 +12,9 @@ import {
 } from '@mui/material';
 import DeleteSweepIcon from '@mui/icons-material/DeleteSweep';
 import OpenWithIcon from '@mui/icons-material/OpenWith';
+import FolderOffIcon from '@mui/icons-material/FolderOff';
 import {
   ContentFile,
-  DeletePlaylist,
   DetailsPlaylistDto,
   ErrorResponse,
   FindFilesByPlaylistDto,
@@ -28,7 +28,7 @@ import {
 import axios, { AxiosError } from 'axios';
 import { formatBrDate, ValidationsError } from '../../../shared';
 import { useLoggedUser } from '../../../contexts';
-import { ContentFileItem } from '../../list';
+import { ContentFileItem, EmptyListResponse } from '../../list';
 import { ButtonFileMenu } from '../../menu';
 import {
   DeletePlaylistFilesModal,
@@ -60,9 +60,9 @@ export const DetailsPlaylistModal: FC<DetailsPlaylistModalProps> = ({
   const [dataLoaded, setDataLoaded] = useState(false);
   const [moveFilePopUp, setMoveFilePopUp] = useState(false);
   const [deleteFilePopUp, setDeleteFilePopUp] = useState(false);
-  const [selectedFiles, setSelectedFiles] = useState<{
-    [key: string]: boolean;
-  }>({});
+  const [selectedFiles, setSelectedFiles] = useState<Record<string, boolean>>(
+    {}
+  );
 
   const { loggedUser } = useLoggedUser();
   const theme = useTheme();
@@ -136,7 +136,14 @@ export const DetailsPlaylistModal: FC<DetailsPlaylistModalProps> = ({
         loggedUserId: loggedUser?.id ?? '',
       });
     }
-  }, [open, idPlaylist, dataLoaded, getPlaylist, loggedUser]);
+  }, [
+    open,
+    idPlaylist,
+    dataLoaded,
+    getPlaylist,
+    loggedUser,
+    getFilesByPlaylist,
+  ]);
 
   const handleFileToggle = (fileId: string) => {
     setSelectedFiles((prevSelectedFiles) => {
@@ -284,14 +291,27 @@ export const DetailsPlaylistModal: FC<DetailsPlaylistModalProps> = ({
               <ButtonFileMenu iconMenuItemList={iconMenuList} />
             </Box>
             <List>
-              {files.map((file) => (
-                <ContentFileItem
-                  contentFile={file}
-                  key={file.id}
-                  isSelected={!!selectedFiles[file.id]}
-                  onFileToggle={handleFileToggle}
+              {files.length > 0 ? (
+                files.map((file) => (
+                  <ContentFileItem
+                    contentFile={file}
+                    key={file.id}
+                    isSelected={!!selectedFiles[file.id]}
+                    onFileToggle={handleFileToggle}
+                  />
+                ))
+              ) : (
+                <EmptyListResponse
+                  message="Sem Arquivos"
+                  icon={
+                    <FolderOffIcon
+                      sx={{
+                        fontSize: theme.spacing(10),
+                      }}
+                    />
+                  }
                 />
-              ))}
+              )}
             </List>
             <Box
               width="100%"

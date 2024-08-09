@@ -1,11 +1,5 @@
-import {
-  Box,
-  Grid,
-  Icon,
-  Typography,
-  useMediaQuery,
-  useTheme,
-} from '@mui/material';
+import { Box, Grid, Icon, useMediaQuery, useTheme } from '@mui/material';
+import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
 import {
   CreatePlaylistModal,
   ToolbarPureTV,
@@ -16,6 +10,7 @@ import {
   MobileButtonMenu,
   DetailsPlaylistModal,
   EditPlaylistModal,
+  EmptyListResponse,
 } from '../../components';
 import { LayoutBase } from '../../layout';
 import { useSnackbarAlert } from '../../hooks';
@@ -260,16 +255,16 @@ export const ListPlaylistContainer = () => {
                 </Grid>
               </Box>
             ) : (
-              <Box
-                marginTop={theme.spacing(2)}
-                width="100%"
-                display="flex"
-                justifyContent="center"
-              >
-                <Typography variant="h4">
-                  Não foram encontrados registros
-                </Typography>
-              </Box>
+              <EmptyListResponse
+                message="Sem Playlists"
+                icon={
+                  <PlaylistRemoveIcon
+                    sx={{
+                      fontSize: theme.spacing(10),
+                    }}
+                  />
+                }
+              />
             )}
           </ContainerCardList>
         </RightClickMenu>
