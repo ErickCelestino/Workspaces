@@ -3,6 +3,7 @@ export * from './entity-already-exists.error';
 export * from './entity-not-associate.error';
 export * from './entity-not-converted.error';
 export * from './entity-not-created';
+export * from './entity-not-deleted.error';
 export * from './entity-not-edit';
 export * from './entity-not-empty.error';
 export * from './entity-not-exists.error';
