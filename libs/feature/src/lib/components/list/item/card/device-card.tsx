@@ -1,6 +1,7 @@
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddToQueueIcon from '@mui/icons-material/AddToQueue';
+import InfoIcon from '@mui/icons-material/Info';
 import { FC } from 'react';
 import { IconMenuItem } from '@workspaces/domain';
 import { SimpleCardItem } from '../../../card';
@@ -10,10 +11,12 @@ interface DeviceCardProps {
   name: string;
   editTitle?: string;
   deleteTitle?: string;
+  detailsTitle?: string;
   addSchedulesToDeviceTitle?: string;
   deleteDevice: () => Promise<void>;
   editDevice: () => Promise<void>;
   addSchedulesToDevice: () => Promise<void>;
+  detailsDevice: () => Promise<void>;
 }
 
 export const DeviceCard: FC<DeviceCardProps> = ({
@@ -21,8 +24,10 @@ export const DeviceCard: FC<DeviceCardProps> = ({
   deleteDevice,
   editDevice,
   addSchedulesToDevice,
+  detailsDevice,
   editTitle = 'Editar',
   deleteTitle = 'Deletar',
+  detailsTitle = 'Detalhes',
   addSchedulesToDeviceTitle = 'Adicionar Agendamentos',
 }) => {
   const { themeName } = useAppThemeContext();
@@ -36,6 +41,11 @@ export const DeviceCard: FC<DeviceCardProps> = ({
       icon: <EditIcon />,
       title: editTitle,
       handleClick: editDevice,
+    },
+    {
+      icon: <InfoIcon />,
+      title: detailsTitle,
+      handleClick: detailsDevice,
     },
     {
       icon: <AddToQueueIcon />,
