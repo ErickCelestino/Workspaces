@@ -1,13 +1,6 @@
-import {
-  Box,
-  Grid,
-  Icon,
-  Typography,
-  useMediaQuery,
-  useTheme,
-} from '@mui/material';
+import { Box, Grid, Icon, useMediaQuery, useTheme } from '@mui/material';
+import FolderOffIcon from '@mui/icons-material/FolderOff';
 import { LayoutBase } from '../../layout';
-
 import { useCallback, useEffect, useState } from 'react';
 import {
   ContentFile,
@@ -30,6 +23,7 @@ import {
   CreateDirectoryModal,
   DeleteFileModal,
   DetailsFileModal,
+  EmptyListResponse,
   MobileButtonMenu,
   MoveFileToDirectoryModal,
   RightClickMenu,
@@ -322,16 +316,16 @@ export const ListContanteFilesContainer = () => {
                 </Grid>
               </Box>
             ) : (
-              <Box
-                marginTop={theme.spacing(2)}
-                width="100%"
-                display="flex"
-                justifyContent="center"
-              >
-                <Typography variant="h4">
-                  Não foram encontrados registros
-                </Typography>
-              </Box>
+              <EmptyListResponse
+                message="Sem Arquivos"
+                icon={
+                  <FolderOffIcon
+                    sx={{
+                      fontSize: theme.spacing(10),
+                    }}
+                  />
+                }
+              />
             )}
           </ContainerCardList>
         </RightClickMenu>

@@ -77,37 +77,40 @@ export const FileModalContainer: FC<FileModalContainerProps> = ({
     setProgress(progress);
   }, []);
 
-  const onFinish = async (
-    data: FileConfigs,
-    updateProgress: (progress: number) => void
-  ) => {
-    try {
-      const result = await CreateContenVideoRequest(data, updateProgress);
-      setFilesToUpload([]);
-      removeItemLocalStorage('files');
+  const showErrorAlert = useCallback(
+    (message: string, success: boolean) => {
+      showSnackbarAlert({
+        message: message,
+        severity: success ? 'success' : 'error',
+      });
+    },
+    [showSnackbarAlert]
+  );
 
-      return result;
-    } catch (error) {
-      setFilesToUpload([]);
-      removeItemLocalStorage('files');
-      setProgress(0);
-      console.error(error);
-      if (axios.isAxiosError(error)) {
-        const axiosError = error as AxiosError<ErrorResponse>;
-        const errors = ValidationsError(axiosError, 'Arquivo');
-        if (errors) {
-          showErrorAlert(errors);
+  const onFinish = useCallback(
+    async (data: FileConfigs, updateProgress: (progress: number) => void) => {
+      try {
+        const result = await CreateContenVideoRequest(data, updateProgress);
+        setFilesToUpload([]);
+        removeItemLocalStorage('files');
+
+        return result;
+      } catch (error) {
+        setFilesToUpload([]);
+        removeItemLocalStorage('files');
+        setProgress(0);
+        console.error(error);
+        if (axios.isAxiosError(error)) {
+          const axiosError = error as AxiosError<ErrorResponse>;
+          const errors = ValidationsError(axiosError, 'Arquivo');
+          if (errors) {
+            showErrorAlert(errors, false);
+          }
         }
       }
-    }
-  };
-
-  const showErrorAlert = (message: string) => {
-    showSnackbarAlert({
-      message: message,
-      severity: 'error',
-    });
-  };
+    },
+    [showErrorAlert]
+  );
 
   const onCloseProgressFile = () => {
     setUploading(false);
@@ -133,7 +136,15 @@ export const FileModalContainer: FC<FileModalContainerProps> = ({
         severity: 'success',
       });
     }
-  }, [onFinish]);
+  }, [
+    filesToUpload,
+    handleClose,
+    loggedUser?.id,
+    onFinish,
+    showSnackbarAlert,
+    sucessAlertMessage,
+    updateProgress,
+  ]);
 
   return (
     <>
