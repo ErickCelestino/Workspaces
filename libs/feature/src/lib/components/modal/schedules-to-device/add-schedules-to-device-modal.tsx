@@ -12,6 +12,7 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
+import LocalHotelIcon from '@mui/icons-material/LocalHotel';
 import {
   AddSchedulesToDeviceDto,
   ErrorResponse,
@@ -29,6 +30,7 @@ import { ValidationsError } from '../../../shared';
 import { SimpleFormModal } from '../simple';
 import { ScrollBox } from '../../scroll';
 import { FormButton } from '../../form';
+import { EmptyListResponse } from '../../list';
 
 interface AddSchedulesToDeviceModalProps {
   open: boolean;
@@ -262,7 +264,16 @@ export const AddSchedulesToDeviceModal: FC<AddSchedulesToDeviceModalProps> = ({
               </Box>
             </>
           ) : (
-            <Box>Sem Agendamento</Box>
+            <EmptyListResponse
+              message="Sem Agendamentos"
+              icon={
+                <LocalHotelIcon
+                  sx={{
+                    fontSize: theme.spacing(10),
+                  }}
+                />
+              }
+            />
           )}
         </Box>
         <Box
