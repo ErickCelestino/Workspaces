@@ -1,4 +1,5 @@
 import { FC, useCallback, useEffect, useState } from 'react';
+import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
 import { useLoggedUser } from '../../../contexts';
 import {
   ErrorResponse,
@@ -16,7 +17,7 @@ import { ValidationsError } from '../../../shared';
 import { SimpleFormModal } from '../simple';
 import { Box, Typography, useMediaQuery, useTheme } from '@mui/material';
 import { DetailsSchedulingCard } from '../../card';
-import { ListSimplePlaylist } from '../../list';
+import { EmptyListResponse, ListSimplePlaylist } from '../../list';
 
 interface DetailsSchedulingModalProps {
   open: boolean;
@@ -162,27 +163,40 @@ export const DetailsSchedulingModal: FC<DetailsSchedulingModalProps> = ({
       />
       <Box>
         {playlistList.length > 0 ? (
-          <Box>
-            <ListSimplePlaylist
-              updatePlaylist={updatePlaylistList}
-              schedulingId={idToDetails}
-              showAlert={showAlert}
-              playlists={playlistList}
-              totalPages={totalPages}
-              handleChange={handleChange}
-            />
-          </Box>
+          playlistList.length > 0 ? (
+            <Box>
+              <ListSimplePlaylist
+                updatePlaylist={updatePlaylistList}
+                schedulingId={idToDetails}
+                showAlert={showAlert}
+                playlists={playlistList}
+                totalPages={totalPages}
+                handleChange={handleChange}
+              />
+            </Box>
+          ) : (
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'center',
+              }}
+            >
+              <Typography variant="h4">
+                <strong>{listEmpty}</strong>
+              </Typography>
+            </Box>
+          )
         ) : (
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'center',
-            }}
-          >
-            <Typography variant="h4">
-              <strong>{listEmpty}</strong>
-            </Typography>
-          </Box>
+          <EmptyListResponse
+            message="Sem Playlists"
+            icon={
+              <PlaylistRemoveIcon
+                sx={{
+                  fontSize: theme.spacing(10),
+                }}
+              />
+            }
+          />
         )}
       </Box>
     </SimpleFormModal>
