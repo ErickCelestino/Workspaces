@@ -1,5 +1,6 @@
-import { Icon, List, useMediaQuery, useTheme } from '@mui/material';
+import { List, useMediaQuery, useTheme } from '@mui/material';
 import AlarmAddIcon from '@mui/icons-material/AlarmAdd';
+import EventBusyIcon from '@mui/icons-material/EventBusy';
 import { LayoutBase } from '../../layout';
 import {
   AddPlaylistToSchedulingModal,
@@ -7,6 +8,7 @@ import {
   DeleteSchedulingModal,
   DetailsSchedulingModal,
   EditSchedulingModal,
+  EmptyListResponse,
   MobileButtonMenu,
   RightClickMenu,
   SchedulingItem,
@@ -222,24 +224,37 @@ export const ListSchedulesContainer = () => {
             handleChange={handleChange}
           >
             <List>
-              {listSchedules.map((scheduling) => (
-                <SchedulingItem
-                  editScheduling={async () =>
-                    handlePopUpOpen('edit', scheduling.id)
+              {listSchedules.length > 0 ? (
+                listSchedules.map((scheduling) => (
+                  <SchedulingItem
+                    editScheduling={async () =>
+                      handlePopUpOpen('edit', scheduling.id)
+                    }
+                    deleteScheduling={async () =>
+                      handlePopUpOpen('delete', scheduling.id)
+                    }
+                    addPlaylistToScheduling={async () =>
+                      handlePopUpOpen('add-playlist', scheduling.id)
+                    }
+                    detailsScheduling={async () =>
+                      handlePopUpOpen('details', scheduling.id)
+                    }
+                    key={scheduling.id}
+                    scheduling={scheduling}
+                  />
+                ))
+              ) : (
+                <EmptyListResponse
+                  message="Sem Agendamentos"
+                  icon={
+                    <EventBusyIcon
+                      sx={{
+                        fontSize: theme.spacing(10),
+                      }}
+                    />
                   }
-                  deleteScheduling={async () =>
-                    handlePopUpOpen('delete', scheduling.id)
-                  }
-                  addPlaylistToScheduling={async () =>
-                    handlePopUpOpen('add-playlist', scheduling.id)
-                  }
-                  detailsScheduling={async () =>
-                    handlePopUpOpen('details', scheduling.id)
-                  }
-                  key={scheduling.id}
-                  scheduling={scheduling}
                 />
-              ))}
+              )}
             </List>
           </ContainerSimpleList>
         </RightClickMenu>

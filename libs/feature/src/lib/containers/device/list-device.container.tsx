@@ -1,16 +1,12 @@
+import { Box, Grid, Icon, useMediaQuery, useTheme } from '@mui/material';
+import DesktopAccessDisabledIcon from '@mui/icons-material/DesktopAccessDisabled';
 import {
-  Box,
-  Grid,
-  Icon,
-  Typography,
-  useMediaQuery,
-  useTheme,
-} from '@mui/material';
-import {
+  AddSchedulesToDeviceModal,
   CreateDeviceModal,
   DeleteDeviceModal,
   DeviceCard,
   EditDeviceModal,
+  EmptyListResponse,
   MobileButtonMenu,
   RightClickMenu,
   ToolbarPureTV,
@@ -40,6 +36,8 @@ export const ListDeviceContainer = () => {
   const [createDevicePopUp, setCreateDevicePopUp] = useState(false);
   const [deleteDevicePopUp, setDeleteDevicePopUp] = useState(false);
   const [editDevicePopUp, setEditDevicePopUp] = useState(false);
+  const [addSchedulesToDevicePopUp, setAddSchedulesToDevicePopUp] =
+    useState(false);
   const [listDevice, setListDevice] = useState<Device[]>([]);
   const [totalPage, setTotalPage] = useState<number>(1);
   const [search, setSearch] = useState(false);
@@ -55,7 +53,7 @@ export const ListDeviceContainer = () => {
     [showSnackbarAlert]
   );
 
-  const handlePopUpOpen = (types: CrudType, id?: string) => {
+  const handlePopUpOpen = (types: CrudType | 'add', id?: string) => {
     switch (types) {
       case 'create':
         setCreateDevicePopUp(true);
@@ -67,6 +65,10 @@ export const ListDeviceContainer = () => {
       case 'delete':
         setSelectedId(id ?? '');
         setDeleteDevicePopUp(true);
+        break;
+      case 'add':
+        setSelectedId(id ?? '');
+        setAddSchedulesToDevicePopUp(true);
         break;
     }
   };
@@ -166,6 +168,13 @@ export const ListDeviceContainer = () => {
         showAlert={showAlert}
         idToEdit={selectedId}
       />
+      <AddSchedulesToDeviceModal
+        open={addSchedulesToDevicePopUp}
+        title="Adicionar Agendamento"
+        handlePopUpClose={() => setAddSchedulesToDevicePopUp(false)}
+        showAlert={showAlert}
+        idDevice={selectedId}
+      />
       <LayoutBase title="Listagem Dispositivos" toolBar={<ToolbarPureTV />}>
         <RightClickMenu iconMenuItemList={rightClickMenuList}>
           {smDown && <MobileButtonMenu iconMenuItemList={rightClickMenuList} />}
@@ -196,6 +205,9 @@ export const ListDeviceContainer = () => {
                         deleteDevice={async () =>
                           handlePopUpOpen('delete', device.id)
                         }
+                        addSchedulesToDevice={async () =>
+                          handlePopUpOpen('add', device.id)
+                        }
                         key={device.id}
                       />
                     </Grid>
@@ -203,16 +215,16 @@ export const ListDeviceContainer = () => {
                 </Grid>
               </Box>
             ) : (
-              <Box
-                marginTop={theme.spacing(2)}
-                width="100%"
-                display="flex"
-                justifyContent="center"
-              >
-                <Typography variant="h4">
-                  Não foram encontrados registros
-                </Typography>
-              </Box>
+              <EmptyListResponse
+                message="Sem Dispositivos"
+                icon={
+                  <DesktopAccessDisabledIcon
+                    sx={{
+                      fontSize: theme.spacing(10),
+                    }}
+                  />
+                }
+              />
             )}
           </ContainerCardList>
         </RightClickMenu>

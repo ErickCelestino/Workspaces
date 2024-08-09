@@ -15,6 +15,7 @@ import {
 import DeleteIcon from '@mui/icons-material/Delete';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
+import LocalHotelIcon from '@mui/icons-material/LocalHotel';
 import {
   ContentFile,
   CrudType,
@@ -30,6 +31,7 @@ import { ValidationsError } from '../../shared';
 import { ScrollBox } from '../scroll';
 import { ButtonFileMenu } from '../menu';
 import { DeletePlaylistToSchedulingModal } from '../modal';
+import { EmptyListResponse } from './simple';
 
 interface PlaylistItemProps {
   schedulingId: string;
@@ -117,121 +119,134 @@ export const ListSimplePlaylist: FC<PlaylistItemProps> = ({
       />
       <ScrollBox maxHeight={theme.spacing(32)}>
         <List>
-          {playlists.map((playlist) => (
-            <div key={playlist.id}>
-              <ListItem>
-                <ListItemButton
-                  onClick={() => handleToggleSubItems(playlist.id)}
-                >
+          {playlists.length > 0 ? (
+            playlists.map((playlist) => (
+              <div key={playlist.id}>
+                <ListItem>
                   <ListItemButton
-                    sx={{
-                      padding: 0,
-                    }}
-                    key={playlist.id}
+                    onClick={() => handleToggleSubItems(playlist.id)}
                   >
-                    <ListItemText primary={playlist.name} />
-                    {openSubItems[playlist.id] ? (
-                      <ExpandLess />
-                    ) : (
-                      <ExpandMore />
-                    )}
+                    <ListItemButton
+                      sx={{
+                        padding: 0,
+                      }}
+                      key={playlist.id}
+                    >
+                      <ListItemText primary={playlist.name} />
+                      {openSubItems[playlist.id] ? (
+                        <ExpandLess />
+                      ) : (
+                        <ExpandMore />
+                      )}
+                    </ListItemButton>
                   </ListItemButton>
-                </ListItemButton>
-                <ButtonFileMenu
-                  iconMenuItemList={[
-                    {
-                      icon: <DeleteIcon />,
-                      title: 'Deletar',
-                      handleClick: async () =>
-                        handlePopUpOpen('delete', playlist.id),
-                    },
-                  ]}
-                />
-              </ListItem>
-              <Box
-                sx={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                }}
-              >
-                <Collapse
+                  <ButtonFileMenu
+                    iconMenuItemList={[
+                      {
+                        icon: <DeleteIcon />,
+                        title: 'Deletar',
+                        handleClick: async () =>
+                          handlePopUpOpen('delete', playlist.id),
+                      },
+                    ]}
+                  />
+                </ListItem>
+                <Box
                   sx={{
-                    width: '90%',
+                    display: 'flex',
+                    justifyContent: 'center',
                   }}
-                  in={openSubItems[playlist.id]}
-                  timeout="auto"
-                  unmountOnExit
                 >
-                  <List key={playlist.id} component="div" disablePadding>
-                    {listFiles[playlist.id]?.map((file) => (
-                      <div key={file.id}>
-                        <ListItem
-                          sx={{
-                            width: '100%',
-                          }}
-                          key={file.id}
-                        >
-                          <ListItemAvatar
+                  <Collapse
+                    sx={{
+                      width: '90%',
+                    }}
+                    in={openSubItems[playlist.id]}
+                    timeout="auto"
+                    unmountOnExit
+                  >
+                    <List key={playlist.id} component="div" disablePadding>
+                      {listFiles[playlist.id]?.map((file) => (
+                        <div key={file.id}>
+                          <ListItem
                             sx={{
-                              marginRight: smDown
-                                ? theme.spacing(1)
-                                : theme.spacing(3),
+                              width: '100%',
+                            }}
+                            key={file.id}
+                          >
+                            <ListItemAvatar
+                              sx={{
+                                marginRight: smDown
+                                  ? theme.spacing(1)
+                                  : theme.spacing(3),
+                              }}
+                            >
+                              <Avatar
+                                sx={{
+                                  width: theme.spacing(6),
+                                  height: theme.spacing(6),
+                                  '& img': {
+                                    objectFit: 'contain',
+                                    objectPosition: 'center',
+                                    maxHeight: '100%',
+                                    maxWidth: '100%',
+                                  },
+                                }}
+                                src={file.path}
+                              />
+                            </ListItemAvatar>
+                            <ListItemText
+                              sx={{
+                                overflow: 'hidden',
+                                fontSize: smDown ? '8px' : '12px',
+                                textOverflow: 'ellipsis',
+                              }}
+                              primary={file.originalName}
+                            />
+                          </ListItem>
+                          <Box
+                            sx={{
+                              display: 'flex',
+                              justifyContent: 'center',
                             }}
                           >
-                            <Avatar
+                            <Divider
                               sx={{
-                                width: theme.spacing(6),
-                                height: theme.spacing(6),
-                                '& img': {
-                                  objectFit: 'contain',
-                                  objectPosition: 'center',
-                                  maxHeight: '100%',
-                                  maxWidth: '100%',
-                                },
+                                width: '95%',
                               }}
-                              src={file.path}
                             />
-                          </ListItemAvatar>
-                          <ListItemText
-                            sx={{
-                              overflow: 'hidden',
-                              fontSize: smDown ? '8px' : '12px',
-                              textOverflow: 'ellipsis',
-                            }}
-                            primary={file.originalName}
-                          />
-                        </ListItem>
-                        <Box
-                          sx={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                          }}
-                        >
-                          <Divider
-                            sx={{
-                              width: '95%',
-                            }}
-                          />
-                        </Box>
-                      </div>
-                    ))}
-                  </List>
-                </Collapse>
-              </Box>
-              <Box
-                sx={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                }}
-              >
-                <Divider
+                          </Box>
+                        </div>
+                      ))}
+                    </List>
+                  </Collapse>
+                </Box>
+                <Box
                   sx={{
-                    width: '90%',
+                    display: 'flex',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <Divider
+                    sx={{
+                      width: '90%',
+                    }}
+                  />
+                </Box>
+              </div>
+            ))
+          ) : (
+            <EmptyListResponse
+              message="Sem Playlist"
+              icon={
+                <LocalHotelIcon
+                  sx={{
+                    fontSize: theme.spacing(10),
                   }}
                 />
-              </Box>
-            </div>
-          ))}
+              }
+            />
+          )}
         </List>
       </ScrollBox>
       <Box

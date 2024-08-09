@@ -2,17 +2,11 @@ import { FC, useCallback, useEffect, useState } from 'react';
 import { SimpleFormModal } from '../simple';
 import { Box, useMediaQuery, useTheme } from '@mui/material';
 import {
-  AddFileToPlaylistDto,
-  ContentFile,
   ErrorResponse,
-  ListContentFileDto,
   ListDirectoryNameResponseDto,
   ListSimpleDirectoryDto,
 } from '@workspaces/domain';
-import {
-  ListContentFilesRequest,
-  ListSimpleDirectoryRequest,
-} from '../../../services';
+import { ListSimpleDirectoryRequest } from '../../../services';
 import axios, { AxiosError } from 'axios';
 import { ValidationsError } from '../../../shared';
 import { useLoggedUser } from '../../../contexts';
@@ -102,7 +96,7 @@ export const AddFileToPlaylistModal: FC<AddFileToPlaylistModalProps> = ({
         userInput: '',
       });
     }
-  }, [dataLoaded, idPlaylist, open]);
+  }, [dataLoaded, idPlaylist, open, getDirectory, loggedUser]);
 
   return (
     <SimpleFormModal

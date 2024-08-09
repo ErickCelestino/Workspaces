@@ -5,7 +5,6 @@ import {
   ComboBoxListResult,
   ErrorResponse,
   ListPlaylistDto,
-  Playlist,
 } from '@workspaces/domain';
 import {
   ListPlaylistRequest,
@@ -17,7 +16,7 @@ import { useLoggedUser } from '../../../contexts';
 import { SearchComboBox } from '../../combo-box';
 
 interface MoveFileToAnotherPlaylistModalProps {
-  selectedFiles: { [key: string]: boolean };
+  selectedFiles: Record<string, boolean>;
   oldPlaylist: string;
   open: boolean;
   handlePopUpClose: () => void;
@@ -103,7 +102,7 @@ export const MoveFileToAnotherPlaylistModal: FC<
 
   const moveFiles = async () => {
     try {
-      const result = await MoveFilesToAnotherPlaylistRequest({
+      await MoveFilesToAnotherPlaylistRequest({
         filesId: Object.keys(selectedFiles),
         loggedUserId: loggedUser?.id ?? '',
         oldPlaylistId: oldPlaylist,
