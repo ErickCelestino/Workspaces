@@ -42,8 +42,10 @@ const makeSut = (): SutTypes => {
   const findUserByIdRepository = new FindUserByIdRepositoryMock();
   const findDeviceByIdRepository = new FindDeviceByIdRepositoryMock();
   const findSchedulingByIdRepository = new FindSchedulingByIdRepositoryMock();
-  const findSchedulingToDeviceByIdsRepository =
-    new FindSchedulingToDeviceByIdsRepositoryMock();
+  const findSchedulingToDeviceByIdsRepository: FindSchedulingToDeviceByIdsRepository =
+    {
+      find: jest.fn(async () => SchedulesToDeviceMock.id),
+    };
   const deleteSchedulingToDeviceRepository =
     new DeleteSchedulingToDeviceRepositoryMock();
 
@@ -156,20 +158,22 @@ describe('DeleteSchedulesToDevice', () => {
     expect(result.value).toBeInstanceOf(EntityNotExists);
   });
 
-  it('should return EntityAlreadyExists when exist scheduling to device in system', async () => {
+  it('should return EntityNotExists when exist scheduling to device in system', async () => {
     const { deleteSchedulesToDeviceDto, sut } = makeSut();
     jest
       .spyOn(sut['findSchedulingToDeviceByIdsRepository'], 'find')
-      .mockResolvedValueOnce('any_id');
+      .mockResolvedValueOnce('');
+
     const result = await sut.execute(deleteSchedulesToDeviceDto);
 
     expect(result.isLeft()).toBe(true);
     expect(result.isRight()).toBe(false);
-    expect(result.value).toBeInstanceOf(EntityAlreadyExists);
+    expect(result.value).toBeInstanceOf(EntityNotExists);
   });
 
   it('should return EntityAlreadyExists when exist scheduling to device in system', async () => {
     const { deleteSchedulesToDeviceDto, sut } = makeSut();
+
     jest
       .spyOn(sut['deleteSchedulingToDeviceRepository'], 'delete')
       .mockResolvedValueOnce('');

@@ -5,6 +5,7 @@ import {
   EntityAlreadyExists,
   EntityNotDeleted,
   EntityNotEmpty,
+  EntityNotExists,
 } from '../../error';
 import { Either, left, right } from '../../shared/either';
 import {
@@ -93,8 +94,8 @@ export class DeleteSchedulesToDevice
           idScheduling: schedulingId,
         });
 
-      if (Object.keys(filteredSchedulingToDevice).length > 0) {
-        return left(new EntityAlreadyExists('Scheduling'));
+      if (Object.keys(filteredSchedulingToDevice).length < 1) {
+        return left(new EntityNotExists('Scheduling'));
       }
 
       const deletedScheduling =
