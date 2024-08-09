@@ -7,7 +7,7 @@ import {
   useTheme,
 } from '@mui/material';
 import { IconMenuItem } from '@workspaces/domain';
-import { FC } from 'react';
+import { FC, useMemo } from 'react';
 
 interface BaseMenuProps {
   iconMenuItemList: IconMenuItem[];
@@ -36,6 +36,19 @@ export const BaseMenu: FC<BaseMenuProps> = ({
     }
   };
 
+  const minWidth = theme.spacing(25);
+
+  const maxWidth = useMemo(() => {
+    const maxCharLength = Math.max(
+      ...iconMenuItemList.map((item) => item.title.length)
+    );
+    const charWidth = 10;
+    const padding = theme.spacing(4);
+    const calculatedWidth = maxCharLength * charWidth + parseInt(padding);
+
+    return Math.max(calculatedWidth, parseInt(minWidth));
+  }, [iconMenuItemList, theme, minWidth]);
+
   return (
     <Menu
       anchorEl={anchorEl}
@@ -48,7 +61,7 @@ export const BaseMenu: FC<BaseMenuProps> = ({
         <MenuItem
           key={index}
           sx={{
-            width: theme.spacing(25),
+            width: maxWidth,
           }}
           onClick={() => {
             item.handleClick();

@@ -129,7 +129,7 @@ export const EditDeviceModal: FC<EditDeviceModalProps> = ({
 
   return (
     <SimpleFormModal
-      height={smDown ? theme.spacing(55) : theme.spacing(53)}
+      height={theme.spacing(40)}
       width={smDown ? '90%' : theme.spacing(80)}
       open={open}
       handlePopUpClose={handlePopUpClose}
