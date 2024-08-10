@@ -1,18 +1,22 @@
 import {
   Box,
+  Button,
+  Icon,
   IconButton,
   Pagination,
+  Typography,
   useMediaQuery,
   useTheme,
 } from '@mui/material';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { FC, ReactNode } from 'react';
 
-import { SearchBar } from '../../components';
+import { MobileBackButtom, SearchBar } from '../../components';
 
 interface ContainerCardListProps {
   children: ReactNode;
   totalPage: number;
+  mobileBackButtom?: boolean;
   search: {
     placeholder: string;
     searchData: (input: string) => Promise<void>;
@@ -22,13 +26,18 @@ interface ContainerCardListProps {
     event: React.ChangeEvent<unknown>,
     value: number
   ) => Promise<void>;
+  changeDirectory?: boolean;
+  handleDirectoryPopUpOpen?: () => void;
 }
 
 export const ContainerCardList: FC<ContainerCardListProps> = ({
   children,
   totalPage,
+  mobileBackButtom = false,
   search,
   handleChange,
+  changeDirectory = false,
+  handleDirectoryPopUpOpen,
 }) => {
   const theme = useTheme();
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
@@ -52,6 +61,45 @@ export const ContainerCardList: FC<ContainerCardListProps> = ({
             alignItems: 'center',
           }}
         >
+          {!smDown && changeDirectory && (
+            <Box display={'flex'}>
+              <Button
+                variant="outlined"
+                onClick={handleDirectoryPopUpOpen}
+                sx={{
+                  marginRight: theme.spacing(4),
+                  backgroundColor:
+                    theme.palette.mode === 'dark'
+                      ? theme.palette.grey[800]
+                      : theme.palette.grey[200],
+                }}
+              >
+                <Box
+                  display={'flex'}
+                  flexDirection={'row'}
+                  justifyContent={'space-between'}
+                  alignItems={'center'}
+                >
+                  <Box display={'flex'} margin={theme.spacing(0.5)}>
+                    <Icon
+                      sx={{
+                        color:
+                          theme.palette.mode === 'dark'
+                            ? theme.palette.common.white
+                            : theme.palette.grey[700],
+                      }}
+                    >
+                      folder
+                    </Icon>
+                  </Box>
+                  <Box display={'flex'} margin={theme.spacing(0.5)}>
+                    <Typography> Mudar Diretório</Typography>
+                  </Box>
+                </Box>
+              </Button>
+            </Box>
+          )}
+          {smDown && mobileBackButtom && <MobileBackButtom />}
           <Box
             sx={{
               justifyContent: 'center',

@@ -1,5 +1,15 @@
-import { Box, Grid, Icon, useMediaQuery, useTheme } from '@mui/material';
-import FolderOffIcon from '@mui/icons-material/FolderOff';
+import {
+  Box,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  Grid,
+  Icon,
+  IconButton,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from '@mui/material';
 import { LayoutBase } from '../../layout';
 import { useCallback, useEffect, useState } from 'react';
 import {
@@ -24,9 +34,9 @@ import {
   DeleteFileModal,
   DetailsFileModal,
   EmptyListResponse,
+  ListDirectory,
   MobileButtonMenu,
   MoveFileToDirectoryModal,
-  RightClickMenu,
   ToolbarPureTV,
 } from '../../components';
 import axios, { AxiosError } from 'axios';
@@ -66,6 +76,7 @@ export const ListContanteFilesContainer = () => {
   const [createDirectoryPopUp, setCreateDirectoryPopUp] = useState(false);
   const [movePopUp, setMovePopUp] = useState(false);
   const [fileId, setFileId] = useState('');
+  const [directoyPopUp, setDirectoryPopUp] = useState(false);
 
   const theme = useTheme();
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
@@ -111,7 +122,7 @@ export const ListContanteFilesContainer = () => {
   const getData = useCallback(async () => {
     const directoryId = getItemLocalStorage('di');
     const result = await handleData({
-      directoryId,
+      directoryId: directoryId ?? '',
       loggedUserId: loggedUser?.id ?? '',
       userInput: '',
     });
@@ -156,18 +167,24 @@ export const ListContanteFilesContainer = () => {
     }
   };
 
-  const handleDirectoryPopUpOpen = (types: CrudType) => {
+  const handleDirectoryPopUpOpen = (types: CrudType | 'changeDirectory') => {
     switch (types) {
       case 'create':
         setCreateDirectoryPopUp(true);
         break;
+      case 'changeDirectory':
+        setDirectoryPopUp(true);
+        break;
     }
   };
 
-  const handleDirectoryPopUpClose = (types: CrudType) => {
+  const handleDirectoryPopUpClose = (types: CrudType | 'changeDirectory') => {
     switch (types) {
       case 'create':
         setCreateDirectoryPopUp(false);
+        break;
+      case 'changeDirectory':
+        setDirectoryPopUp(false);
         break;
     }
   };
@@ -219,6 +236,7 @@ export const ListContanteFilesContainer = () => {
     });
     setTotalPage(result.totalPages);
     setFileList(result.files);
+    setTotalPage(result.totalPages);
   };
 
   const searchData = async (input: string) => {
@@ -236,7 +254,7 @@ export const ListContanteFilesContainer = () => {
     if (!search) {
       getData();
     }
-  }, [getData, search]);
+  }, [directoryId, getData, search]);
 
   const rightClickMenuList: IconMenuItem[] = [
     {
@@ -279,56 +297,75 @@ export const ListContanteFilesContainer = () => {
         handlePopUpClose={() => handleDirectoryPopUpClose('create')}
         title="Criar Diretório"
       />
-
-      <LayoutBase title="Listagem de Arquivos" toolBar={<ToolbarPureTV />}>
-        <RightClickMenu iconMenuItemList={rightClickMenuList}>
-          {smDown && <MobileButtonMenu iconMenuItemList={rightClickMenuList} />}
-          <ContainerCardList
-            search={{
-              searchData: searchData,
-              placeholder: 'Pesquisar Arquivo',
+      <Dialog
+        open={directoyPopUp}
+        onClose={() => handleDirectoryPopUpClose('changeDirectory')}
+      >
+        <DialogTitle>
+          Selecione um Diretório
+          <IconButton
+            aria-label="close"
+            onClick={() => handleDirectoryPopUpClose('changeDirectory')}
+            sx={{
+              position: 'absolute',
+              right: 8,
+              top: 8,
+              color: (theme) => theme.palette.grey[500],
             }}
-            totalPage={totalPage}
-            handleChange={handleChange}
           >
-            {fileList.length > 0 ? (
-              <Box display="flex" justifyContent="center" width="100%">
-                <Grid
-                  container
-                  display="flex"
-                  justifyContent="center"
-                  spacing={2}
-                >
-                  {fileList.map((file, index) => (
-                    <Grid item key={index}>
-                      <ContentFileCard
-                        deleteFile={() => handleFile(file.id, 'delete')}
-                        detailsFile={() => handleFile(file.id, 'details')}
-                        downloadFile={() => handleFile(file.id, 'download')}
-                        moveFile={() => handleFile(file.id, 'moveFile')}
-                        fileImage={file.path}
-                        fileImageName={file.fileName}
-                        name={file.originalName}
-                        key={file.id}
-                      />
-                    </Grid>
-                  ))}
-                </Grid>
-              </Box>
-            ) : (
-              <EmptyListResponse
-                message="Sem Arquivos"
-                icon={
-                  <FolderOffIcon
-                    sx={{
-                      fontSize: theme.spacing(10),
-                    }}
+            <Icon>close_icon</Icon>
+          </IconButton>
+        </DialogTitle>
+        <DialogContent>
+          <ListDirectory getDataInput={getData} />
+        </DialogContent>
+      </Dialog>
+      <LayoutBase title="Listagem de Arquivos" toolBar={<ToolbarPureTV />}>
+        {smDown && <MobileButtonMenu iconMenuItemList={rightClickMenuList} />}
+
+        <ContainerCardList
+          search={{
+            searchData: searchData,
+            placeholder: 'Pesquisar Arquivo',
+          }}
+          totalPage={totalPage}
+          handleChange={handleChange}
+          mobileBackButtom
+          changeDirectory
+          handleDirectoryPopUpOpen={() =>
+            handleDirectoryPopUpOpen('changeDirectory')
+          }
+        >
+          {fileList.length > 0 ? (
+            <Grid justifyContent="center" container spacing={2}>
+              {fileList.map((file, index) => (
+                <Grid item md={6} lg={4} xl={3} key={index}>
+                  <ContentFileCard
+                    deleteFile={() => handleFile(file.id, 'delete')}
+                    detailsFile={() => handleFile(file.id, 'details')}
+                    downloadFile={() => handleFile(file.id, 'download')}
+                    moveFile={() => handleFile(file.id, 'moveFile')}
+                    fileImage={file.path}
+                    fileImageName={file.fileName}
+                    name={file.originalName}
+                    key={file.id}
                   />
-                }
-              />
-            )}
-          </ContainerCardList>
-        </RightClickMenu>
+                </Grid>
+              ))}
+            </Grid>
+          ) : (
+            <Box
+              marginTop={theme.spacing(2)}
+              width="100%"
+              display="flex"
+              justifyContent="center"
+            >
+              <Typography variant="h4">
+                Não foram encontrados registros
+              </Typography>
+            </Box>
+          )}
+        </ContainerCardList>
       </LayoutBase>
       {SnackbarAlert}
     </>

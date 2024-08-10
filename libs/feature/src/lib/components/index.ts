@@ -13,3 +13,4 @@ export * from './scroll';
 export * from './search';
 export * from './stepper';
 export * from './toolbar';
+export * from './buttom';

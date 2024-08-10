@@ -24,12 +24,12 @@ import {
   ListContentFileDto,
   ListDirectoryNameResponseDto,
 } from '@workspaces/domain';
-import { useLoggedUser } from '../../contexts';
-import { ListContentFilesRequest } from '../../services';
+import { useLoggedUser } from '../../../contexts';
+import { ListContentFilesRequest } from '../../../services';
 import axios, { AxiosError } from 'axios';
-import { ValidationsError } from '../../shared';
-import { ScrollBox } from '../scroll';
-import { EmptyListResponse } from './simple';
+import { ValidationsError } from '../../../shared';
+import { ScrollBox } from '../../scroll';
+import { EmptyListResponse } from '../simple';
 
 interface ListSimpleDirectoryProps {
   listDirectories: ListDirectoryNameResponseDto[];
