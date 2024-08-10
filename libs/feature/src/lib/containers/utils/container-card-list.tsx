@@ -1,7 +1,10 @@
 import {
   Box,
+  Button,
+  Icon,
   IconButton,
   Pagination,
+  Typography,
   useMediaQuery,
   useTheme,
 } from '@mui/material';
@@ -23,6 +26,8 @@ interface ContainerCardListProps {
     event: React.ChangeEvent<unknown>,
     value: number
   ) => Promise<void>;
+  changeDirectory?: boolean;
+  handleDirectoryPopUpOpen?: () => void;
 }
 
 export const ContainerCardList: FC<ContainerCardListProps> = ({
@@ -31,6 +36,8 @@ export const ContainerCardList: FC<ContainerCardListProps> = ({
   mobileBackButtom = false,
   search,
   handleChange,
+  changeDirectory = false,
+  handleDirectoryPopUpOpen,
 }) => {
   const theme = useTheme();
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
@@ -53,6 +60,44 @@ export const ContainerCardList: FC<ContainerCardListProps> = ({
             alignItems: 'center',
           }}
         >
+          {!smDown && changeDirectory && (
+            <Box display={'flex'}>
+              <Button
+                variant="outlined"
+                onClick={handleDirectoryPopUpOpen}
+                sx={{
+                  marginRight: theme.spacing(4),
+                  backgroundColor:
+                    theme.palette.mode === 'dark'
+                      ? theme.palette.grey[800]
+                      : theme.palette.grey[200],
+                }}
+              >
+                <Box
+                  display={'flex'}
+                  flexDirection={'row'}
+                  justifyContent={'space-between'}
+                  alignItems={'center'}
+                >
+                  <Box display={'flex'} margin={theme.spacing(0.5)}>
+                    <Icon
+                      sx={{
+                        color:
+                          theme.palette.mode === 'dark'
+                            ? theme.palette.common.white
+                            : theme.palette.grey[700],
+                      }}
+                    >
+                      folder
+                    </Icon>
+                  </Box>
+                  <Box display={'flex'} margin={theme.spacing(0.5)}>
+                    <Typography> Mudar Diretório</Typography>
+                  </Box>
+                </Box>
+              </Button>
+            </Box>
+          )}
           {smDown && mobileBackButtom && <MobileBackButtom />}
           <Box
             sx={{

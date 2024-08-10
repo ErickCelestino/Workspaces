@@ -82,11 +82,6 @@ export class ListContentFileRepositoryImpl
       };
     });
 
-    console.log(`total: ${total}`);
-    console.log(`totalPages: ${totalPages}`);
-    console.log(`files: ${files}`);
-    console.log(files);
-    console.log(`take: ${take}`);
     return {
       total,
       totalPages,

@@ -8,7 +8,6 @@ import {
   ListItemText,
   Pagination,
   Tooltip,
-  Typography,
   useMediaQuery,
   useTheme,
 } from '@mui/material';
@@ -117,6 +116,7 @@ export const ListDirectory: FC<ListDirectoryProps> = ({ getDataInput }) => {
       loggedUserId: loggedUser?.id ?? '',
       userInput: '',
     });
+    setTotalPageTest(result?.totalPages ?? 0);
     setListDirectory(result?.directories ?? []);
   }, [handleData, loggedUser]);
 
@@ -164,27 +164,8 @@ export const ListDirectory: FC<ListDirectoryProps> = ({ getDataInput }) => {
         showAlert={showAlert}
         title="Novo Diretório"
       />
-      <Box
-        display="flex"
-        flexDirection={'column'}
-        sx={{
-          maxHeight: theme.spacing(65),
-          marginLeft: theme.spacing(2),
-          border: `1px solid ${theme.palette.divider}`,
-          boxShadow: theme.shadows[3],
-          padding: theme.spacing(2),
-          borderRadius: theme.shape.borderRadius,
-          marginBottom: theme.spacing(2),
-          backgroundColor:
-            theme.palette.mode === 'dark'
-              ? theme.palette.grey[800]
-              : theme.palette.primary.main,
-        }}
-      >
+      <Box display="flex" flexDirection={'column'}>
         <Box display={'flex'} flexDirection={'column'} height={'100%'}>
-          <Typography variant="h6" gutterBottom marginLeft={theme.spacing(2)}>
-            Diretórios
-          </Typography>
           <SearchBar onSearch={searchData} placeholder="Pesquisar diretório" />
           <RightClickMenu iconMenuItemList={rightClickMenuList}>
             <List component={'nav'}>

@@ -1,9 +1,6 @@
 import {
   Box,
-  Divider,
-  Fade,
   IconButton,
-  Modal,
   Typography,
   useMediaQuery,
   useTheme,

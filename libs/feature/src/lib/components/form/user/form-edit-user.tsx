@@ -95,7 +95,6 @@ export const FormEditUser: FC<FormEditUserProps> = ({
   const handleUserData = async (data: EditUserDto) => {
     setSuccess(false);
     setLoading(true);
-    console.log(data);
     await editUser(data);
     setSuccess(true);
     setLoading(false);

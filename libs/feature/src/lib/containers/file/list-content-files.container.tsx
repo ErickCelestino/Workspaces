@@ -1,7 +1,11 @@
 import {
   Box,
+  Dialog,
+  DialogContent,
+  DialogTitle,
   Grid,
   Icon,
+  IconButton,
   Typography,
   useMediaQuery,
   useTheme,
@@ -72,6 +76,7 @@ export const ListContanteFilesContainer = () => {
   const [createDirectoryPopUp, setCreateDirectoryPopUp] = useState(false);
   const [movePopUp, setMovePopUp] = useState(false);
   const [fileId, setFileId] = useState('');
+  const [directoyPopUp, setDirectoryPopUp] = useState(false);
 
   const theme = useTheme();
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
@@ -160,18 +165,24 @@ export const ListContanteFilesContainer = () => {
     }
   };
 
-  const handleDirectoryPopUpOpen = (types: CrudType) => {
+  const handleDirectoryPopUpOpen = (types: CrudType | 'changeDirectory') => {
     switch (types) {
       case 'create':
         setCreateDirectoryPopUp(true);
         break;
+      case 'changeDirectory':
+        setDirectoryPopUp(true);
+        break;
     }
   };
 
-  const handleDirectoryPopUpClose = (types: CrudType) => {
+  const handleDirectoryPopUpClose = (types: CrudType | 'changeDirectory') => {
     switch (types) {
       case 'create':
         setCreateDirectoryPopUp(false);
+        break;
+      case 'changeDirectory':
+        setDirectoryPopUp(false);
         break;
     }
   };
@@ -283,8 +294,32 @@ export const ListContanteFilesContainer = () => {
         handlePopUpClose={() => handleDirectoryPopUpClose('create')}
         title="Criar Diretório"
       />
+      <Dialog
+        open={directoyPopUp}
+        onClose={() => handleDirectoryPopUpClose('changeDirectory')}
+      >
+        <DialogTitle>
+          Selecione um Diretório
+          <IconButton
+            aria-label="close"
+            onClick={() => handleDirectoryPopUpClose('changeDirectory')}
+            sx={{
+              position: 'absolute',
+              right: 8,
+              top: 8,
+              color: (theme) => theme.palette.grey[500],
+            }}
+          >
+            <Icon>close_icon</Icon>
+          </IconButton>
+        </DialogTitle>
+        <DialogContent>
+          <ListDirectory getDataInput={getData} />
+        </DialogContent>
+      </Dialog>
       <LayoutBase title="Listagem de Arquivos" toolBar={<ToolbarPureTV />}>
         {smDown && <MobileButtonMenu iconMenuItemList={rightClickMenuList} />}
+
         <ContainerCardList
           search={{
             searchData: searchData,
@@ -293,8 +328,11 @@ export const ListContanteFilesContainer = () => {
           totalPage={totalPage}
           handleChange={handleChange}
           mobileBackButtom
+          changeDirectory
+          handleDirectoryPopUpOpen={() =>
+            handleDirectoryPopUpOpen('changeDirectory')
+          }
         >
-          {!smDown && <ListDirectory getDataInput={getData} />}
           {fileList.length > 0 ? (
             <Grid justifyContent="center" container spacing={2}>
               {fileList.map((file, index) => (
