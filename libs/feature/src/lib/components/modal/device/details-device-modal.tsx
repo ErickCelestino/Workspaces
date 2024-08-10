@@ -1,5 +1,13 @@
-import { Box, Typography, useMediaQuery, useTheme } from '@mui/material';
+import {
+  Box,
+  Divider,
+  List,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from '@mui/material';
 import DeleteSweepIcon from '@mui/icons-material/DeleteSweep';
+import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
 import { useLoggedUser } from '../../../contexts';
 import { FC, useCallback, useEffect, useState } from 'react';
 import {
@@ -17,11 +25,18 @@ import {
 import axios, { AxiosError } from 'axios';
 import { formatBrDate, ValidationsError } from '../../../shared';
 import { SimpleFormModal } from '../simple';
+import { ButtonFileMenu } from '../../menu';
+import {
+  EmptyListResponse,
+  SchedulingItem,
+  SchedulingSimpleItem,
+} from '../../list';
 
 interface DetailsDeviceModalProps {
   open: boolean;
   title: string;
   idDevice: string;
+  schedulesTitle?: string;
   handlePopUpClose: () => void;
   showAlert: (message: string, success: boolean) => void;
 }
@@ -32,6 +47,7 @@ export const DetailsDeviceModal: FC<DetailsDeviceModalProps> = ({
   title,
   open,
   idDevice,
+  schedulesTitle = 'Agendamentos',
 }) => {
   const { loggedUser } = useLoggedUser();
   const theme = useTheme();
@@ -169,6 +185,47 @@ export const DetailsDeviceModal: FC<DetailsDeviceModalProps> = ({
             <strong>Criado em: </strong>
             {formatBrDate(new Date(deviceDetails?.createdAt ?? new Date()))}
           </Typography>
+        </Box>
+        <Divider
+          sx={{
+            marginTop: theme.spacing(2),
+            marginBottom: theme.spacing(2),
+          }}
+        />
+
+        <Box>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+            }}
+          >
+            <Typography variant="h5">
+              <strong>{schedulesTitle}</strong>
+            </Typography>
+            <ButtonFileMenu iconMenuItemList={iconMenuList} />
+          </Box>
+          <List>
+            {schedules.length > 0 ? (
+              schedules.map((scheduling) => (
+                <SchedulingSimpleItem
+                  scheduling={scheduling}
+                  key={scheduling.id}
+                />
+              ))
+            ) : (
+              <EmptyListResponse
+                message="Sem Playlist"
+                icon={
+                  <PlaylistRemoveIcon
+                    sx={{
+                      fontSize: theme.spacing(10),
+                    }}
+                  />
+                }
+              />
+            )}
+          </List>
         </Box>
       </Box>
     </SimpleFormModal>

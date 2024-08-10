@@ -182,8 +182,8 @@ export const SchedulingItem: React.FC<SchedulingItemProps> = ({
                   <Chip
                     component="span"
                     sx={{ marginLeft: theme.spacing(1) }}
-                    label={scheduling.lopping == true ? 'Sim' : 'Não'}
-                    color={scheduling.lopping == true ? 'success' : 'error'}
+                    label={scheduling.lopping === true ? 'Sim' : 'Não'}
+                    color={scheduling.lopping === true ? 'success' : 'error'}
                     variant="filled"
                   />
                   <Typography
