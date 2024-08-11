@@ -55,7 +55,14 @@ export class CreateDirectory
       return left(new EntityNotEmpty('Logged User ID'));
     }
 
-    await ValidationUserId(loggedUserId, this.findUserByIdRepository);
+    const userValidation = await ValidationUserId(
+      loggedUserId,
+      this.findUserByIdRepository
+    );
+
+    if (userValidation.isLeft()) {
+      return left(userValidation.value);
+    }
 
     const findDirectory = await this.findDirectoryByNameRepository.find({
       name: body.name,

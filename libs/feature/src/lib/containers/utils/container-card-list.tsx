@@ -1,5 +1,6 @@
 import {
   Box,
+  Icon,
   IconButton,
   Pagination,
   useMediaQuery,
@@ -8,11 +9,12 @@ import {
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { FC, ReactNode } from 'react';
 
-import { SearchBar } from '../../components';
+import { MobileBackButtom, SearchBar } from '../../components';
 
 interface ContainerCardListProps {
   children: ReactNode;
   totalPage: number;
+  mobileBackButtom?: boolean;
   search: {
     placeholder: string;
     searchData: (input: string) => Promise<void>;
@@ -22,13 +24,18 @@ interface ContainerCardListProps {
     event: React.ChangeEvent<unknown>,
     value: number
   ) => Promise<void>;
+  changeDirectory?: boolean;
+  handleDirectoryPopUpOpen?: () => void;
 }
 
 export const ContainerCardList: FC<ContainerCardListProps> = ({
   children,
   totalPage,
+  mobileBackButtom = false,
   search,
   handleChange,
+  changeDirectory = false,
+  handleDirectoryPopUpOpen,
 }) => {
   const theme = useTheme();
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
@@ -52,6 +59,29 @@ export const ContainerCardList: FC<ContainerCardListProps> = ({
             alignItems: 'center',
           }}
         >
+          {!smDown && changeDirectory && (
+            <IconButton
+              onClick={handleDirectoryPopUpOpen}
+              sx={{
+                width: theme.spacing(8),
+                height: theme.spacing(8),
+                marginRight: theme.spacing(2),
+                backgroundColor: theme.palette.primary.main,
+              }}
+            >
+              <Icon
+                sx={{
+                  color: theme.palette.common.white,
+                  // theme.palette.mode === 'dark'
+                  //   ? theme.palette.common.white
+                  //   : theme.palette.grey[700],
+                }}
+              >
+                folder
+              </Icon>
+            </IconButton>
+          )}
+          {smDown && mobileBackButtom && <MobileBackButtom />}
           <Box
             sx={{
               justifyContent: 'center',

@@ -1,31 +1,32 @@
 import { Inject } from '@nestjs/common';
 import { UseCase } from '../../base/use-case';
-import { ListPlaylistDto, ListPlaylistResponseDto } from '../../dto';
+import { ListDirectoryDto, ListDirectoryResponseDto } from '../../dto';
 import { EntityNotEmpty, EntityNotExists } from '../../error';
 import { Either, left, right } from '../../shared/either';
 import {
   FindUserByIdRepository,
-  ListPlaylistRepository,
+  ListDirectoryRepository,
 } from '../../repository';
 import { ValidationUserId } from '../../utils';
 
-export class ListPlaylist
+export class ListDirectory
   implements
     UseCase<
-      ListPlaylistDto,
-      Either<EntityNotEmpty | EntityNotExists, ListPlaylistResponseDto>
+      ListDirectoryDto,
+      Either<EntityNotEmpty | EntityNotExists, ListDirectoryResponseDto>
     >
 {
   constructor(
     @Inject('FindUserByIdRepository')
     private findUserByIdRepository: FindUserByIdRepository,
-    @Inject('ListPlaylistRepository')
-    private listPlaylistRepository: ListPlaylistRepository
+    @Inject('ListDirectoryRepository')
+    private listDirectoryRepository: ListDirectoryRepository
   ) {}
+
   async execute(
-    input: ListPlaylistDto
+    input: ListDirectoryDto
   ): Promise<
-    Either<EntityNotEmpty | EntityNotExists, ListPlaylistResponseDto>
+    Either<EntityNotEmpty | EntityNotExists, ListDirectoryResponseDto>
   > {
     const { loggedUserId } = input;
 
@@ -37,12 +38,13 @@ export class ListPlaylist
       loggedUserId,
       this.findUserByIdRepository
     );
+
     if (userValidation.isLeft()) {
       return left(userValidation.value);
     }
 
-    const filteredPlaylist = await this.listPlaylistRepository.list(input);
+    const listDirectory = await this.listDirectoryRepository.list(input);
 
-    return right(filteredPlaylist);
+    return right(listDirectory);
   }
 }
