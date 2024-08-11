@@ -32,6 +32,13 @@ export const DirectoryCard: FC<ListDirectoryProps> = ({
   // const { loggedUser } = useLoggedUser();
   const iconMenuList: IconMenuItem[] = [
     {
+      icon: <Icon>folder_open</Icon>,
+      title: 'Abrir',
+      handleClick: async () => {
+        onClick();
+      },
+    },
+    {
       icon: <EditIcon />,
       title: editTitle,
       handleClick: async () => {
@@ -42,7 +49,6 @@ export const DirectoryCard: FC<ListDirectoryProps> = ({
 
   return (
     <Card
-      onClick={onClick}
       sx={{
         width: theme.spacing(40),
         height: theme.spacing(8),
@@ -58,7 +64,7 @@ export const DirectoryCard: FC<ListDirectoryProps> = ({
         }}
       >
         <Icon>folder</Icon>
-        <CardContent>
+        <CardContent onClick={onClick}>
           <Box>
             <Typography
               component="div"

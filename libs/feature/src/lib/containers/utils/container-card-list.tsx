@@ -1,10 +1,8 @@
 import {
   Box,
-  Button,
   Icon,
   IconButton,
   Pagination,
-  Typography,
   useMediaQuery,
   useTheme,
 } from '@mui/material';
@@ -62,42 +60,26 @@ export const ContainerCardList: FC<ContainerCardListProps> = ({
           }}
         >
           {!smDown && changeDirectory && (
-            <Box display={'flex'}>
-              <Button
-                variant="outlined"
-                onClick={handleDirectoryPopUpOpen}
+            <IconButton
+              onClick={handleDirectoryPopUpOpen}
+              sx={{
+                width: theme.spacing(8),
+                height: theme.spacing(8),
+                marginRight: theme.spacing(2),
+                backgroundColor: theme.palette.primary.main,
+              }}
+            >
+              <Icon
                 sx={{
-                  marginRight: theme.spacing(4),
-                  backgroundColor:
-                    theme.palette.mode === 'dark'
-                      ? theme.palette.grey[800]
-                      : theme.palette.grey[200],
+                  color: theme.palette.common.white,
+                  // theme.palette.mode === 'dark'
+                  //   ? theme.palette.common.white
+                  //   : theme.palette.grey[700],
                 }}
               >
-                <Box
-                  display={'flex'}
-                  flexDirection={'row'}
-                  justifyContent={'space-between'}
-                  alignItems={'center'}
-                >
-                  <Box display={'flex'} margin={theme.spacing(0.5)}>
-                    <Icon
-                      sx={{
-                        color:
-                          theme.palette.mode === 'dark'
-                            ? theme.palette.common.white
-                            : theme.palette.grey[700],
-                      }}
-                    >
-                      folder
-                    </Icon>
-                  </Box>
-                  <Box display={'flex'} margin={theme.spacing(0.5)}>
-                    <Typography> Mudar Diretório</Typography>
-                  </Box>
-                </Box>
-              </Button>
-            </Box>
+                folder
+              </Icon>
+            </IconButton>
           )}
           {smDown && mobileBackButtom && <MobileBackButtom />}
           <Box
