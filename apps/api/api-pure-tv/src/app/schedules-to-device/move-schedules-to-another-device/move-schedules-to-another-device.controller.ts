@@ -1,6 +1,10 @@
-import { Body, Controller, Put, Query } from '@nestjs/common';
+import { Body, Controller, Put, Query, UsePipes } from '@nestjs/common';
 import { MoveSchedulesToAnotherDeviceService } from './move-schedules-to-another-device.service';
-import { ErrorMessageResult } from '@workspaces/domain';
+import {
+  ErrorMessageResult,
+  moveSchedulesToAnotherDeviceSchema,
+} from '@workspaces/domain';
+import { ZodValidationPipe } from '../../pipes/zod-validation-pipe';
 
 @Controller('move-schedules-to-another-device')
 export class MoveSchedulesToAnotherDeviceController {
@@ -8,6 +12,7 @@ export class MoveSchedulesToAnotherDeviceController {
     private readonly moveSchedulesToAnotherDeviceService: MoveSchedulesToAnotherDeviceService
   ) {}
 
+  @UsePipes(new ZodValidationPipe(moveSchedulesToAnotherDeviceSchema))
   @Put()
   async move(
     @Query('oldDeviceId') oldDeviceId: string,
