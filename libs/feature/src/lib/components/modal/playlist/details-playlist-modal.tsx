@@ -107,6 +107,10 @@ export const DetailsPlaylistModal: FC<DetailsPlaylistModalProps> = ({
     [showAlert]
   );
 
+  const getSelectedFilesIds = () => {
+    return Object.keys(selectedFiles).filter((fileId) => selectedFiles[fileId]);
+  };
+
   const handleChange = async (
     event: React.ChangeEvent<unknown>,
     value: number
@@ -159,14 +163,14 @@ export const DetailsPlaylistModal: FC<DetailsPlaylistModalProps> = ({
     const selecteFileMessage = 'Selecione um arquivo para mover';
     switch (types) {
       case 'move-file':
-        if (Object.keys(selectedFiles).length > 0) {
+        if (getSelectedFilesIds().length > 0) {
           setMoveFilePopUp(true);
         } else {
           showAlert(selecteFileMessage, false);
         }
         break;
       case 'delete-file':
-        if (Object.keys(selectedFiles).length > 0) {
+        if (getSelectedFilesIds().length > 0) {
           setDeleteFilePopUp(true);
         } else {
           showAlert(selecteFileMessage, false);
@@ -210,13 +214,13 @@ export const DetailsPlaylistModal: FC<DetailsPlaylistModalProps> = ({
       />
       <DeletePlaylistFilesModal
         handlePopUpClose={() => handlesPopUpClose('delete-file')}
-        idsToDelete={Object.keys(selectedFiles)}
+        idsToDelete={getSelectedFilesIds()}
         idPlaylist={idPlaylist}
         open={deleteFilePopUp}
         showAlert={showAlert}
         title="Deletar Arquivos"
         subTitle={`Deseja realmente deletar os ${
-          Object.keys(selectedFiles).length
+          getSelectedFilesIds().length
         } arquivos selecionados?`}
       />
       <SimpleFormModal

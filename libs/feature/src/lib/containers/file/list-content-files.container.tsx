@@ -6,10 +6,10 @@ import {
   Grid,
   Icon,
   IconButton,
-  Typography,
   useMediaQuery,
   useTheme,
 } from '@mui/material';
+import AttachFileIcon from '@mui/icons-material/AttachFile';
 import { LayoutBase } from '../../layout';
 import { useCallback, useEffect, useState } from 'react';
 import {
@@ -354,16 +354,16 @@ export const ListContanteFilesContainer = () => {
               ))}
             </Grid>
           ) : (
-            <Box
-              marginTop={theme.spacing(2)}
-              width="100%"
-              display="flex"
-              justifyContent="center"
-            >
-              <Typography variant="h4">
-                Não foram encontrados registros
-              </Typography>
-            </Box>
+            <EmptyListResponse
+              message="Sem Arquivos"
+              icon={
+                <AttachFileIcon
+                  sx={{
+                    fontSize: theme.spacing(10),
+                  }}
+                />
+              }
+            />
           )}
         </ContainerCardList>
       </LayoutBase>
