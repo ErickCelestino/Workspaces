@@ -7,6 +7,7 @@ export * from './entity-not-deleted.error';
 export * from './entity-not-edit';
 export * from './entity-not-empty.error';
 export * from './entity-not-exists.error';
+export * from './entity-not-moved.error';
 export * from './entity-not-negative-number.erro';
 export * from './file-not-allowed';
 export * from './incorrect-password-or-email.error';
