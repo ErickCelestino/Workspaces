@@ -1,7 +1,7 @@
 import { Inject } from '@nestjs/common';
 import {
   ListPlaylistDto,
-  ListPlaylistReponseDto,
+  ListPlaylistResponseDto,
   ListPlaylistRepository,
   Playlist,
 } from '@workspaces/domain';
@@ -9,7 +9,7 @@ import { PrismaService } from 'nestjs-prisma';
 
 export class ListPlaylistRepositoryImpl implements ListPlaylistRepository {
   constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
-  async list(input: ListPlaylistDto): Promise<ListPlaylistReponseDto> {
+  async list(input: ListPlaylistDto): Promise<ListPlaylistResponseDto> {
     const { loggedUserId, userInput } = input;
 
     const skip = input?.skip || 0;

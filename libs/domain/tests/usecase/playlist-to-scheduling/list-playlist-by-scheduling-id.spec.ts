@@ -10,7 +10,7 @@ import {
   UserList,
 } from '../../../src';
 import {
-  ListPlaylistReponseMock,
+  ListPlaylistResponseMock,
   SchedulingMock,
   userMock,
 } from '../../entity';
@@ -56,14 +56,14 @@ const makeSut = (): SutTypes => {
 };
 
 describe('ListPlaylistBySchedulingId', () => {
-  it('should return ListPlaylistReponseDto when a pass correct ListPlaylistDto', async () => {
+  it('should return ListPlaylistResponseDto when a pass correct ListPlaylistDto', async () => {
     const { sut, listPlaylistBySchedulingIdDto } = makeSut();
 
     const result = await sut.execute(listPlaylistBySchedulingIdDto);
 
     expect(result.isRight()).toBe(true);
     expect(result.isLeft()).toBe(false);
-    expect(result.value).toStrictEqual(ListPlaylistReponseMock);
+    expect(result.value).toStrictEqual(ListPlaylistResponseMock);
   });
 
   it('should return EntityNotEmpty when pass incorrect User ID', async () => {

@@ -26,11 +26,8 @@ import axios, { AxiosError } from 'axios';
 import { formatBrDate, ValidationsError } from '../../../shared';
 import { SimpleFormModal } from '../simple';
 import { ButtonFileMenu } from '../../menu';
-import {
-  EmptyListResponse,
-  SchedulingItem,
-  SchedulingSimpleItem,
-} from '../../list';
+import { EmptyListResponse, SchedulingSimpleItem } from '../../list';
+import { DeleteSchedulesToDeviceModal } from '../schedules-to-device';
 
 interface DetailsDeviceModalProps {
   open: boolean;
@@ -150,84 +147,100 @@ export const DetailsDeviceModal: FC<DetailsDeviceModalProps> = ({
   ];
 
   return (
-    <SimpleFormModal
-      height={smDown ? theme.spacing(55) : theme.spacing(80)}
-      width={smDown ? '90%' : theme.spacing(80)}
-      open={open}
-      handlePopUpClose={handlePopUpClose}
-      title={title}
-    >
-      <Box sx={{ padding: theme.spacing(2) }}>
-        <Typography
-          sx={{
-            fontSize: '18px',
-          }}
-        >
-          <strong>Nome: </strong>
-          {deviceDetails?.name ?? ''}
-        </Typography>
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-          }}
-        >
+    <>
+      <DeleteSchedulesToDeviceModal
+        idDevice={idDevice}
+        loggedUserId={loggedUser?.id ?? ''}
+        open={deleteSchedulesPopUp}
+        title="Deletar Agendamento"
+        schedulesIds={Object.keys(selectedSchedules)}
+        showAlert={showAlert}
+        onClose={() => setDeleteSchedulesPopUp(false)}
+        subTitle={`Deseja realmente deletar os ${
+          Object.keys(selectedSchedules).length
+        } agendamentos selecionados?`}
+      />
+      <SimpleFormModal
+        height={smDown ? theme.spacing(55) : theme.spacing(80)}
+        width={smDown ? '90%' : theme.spacing(80)}
+        open={open}
+        handlePopUpClose={handlePopUpClose}
+        title={title}
+      >
+        <Box sx={{ padding: theme.spacing(2) }}>
           <Typography
             sx={{
               fontSize: '18px',
             }}
           >
-            <strong>Criado por: </strong>
-            {deviceDetails?.createdBy ?? ''}
+            <strong>Nome: </strong>
+            {deviceDetails?.name ?? ''}
           </Typography>
-          <Typography>
-            <strong>Criado em: </strong>
-            {formatBrDate(new Date(deviceDetails?.createdAt ?? new Date()))}
-          </Typography>
-        </Box>
-        <Divider
-          sx={{
-            marginTop: theme.spacing(2),
-            marginBottom: theme.spacing(2),
-          }}
-        />
-
-        <Box>
           <Box
             sx={{
               display: 'flex',
+              flexDirection: 'row',
               justifyContent: 'space-between',
             }}
           >
-            <Typography variant="h5">
-              <strong>{schedulesTitle}</strong>
+            <Typography
+              sx={{
+                fontSize: '18px',
+              }}
+            >
+              <strong>Criado por: </strong>
+              {deviceDetails?.createdBy ?? ''}
             </Typography>
-            <ButtonFileMenu iconMenuItemList={iconMenuList} />
+            <Typography>
+              <strong>Criado em: </strong>
+              {formatBrDate(new Date(deviceDetails?.createdAt ?? new Date()))}
+            </Typography>
           </Box>
-          <List>
-            {schedules.length > 0 ? (
-              schedules.map((scheduling) => (
-                <SchedulingSimpleItem
-                  scheduling={scheduling}
-                  key={scheduling.id}
-                />
-              ))
-            ) : (
-              <EmptyListResponse
-                message="Sem Playlist"
-                icon={
-                  <PlaylistRemoveIcon
-                    sx={{
-                      fontSize: theme.spacing(10),
-                    }}
+          <Divider
+            sx={{
+              marginTop: theme.spacing(2),
+              marginBottom: theme.spacing(2),
+            }}
+          />
+
+          <Box>
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+              }}
+            >
+              <Typography variant="h5">
+                <strong>{schedulesTitle}</strong>
+              </Typography>
+              <ButtonFileMenu iconMenuItemList={iconMenuList} />
+            </Box>
+            <List>
+              {schedules.length > 0 ? (
+                schedules.map((scheduling) => (
+                  <SchedulingSimpleItem
+                    scheduling={scheduling}
+                    key={scheduling.id}
+                    isSelected={selectedSchedules[scheduling.id]}
+                    onSchedulingToggle={handleSchedulingToggle}
                   />
-                }
-              />
-            )}
-          </List>
+                ))
+              ) : (
+                <EmptyListResponse
+                  message="Sem Playlist"
+                  icon={
+                    <PlaylistRemoveIcon
+                      sx={{
+                        fontSize: theme.spacing(10),
+                      }}
+                    />
+                  }
+                />
+              )}
+            </List>
+          </Box>
         </Box>
-      </Box>
-    </SimpleFormModal>
+      </SimpleFormModal>
+    </>
   );
 };
