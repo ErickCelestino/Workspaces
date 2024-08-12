@@ -33,7 +33,7 @@ export const SchedulingSimpleItem: FC<SchedulingSimpleItemProps> = ({
         >
           <Checkbox
             edge="start"
-            checked={isSelected}
+            checked={!!isSelected}
             onChange={() => onSchedulingToggle(scheduling.id)}
           />
         </ListItemIcon>

@@ -41,9 +41,9 @@ interface DetailsDeviceModalProps {
 export const DetailsDeviceModal: FC<DetailsDeviceModalProps> = ({
   handlePopUpClose,
   showAlert,
-  title,
+  title = '',
   open,
-  idDevice,
+  idDevice = '',
   schedulesTitle = 'Agendamentos',
 }) => {
   const { loggedUser } = useLoggedUser();
