@@ -4,6 +4,7 @@ import {
   AddSchedulesToDeviceModal,
   CreateDeviceModal,
   DeleteDeviceModal,
+  DetailsDeviceModal,
   DeviceCard,
   EditDeviceModal,
   EmptyListResponse,
@@ -36,6 +37,7 @@ export const ListDeviceContainer = () => {
   const [createDevicePopUp, setCreateDevicePopUp] = useState(false);
   const [deleteDevicePopUp, setDeleteDevicePopUp] = useState(false);
   const [editDevicePopUp, setEditDevicePopUp] = useState(false);
+  const [detailsDevicePopUp, setDetailsDevicePopUp] = useState(false);
   const [addSchedulesToDevicePopUp, setAddSchedulesToDevicePopUp] =
     useState(false);
   const [listDevice, setListDevice] = useState<Device[]>([]);
@@ -69,6 +71,10 @@ export const ListDeviceContainer = () => {
       case 'add':
         setSelectedId(id ?? '');
         setAddSchedulesToDevicePopUp(true);
+        break;
+      case 'details':
+        setSelectedId(id ?? '');
+        setDetailsDevicePopUp(true);
         break;
     }
   };
@@ -175,6 +181,13 @@ export const ListDeviceContainer = () => {
         showAlert={showAlert}
         idDevice={selectedId}
       />
+      <DetailsDeviceModal
+        open={detailsDevicePopUp}
+        title="Detalhes Dispositivo"
+        handlePopUpClose={() => setDetailsDevicePopUp(false)}
+        showAlert={showAlert}
+        idDevice={selectedId}
+      />
       <LayoutBase title="Listagem Dispositivos" toolBar={<ToolbarPureTV />}>
         <RightClickMenu iconMenuItemList={rightClickMenuList}>
           {smDown && <MobileButtonMenu iconMenuItemList={rightClickMenuList} />}
@@ -207,6 +220,9 @@ export const ListDeviceContainer = () => {
                         }
                         addSchedulesToDevice={async () =>
                           handlePopUpOpen('add', device.id)
+                        }
+                        detailsDevice={async () =>
+                          handlePopUpOpen('details', device.id)
                         }
                         key={device.id}
                       />

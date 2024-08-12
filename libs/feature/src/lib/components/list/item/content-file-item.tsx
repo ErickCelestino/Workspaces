@@ -10,7 +10,7 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
-import { FC, useState } from 'react';
+import { FC } from 'react';
 import { ContentFile } from '@workspaces/domain';
 
 interface ContentFileItemProps {
@@ -25,11 +25,6 @@ export const ContentFileItem: FC<ContentFileItemProps> = ({
 }) => {
   const theme = useTheme();
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
-
-  const [selectedFiles, setSelectedFiles] = useState<{
-    [key: string]: boolean;
-  }>({});
-
   return (
     <Box>
       <ListItem key={contentFile.id}>

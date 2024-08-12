@@ -5,9 +5,11 @@ import {
   IconMenuItem,
   ListDirectoryDto,
 } from '@workspaces/domain';
+import FolderOffIcon from '@mui/icons-material/FolderOff';
 import {
   CreateDirectoryModal,
   DirectoryCard,
+  EmptyListResponse,
   MobileButtonMenu,
   RightClickMenu,
   ToolbarPureTV,
@@ -177,16 +179,16 @@ export const ListDirectoryContainer = () => {
                 ))}
               </Grid>
             ) : (
-              <Box
-                marginTop={theme.spacing(2)}
-                width="100%"
-                display="flex"
-                justifyContent="center"
-              >
-                <Typography variant="h4">
-                  Não foram encontrados registros
-                </Typography>
-              </Box>
+              <EmptyListResponse
+                message="Sem Diretórios"
+                icon={
+                  <FolderOffIcon
+                    sx={{
+                      fontSize: theme.spacing(10),
+                    }}
+                  />
+                }
+              />
             )}
           </ContainerCardList>
         </RightClickMenu>

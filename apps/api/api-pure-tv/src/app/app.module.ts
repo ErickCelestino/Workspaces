@@ -55,6 +55,7 @@ import {
 import {
   AddSchedulesToDeviceModule,
   FindSchedulesByDeviceIdModule,
+  DeleteSchedulesToDeviceModule,
 } from './schedules-to-device';
 import {
   ListSimpleDirectoryModule,
@@ -109,6 +110,7 @@ import {
     FindDeviceByIdModule,
     AddSchedulesToDeviceModule,
     FindSchedulesByDeviceIdModule,
+    DeleteSchedulesToDeviceModule,
     ListDirectoryModule,
   ],
   controllers: [AppController],
