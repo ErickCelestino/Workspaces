@@ -86,7 +86,7 @@ describe('MoveSchedulesToAnotherDevice', () => {
 
     expect(result.isRight()).toBeTruthy();
     expect(result.isLeft()).toBeFalsy();
-    expect(result.value).toEqual([SchedulingMock.id]);
+    expect(result.value).toEqual([SchedulesToDeviceMock.id]);
   });
 
   it('should return EntityNotEmpty when a pass incorrect logged id', async () => {

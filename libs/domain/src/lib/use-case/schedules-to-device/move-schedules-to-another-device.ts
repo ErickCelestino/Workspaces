@@ -130,7 +130,7 @@ export class MoveSchedulesToAnotherDevice
         return left(new EntityNotMoved('Scheduling'));
       }
 
-      ids.push(scheduleId);
+      ids.push(movedScheduling);
     }
 
     return right(ids);
