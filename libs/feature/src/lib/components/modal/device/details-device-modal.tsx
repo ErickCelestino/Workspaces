@@ -77,6 +77,12 @@ export const DetailsDeviceModal: FC<DetailsDeviceModalProps> = ({
     [showAlert]
   );
 
+  const getSelectedSchedulingIds = () => {
+    return Object.keys(selectedSchedules).filter(
+      (fileId) => selectedSchedules[fileId]
+    );
+  };
+
   const getSchedulesToDevice = useCallback(
     async (input: FindSchedulesByDeviceIdDto) => {
       try {
@@ -115,21 +121,22 @@ export const DetailsDeviceModal: FC<DetailsDeviceModalProps> = ({
     }
   }, [open, idDevice, dataLoaded, getDevice, loggedUser, getSchedulesToDevice]);
 
-  const handleSchedulingToggle = (fileId: string) => {
-    setSelectedSchedules((prevSelectedScheduling) => {
+  const handleSchedulingToggle = (schedulingId: string) => {
+    setSelectedSchedules((prevSelectedSchedules) => {
       const newSelectedSchedules = {
-        ...prevSelectedScheduling,
-        [fileId]: !prevSelectedScheduling[fileId],
+        ...prevSelectedSchedules,
+        [schedulingId]: !prevSelectedSchedules[schedulingId],
       };
       return newSelectedSchedules;
     });
   };
 
-  const handlePopUpOpen = (types: 'delete-scheduling', id?: string) => {
+  const handlePopUpOpen = (types: 'delete-scheduling') => {
     const selecteFileMessage = 'Selecione um Agendamento para mover';
     switch (types) {
       case 'delete-scheduling':
-        if (Object.keys(selectedSchedules).length > 0) {
+        const selectedIds = getSelectedSchedulingIds();
+        if (selectedIds.length > 0) {
           setDeleteSchedulesPopUp(true);
         } else {
           showAlert(selecteFileMessage, false);
@@ -153,11 +160,11 @@ export const DetailsDeviceModal: FC<DetailsDeviceModalProps> = ({
         loggedUserId={loggedUser?.id ?? ''}
         open={deleteSchedulesPopUp}
         title="Deletar Agendamento"
-        schedulesIds={Object.keys(selectedSchedules)}
+        schedulesIds={getSelectedSchedulingIds()}
         showAlert={showAlert}
         onClose={() => setDeleteSchedulesPopUp(false)}
         subTitle={`Deseja realmente deletar os ${
-          Object.keys(selectedSchedules).length
+          getSelectedSchedulingIds().length
         } agendamentos selecionados?`}
       />
       <SimpleFormModal
