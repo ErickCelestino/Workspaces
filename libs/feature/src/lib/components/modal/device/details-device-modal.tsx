@@ -8,6 +8,7 @@ import {
 } from '@mui/material';
 import DeleteSweepIcon from '@mui/icons-material/DeleteSweep';
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
+import OpenWithIcon from '@mui/icons-material/OpenWith';
 import { useLoggedUser } from '../../../contexts';
 import { FC, useCallback, useEffect, useState } from 'react';
 import {
@@ -27,7 +28,10 @@ import { formatBrDate, ValidationsError } from '../../../shared';
 import { SimpleFormModal } from '../simple';
 import { ButtonFileMenu } from '../../menu';
 import { EmptyListResponse, SchedulingSimpleItem } from '../../list';
-import { DeleteSchedulesToDeviceModal } from '../schedules-to-device';
+import {
+  DeleteSchedulesToDeviceModal,
+  MoveSchedulesToAnotherDeviceModal,
+} from '../schedules-to-device';
 
 interface DetailsDeviceModalProps {
   open: boolean;
@@ -57,6 +61,7 @@ export const DetailsDeviceModal: FC<DetailsDeviceModalProps> = ({
     Record<string, boolean>
   >({});
   const [deleteSchedulesPopUp, setDeleteSchedulesPopUp] = useState(false);
+  const [moveSchedulesPopUp, setMoveSchedulesPopUp] = useState(false);
 
   const getDevice = useCallback(
     async (input: FindDeviceByIdDto) => {
@@ -131,13 +136,20 @@ export const DetailsDeviceModal: FC<DetailsDeviceModalProps> = ({
     });
   };
 
-  const handlePopUpOpen = (types: 'delete-scheduling') => {
+  const handlePopUpOpen = (types: 'delete-scheduling' | 'move-scheduling') => {
     const selecteFileMessage = 'Selecione um Agendamento para mover';
+    const selectedIds = getSelectedSchedulingIds();
     switch (types) {
       case 'delete-scheduling':
-        const selectedIds = getSelectedSchedulingIds();
         if (selectedIds.length > 0) {
           setDeleteSchedulesPopUp(true);
+        } else {
+          showAlert(selecteFileMessage, false);
+        }
+        break;
+      case 'move-scheduling':
+        if (selectedIds.length > 0) {
+          setMoveSchedulesPopUp(true);
         } else {
           showAlert(selecteFileMessage, false);
         }
@@ -148,8 +160,13 @@ export const DetailsDeviceModal: FC<DetailsDeviceModalProps> = ({
   const iconMenuList: IconMenuItem[] = [
     {
       icon: <DeleteSweepIcon />,
-      title: 'Deletar Arquivos',
+      title: 'Deletar Agendamentos',
       handleClick: async () => handlePopUpOpen('delete-scheduling'),
+    },
+    {
+      icon: <OpenWithIcon />,
+      title: 'Mover Agendamentos',
+      handleClick: async () => handlePopUpOpen('move-scheduling'),
     },
   ];
 
@@ -166,6 +183,15 @@ export const DetailsDeviceModal: FC<DetailsDeviceModalProps> = ({
         subTitle={`Deseja realmente deletar os ${
           getSelectedSchedulingIds().length
         } agendamentos selecionados?`}
+      />
+      <MoveSchedulesToAnotherDeviceModal
+        open={moveSchedulesPopUp}
+        oldDeviceId={idDevice}
+        loggedUserId={loggedUser?.id ?? ''}
+        selectedSchedules={getSelectedSchedulingIds()}
+        showAlert={showAlert}
+        onClose={() => setMoveSchedulesPopUp(false)}
+        title="Mover Agendamentos"
       />
       <SimpleFormModal
         height={smDown ? theme.spacing(55) : theme.spacing(80)}
