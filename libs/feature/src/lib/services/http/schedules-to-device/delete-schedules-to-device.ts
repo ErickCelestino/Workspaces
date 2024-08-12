@@ -8,7 +8,7 @@ export async function DeleteSchedulesToDeviceRequest(
     `delete-schedules-to-device/${input.idDevice}`,
     {
       data: {
-        schedulesId: input.schedulesIds,
+        schedulesIds: input.schedulesIds,
       },
       params: {
         loggedUserId: input.loggedUserId,

@@ -37,6 +37,7 @@ export const DeleteSchedulesToDeviceModal: FC<
         loggedUserId,
         schedulesIds,
       };
+      console.log(dto);
       const deletedSchedules = await DeleteSchedulesToDeviceRequest(dto);
 
       if (deletedSchedules) {
