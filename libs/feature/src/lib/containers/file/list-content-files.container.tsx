@@ -27,7 +27,7 @@ import {
   ListContentFilesRequest,
   getItemLocalStorage,
 } from '../../services';
-import { useLoggedUser } from '../../contexts';
+import { useFileModal, useLoggedUser } from '../../contexts';
 import {
   ContentFileCard,
   CreateDirectoryModal,
@@ -44,6 +44,7 @@ import { useSnackbarAlert } from '../../hooks';
 import { DownloadError } from '../../shared';
 import { ValidationsError } from '../../shared/validations/utils';
 import { ContainerCardList } from '../utils';
+import { FileModalContainer } from './file-modal.container';
 
 const onDownloadFile = async (input: DownloadContentFileResponseDto) => {
   try {
@@ -70,7 +71,7 @@ export const ListContanteFilesContainer = () => {
   const [search, setSearch] = useState(false);
   const [fileList, setFileList] = useState<ContentFile[]>([]);
   const [totalPage, setTotalPage] = useState<number>(1);
-  const [directoryId, setDirectoryId] = useState('');
+  const [directoryId, setLocalDirectoryId] = useState('');
   const [deletePopUp, setDeletePopUp] = useState(false);
   const [detailsPopUp, setDetailsPopUp] = useState(false);
   const [createDirectoryPopUp, setCreateDirectoryPopUp] = useState(false);
@@ -82,6 +83,7 @@ export const ListContanteFilesContainer = () => {
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
   const { loggedUser } = useLoggedUser();
   const { showSnackbarAlert, SnackbarAlert } = useSnackbarAlert();
+  const { handleOpen, setDirectoryId } = useFileModal();
 
   const showAlert = useCallback(
     (message: string, success: boolean) => {
@@ -128,7 +130,7 @@ export const ListContanteFilesContainer = () => {
     });
     if (result) {
       setFileList(result?.files ?? []);
-      setDirectoryId(directoryId);
+      setLocalDirectoryId(directoryId);
       setTotalPage(result?.totalPages ?? 0);
     }
   }, [loggedUser, handleData]);
@@ -147,22 +149,27 @@ export const ListContanteFilesContainer = () => {
     }
   };
 
-  const handleFile = async (id: string, types: FileContentType) => {
+  const handleFile = async (types: FileContentType, id?: string) => {
+    const selectedId = id ?? '';
     switch (types) {
       case 'delete':
-        setFileId(id);
+        setFileId(selectedId);
         setDeletePopUp(true);
         break;
       case 'details':
-        setFileId(id);
+        setFileId(selectedId);
         setDetailsPopUp(true);
         break;
       case 'download':
-        downloadFile(id);
+        downloadFile(selectedId);
         break;
       case 'moveFile':
-        setFileId(id);
+        setFileId(selectedId);
         setMovePopUp(true);
+        break;
+      case 'create':
+        setDirectoryId(directoryId);
+        handleOpen();
         break;
     }
   };
@@ -327,6 +334,7 @@ export const ListContanteFilesContainer = () => {
           search={{
             searchData: searchData,
             placeholder: 'Pesquisar Arquivo',
+            createPopUp: () => handleFile('create'),
           }}
           totalPage={totalPage}
           handleChange={handleChange}
@@ -341,10 +349,10 @@ export const ListContanteFilesContainer = () => {
               {fileList.map((file, index) => (
                 <Grid item md={6} lg={4} xl={3} key={index}>
                   <ContentFileCard
-                    deleteFile={() => handleFile(file.id, 'delete')}
-                    detailsFile={() => handleFile(file.id, 'details')}
-                    downloadFile={() => handleFile(file.id, 'download')}
-                    moveFile={() => handleFile(file.id, 'moveFile')}
+                    deleteFile={() => handleFile('delete', file.id)}
+                    detailsFile={() => handleFile('details', file.id)}
+                    downloadFile={() => handleFile('download', file.id)}
+                    moveFile={() => handleFile('moveFile', file.id)}
                     fileImage={file.path}
                     fileImageName={file.fileName}
                     name={file.originalName}
