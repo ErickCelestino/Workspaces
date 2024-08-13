@@ -94,7 +94,9 @@ export const FileModalContainer: FC<FileModalContainerProps> = ({
         const result = await CreateContenVideoRequest(data, updateProgress);
         setFilesToUpload([]);
         removeItemLocalStorage('files');
-
+        if (result) {
+          setProgress(0);
+        }
         return result;
       } catch (error) {
         setFilesToUpload([]);
