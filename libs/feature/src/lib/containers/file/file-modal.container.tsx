@@ -75,7 +75,11 @@ export const FileModalContainer: FC<FileModalContainerProps> = ({
   };
 
   const updateProgress = useCallback((progress: number) => {
-    setProgress(progress);
+    if (progress <= 99) {
+      setProgress(progress);
+    } else {
+      setProgress(100);
+    }
   }, []);
 
   const showErrorAlert = useCallback(
@@ -95,7 +99,7 @@ export const FileModalContainer: FC<FileModalContainerProps> = ({
         setFilesToUpload([]);
         removeItemLocalStorage('files');
         if (result) {
-          setProgress(0);
+          setProgress(100);
         }
         return result;
       } catch (error) {
