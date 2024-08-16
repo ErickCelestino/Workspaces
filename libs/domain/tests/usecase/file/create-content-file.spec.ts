@@ -12,12 +12,14 @@ import {
   Directory,
   UploadContentFileRepository,
   EntityNotLoaded,
+  GenerateThumbnailRepository,
 } from '../../../src';
 import { ContentFileMock, DirectoryMock, userMock } from '../../entity';
 import {
   CreateContentFileRepositoryMock,
   FindDirectoryByIdRespositoryMock,
   FindUserByIdRepositoryMock,
+  GenerateThumbnailRepositoryMock,
   UploadContentFileRepositoryMock,
 } from '../../repository';
 
@@ -27,6 +29,7 @@ interface SutTypes {
   findUserByIdRepository: FindUserByIdRepository;
   findDirectoryByIdRepository: FindDirectoryByIdRepository;
   CreateContentFileRepository: CreateContentFileRepository;
+  generateThumbnailRepository: GenerateThumbnailRepository;
   uploadContentFileRepository: UploadContentFileRepository;
 }
 
@@ -34,6 +37,7 @@ const makeSut = (): SutTypes => {
   const CreateContentFileRepository = new CreateContentFileRepositoryMock();
   const findUserByIdRepository = new FindUserByIdRepositoryMock();
   const findDirectoryByIdRepository = new FindDirectoryByIdRespositoryMock();
+  const generateThumbnailRepository = new GenerateThumbnailRepositoryMock();
   const uploadContentFileRepository = new UploadContentFileRepositoryMock();
   const mockBuffer = {} as Buffer;
   const CreateContentFileDto: CreateContentFileDto = {
@@ -57,6 +61,7 @@ const makeSut = (): SutTypes => {
     CreateContentFileRepository,
     findUserByIdRepository,
     findDirectoryByIdRepository,
+    generateThumbnailRepository,
     uploadContentFileRepository
   );
 
@@ -64,6 +69,7 @@ const makeSut = (): SutTypes => {
     CreateContentFileRepository,
     findUserByIdRepository,
     findDirectoryByIdRepository,
+    generateThumbnailRepository,
     uploadContentFileRepository,
     CreateContentFileDto,
     sut,

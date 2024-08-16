@@ -12,11 +12,13 @@ import {
   CreateContentFileRepository,
   FindDirectoryByIdRepository,
   FindUserByIdRepository,
+  GenerateThumbnailRepository,
   UploadContentFileRepository,
 } from '../../repository';
 import { Either, left, right } from '../../shared/either';
 import { FileTypes } from '../../type';
 import { ValidationDirectoryId, ValidationUserId } from '../../utils';
+import { bufferToStream } from '../../entity';
 
 export class CreateContentFile
   implements
@@ -32,6 +34,8 @@ export class CreateContentFile
     private findUserByIdRepository: FindUserByIdRepository,
     @Inject('FindDirectoryByIdRepository')
     private findDirectoryByIdRepository: FindDirectoryByIdRepository,
+    @Inject('GenerateThumbnailRepository')
+    private generateThumbnailRepository: GenerateThumbnailRepository,
     @Inject('UploadContentFileRepository')
     private uploadContentFileRepository: UploadContentFileRepository
   ) {}
@@ -85,6 +89,31 @@ export class CreateContentFile
     }
 
     for (const item of file) {
+      let thumbNailUrl = '';
+      if (item.mimetype.startsWith('video/')) {
+        const thumbNailKey = `${Date.now()}-${item.originalname}-thumbnail.png`;
+        const videoStream = bufferToStream(item.buffer);
+
+        const thumbnailBuffer = await this.generateThumbnailRepository.generate(
+          {
+            file: videoStream,
+            key: thumbNailKey,
+          }
+        );
+
+        thumbNailUrl = await this.uploadContentFileRepository.upload({
+          file: {
+            buffer: thumbnailBuffer,
+            mimetype: 'image/png',
+          },
+          bucket: process.env['AWS_S3_BUCKET_NAME'] ?? '',
+          key: thumbNailKey,
+        });
+
+        if (Object.keys(thumbNailUrl).length < 1) {
+          return left(new EntityNotLoaded('Thumbnail'));
+        }
+      }
       const key = `${Date.now()}-${item.originalname}`;
 
       const resultUpload = await this.uploadContentFileRepository.upload({
@@ -106,6 +135,7 @@ export class CreateContentFile
           },
           directoryId,
           loggedUserId,
+          thumbnail: thumbNailUrl,
         });
       if (Object.keys(filteredContentFileId).length < 1) {
         return left(new EntityNotCreated('Content File'));

@@ -6,6 +6,7 @@ import {
   CreateContentFileRepositoryImpl,
   FindDirectoryByIdRepositoryImpl,
   FindUserByIdRepositoryImpl,
+  GenerateThumbnailRepositoryImpl,
   PrismaService,
   UploadContentFileRepositoryImpl,
 } from '@workspaces/data-access';
@@ -29,6 +30,10 @@ import {
     {
       provide: 'FindDirectoryByIdRepository',
       useClass: FindDirectoryByIdRepositoryImpl,
+    },
+    {
+      provide: 'GenerateThumbnailRepository',
+      useClass: GenerateThumbnailRepositoryImpl,
     },
     {
       provide: 'UploadContentFileRepository',

@@ -1,7 +1,8 @@
-import { UploadedFile } from '../../../entity';
-
 export interface UploadContentFileDto {
-  file: UploadedFile;
+  file: {
+    buffer: Buffer;
+    mimetype: string;
+  };
   bucket: string;
   key: string;
 }
