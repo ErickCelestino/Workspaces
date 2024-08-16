@@ -93,7 +93,7 @@ export class CreateContentFile
       if (item.mimetype.startsWith('video/')) {
         const thumbNailKey = `${Date.now()}-${
           item.originalname.split('.')[0]
-        }-thumbnail.png`;
+        }-thumbnail.PNG`;
         const videoStream = bufferToStream(item.buffer);
 
         const thumbnailBuffer = await this.generateThumbnailRepository.generate(

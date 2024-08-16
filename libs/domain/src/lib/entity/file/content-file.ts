@@ -7,4 +7,5 @@ export interface ContentFile {
   path: string;
   originalName: string;
   created_by: string;
+  thumbnail?: string;
 }

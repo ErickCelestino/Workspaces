@@ -52,7 +52,7 @@ export const ContentFileCard: FC<ListContentFilesProps> = ({
     <SimpleCardItem
       iconMenuList={iconMenuList}
       imageData={{
-        image: fileImage ?? '',
+        image: fileImage,
         imageName: fileImageName,
       }}
       name={name}

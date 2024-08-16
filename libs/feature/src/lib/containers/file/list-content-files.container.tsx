@@ -353,8 +353,12 @@ export const ListContanteFilesContainer = () => {
                     detailsFile={() => handleFile('details', file.id)}
                     downloadFile={() => handleFile('download', file.id)}
                     moveFile={() => handleFile('moveFile', file.id)}
-                    fileImage={file.path}
-                    fileImageName={file.fileName}
+                    fileImage={
+                      !file.format.startsWith('video/')
+                        ? file.path ?? ''
+                        : file.thumbnail ?? ''
+                    }
+                    fileImageName={file.originalName}
                     name={file.originalName}
                     key={file.id}
                   />
