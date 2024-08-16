@@ -10,11 +10,17 @@ export class ListUserController {
   @UsePipes(new ZodValidationPipe(listUserSchema))
   @Get()
   async getListUsers(
-    @Query('filter') input: string,
+    @Query('filter') filter: string,
     @Query('skip') skip: number,
-    @Query('take') take: number
+    @Query('take') take: number,
+    @Query('loggedUserId') loggedUserId: string
   ) {
-    const result = await this.listUserService.list({ input, skip, take });
+    const result = await this.listUserService.list({
+      filter,
+      loggedUserId,
+      skip,
+      take,
+    });
 
     if (result.isRight()) return result.value;
     else await ErrorMessageResult(result.value.name, result.value.message);

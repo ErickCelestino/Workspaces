@@ -18,7 +18,7 @@ import { useSnackbarAlert } from '../../hooks';
 import { useForm } from 'react-hook-form';
 import { LoginSchema } from '../../shared';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ListUserRequest, setItemLocalStorage } from '../../services';
+import { FindUserByEmailRequest, setItemLocalStorage } from '../../services';
 import { useLoggedUser } from '../../contexts';
 
 interface LoginContainerProps {
@@ -69,13 +69,14 @@ export const LoginContainer: React.FC<LoginContainerProps> = ({
   });
 
   const setLocalUserId = async (email: string) => {
-    const user = await ListUserRequest({ input: email });
+    const user = await FindUserByEmailRequest({ email });
     if (Object.keys(user).length > 0) {
       const loggedUser: LoggedUser = {
-        id: user.users[0].userId,
-        email: user.users[0].email,
-        name: user.users[0].name,
-        type: user.users[0].type,
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        type: user.type,
+        status: user.status,
       };
       setItemLocalStorage(JSON.stringify(loggedUser), 'lu');
       setLoggedUser(loggedUser);

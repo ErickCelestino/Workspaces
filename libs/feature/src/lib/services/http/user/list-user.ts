@@ -6,7 +6,7 @@ export async function ListUserRequest(input: ListUserDto) {
   const take = input?.take || 4;
   const result = await generalApi.get<ListUserResponseDto>('list-user', {
     params: {
-      filter: input.input,
+      filter: input.filter,
       skip,
       take,
     },

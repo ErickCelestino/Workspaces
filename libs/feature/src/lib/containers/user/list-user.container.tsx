@@ -11,17 +11,19 @@ import {
 import { LayoutBase } from '../../layout';
 import { useEffect, useState } from 'react';
 import { ListUserRequest, setItemLocalStorage } from '../../services';
-import { ErrorResponse, IconMenuItem, UserList } from '@workspaces/domain';
+import { ErrorResponse, UserList } from '@workspaces/domain';
 import { useSnackbarAlert } from '../../hooks';
 import axios, { AxiosError } from 'axios';
 import { ConnectionError } from '../../shared';
 import { useNavigate } from 'react-router-dom';
+import { useLoggedUser } from '../../contexts';
 
 export const ListUserContainer = () => {
   const [openPopUp, setPopUp] = useState<boolean>(false);
   const [userList, setUserList] = useState<UserList[]>([]);
   const [totalPage, setTotalPage] = useState<number>(1);
   const theme = useTheme();
+  const { loggedUser } = useLoggedUser();
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
   const mdDown = useMediaQuery(theme.breakpoints.down('md'));
   const navigate = useNavigate();
@@ -29,7 +31,10 @@ export const ListUserContainer = () => {
 
   useEffect(() => {
     const getData = async () => {
-      const result = await ListUserRequest({ input: '' });
+      const result = await ListUserRequest({
+        filter: '',
+        loggedUserId: loggedUser?.id ?? '',
+      });
       setUserList(result.users);
       setTotalPage(result.totalPages);
     };
@@ -52,7 +57,8 @@ export const ListUserContainer = () => {
     value: number
   ) => {
     const result = await ListUserRequest({
-      input: '',
+      filter: '',
+      loggedUserId: loggedUser?.id ?? '',
       skip: (value - 1) * 4,
     });
     setUserList(result.users);
@@ -60,7 +66,10 @@ export const ListUserContainer = () => {
 
   const handleData = async (text: string) => {
     try {
-      const result = await ListUserRequest({ input: text });
+      const result = await ListUserRequest({
+        filter: text,
+        loggedUserId: loggedUser?.id ?? '',
+      });
       setUserList(result.users);
     } catch (error) {
       console.error((error as { message: string }).message);

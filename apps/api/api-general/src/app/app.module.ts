@@ -9,6 +9,7 @@ import {
   EditUserModule,
   DeleteUserByIdModule,
   CreateUserModule,
+  FindUserByEmailModule,
 } from './user';
 
 @Module({
@@ -20,6 +21,7 @@ import {
     EditUserModule,
     FindUserByIdModule,
     DeleteUserByIdModule,
+    FindUserByEmailModule,
   ],
   controllers: [AppController],
   providers: [AppService],
