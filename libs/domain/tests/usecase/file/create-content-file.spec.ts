@@ -13,6 +13,7 @@ import {
   UploadContentFileRepository,
   EntityNotLoaded,
   GenerateThumbnailRepository,
+  EntityNotConverted,
 } from '../../../src';
 import { ContentFileMock, DirectoryMock, userMock } from '../../entity';
 import {
@@ -168,6 +169,41 @@ describe('CreateContentFile', () => {
     jest
       .spyOn(sut['uploadContentFileRepository'], 'upload')
       .mockResolvedValueOnce('');
+    const result = await sut.execute(CreateContentFileDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
+    expect(result.value).toBeInstanceOf(EntityNotLoaded);
+  });
+
+  it('should return EntityNotConverted when not converted content file in system', async () => {
+    const { CreateContentFileDto, sut } = makeSut();
+    jest
+      .spyOn(sut['generateThumbnailRepository'], 'generate')
+      .mockResolvedValueOnce(Buffer.from(''));
+
+    CreateContentFileDto.file[0].mimetype = 'video/mp4';
+    CreateContentFileDto.file[0].buffer = Buffer.from('valid buffer content');
+
+    const result = await sut.execute(CreateContentFileDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
+    expect(result.value).toBeInstanceOf(EntityNotConverted);
+  });
+
+  it('should return EntityNotLoaded when not uploaded content file in system', async () => {
+    const { CreateContentFileDto, sut } = makeSut();
+    jest
+      .spyOn(sut['generateThumbnailRepository'], 'generate')
+      .mockResolvedValueOnce(Buffer.from('files'));
+    jest
+      .spyOn(sut['uploadContentFileRepository'], 'upload')
+      .mockResolvedValueOnce('');
+
+    CreateContentFileDto.file[0].mimetype = 'video/mp4';
+    CreateContentFileDto.file[0].buffer = Buffer.from('valid buffer content');
+
     const result = await sut.execute(CreateContentFileDto);
 
     expect(result.isLeft()).toBe(true);

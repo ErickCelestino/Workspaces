@@ -2,6 +2,7 @@ import { Inject } from '@nestjs/common';
 import { UseCase } from '../../base/use-case';
 import { CreateContentFileDto } from '../../dto';
 import {
+  EntityNotConverted,
   EntityNotCreated,
   EntityNotEmpty,
   EntityNotExists,
@@ -18,7 +19,7 @@ import {
 import { Either, left, right } from '../../shared/either';
 import { FileTypes } from '../../type';
 import { ValidationDirectoryId, ValidationUserId } from '../../utils';
-import { bufferToStream } from '../../entity';
+import { bufferToStream } from '../../utils';
 
 export class CreateContentFile
   implements
@@ -103,6 +104,10 @@ export class CreateContentFile
           }
         );
 
+        if (Object.keys(thumbnailBuffer).length < 1) {
+          return left(new EntityNotConverted('Thumbnail'));
+        }
+        console.log('aaaas');
         thumbNailUrl = await this.uploadContentFileRepository.upload({
           file: {
             buffer: thumbnailBuffer,
