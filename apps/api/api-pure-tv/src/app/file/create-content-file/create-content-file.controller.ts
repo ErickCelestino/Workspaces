@@ -2,7 +2,6 @@ import {
   Controller,
   Post,
   Query,
-  Req,
   UploadedFiles,
   UseInterceptors,
   UsePipes,
@@ -11,12 +10,10 @@ import { FilesInterceptor } from '@nestjs/platform-express';
 import { CreateContentFileService } from './create-content-file.service';
 import {
   ErrorMessageResult,
-  UploadedFile,
   createContentFileSchema,
 } from '@workspaces/domain';
 import { FileS3Storage } from '@workspaces/data-access';
 import { ZodValidationPipe } from '../../pipes/zod-validation-pipe';
-import multer from 'multer';
 
 @Controller('create-content-file')
 export class CreateContentFileController {
@@ -37,7 +34,6 @@ export class CreateContentFileController {
     @Query('loggedUserId') loggedUserId: string,
     @Query('directoryId') directoryId: string
   ) {
-    console.log(files);
     const uploadedFileNames = FileS3Storage.getUploadedFileNames();
     const updatedFiles =
       files?.length > 0

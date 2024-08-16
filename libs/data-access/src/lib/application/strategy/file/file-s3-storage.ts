@@ -15,7 +15,6 @@ const fileFilter = (
   cb: multer.FileFilterCallback
 ) => {
   if (FileTypes.includes(file.mimetype)) {
-    console.log(file);
     cb(null, true);
   } else {
     const error = new FileNotAllowed();

@@ -5,13 +5,14 @@ import {
   EntityNotCreated,
   EntityNotEmpty,
   EntityNotExists,
+  EntityNotLoaded,
   FileNotAllowed,
 } from '../../error';
 import {
   CreateContentFileRepository,
   FindDirectoryByIdRepository,
   FindUserByIdRepository,
-  FindUrlFileRepository,
+  UploadContentFileRepository,
 } from '../../repository';
 import { Either, left, right } from '../../shared/either';
 import { FileTypes } from '../../type';
@@ -31,8 +32,8 @@ export class CreateContentFile
     private findUserByIdRepository: FindUserByIdRepository,
     @Inject('FindDirectoryByIdRepository')
     private findDirectoryByIdRepository: FindDirectoryByIdRepository,
-    @Inject('FindUrlFileRepository')
-    private findUrlFileRepository: FindUrlFileRepository
+    @Inject('UploadContentFileRepository')
+    private uploadContentFileRepository: UploadContentFileRepository
   ) {}
   async execute(
     input: CreateContentFileDto
@@ -84,15 +85,24 @@ export class CreateContentFile
     }
 
     for (const item of file) {
-      const resultUrl = await this.findUrlFileRepository.find({
-        fileName: item.filename,
+      const key = `${Date.now()}-${item.originalname}`;
+
+      const resultUpload = await this.uploadContentFileRepository.upload({
+        file: item,
+        bucket: process.env['AWS_S3_BUCKET_NAME'] ?? '',
+        key,
       });
+
+      if (Object.keys(resultUpload).length < 1) {
+        return left(new EntityNotLoaded('File'));
+      }
 
       const filteredContentFileId =
         await this.createContentFileRepository.create({
           file: {
             ...item,
-            path: resultUrl,
+            path: resultUpload,
+            filename: key,
           },
           directoryId,
           loggedUserId,
@@ -100,6 +110,7 @@ export class CreateContentFile
       if (Object.keys(filteredContentFileId).length < 1) {
         return left(new EntityNotCreated('Content File'));
       }
+
       listId.push(filteredContentFileId);
     }
 
