@@ -37,6 +37,7 @@ import {
   ListDirectory,
   MobileButtonMenu,
   MoveFileToDirectoryModal,
+  RightClickMenu,
   ToolbarPureTV,
 } from '../../components';
 import axios, { AxiosError } from 'axios';
@@ -266,11 +267,15 @@ export const ListContanteFilesContainer = () => {
   const rightClickMenuList: IconMenuItem[] = [
     {
       icon: <Icon>create_new_folder</Icon>,
-      title: 'Nova Pasta',
+      title: 'Novo Diretório',
       handleClick: async () => handleDirectoryPopUpOpen('create'),
     },
+    {
+      icon: <Icon>note_add</Icon>,
+      title: 'Novo Arquivo',
+      handleClick: async () => handleFile('create'),
+    },
   ];
-
   return (
     <>
       <DeleteFileModal
@@ -328,56 +333,58 @@ export const ListContanteFilesContainer = () => {
         </DialogContent>
       </Dialog>
       <LayoutBase title="Listagem de Arquivos" toolBar={<ToolbarPureTV />}>
-        {smDown && <MobileButtonMenu iconMenuItemList={rightClickMenuList} />}
+        <RightClickMenu iconMenuItemList={rightClickMenuList}>
+          {smDown && <MobileButtonMenu iconMenuItemList={rightClickMenuList} />}
 
-        <ContainerCardList
-          search={{
-            searchData: searchData,
-            placeholder: 'Pesquisar Arquivo',
-            createPopUp: () => handleFile('create'),
-          }}
-          totalPage={totalPage}
-          handleChange={handleChange}
-          mobileBackButtom
-          changeDirectory
-          handleDirectoryPopUpOpen={() =>
-            handleDirectoryPopUpOpen('changeDirectory')
-          }
-        >
-          {fileList.length > 0 ? (
-            <Grid justifyContent="center" container spacing={2}>
-              {fileList.map((file, index) => (
-                <Grid item md={6} lg={4} xl={3} key={index}>
-                  <ContentFileCard
-                    deleteFile={() => handleFile('delete', file.id)}
-                    detailsFile={() => handleFile('details', file.id)}
-                    downloadFile={() => handleFile('download', file.id)}
-                    moveFile={() => handleFile('moveFile', file.id)}
-                    fileImage={
-                      !file.format.startsWith('video/')
-                        ? file.path ?? ''
-                        : file.thumbnail ?? ''
-                    }
-                    fileImageName={file.originalName}
-                    name={file.originalName}
-                    key={file.id}
+          <ContainerCardList
+            search={{
+              searchData: searchData,
+              placeholder: 'Pesquisar Arquivo',
+              createPopUp: () => handleFile('create'),
+            }}
+            totalPage={totalPage}
+            handleChange={handleChange}
+            mobileBackButtom
+            changeDirectory
+            handleDirectoryPopUpOpen={() =>
+              handleDirectoryPopUpOpen('changeDirectory')
+            }
+          >
+            {fileList.length > 0 ? (
+              <Grid justifyContent="center" container spacing={2}>
+                {fileList.map((file, index) => (
+                  <Grid item md={6} lg={4} xl={3} key={index}>
+                    <ContentFileCard
+                      deleteFile={() => handleFile('delete', file.id)}
+                      detailsFile={() => handleFile('details', file.id)}
+                      downloadFile={() => handleFile('download', file.id)}
+                      moveFile={() => handleFile('moveFile', file.id)}
+                      fileImage={
+                        !file.format.startsWith('video/')
+                          ? file.path ?? ''
+                          : file.thumbnail ?? ''
+                      }
+                      fileImageName={file.originalName}
+                      name={file.originalName}
+                      key={file.id}
+                    />
+                  </Grid>
+                ))}
+              </Grid>
+            ) : (
+              <EmptyListResponse
+                message="Sem Arquivos"
+                icon={
+                  <AttachFileIcon
+                    sx={{
+                      fontSize: theme.spacing(10),
+                    }}
                   />
-                </Grid>
-              ))}
-            </Grid>
-          ) : (
-            <EmptyListResponse
-              message="Sem Arquivos"
-              icon={
-                <AttachFileIcon
-                  sx={{
-                    fontSize: theme.spacing(10),
-                  }}
-                />
-              }
-            />
-          )}
-        </ContainerCardList>
+                }
+              />
+            )}
+          </ContainerCardList>
+        </RightClickMenu>
       </LayoutBase>
       {SnackbarAlert}
     </>
