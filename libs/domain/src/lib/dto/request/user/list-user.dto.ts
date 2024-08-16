@@ -1,5 +1,6 @@
 export interface ListUserDto {
-  input: string;
+  filter: string;
+  loggedUserId: string;
   take?: number;
   skip?: number;
 }

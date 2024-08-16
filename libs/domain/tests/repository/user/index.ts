@@ -4,3 +4,4 @@ export * from './edit-user.mock';
 export * from './find-user-by-id.mock';
 export * from './list-user.mock';
 export * from './verify-user-status-by-id.mock';
+export * from './verify-user-type-by-id.mock';

@@ -3,7 +3,9 @@ import { VerifyUserStatusByIdRepository } from '../../../src';
 export class VerifyUserStatusByIdRepositoryMock
   implements VerifyUserStatusByIdRepository
 {
+  inputMock = '';
   async verify(input: string): Promise<string> {
-    return 'ADM';
+    this.inputMock = input;
+    return 'ACTIVE';
   }
 }
