@@ -21,7 +21,8 @@ import axios, { AxiosError } from 'axios';
 import { ValidationsError } from '../../shared';
 import {
   CreateContenVideoRequest,
-  getItemLocalStorage,
+  CreateDirectoryRequest,
+  ListDirectoryRequest,
   removeItemLocalStorage,
 } from '../../services';
 import { ProgressFilePopUp } from '../../components/popup';
@@ -37,7 +38,7 @@ export const FileModalContainer: FC<FileModalContainerProps> = ({
   sucessAlertMessage = 'Arquivos Salvos com sucesso',
   uploadTitleButton = 'Subir Arquivos',
 }) => {
-  const { open, handleClose } = useFileModal();
+  const { open, handleClose, directoryId, setDirectoryId } = useFileModal();
   const [uploading, setUploading] = useState(false);
   const [progress, setProgress] = useState(0);
   const [filesToUpload, setFilesToUpload] = useState<FileWithProgress[]>([]);
@@ -74,7 +75,11 @@ export const FileModalContainer: FC<FileModalContainerProps> = ({
   };
 
   const updateProgress = useCallback((progress: number) => {
-    setProgress(progress);
+    if (progress <= 99) {
+      setProgress(progress);
+    } else {
+      setProgress(100);
+    }
   }, []);
 
   const showErrorAlert = useCallback(
@@ -93,7 +98,9 @@ export const FileModalContainer: FC<FileModalContainerProps> = ({
         const result = await CreateContenVideoRequest(data, updateProgress);
         setFilesToUpload([]);
         removeItemLocalStorage('files');
-
+        if (result) {
+          setProgress(100);
+        }
         return result;
       } catch (error) {
         setFilesToUpload([]);
@@ -117,19 +124,48 @@ export const FileModalContainer: FC<FileModalContainerProps> = ({
     setProgress(0);
   };
 
+  const fileValidate = useCallback(
+    async (directoryId: string) => {
+      if (Object.keys(directoryId).length === 0) {
+        const fileredDirectory = await ListDirectoryRequest({
+          loggedUserId: loggedUser?.id ?? '',
+          userInput: 'Base',
+        });
+
+        if (fileredDirectory.directories.length < 1) {
+          const createdDirectory = await CreateDirectoryRequest({
+            loggedUserId: loggedUser?.id ?? '',
+            body: {
+              name: 'Base',
+            },
+          });
+          return createdDirectory.directory_id;
+        }
+
+        return fileredDirectory.directories[0].id;
+      }
+    },
+    [loggedUser]
+  );
+
   const uploadFiles = useCallback(async () => {
     const loggedUserId = loggedUser?.id ?? '';
-    const directoryId = getItemLocalStorage('di');
+    const directoryToUpload = directoryId ?? '';
+    const createdDirectoryId =
+      directoryToUpload === ''
+        ? await fileValidate(directoryId ?? '')
+        : directoryToUpload;
 
     const result = await onFinish(
       {
-        directoryId: directoryId,
+        directoryId: createdDirectoryId ?? '',
         loggedUserId: loggedUserId,
         filesToUpload: filesToUpload,
       },
       updateProgress
     );
     if (result) {
+      setDirectoryId('');
       handleClose();
       showSnackbarAlert({
         message: sucessAlertMessage,

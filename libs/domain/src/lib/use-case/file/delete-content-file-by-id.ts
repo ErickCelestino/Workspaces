@@ -78,7 +78,22 @@ export class DeleteContentFileById
     }
 
     await this.deleteCotentFileByIdRepository.delete(input);
-    await this.deleteFileByNameRepository.delete(filteredContentFile.fileName);
+
+    if (Object.keys(filteredContentFile?.thumbnail ?? '').length > 0) {
+      const thumbnail = filteredContentFile?.thumbnail
+        ? filteredContentFile?.thumbnail.split('/')
+        : '';
+      await this.deleteFileByNameRepository.delete(
+        thumbnail[thumbnail.length - 1]
+      );
+      await this.deleteFileByNameRepository.delete(
+        filteredContentFile.fileName
+      );
+    } else {
+      await this.deleteFileByNameRepository.delete(
+        filteredContentFile.fileName
+      );
+    }
     return right(undefined);
   }
 }

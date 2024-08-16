@@ -42,6 +42,7 @@ export class ListContentFileRepositoryImpl
           file_name: true,
           path: true,
           original_name: true,
+          thumbnail: true,
           user: {
             select: {
               nick_name: true,
@@ -79,6 +80,7 @@ export class ListContentFileRepositoryImpl
         size: file.size,
         uploadDate: file.upload_date,
         created_by: file.user.nick_name,
+        thumbnail: file.thumbnail ?? '',
       };
     });
 

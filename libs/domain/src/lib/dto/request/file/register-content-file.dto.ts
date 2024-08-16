@@ -4,4 +4,5 @@ export interface RegisterContentFileDto {
   loggedUserId: string;
   directoryId: string;
   file: UploadedFile;
+  thumbnail?: string;
 }

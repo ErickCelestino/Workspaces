@@ -138,4 +138,18 @@ describe('DeleteContentFileById', () => {
     expect(result.isRight()).toBe(false);
     expect(result.value).toBeInstanceOf(EntityNotExists);
   });
+
+  it('should return when a pass incorrect Directory ID', async () => {
+    const { deleteContentFileByIdDto, sut } = makeSut();
+    jest
+      .spyOn(sut['findContentFileByIdRepository'], 'find')
+      .mockResolvedValueOnce({
+        thumbnail: 'aa',
+      } as ContentFile);
+    const result = await sut.execute(deleteContentFileByIdDto);
+
+    expect(result.isLeft()).toBe(false);
+    expect(result.isRight()).toBe(true);
+    expect(result.value).toStrictEqual(undefined);
+  });
 });

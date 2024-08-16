@@ -188,62 +188,63 @@ export const ListDeviceContainer = () => {
         showAlert={showAlert}
         idDevice={selectedId}
       />
-      <LayoutBase title="Listagem Dispositivos" toolBar={<ToolbarPureTV />}>
-        <RightClickMenu iconMenuItemList={rightClickMenuList}>
-          {smDown && <MobileButtonMenu iconMenuItemList={rightClickMenuList} />}
-          <ContainerCardList
-            handleChange={handleChange}
-            search={{
-              searchData: searchData,
-              placeholder: 'Pesquisar Dispositivo',
-              createPopUp: () => handlePopUpOpen('create'),
-            }}
-            totalPage={totalPage}
-          >
-            {listDevice.length > 0 ? (
-              <Box display="flex" justifyContent="center" width="100%">
-                <Grid
-                  display="flex"
-                  justifyContent="center"
-                  container
-                  spacing={2}
-                >
-                  {listDevice.map((device, index) => (
-                    <Grid item key={index}>
-                      <DeviceCard
-                        name={device.name}
-                        editDevice={async () =>
-                          handlePopUpOpen('edit', device.id)
-                        }
-                        deleteDevice={async () =>
-                          handlePopUpOpen('delete', device.id)
-                        }
-                        addSchedulesToDevice={async () =>
-                          handlePopUpOpen('add', device.id)
-                        }
-                        detailsDevice={async () =>
-                          handlePopUpOpen('details', device.id)
-                        }
-                        key={device.id}
-                      />
-                    </Grid>
-                  ))}
-                </Grid>
-              </Box>
-            ) : (
-              <EmptyListResponse
-                message="Sem Dispositivos"
-                icon={
-                  <DesktopAccessDisabledIcon
-                    sx={{
-                      fontSize: theme.spacing(10),
-                    }}
-                  />
-                }
-              />
-            )}
-          </ContainerCardList>
-        </RightClickMenu>
+      <LayoutBase
+        title="Listagem Dispositivos"
+        iconMenuItemList={rightClickMenuList}
+        toolBar={<ToolbarPureTV />}
+      >
+        <ContainerCardList
+          handleChange={handleChange}
+          search={{
+            searchData: searchData,
+            placeholder: 'Pesquisar Dispositivo',
+            createPopUp: () => handlePopUpOpen('create'),
+          }}
+          totalPage={totalPage}
+        >
+          {listDevice.length > 0 ? (
+            <Box display="flex" justifyContent="center" width="100%">
+              <Grid
+                display="flex"
+                justifyContent="center"
+                container
+                spacing={2}
+              >
+                {listDevice.map((device, index) => (
+                  <Grid item key={index}>
+                    <DeviceCard
+                      name={device.name}
+                      editDevice={async () =>
+                        handlePopUpOpen('edit', device.id)
+                      }
+                      deleteDevice={async () =>
+                        handlePopUpOpen('delete', device.id)
+                      }
+                      addSchedulesToDevice={async () =>
+                        handlePopUpOpen('add', device.id)
+                      }
+                      detailsDevice={async () =>
+                        handlePopUpOpen('details', device.id)
+                      }
+                      key={device.id}
+                    />
+                  </Grid>
+                ))}
+              </Grid>
+            </Box>
+          ) : (
+            <EmptyListResponse
+              message="Sem Dispositivos"
+              icon={
+                <DesktopAccessDisabledIcon
+                  sx={{
+                    fontSize: theme.spacing(10),
+                  }}
+                />
+              }
+            />
+          )}
+        </ContainerCardList>
       </LayoutBase>
       {SnackbarAlert}
     </>

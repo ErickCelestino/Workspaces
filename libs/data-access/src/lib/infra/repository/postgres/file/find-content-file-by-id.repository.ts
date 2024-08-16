@@ -19,6 +19,7 @@ export class FindContentFileByIdRepositoryImpl
         file_name: true,
         path: true,
         original_name: true,
+        thumbnail: true,
         user: {
           select: {
             nick_name: true,
@@ -36,6 +37,7 @@ export class FindContentFileByIdRepositoryImpl
       path: contentFileResult?.path ?? '',
       size: contentFileResult?.size ?? '',
       uploadDate: contentFileResult?.upload_date ?? new Date(),
+      thumbnail: contentFileResult?.thumbnail ?? '',
     };
 
     return mappedContentFile;

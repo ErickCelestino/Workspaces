@@ -153,45 +153,45 @@ export const ListDirectoryContainer = () => {
         showAlert={showAlert}
         title="Novo Diretório"
       />
-      <LayoutBase title="Listagem de Diretórios" toolBar={<ToolbarPureTV />}>
-        <RightClickMenu iconMenuItemList={rightClickMenuList}>
-          {smDown && <MobileButtonMenu iconMenuItemList={rightClickMenuList} />}
-
-          <ContainerCardList
-            handleChange={handleChange}
-            search={{
-              searchData: searchData,
-              placeholder: 'Pesquisar diretório',
-              createPopUp: () => handlePopUpOpen('create'),
-            }}
-            totalPage={totalPage}
-          >
-            {listDirectory.length > 0 ? (
-              <Grid justifyContent={'center'} container spacing={2}>
-                {listDirectory.map((directory, index) => (
-                  <Grid item md={6} lg={4} xl={3} key={index}>
-                    <DirectoryCard
-                      onClick={() => handleDirectoryClick(directory.id)}
-                      idDirectory={directory.id}
-                      name={directory.name}
-                    />
-                  </Grid>
-                ))}
-              </Grid>
-            ) : (
-              <EmptyListResponse
-                message="Sem Diretórios"
-                icon={
-                  <FolderOffIcon
-                    sx={{
-                      fontSize: theme.spacing(10),
-                    }}
+      <LayoutBase
+        title="Listagem de Diretórios"
+        iconMenuItemList={rightClickMenuList}
+        toolBar={<ToolbarPureTV />}
+      >
+        <ContainerCardList
+          handleChange={handleChange}
+          search={{
+            searchData: searchData,
+            placeholder: 'Pesquisar diretório',
+            createPopUp: () => handlePopUpOpen('create'),
+          }}
+          totalPage={totalPage}
+        >
+          {listDirectory.length > 0 ? (
+            <Grid justifyContent={'center'} container spacing={2}>
+              {listDirectory.map((directory, index) => (
+                <Grid item md={6} lg={4} xl={3} key={index}>
+                  <DirectoryCard
+                    onClick={() => handleDirectoryClick(directory.id)}
+                    idDirectory={directory.id}
+                    name={directory.name}
                   />
-                }
-              />
-            )}
-          </ContainerCardList>
-        </RightClickMenu>
+                </Grid>
+              ))}
+            </Grid>
+          ) : (
+            <EmptyListResponse
+              message="Sem Diretórios"
+              icon={
+                <FolderOffIcon
+                  sx={{
+                    fontSize: theme.spacing(10),
+                  }}
+                />
+              }
+            />
+          )}
+        </ContainerCardList>
       </LayoutBase>
       {SnackbarAlert}
     </>

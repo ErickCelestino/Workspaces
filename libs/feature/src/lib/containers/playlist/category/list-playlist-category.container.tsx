@@ -1,4 +1,4 @@
-import { List, useTheme } from '@mui/material';
+import { Icon, List, useTheme } from '@mui/material';
 import DoNotTouchIcon from '@mui/icons-material/DoNotTouch';
 import {
   CreatePlaylistCategoryModal,
@@ -16,6 +16,7 @@ import {
   ListPlaylistCategoryDto,
   PlaylistCategory,
   CrudType,
+  IconMenuItem,
 } from '@workspaces/domain';
 import { ListPlaylistCategoryRequest } from '../../../services';
 import { useLoggedUser } from '../../../contexts';
@@ -140,6 +141,14 @@ export const ListPlaylistCategoryContainer = () => {
     setListPlaylistCategory(result.categories);
   };
 
+  const rightClickMenuList: IconMenuItem[] = [
+    {
+      icon: <Icon>category</Icon>,
+      title: 'Nova Categoria',
+      handleClick: async () => handlePopUpOpen('create'),
+    },
+  ];
+
   return (
     <>
       <CreatePlaylistCategoryModal
@@ -165,6 +174,7 @@ export const ListPlaylistCategoryContainer = () => {
       />
       <LayoutBase
         title="Listagem de Categoria da Playlist"
+        iconMenuItemList={rightClickMenuList}
         toolBar={<ToolbarPureTV />}
       >
         <ContainerSimpleList

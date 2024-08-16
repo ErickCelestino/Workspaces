@@ -6,8 +6,9 @@ import {
   CreateContentFileRepositoryImpl,
   FindDirectoryByIdRepositoryImpl,
   FindUserByIdRepositoryImpl,
+  GenerateThumbnailRepositoryImpl,
   PrismaService,
-  FindUrlFileRepositoryImpl,
+  UploadContentFileRepositoryImpl,
 } from '@workspaces/data-access';
 @Module({
   controllers: [CreateContentFileController],
@@ -31,8 +32,12 @@ import {
       useClass: FindDirectoryByIdRepositoryImpl,
     },
     {
-      provide: 'FindUrlFileRepository',
-      useClass: FindUrlFileRepositoryImpl,
+      provide: 'GenerateThumbnailRepository',
+      useClass: GenerateThumbnailRepositoryImpl,
+    },
+    {
+      provide: 'UploadContentFileRepository',
+      useClass: UploadContentFileRepositoryImpl,
     },
   ],
 })

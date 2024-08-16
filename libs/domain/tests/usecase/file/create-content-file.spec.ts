@@ -7,17 +7,21 @@ import {
   EntityNotEmpty,
   EntityNotCreated,
   FileNotAllowed,
-  FindUrlFileRepository,
   UserList,
   EntityNotExists,
   Directory,
+  UploadContentFileRepository,
+  EntityNotLoaded,
+  GenerateThumbnailRepository,
+  EntityNotConverted,
 } from '../../../src';
 import { ContentFileMock, DirectoryMock, userMock } from '../../entity';
 import {
   CreateContentFileRepositoryMock,
   FindDirectoryByIdRespositoryMock,
-  FindUrlFileRepositoryMock,
   FindUserByIdRepositoryMock,
+  GenerateThumbnailRepositoryMock,
+  UploadContentFileRepositoryMock,
 } from '../../repository';
 
 interface SutTypes {
@@ -26,14 +30,16 @@ interface SutTypes {
   findUserByIdRepository: FindUserByIdRepository;
   findDirectoryByIdRepository: FindDirectoryByIdRepository;
   CreateContentFileRepository: CreateContentFileRepository;
-  findUrlFileRespository: FindUrlFileRepository;
+  generateThumbnailRepository: GenerateThumbnailRepository;
+  uploadContentFileRepository: UploadContentFileRepository;
 }
 
 const makeSut = (): SutTypes => {
   const CreateContentFileRepository = new CreateContentFileRepositoryMock();
   const findUserByIdRepository = new FindUserByIdRepositoryMock();
   const findDirectoryByIdRepository = new FindDirectoryByIdRespositoryMock();
-  const findUrlFileRespository = new FindUrlFileRepositoryMock();
+  const generateThumbnailRepository = new GenerateThumbnailRepositoryMock();
+  const uploadContentFileRepository = new UploadContentFileRepositoryMock();
   const mockBuffer = {} as Buffer;
   const CreateContentFileDto: CreateContentFileDto = {
     directoryId: DirectoryMock.id,
@@ -56,14 +62,16 @@ const makeSut = (): SutTypes => {
     CreateContentFileRepository,
     findUserByIdRepository,
     findDirectoryByIdRepository,
-    findUrlFileRespository
+    generateThumbnailRepository,
+    uploadContentFileRepository
   );
 
   return {
     CreateContentFileRepository,
     findUserByIdRepository,
     findDirectoryByIdRepository,
-    findUrlFileRespository,
+    generateThumbnailRepository,
+    uploadContentFileRepository,
     CreateContentFileDto,
     sut,
   };
@@ -154,5 +162,49 @@ describe('CreateContentFile', () => {
     expect(result.isLeft()).toBe(true);
     expect(result.isRight()).toBe(false);
     expect(result.value).toBeInstanceOf(EntityNotExists);
+  });
+
+  it('should return EntityNotLoaded when not loaded content file in cloud', async () => {
+    const { CreateContentFileDto, sut } = makeSut();
+    jest
+      .spyOn(sut['uploadContentFileRepository'], 'upload')
+      .mockResolvedValueOnce('');
+    const result = await sut.execute(CreateContentFileDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
+    expect(result.value).toBeInstanceOf(EntityNotLoaded);
+  });
+
+  it('should return EntityNotConverted when not converted content file in system', async () => {
+    const { CreateContentFileDto, sut } = makeSut();
+
+    CreateContentFileDto.file[0].mimetype = 'video/mp4';
+    CreateContentFileDto.file[0].buffer = Buffer.from('valid buffer content');
+
+    const result = await sut.execute(CreateContentFileDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
+    expect(result.value).toBeInstanceOf(EntityNotConverted);
+  });
+
+  it('should return EntityNotLoaded when not uploaded content file in system', async () => {
+    const { CreateContentFileDto, sut } = makeSut();
+    jest
+      .spyOn(sut['generateThumbnailRepository'], 'generate')
+      .mockResolvedValueOnce(Buffer.from('files'));
+    jest
+      .spyOn(sut['uploadContentFileRepository'], 'upload')
+      .mockResolvedValueOnce('');
+
+    CreateContentFileDto.file[0].mimetype = 'video/mp4';
+    CreateContentFileDto.file[0].buffer = Buffer.from('valid buffer content');
+
+    const result = await sut.execute(CreateContentFileDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
+    expect(result.value).toBeInstanceOf(EntityNotLoaded);
   });
 });

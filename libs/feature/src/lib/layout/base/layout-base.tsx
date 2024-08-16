@@ -10,6 +10,8 @@ import { FC, ReactNode } from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import { useDrawerContext } from '../../contexts';
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
+import { MobileButtonMenu, RightClickMenu } from '../../components';
+import { IconMenuItem } from '@workspaces/domain';
 
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean;
@@ -39,12 +41,14 @@ interface ILayoutBasePros {
   children: ReactNode;
   title: string;
   toolBar?: ReactNode;
+  iconMenuItemList?: IconMenuItem[];
 }
 
 export const LayoutBase: FC<ILayoutBasePros> = ({
   children,
   title,
   toolBar,
+  iconMenuItemList = [],
 }) => {
   const theme = useTheme();
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
@@ -107,7 +111,14 @@ export const LayoutBase: FC<ILayoutBasePros> = ({
         )}
       </Box>
       <Box flex={1} overflow="auto">
-        {children}
+        {iconMenuItemList.length > 0 ? (
+          <RightClickMenu iconMenuItemList={iconMenuItemList ?? []}>
+            {smDown && <MobileButtonMenu iconMenuItemList={iconMenuItemList} />}
+            {children}
+          </RightClickMenu>
+        ) : (
+          children
+        )}
       </Box>
     </Box>
   );
