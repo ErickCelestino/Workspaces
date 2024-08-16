@@ -1,4 +1,4 @@
-import { Box, Pagination, useMediaQuery, useTheme } from '@mui/material';
+import { Box, Icon, Pagination, useMediaQuery, useTheme } from '@mui/material';
 import PersonOffIcon from '@mui/icons-material/PersonOff';
 import {
   FormDeleteUser,
@@ -11,7 +11,7 @@ import {
 import { LayoutBase } from '../../layout';
 import { useEffect, useState } from 'react';
 import { ListUserRequest, setItemLocalStorage } from '../../services';
-import { ErrorResponse, UserList } from '@workspaces/domain';
+import { ErrorResponse, IconMenuItem, UserList } from '@workspaces/domain';
 import { useSnackbarAlert } from '../../hooks';
 import axios, { AxiosError } from 'axios';
 import { ConnectionError } from '../../shared';

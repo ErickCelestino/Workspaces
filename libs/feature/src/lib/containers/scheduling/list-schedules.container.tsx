@@ -211,53 +211,54 @@ export const ListSchedulesContainer = () => {
         idToDetails={selectedId}
         showAlert={showAlert}
       />
-      <LayoutBase title="Listagem Agendamentos" toolBar={<ToolbarPureTV />}>
-        <RightClickMenu iconMenuItemList={rightClickMenuList}>
-          {smDown && <MobileButtonMenu iconMenuItemList={rightClickMenuList} />}
-          <ContainerSimpleList
-            search={{
-              placeholder: 'Pesquisar por agendamento',
-              searchData: searchData,
-              createPopUp: () => handlePopUpOpen('create'),
-            }}
-            totalPage={totalPage}
-            handleChange={handleChange}
-          >
-            <List>
-              {listSchedules.length > 0 ? (
-                listSchedules.map((scheduling) => (
-                  <SchedulingItem
-                    editScheduling={async () =>
-                      handlePopUpOpen('edit', scheduling.id)
-                    }
-                    deleteScheduling={async () =>
-                      handlePopUpOpen('delete', scheduling.id)
-                    }
-                    addPlaylistToScheduling={async () =>
-                      handlePopUpOpen('add-playlist', scheduling.id)
-                    }
-                    detailsScheduling={async () =>
-                      handlePopUpOpen('details', scheduling.id)
-                    }
-                    key={scheduling.id}
-                    scheduling={scheduling}
-                  />
-                ))
-              ) : (
-                <EmptyListResponse
-                  message="Sem Agendamentos"
-                  icon={
-                    <EventBusyIcon
-                      sx={{
-                        fontSize: theme.spacing(10),
-                      }}
-                    />
+      <LayoutBase
+        title="Listagem Agendamentos"
+        iconMenuItemList={rightClickMenuList}
+        toolBar={<ToolbarPureTV />}
+      >
+        <ContainerSimpleList
+          search={{
+            placeholder: 'Pesquisar por agendamento',
+            searchData: searchData,
+            createPopUp: () => handlePopUpOpen('create'),
+          }}
+          totalPage={totalPage}
+          handleChange={handleChange}
+        >
+          <List>
+            {listSchedules.length > 0 ? (
+              listSchedules.map((scheduling) => (
+                <SchedulingItem
+                  editScheduling={async () =>
+                    handlePopUpOpen('edit', scheduling.id)
                   }
+                  deleteScheduling={async () =>
+                    handlePopUpOpen('delete', scheduling.id)
+                  }
+                  addPlaylistToScheduling={async () =>
+                    handlePopUpOpen('add-playlist', scheduling.id)
+                  }
+                  detailsScheduling={async () =>
+                    handlePopUpOpen('details', scheduling.id)
+                  }
+                  key={scheduling.id}
+                  scheduling={scheduling}
                 />
-              )}
-            </List>
-          </ContainerSimpleList>
-        </RightClickMenu>
+              ))
+            ) : (
+              <EmptyListResponse
+                message="Sem Agendamentos"
+                icon={
+                  <EventBusyIcon
+                    sx={{
+                      fontSize: theme.spacing(10),
+                    }}
+                  />
+                }
+              />
+            )}
+          </List>
+        </ContainerSimpleList>
       </LayoutBase>
       {SnackbarAlert}
     </>

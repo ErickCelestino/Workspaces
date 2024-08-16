@@ -205,69 +205,69 @@ export const ListPlaylistContainer = () => {
         open={detailsPlaylistPopUp}
         title="Detalhes da Playlist"
       />
-      <LayoutBase title="Listagem Playlist" toolBar={<ToolbarPureTV />}>
-        <RightClickMenu iconMenuItemList={rightClickMenuList}>
-          {smDown && <MobileButtonMenu iconMenuItemList={rightClickMenuList} />}
-
-          <ContainerCardList
-            handleChange={handleChange}
-            search={{
-              searchData: searchData,
-              placeholder: 'Pesquisar Playlist',
-              createPopUp: () => handlePopUpOpen('create'),
-            }}
-            totalPage={totalPage}
-          >
-            {listPlaylist.length > 0 ? (
-              <Box
+      <LayoutBase
+        title="Listagem Playlist"
+        iconMenuItemList={rightClickMenuList}
+        toolBar={<ToolbarPureTV />}
+      >
+        <ContainerCardList
+          handleChange={handleChange}
+          search={{
+            searchData: searchData,
+            placeholder: 'Pesquisar Playlist',
+            createPopUp: () => handlePopUpOpen('create'),
+          }}
+          totalPage={totalPage}
+        >
+          {listPlaylist.length > 0 ? (
+            <Box
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+              width="100%"
+            >
+              <Grid
+                container
                 display="flex"
                 justifyContent="center"
-                alignItems="center"
-                width="100%"
+                spacing={2}
               >
-                <Grid
-                  container
-                  display="flex"
-                  justifyContent="center"
-                  spacing={2}
-                >
-                  {listPlaylist.map((playlist, index) => (
-                    <Grid item key={index}>
-                      <PlaylistCard
-                        editPlaylist={async () =>
-                          handlePopUpOpen('edit', playlist.id)
-                        }
-                        deletePlaylist={async () =>
-                          handlePopUpOpen('delete', playlist.id)
-                        }
-                        addFile={async () =>
-                          handlePopUpOpen('add-file', playlist.id)
-                        }
-                        detailsPlaylist={async () =>
-                          handlePopUpOpen('details', playlist.id)
-                        }
-                        idPlaylist={playlist.id}
-                        name={playlist.name}
-                        showAlert={showAlert}
-                      />
-                    </Grid>
-                  ))}
-                </Grid>
-              </Box>
-            ) : (
-              <EmptyListResponse
-                message="Sem Playlists"
-                icon={
-                  <PlaylistRemoveIcon
-                    sx={{
-                      fontSize: theme.spacing(10),
-                    }}
-                  />
-                }
-              />
-            )}
-          </ContainerCardList>
-        </RightClickMenu>
+                {listPlaylist.map((playlist, index) => (
+                  <Grid item key={index}>
+                    <PlaylistCard
+                      editPlaylist={async () =>
+                        handlePopUpOpen('edit', playlist.id)
+                      }
+                      deletePlaylist={async () =>
+                        handlePopUpOpen('delete', playlist.id)
+                      }
+                      addFile={async () =>
+                        handlePopUpOpen('add-file', playlist.id)
+                      }
+                      detailsPlaylist={async () =>
+                        handlePopUpOpen('details', playlist.id)
+                      }
+                      idPlaylist={playlist.id}
+                      name={playlist.name}
+                      showAlert={showAlert}
+                    />
+                  </Grid>
+                ))}
+              </Grid>
+            </Box>
+          ) : (
+            <EmptyListResponse
+              message="Sem Playlists"
+              icon={
+                <PlaylistRemoveIcon
+                  sx={{
+                    fontSize: theme.spacing(10),
+                  }}
+                />
+              }
+            />
+          )}
+        </ContainerCardList>
       </LayoutBase>
       {SnackbarAlert}
     </>

@@ -332,59 +332,59 @@ export const ListContanteFilesContainer = () => {
           <ListDirectory getDataInput={getData} />
         </DialogContent>
       </Dialog>
-      <LayoutBase title="Listagem de Arquivos" toolBar={<ToolbarPureTV />}>
-        <RightClickMenu iconMenuItemList={rightClickMenuList}>
-          {smDown && <MobileButtonMenu iconMenuItemList={rightClickMenuList} />}
-
-          <ContainerCardList
-            search={{
-              searchData: searchData,
-              placeholder: 'Pesquisar Arquivo',
-              createPopUp: () => handleFile('create'),
-            }}
-            totalPage={totalPage}
-            handleChange={handleChange}
-            mobileBackButtom
-            changeDirectory
-            handleDirectoryPopUpOpen={() =>
-              handleDirectoryPopUpOpen('changeDirectory')
-            }
-          >
-            {fileList.length > 0 ? (
-              <Grid justifyContent="center" container spacing={2}>
-                {fileList.map((file, index) => (
-                  <Grid item md={6} lg={4} xl={3} key={index}>
-                    <ContentFileCard
-                      deleteFile={() => handleFile('delete', file.id)}
-                      detailsFile={() => handleFile('details', file.id)}
-                      downloadFile={() => handleFile('download', file.id)}
-                      moveFile={() => handleFile('moveFile', file.id)}
-                      fileImage={
-                        !file.format.startsWith('video/')
-                          ? file.path ?? ''
-                          : file.thumbnail ?? ''
-                      }
-                      fileImageName={file.originalName}
-                      name={file.originalName}
-                      key={file.id}
-                    />
-                  </Grid>
-                ))}
-              </Grid>
-            ) : (
-              <EmptyListResponse
-                message="Sem Arquivos"
-                icon={
-                  <AttachFileIcon
-                    sx={{
-                      fontSize: theme.spacing(10),
-                    }}
+      <LayoutBase
+        title="Listagem de Arquivos"
+        iconMenuItemList={rightClickMenuList}
+        toolBar={<ToolbarPureTV />}
+      >
+        <ContainerCardList
+          search={{
+            searchData: searchData,
+            placeholder: 'Pesquisar Arquivo',
+            createPopUp: () => handleFile('create'),
+          }}
+          totalPage={totalPage}
+          handleChange={handleChange}
+          mobileBackButtom
+          changeDirectory
+          handleDirectoryPopUpOpen={() =>
+            handleDirectoryPopUpOpen('changeDirectory')
+          }
+        >
+          {fileList.length > 0 ? (
+            <Grid justifyContent="center" container spacing={2}>
+              {fileList.map((file, index) => (
+                <Grid item md={6} lg={4} xl={3} key={index}>
+                  <ContentFileCard
+                    deleteFile={() => handleFile('delete', file.id)}
+                    detailsFile={() => handleFile('details', file.id)}
+                    downloadFile={() => handleFile('download', file.id)}
+                    moveFile={() => handleFile('moveFile', file.id)}
+                    fileImage={
+                      !file.format.startsWith('video/')
+                        ? file.path ?? ''
+                        : file.thumbnail ?? ''
+                    }
+                    fileImageName={file.originalName}
+                    name={file.originalName}
+                    key={file.id}
                   />
-                }
-              />
-            )}
-          </ContainerCardList>
-        </RightClickMenu>
+                </Grid>
+              ))}
+            </Grid>
+          ) : (
+            <EmptyListResponse
+              message="Sem Arquivos"
+              icon={
+                <AttachFileIcon
+                  sx={{
+                    fontSize: theme.spacing(10),
+                  }}
+                />
+              }
+            />
+          )}
+        </ContainerCardList>
       </LayoutBase>
       {SnackbarAlert}
     </>
