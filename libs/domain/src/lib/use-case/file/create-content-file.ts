@@ -107,7 +107,6 @@ export class CreateContentFile
         if (Object.keys(thumbnailBuffer).length < 1) {
           return left(new EntityNotConverted('Thumbnail'));
         }
-        console.log('aaaas');
         thumbNailUrl = await this.uploadContentFileRepository.upload({
           file: {
             buffer: thumbnailBuffer,
