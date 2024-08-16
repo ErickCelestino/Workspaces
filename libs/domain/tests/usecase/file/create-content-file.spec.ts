@@ -178,9 +178,6 @@ describe('CreateContentFile', () => {
 
   it('should return EntityNotConverted when not converted content file in system', async () => {
     const { CreateContentFileDto, sut } = makeSut();
-    jest
-      .spyOn(sut['generateThumbnailRepository'], 'generate')
-      .mockResolvedValueOnce(Buffer.from(''));
 
     CreateContentFileDto.file[0].mimetype = 'video/mp4';
     CreateContentFileDto.file[0].buffer = Buffer.from('valid buffer content');
