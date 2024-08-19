@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { FindUserById } from '@workspaces/domain';
+import { FindUserById, FindUserByIdDto } from '@workspaces/domain';
 
 @Injectable()
 export class FindUserByIdService {
   constructor(private useCase: FindUserById) {}
 
-  async find(id: string) {
-    return await this.useCase.execute(id);
+  async find(input: FindUserByIdDto) {
+    return await this.useCase.execute(input);
   }
 }

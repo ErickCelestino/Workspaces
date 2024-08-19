@@ -58,10 +58,11 @@ export const UserListItem: FC<UserListItemProps> = ({
   ];
 
   return (
-    <Box key={user.userId}>
-      <ListItem>
+    <Box key={user.userId} width="100%">
+      <ListItem key={user.userId}>
         <ListItemAvatar>
           <Avatar
+            component="span"
             sx={{
               width: theme.spacing(7),
               height: theme.spacing(7),
@@ -118,6 +119,7 @@ export const UserListItem: FC<UserListItemProps> = ({
                     {statusTitle}:
                   </Typography>
                   <Chip
+                    component="span"
                     sx={{
                       marginLeft: theme.spacing(1),
                     }}

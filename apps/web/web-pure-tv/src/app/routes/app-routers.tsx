@@ -1,6 +1,5 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 import {
-  EditUserContainer,
   ListUserContainer,
   TestContainer,
   useDrawerContext,
@@ -67,8 +66,8 @@ export const AppRouters = () => {
           Usuários: [
             {
               label: 'Usuários',
-              icon: 'list',
-              path: '/list-user',
+              icon: 'manage_accounts',
+              path: '/user',
             },
           ],
         })
@@ -78,8 +77,7 @@ export const AppRouters = () => {
   return (
     <Routes>
       <Route path="/home" element={<TestContainer />} />
-      <Route path="/edit-user" element={<EditUserContainer />} />
-      <Route path="list-user" element={<ListUserContainer />} />
+      <Route path="user" element={<ListUserContainer />} />
       <Route path="/files" element={<ListContanteFilesContainer />} />
       <Route path="/directory" element={<ListDirectoryContainer />} />
       <Route path="playlist" element={<ListPlaylistContainer />} />

@@ -5,10 +5,11 @@ import {
   ToolbarPureTV,
   EmptyListResponse,
   DeleteUserModal,
+  EditUserModal,
 } from '../../components';
 import { LayoutBase } from '../../layout';
 import { useCallback, useEffect, useState } from 'react';
-import { ListUserRequest, setItemLocalStorage } from '../../services';
+import { ListUserRequest } from '../../services';
 import {
   CrudType,
   ErrorResponse,
@@ -18,19 +19,18 @@ import {
 import { useSnackbarAlert } from '../../hooks';
 import axios, { AxiosError } from 'axios';
 import { ValidationsError } from '../../shared';
-import { useNavigate } from 'react-router-dom';
 import { useLoggedUser } from '../../contexts';
 import { ContainerSimpleList } from '../utils';
 
 export const ListUserContainer = () => {
   const [search, setSearch] = useState(false);
   const [deleteUserPopUp, setDeleteUserPopUp] = useState<boolean>(false);
+  const [editUserPopUp, setEditUserPopUp] = useState<boolean>(false);
   const [userList, setUserList] = useState<UserList[]>([]);
   const [totalPage, setTotalPage] = useState<number>(1);
   const [selectedId, setSelectedId] = useState<string>('');
   const theme = useTheme();
   const { loggedUser } = useLoggedUser();
-  const navigate = useNavigate();
   const { showSnackbarAlert, SnackbarAlert } = useSnackbarAlert();
 
   const showAlert = useCallback(
@@ -85,22 +85,17 @@ export const ListUserContainer = () => {
     [showAlert]
   );
 
-  const handlePopUpOpen = (types: CrudType | 'add-playlist', id?: string) => {
+  const handlePopUpOpen = (types: CrudType, id?: string) => {
     switch (types) {
-      // case 'edit':
-      //   setSelectedId(id ?? '');
-      //   setEditSchedulingPopUp(true);
-      //   break;
+      case 'edit':
+        setSelectedId(id ?? '');
+        setEditUserPopUp(true);
+        break;
       case 'delete':
         setSelectedId(id ?? '');
         setDeleteUserPopUp(true);
         break;
     }
-  };
-
-  const editUser = (id: string) => {
-    setItemLocalStorage(id, 'eu');
-    navigate('/edit-user');
   };
 
   const searchData = async (input: string) => {
@@ -129,6 +124,13 @@ export const ListUserContainer = () => {
         title="Deletar Usuário"
         idToDelete={selectedId}
       />
+      <EditUserModal
+        open={editUserPopUp}
+        handlePopUpClose={() => setEditUserPopUp(false)}
+        showAlert={showAlert}
+        title="Editar Usuário"
+        idToEdit={selectedId}
+      />
       <LayoutBase title="Listagem de Usuários" toolBar={<ToolbarPureTV />}>
         <ContainerSimpleList
           search={{
@@ -145,7 +147,7 @@ export const ListUserContainer = () => {
                   deleteUser={async () =>
                     handlePopUpOpen('delete', user.userId)
                   }
-                  editUser={async () => editUser(user.userId)}
+                  editUser={async () => handlePopUpOpen('edit', user.userId)}
                   key={user.userId}
                   user={user}
                   statusColor={user.status === 'ACTIVE' ? 'success' : 'error'}
