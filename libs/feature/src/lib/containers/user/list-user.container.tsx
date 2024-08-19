@@ -140,7 +140,11 @@ export const ListUserContainer = () => {
           totalPage={totalPage}
           handleChange={handleChange}
         >
-          <List>
+          <List
+            sx={{
+              width: '100%',
+            }}
+          >
             {userList.length > 0 ? (
               userList.map((user) => (
                 <UserListItem

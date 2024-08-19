@@ -94,7 +94,7 @@ export const DeleteUserModal: FC<DeleteUserModalProps> = ({
   return (
     <SimpleFormModal
       height={smDown ? theme.spacing(55) : theme.spacing(62)}
-      width={smDown ? '90%' : theme.spacing(80)}
+      width={mdDown ? '90%' : theme.spacing(80)}
       open={open}
       handlePopUpClose={handlePopUpClose}
       title={title}

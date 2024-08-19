@@ -58,7 +58,7 @@ export const UserListItem: FC<UserListItemProps> = ({
   ];
 
   return (
-    <Box key={user.userId} width="100%">
+    <Box key={user.userId}>
       <ListItem key={user.userId}>
         <ListItemAvatar>
           <Avatar

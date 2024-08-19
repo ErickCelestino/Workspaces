@@ -137,12 +137,14 @@ export const EditUserModal: FC<EditUserModalProps> = ({
   const handleUserData = async (data: EditUserDto) => {
     setSuccess(false);
     setLoading(true);
-    await editUser(data);
-    setSuccess(true);
-    setLoading(false);
-    showAlert(successMessage, true);
-    handlePopUpClose();
-    setSuccess(false);
+    const editedUser = await editUser(data);
+    if (editedUser) {
+      setSuccess(true);
+      setLoading(false);
+      showAlert(successMessage, true);
+      handlePopUpClose();
+      setSuccess(false);
+    }
   };
 
   const statusList = ['ACTIVE', 'INACTIVE'];
@@ -160,7 +162,7 @@ export const EditUserModal: FC<EditUserModalProps> = ({
       title={title}
     >
       <Box component="form" onSubmit={handleSubmit(handleUserData)}>
-        <Box>
+        <Box display="flex" justifyContent="space-between">
           <TextField
             sx={{
               width: smDown
@@ -168,7 +170,6 @@ export const EditUserModal: FC<EditUserModalProps> = ({
                 : mdDown
                 ? theme.spacing(45)
                 : theme.spacing(42),
-              marginRight: mdDown ? '' : theme.spacing(4.5),
             }}
             margin="normal"
             InputLabelProps={{ shrink: true, required: true }}
