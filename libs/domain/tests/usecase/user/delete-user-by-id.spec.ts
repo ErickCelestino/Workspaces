@@ -5,7 +5,7 @@ import {
   EntityNotEmpty,
   EntityNotExists,
   FindUserByIdRepository,
-  NotPermissionError,
+  EntityNotPermissions,
   UserList,
   VerifyUserPermissionsByIdRepository,
 } from '../../../src';
@@ -92,7 +92,7 @@ describe('DeleteUserById', () => {
     expect(result.value).toBeInstanceOf(EntityNotEmpty);
   });
 
-  it('should return NotPermissionError when a logged user passed it does not have permission in database', async () => {
+  it('should return EntityNotPermissionError when a logged user passed it does not have permission in database', async () => {
     const { deleteUserByIdDto, sut } = makeSut();
     jest
       .spyOn(sut['verifyUserPermissionsByIdRepository'], 'verify')
@@ -105,7 +105,7 @@ describe('DeleteUserById', () => {
     const result = await sut.execute(deleteUserByIdDto);
 
     expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(NotPermissionError);
+    expect(result.value).toBeInstanceOf(EntityNotPermissions);
   });
 
   it('should return EntityNotExists when a pass incorrect Logged User ID', async () => {

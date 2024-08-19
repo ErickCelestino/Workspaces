@@ -1,5 +1,4 @@
 import {
-  CreateError,
   CreateUser,
   CreateUserDto,
   CreateUserRepository,
@@ -11,6 +10,7 @@ import {
   FilterByEmailOrNicknameRepository,
   EntityNotExists,
   App,
+  EntityNotCreated,
 } from '../../../src';
 import { userMock } from '../../entity';
 import {
@@ -164,7 +164,7 @@ describe('CreateUser', () => {
     expect(result.value).toBeInstanceOf(EntityNotExists);
   });
 
-  it('should return CreateError if there is no user created in the database', async () => {
+  it('should return EntityNotCreated if there is no user created in the database', async () => {
     const { createUserDto, filterNickNameRepository, findAppByIdRepository } =
       makeSut();
 
@@ -181,6 +181,6 @@ describe('CreateUser', () => {
     const result = await sut.execute(createUserDto);
 
     expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(CreateError);
+    expect(result.value).toBeInstanceOf(EntityNotCreated);
   });
 });

@@ -1,6 +1,6 @@
 import {
   EntityNotEmpty,
-  NotPermissionError,
+  EntityNotPermissions,
   PermissionsUserResponseDto,
   ValidationUserPermisssions,
   VerifyUserPermissionsByIdRepository,
@@ -58,6 +58,6 @@ describe('ValidationUserPermisssions', () => {
 
     expect(result?.isLeft()).toBe(true);
     expect(result?.isRight()).toBe(false);
-    expect(result?.value).toBeInstanceOf(NotPermissionError);
+    expect(result?.value).toBeInstanceOf(EntityNotPermissions);
   });
 });

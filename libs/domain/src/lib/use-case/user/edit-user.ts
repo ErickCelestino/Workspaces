@@ -2,6 +2,7 @@ import { Inject } from '@nestjs/common';
 import { UseCase } from '../../base/use-case';
 import { EditUserDto } from '../../dto';
 import {
+  EntityNotEdit,
   EntityNotEmpty,
   EntityNotExists,
   InsufficientCharacters,
@@ -14,7 +15,7 @@ export class EditUser
   implements
     UseCase<
       EditUserDto,
-      Either<InsufficientCharacters | EntityNotExists, void>
+      Either<InsufficientCharacters | EntityNotExists, string>
     >
 {
   constructor(
@@ -26,7 +27,7 @@ export class EditUser
 
   async execute(
     input: EditUserDto
-  ): Promise<Either<InsufficientCharacters | EntityNotExists, void>> {
+  ): Promise<Either<InsufficientCharacters | EntityNotExists, string>> {
     const { id, name, status } = input;
 
     if (Object.keys(id).length < 1) {
@@ -50,8 +51,12 @@ export class EditUser
       return left(userValidation.value);
     }
 
-    await this.editUserRepository.edit(input);
+    const editedUserId = await this.editUserRepository.edit(input);
 
-    return right(undefined);
+    if (Object.keys(editedUserId).length < 1) {
+      return left(new EntityNotEdit('user'));
+    }
+
+    return right(editedUserId);
   }
 }

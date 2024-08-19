@@ -1,4 +1,8 @@
-import { EntityNotEmpty, EntityNotExists, NotPermissionError } from '../error';
+import {
+  EntityNotEmpty,
+  EntityNotExists,
+  EntityNotPermissions,
+} from '../error';
 import { VerifyUserPermissionsByIdRepository } from '../repository';
 import { Either, left, right } from '../shared/either';
 import { userTypes } from '../type';
@@ -24,7 +28,7 @@ export async function ValidationUserPermisssions(
   }
 
   if (!validation) {
-    return left(new NotPermissionError(id));
+    return left(new EntityNotPermissions(id));
   }
 
   return right(undefined);

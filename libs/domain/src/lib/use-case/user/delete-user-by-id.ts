@@ -4,7 +4,7 @@ import { DeleteUserByIdDto } from '../../dto';
 import {
   EntityNotEmpty,
   EntityNotExists,
-  NotPermissionError,
+  EntityNotPermissions,
 } from '../../error';
 import {
   DeleteUserByIdRepository,
@@ -18,7 +18,7 @@ export class DeleteUserById
   implements
     UseCase<
       DeleteUserByIdDto,
-      Either<EntityNotEmpty | EntityNotExists | NotPermissionError, void>
+      Either<EntityNotEmpty | EntityNotExists | EntityNotPermissions, void>
     >
 {
   constructor(
@@ -32,7 +32,7 @@ export class DeleteUserById
   async execute(
     input: DeleteUserByIdDto
   ): Promise<
-    Either<EntityNotEmpty | EntityNotExists | NotPermissionError, void>
+    Either<EntityNotEmpty | EntityNotExists | EntityNotPermissions, void>
   > {
     const { id, loggedUser, description } = input;
     const idString = 'id';

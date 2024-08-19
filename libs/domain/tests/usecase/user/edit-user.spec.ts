@@ -51,7 +51,7 @@ describe('EditUser', () => {
 
     expect(result.isLeft()).toBe(false);
     expect(result.isRight()).toBe(true);
-    expect(result.value).toBe(undefined);
+    expect(result.value).toBe(userMock.userId);
   });
 
   it('should return EntityNotEmpty if this id is empty', async () => {

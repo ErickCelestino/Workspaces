@@ -4,10 +4,10 @@ import { PrismaService } from 'nestjs-prisma';
 
 export class EditUserRepositoryImpl implements EditUserRepository {
   constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
-  async edit(input: EditUserDto): Promise<void> {
+  async edit(input: EditUserDto): Promise<string> {
     const { id, name, birthDate, status } = input;
 
-    await this.prismaService.user.update({
+    const editedUser = await this.prismaService.user.update({
       where: {
         user_id: id,
       },
@@ -19,5 +19,7 @@ export class EditUserRepositoryImpl implements EditUserRepository {
         status: status,
       },
     });
+
+    return editedUser.user_id;
   }
 }

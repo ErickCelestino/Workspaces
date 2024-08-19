@@ -6,7 +6,7 @@ import {
   ListUser,
   ListUserDto,
   ListUserRepository,
-  NotPermissionError,
+  EntityNotPermissions,
   PermissionsUserResponseDto,
   SyntaxError,
   UserList,
@@ -104,7 +104,7 @@ describe('ListUser', () => {
     expect(result.value).toBeInstanceOf(EntityNotExists);
   });
 
-  it('should return NotPermissionError when a pass invalid logged User ID', async () => {
+  it('should return EntityNotPermissions when a pass invalid logged User ID', async () => {
     const { listUserDto, sut } = makeSut();
     jest
       .spyOn(sut['verifyUserPermissionByIdRepository'], 'verify')
@@ -113,6 +113,6 @@ describe('ListUser', () => {
 
     expect(result.isLeft()).toBe(true);
     expect(result.isRight()).toBe(false);
-    expect(result.value).toBeInstanceOf(NotPermissionError);
+    expect(result.value).toBeInstanceOf(EntityNotPermissions);
   });
 });
