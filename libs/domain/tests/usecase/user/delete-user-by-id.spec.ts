@@ -8,6 +8,7 @@ import {
   EntityNotPermissions,
   UserList,
   VerifyUserPermissionsByIdRepository,
+  EntityNotDeleted,
 } from '../../../src';
 import { listUserMock, userMock } from '../../entity';
 import {
@@ -59,7 +60,7 @@ describe('DeleteUserById', () => {
 
     expect(result.isLeft()).toBe(false);
     expect(result.isRight()).toBe(true);
-    expect(result.value).toBe(undefined);
+    expect(result.value).toBe(userMock.userId);
   });
 
   it('should return EntityNotEmpty when a passed empty user id', async () => {
@@ -133,5 +134,19 @@ describe('DeleteUserById', () => {
     expect(result.isLeft()).toBe(true);
     expect(result.isRight()).toBe(false);
     expect(result.value).toBeInstanceOf(EntityNotExists);
+  });
+
+  it('should return EntityNotDeleted when not deleted user in system', async () => {
+    const { sut, deleteUserByIdDto } = makeSut();
+
+    jest
+      .spyOn(sut['deleteUserByIdRepository'], 'delete')
+      .mockResolvedValueOnce('');
+
+    const result = await sut.execute(deleteUserByIdDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
+    expect(result.value).toBeInstanceOf(EntityNotDeleted);
   });
 });

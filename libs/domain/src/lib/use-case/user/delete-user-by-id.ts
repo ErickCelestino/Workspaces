@@ -2,6 +2,7 @@ import { Inject } from '@nestjs/common';
 import { UseCase } from '../../base/use-case';
 import { DeleteUserByIdDto } from '../../dto';
 import {
+  EntityNotDeleted,
   EntityNotEmpty,
   EntityNotExists,
   EntityNotPermissions,
@@ -18,7 +19,7 @@ export class DeleteUserById
   implements
     UseCase<
       DeleteUserByIdDto,
-      Either<EntityNotEmpty | EntityNotExists | EntityNotPermissions, void>
+      Either<EntityNotEmpty | EntityNotExists | EntityNotPermissions, string>
     >
 {
   constructor(
@@ -32,7 +33,7 @@ export class DeleteUserById
   async execute(
     input: DeleteUserByIdDto
   ): Promise<
-    Either<EntityNotEmpty | EntityNotExists | EntityNotPermissions, void>
+    Either<EntityNotEmpty | EntityNotExists | EntityNotPermissions, string>
   > {
     const { id, loggedUser, description } = input;
     const idString = 'id';
@@ -67,7 +68,7 @@ export class DeleteUserById
     }
 
     const userValidation = await ValidationUserId(
-      loggedUser,
+      id,
       this.findUserByIdRepository
     );
 
@@ -75,8 +76,12 @@ export class DeleteUserById
       return left(userValidation.value);
     }
 
-    await this.deleteUserByIdRepository.delete(input);
+    const deletedUser = await this.deleteUserByIdRepository.delete(input);
 
-    return right(undefined);
+    if (Object.keys(deletedUser).length < 1) {
+      return left(new EntityNotDeleted('Usuário'));
+    }
+
+    return right(deletedUser);
   }
 }
