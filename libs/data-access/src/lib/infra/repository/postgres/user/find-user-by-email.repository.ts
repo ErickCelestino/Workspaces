@@ -12,7 +12,6 @@ export class FindUserByEmailRepositoryImpl
   constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
   async find(input: FindUserByEmailDto): Promise<LoggedUser> {
     const { email } = input;
-    console.log(email);
     const filteredUser = await this.prismaService.user.findFirst({
       where: {
         auth: {

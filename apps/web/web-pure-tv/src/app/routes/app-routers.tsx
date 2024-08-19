@@ -10,14 +10,16 @@ import {
   ListDirectoryContainer,
   ListSchedulesContainer,
   ListDeviceContainer,
+  useLoggedUser,
 } from '@workspaces/feature';
 import { useEffect } from 'react';
 
 export const AppRouters = () => {
+  const { loggedUser } = useLoggedUser();
   const { setDrawerOptions } = useDrawerContext();
 
   useEffect(() => {
-    setDrawerOptions({
+    const drawerOptions = {
       'Página Inicial': [
         {
           label: 'Página Inicial',
@@ -25,20 +27,6 @@ export const AppRouters = () => {
           path: '/home',
         },
       ],
-      Usuários: [
-        {
-          label: 'Usuários',
-          icon: 'list',
-          path: '/list-user',
-        },
-      ],
-      // Arquivos: [
-      //   {
-      //     label: 'Arquivos',
-      //     icon: 'folder',
-      //     path: '/files',
-      //   },
-      // ],
       Diretorios: [
         {
           label: 'Diretórios',
@@ -72,8 +60,20 @@ export const AppRouters = () => {
           path: '/device',
         },
       ],
-    });
-  }, [setDrawerOptions]);
+    };
+    loggedUser?.type === 'ADMIN'
+      ? setDrawerOptions({
+          ...drawerOptions,
+          Usuários: [
+            {
+              label: 'Usuários',
+              icon: 'list',
+              path: '/list-user',
+            },
+          ],
+        })
+      : setDrawerOptions(drawerOptions);
+  }, [setDrawerOptions, loggedUser]);
 
   return (
     <Routes>

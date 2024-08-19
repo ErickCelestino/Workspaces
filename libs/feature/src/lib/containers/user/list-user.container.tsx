@@ -1,4 +1,4 @@
-import { Box, Icon, Pagination, useMediaQuery, useTheme } from '@mui/material';
+import { Box, Pagination, useMediaQuery, useTheme } from '@mui/material';
 import PersonOffIcon from '@mui/icons-material/PersonOff';
 import {
   FormDeleteUser,
@@ -9,12 +9,12 @@ import {
   EmptyListResponse,
 } from '../../components';
 import { LayoutBase } from '../../layout';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { ListUserRequest, setItemLocalStorage } from '../../services';
 import { ErrorResponse, UserList } from '@workspaces/domain';
 import { useSnackbarAlert } from '../../hooks';
 import axios, { AxiosError } from 'axios';
-import { ConnectionError } from '../../shared';
+import { ValidationsError } from '../../shared';
 import { useNavigate } from 'react-router-dom';
 import { useLoggedUser } from '../../contexts';
 
@@ -29,39 +29,64 @@ export const ListUserContainer = () => {
   const navigate = useNavigate();
   const { showSnackbarAlert, SnackbarAlert } = useSnackbarAlert();
 
-  useEffect(() => {
-    const getData = async () => {
-      const result = await ListUserRequest({
-        filter: '',
-        loggedUserId: loggedUser?.id ?? '',
+  const showAlert = useCallback(
+    (message: string, success: boolean) => {
+      showSnackbarAlert({
+        message: message,
+        severity: success ? 'success' : 'error',
       });
-      setUserList(result.users);
-      setTotalPage(result.totalPages);
-    };
-    getData();
-  }, []);
+    },
+    [showSnackbarAlert]
+  );
+
+  useEffect(() => {
+    try {
+      const getData = async () => {
+        const result = await ListUserRequest({
+          filter: '',
+          loggedUserId: loggedUser?.id ?? '',
+        });
+        setUserList(result.users);
+        setTotalPage(result.totalPages);
+      };
+      getData();
+    } catch (error) {
+      console.error(error);
+      if (axios.isAxiosError(error)) {
+        const axiosError = error as AxiosError<ErrorResponse>;
+        const errors = ValidationsError(axiosError, 'Usuarios');
+        if (errors) {
+          showAlert(errors, false);
+        }
+      }
+    }
+  }, [loggedUser, showAlert]);
 
   const handlePopUpClose = () => {
     setPopUp(false);
-  };
-
-  const showErrorAlert = (message: string) => {
-    showSnackbarAlert({
-      message: message,
-      severity: 'error',
-    });
   };
 
   const handleChange = async (
     event: React.ChangeEvent<unknown>,
     value: number
   ) => {
-    const result = await ListUserRequest({
-      filter: '',
-      loggedUserId: loggedUser?.id ?? '',
-      skip: (value - 1) * 4,
-    });
-    setUserList(result.users);
+    try {
+      const result = await ListUserRequest({
+        filter: '',
+        loggedUserId: loggedUser?.id ?? '',
+        skip: (value - 1) * 4,
+      });
+      setUserList(result.users);
+    } catch (error) {
+      console.error(error);
+      if (axios.isAxiosError(error)) {
+        const axiosError = error as AxiosError<ErrorResponse>;
+        const errors = ValidationsError(axiosError, 'Usuarios');
+        if (errors) {
+          showAlert(errors, false);
+        }
+      }
+    }
   };
 
   const handleData = async (text: string) => {
@@ -72,13 +97,12 @@ export const ListUserContainer = () => {
       });
       setUserList(result.users);
     } catch (error) {
-      console.error((error as { message: string }).message);
+      console.error(error);
       if (axios.isAxiosError(error)) {
         const axiosError = error as AxiosError<ErrorResponse>;
-        switch (axiosError.response?.data.error.name) {
-          default:
-            showErrorAlert(ConnectionError('PT-BR'));
-            break;
+        const errors = ValidationsError(axiosError, 'Usuarios');
+        if (errors) {
+          showAlert(errors, false);
         }
       }
     }
@@ -104,10 +128,7 @@ export const ListUserContainer = () => {
         height={50}
         width={smDown ? 40 : mdDown ? 50 : 80}
       >
-        <FormDeleteUser
-          showAlert={showErrorAlert}
-          cancelAction={handlePopUpClose}
-        />
+        <FormDeleteUser showAlert={showAlert} cancelAction={handlePopUpClose} />
       </SimpleModal>
       <LayoutBase title="Listagem de Usuários" toolBar={<ToolbarPureTV />}>
         <Box display="flex" justifyContent="center">

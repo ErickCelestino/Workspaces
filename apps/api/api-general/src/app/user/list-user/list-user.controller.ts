@@ -16,8 +16,8 @@ export class ListUserController {
     @Query('loggedUserId') loggedUserId: string
   ) {
     const result = await this.listUserService.list({
-      filter,
-      loggedUserId,
+      filter: filter ?? '',
+      loggedUserId: loggedUserId ?? '',
       skip,
       take,
     });

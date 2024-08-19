@@ -9,12 +9,7 @@ import {
 } from '@mui/material';
 import { FC, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import {
-  DeleteUserSchema,
-  EntityNotEmpty,
-  EntityNotExist,
-  NotPermission,
-} from '../../../shared';
+import { DeleteUserSchema, ValidationsError } from '../../../shared';
 import { DeleteUserByIdDto, ErrorResponse } from '@workspaces/domain';
 import axios, { AxiosError } from 'axios';
 import { DeleteUserByIdRequest, getItemLocalStorage } from '../../../services';
@@ -23,7 +18,7 @@ interface FormDeleteUserProps {
   cancelAction: () => void;
   buttonNoTitle?: string;
   buttonYesTitle?: string;
-  showAlert?: (message: string) => void;
+  showAlert: (message: string, success: boolean) => void;
 }
 
 export const FormDeleteUser: FC<FormDeleteUserProps> = ({
@@ -57,22 +52,11 @@ export const FormDeleteUser: FC<FormDeleteUserProps> = ({
       return result;
     } catch (error) {
       console.error(error);
-      console.error((error as { message: string }).message);
       if (axios.isAxiosError(error)) {
         const axiosError = error as AxiosError<ErrorResponse>;
-        if (axiosError.response?.data.error.name === 'EntityNotEmpty') {
-          const message = EntityNotEmpty('id', 'PT-BR');
-          showAlert?.(message);
-        }
-
-        if (axiosError.response?.data.error.name === 'EntityNotExists') {
-          const message = EntityNotExist('usuário', 'PT-BR');
-          showAlert?.(message);
-        }
-
-        if (axiosError.response?.data.error.name === 'NotPermissionError') {
-          const message = NotPermission('PT-BR');
-          showAlert?.(message);
+        const errors = ValidationsError(axiosError, 'Usuario');
+        if (errors) {
+          showAlert(errors, false);
         }
       }
       setLoading(false);

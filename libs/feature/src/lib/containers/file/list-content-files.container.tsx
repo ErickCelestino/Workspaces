@@ -1,12 +1,10 @@
 import {
-  Box,
   Dialog,
   DialogContent,
   DialogTitle,
   Grid,
   Icon,
   IconButton,
-  useMediaQuery,
   useTheme,
 } from '@mui/material';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
@@ -35,9 +33,7 @@ import {
   DetailsFileModal,
   EmptyListResponse,
   ListDirectory,
-  MobileButtonMenu,
   MoveFileToDirectoryModal,
-  RightClickMenu,
   ToolbarPureTV,
 } from '../../components';
 import axios, { AxiosError } from 'axios';
@@ -45,7 +41,6 @@ import { useSnackbarAlert } from '../../hooks';
 import { DownloadError } from '../../shared';
 import { ValidationsError } from '../../shared/validations/utils';
 import { ContainerCardList } from '../utils';
-import { FileModalContainer } from './file-modal.container';
 
 const onDownloadFile = async (input: DownloadContentFileResponseDto) => {
   try {
@@ -81,7 +76,6 @@ export const ListContanteFilesContainer = () => {
   const [directoyPopUp, setDirectoryPopUp] = useState(false);
 
   const theme = useTheme();
-  const smDown = useMediaQuery(theme.breakpoints.down('sm'));
   const { loggedUser } = useLoggedUser();
   const { showSnackbarAlert, SnackbarAlert } = useSnackbarAlert();
   const { handleOpen, setDirectoryId } = useFileModal();
