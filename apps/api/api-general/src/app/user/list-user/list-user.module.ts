@@ -6,7 +6,7 @@ import {
   FindUserByIdRepositoryImpl,
   ListUserRepositoryImpl,
   PrismaService,
-  VerifyUserTypeByIdRepositoryImpl,
+  VerifyUserPermissionsByIdRepositoryImpl,
 } from '@workspaces/data-access';
 import { Module } from '@nestjs/common';
 
@@ -28,8 +28,8 @@ import { Module } from '@nestjs/common';
       useClass: FindUserByIdRepositoryImpl,
     },
     {
-      provide: 'VerifyUserTypeByIdRepository',
-      useClass: VerifyUserTypeByIdRepositoryImpl,
+      provide: 'VerifyUserPermissionsByIdRepository',
+      useClass: VerifyUserPermissionsByIdRepositoryImpl,
     },
     {
       provide: 'PrismaService',

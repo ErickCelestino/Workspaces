@@ -7,3 +7,4 @@ export * from './playlist-to-scheduling';
 export * from './schedules-to-device';
 export * from './scheduling';
 export * from './simple';
+export * from './user';

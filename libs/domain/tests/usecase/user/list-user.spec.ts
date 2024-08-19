@@ -7,16 +7,17 @@ import {
   ListUserDto,
   ListUserRepository,
   NotPermissionError,
+  PermissionsUserResponseDto,
   SyntaxError,
   UserList,
-  VerifyUserTypeByIdRepository,
+  VerifyUserPermissionsByIdRepository,
 } from '../../../src';
 import { userMock } from '../../entity';
 import {
   BtrinSanitizeRepositoryMock,
   FindUserByIdRepositoryMock,
   ListUserRepositoryMock,
-  VerifyUserTypeByIdRepositoryMock,
+  VerifyUserPermissionsByIdRepositoryMock,
 } from '../../repository';
 
 interface SutTypes {
@@ -25,14 +26,15 @@ interface SutTypes {
   listUserRepository: ListUserRepository;
   btrinSanitizeRepository: BtrinSanitizeRepository;
   findUserByIdRepository: FindUserByIdRepository;
-  verifyUserTypeByIdRepository: VerifyUserTypeByIdRepository;
+  verifyUserPermissionsByIdRepository: VerifyUserPermissionsByIdRepository;
 }
 
 const makeSut = (): SutTypes => {
   const listUserRepository = new ListUserRepositoryMock();
   const btrinSanitizeRepository = new BtrinSanitizeRepositoryMock();
   const findUserByIdRepository = new FindUserByIdRepositoryMock();
-  const verifyUserTypeByIdRepository = new VerifyUserTypeByIdRepositoryMock();
+  const verifyUserPermissionsByIdRepository =
+    new VerifyUserPermissionsByIdRepositoryMock();
   const listUserDto: ListUserDto = {
     filter: 'any_input',
     loggedUserId: userMock.userId,
@@ -42,7 +44,7 @@ const makeSut = (): SutTypes => {
     listUserRepository,
     btrinSanitizeRepository,
     findUserByIdRepository,
-    verifyUserTypeByIdRepository
+    verifyUserPermissionsByIdRepository
   );
 
   return {
@@ -51,7 +53,7 @@ const makeSut = (): SutTypes => {
     listUserRepository,
     btrinSanitizeRepository,
     findUserByIdRepository,
-    verifyUserTypeByIdRepository,
+    verifyUserPermissionsByIdRepository,
   };
 };
 
@@ -105,8 +107,8 @@ describe('ListUser', () => {
   it('should return NotPermissionError when a pass invalid logged User ID', async () => {
     const { listUserDto, sut } = makeSut();
     jest
-      .spyOn(sut['verifyUserTypeByIdRepository'], 'verify')
-      .mockResolvedValueOnce('');
+      .spyOn(sut['verifyUserPermissionByIdRepository'], 'verify')
+      .mockResolvedValueOnce({} as PermissionsUserResponseDto);
     const result = await sut.execute(listUserDto);
 
     expect(result.isLeft()).toBe(true);

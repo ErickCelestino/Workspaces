@@ -5,11 +5,11 @@ import {
   BtrinSanitizeRepository,
   FindUserByIdRepository,
   ListUserRepository,
-  VerifyUserTypeByIdRepository,
+  VerifyUserPermissionsByIdRepository,
 } from '../../repository';
 import { ListUserDto, ListUserResponseDto } from '../../dto';
-import { EntityNotEmpty, NotPermissionError, SyntaxError } from '../../error';
-import { ValidationUserId } from '../../utils';
+import { EntityNotEmpty, SyntaxError } from '../../error';
+import { ValidationUserId, ValidationUserPermisssions } from '../../utils';
 
 export class ListUser
   implements UseCase<ListUserDto, Either<SyntaxError, ListUserResponseDto>>
@@ -21,8 +21,8 @@ export class ListUser
     private btrinSanitizeRepository: BtrinSanitizeRepository,
     @Inject('FindUserByIdRepository')
     private findUserByIdRepository: FindUserByIdRepository,
-    @Inject('VerifyUserTypeByIdRepository')
-    private verifyUserTypeByIdRepository: VerifyUserTypeByIdRepository
+    @Inject('VerifyUserPermissionsByIdRepository')
+    private verifyUserPermissionByIdRepository: VerifyUserPermissionsByIdRepository
   ) {}
 
   async execute(
@@ -47,12 +47,14 @@ export class ListUser
       return left(userValidation.value);
     }
 
-    const userType = await this.verifyUserTypeByIdRepository.verify(
-      loggedUserId
+    const permissionValidation = await ValidationUserPermisssions(
+      loggedUserId,
+      ['ADMIN'],
+      this.verifyUserPermissionByIdRepository
     );
 
-    if (userType !== 'ADMIN') {
-      return left(new NotPermissionError(loggedUserId));
+    if (permissionValidation.isLeft()) {
+      return left(permissionValidation.value);
     }
 
     const listUserResult = await this.listUserRepository.list(input);

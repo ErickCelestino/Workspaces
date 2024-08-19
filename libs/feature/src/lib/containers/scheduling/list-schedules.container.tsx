@@ -1,4 +1,4 @@
-import { List, useMediaQuery, useTheme } from '@mui/material';
+import { List, useTheme } from '@mui/material';
 import AlarmAddIcon from '@mui/icons-material/AlarmAdd';
 import EventBusyIcon from '@mui/icons-material/EventBusy';
 import { LayoutBase } from '../../layout';
@@ -9,8 +9,6 @@ import {
   DetailsSchedulingModal,
   EditSchedulingModal,
   EmptyListResponse,
-  MobileButtonMenu,
-  RightClickMenu,
   SchedulingItem,
   ToolbarPureTV,
 } from '../../components';
@@ -32,7 +30,6 @@ import { useLoggedUser } from '../../contexts';
 export const ListSchedulesContainer = () => {
   const { loggedUser } = useLoggedUser();
   const theme = useTheme();
-  const smDown = useMediaQuery(theme.breakpoints.down('sm'));
 
   const [listSchedules, setListSchedules] = useState<Scheduling[]>([]);
   const [search, setSearch] = useState(false);

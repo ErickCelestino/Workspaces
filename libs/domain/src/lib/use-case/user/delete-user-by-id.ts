@@ -9,10 +9,10 @@ import {
 import {
   DeleteUserByIdRepository,
   FindUserByIdRepository,
-  VerifyUserStatusByIdRepository,
+  VerifyUserPermissionsByIdRepository,
 } from '../../repository';
 import { Either, left, right } from '../../shared/either';
-import { ValidationUserId } from '../../utils';
+import { ValidationUserId, ValidationUserPermisssions } from '../../utils';
 
 export class DeleteUserById
   implements
@@ -26,8 +26,8 @@ export class DeleteUserById
     private deleteUserByIdRepository: DeleteUserByIdRepository,
     @Inject('FindUserByIdRepository')
     private findUserByIdRepository: FindUserByIdRepository,
-    @Inject('VerifyUserStatusByIdRepository')
-    private verifyUserStatusByIdRepository: VerifyUserStatusByIdRepository
+    @Inject('VerifyUserPermissionsByIdRepository')
+    private verifyUserPermissionsByIdRepository: VerifyUserPermissionsByIdRepository
   ) {}
   async execute(
     input: DeleteUserByIdDto
@@ -50,20 +50,20 @@ export class DeleteUserById
       return left(new EntityNotEmpty('descrição'));
     }
 
-    const findedLoggedUser = await this.verifyUserStatusByIdRepository.verify(
-      loggedUser
-    );
+    const findedLoggedUser = await this.findUserByIdRepository.find(loggedUser);
 
     if (Object.keys(findedLoggedUser).length < 1) {
       return left(new EntityNotExists(loggedUserString));
     }
 
-    if (
-      loggedUser !== id &&
-      findedLoggedUser !== 'ADMIN' &&
-      findedLoggedUser !== 'DEFAULT_ADMIN'
-    ) {
-      return left(new NotPermissionError(loggedUserString));
+    const permissionValidation = await ValidationUserPermisssions(
+      loggedUser,
+      ['ADMIN', 'DEFAULT_ADMIN'],
+      this.verifyUserPermissionsByIdRepository
+    );
+
+    if (permissionValidation.isLeft()) {
+      return left(permissionValidation.value);
     }
 
     const userValidation = await ValidationUserId(
