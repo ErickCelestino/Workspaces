@@ -5,4 +5,5 @@ export interface EditUserDto {
   name: string;
   birthDate?: Date;
   status: StatusUser;
+  loggedUserId: string;
 }

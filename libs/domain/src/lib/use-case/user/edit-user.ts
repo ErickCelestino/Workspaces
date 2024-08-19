@@ -7,9 +7,13 @@ import {
   EntityNotExists,
   InsufficientCharacters,
 } from '../../error';
-import { EditUserRepository, FindUserByIdRepository } from '../../repository';
+import {
+  EditUserRepository,
+  FindUserByIdRepository,
+  VerifyUserPermissionsByIdRepository,
+} from '../../repository';
 import { Either, left, right } from '../../shared/either';
-import { ValidationUserId } from '../../utils';
+import { ValidationUserId, ValidationUserPermisssions } from '../../utils';
 
 export class EditUser
   implements
@@ -22,13 +26,15 @@ export class EditUser
     @Inject('EditUserRepository')
     private editUserRepository: EditUserRepository,
     @Inject('FindUserByIdRepository')
-    private findUserByIdRepository: FindUserByIdRepository
+    private findUserByIdRepository: FindUserByIdRepository,
+    @Inject('VerifyUserPermissionsByIdRepository')
+    private verifyUserPermissionsByIdRepository: VerifyUserPermissionsByIdRepository
   ) {}
 
   async execute(
     input: EditUserDto
   ): Promise<Either<InsufficientCharacters | EntityNotExists, string>> {
-    const { id, name, status } = input;
+    const { id, name, status, loggedUserId } = input;
 
     if (Object.keys(id).length < 1) {
       return left(new EntityNotEmpty('id'));
@@ -42,6 +48,10 @@ export class EditUser
       return left(new EntityNotEmpty('status'));
     }
 
+    if (Object.keys(loggedUserId).length < 1) {
+      return left(new EntityNotEmpty('Logged User ID'));
+    }
+
     const userValidation = await ValidationUserId(
       id,
       this.findUserByIdRepository
@@ -49,6 +59,16 @@ export class EditUser
 
     if (userValidation.isLeft()) {
       return left(userValidation.value);
+    }
+
+    const permissionValidation = await ValidationUserPermisssions(
+      loggedUserId,
+      ['ADMIN', 'DEFAULT_ADMIN'],
+      this.verifyUserPermissionsByIdRepository
+    );
+
+    if (permissionValidation.isLeft()) {
+      return left(permissionValidation.value);
     }
 
     const editedUserId = await this.editUserRepository.edit(input);
