@@ -1,4 +1,4 @@
-import { useTheme } from '@mui/material';
+import { List, useTheme } from '@mui/material';
 import PersonOffIcon from '@mui/icons-material/PersonOff';
 import {
   UserListItem,
@@ -138,34 +138,32 @@ export const ListUserContainer = () => {
           totalPage={totalPage}
           handleChange={handleChange}
         >
-          {userList.length > 0 ? (
-            userList.map((user) => (
-              <UserListItem
-                deleteUser={() => handlePopUpOpen('delete', user.userId)}
-                editUser={() => editUser(user.userId)}
-                key={user.userId}
-                image="teste"
-                imageAlt={`Image from ${user.name}`}
-                name={`Nome: ${user.name}`}
-                userId={`ID: ${user.userId}`}
-                email={`Email: ${user.email}`}
-                nickname={`Nickname: ${user.nickname}`}
-                status={`Status: ${user.status}`}
-                statusColor={user.status === 'ACTIVE' ? 'success' : 'error'}
-              />
-            ))
-          ) : (
-            <EmptyListResponse
-              message="Sem Usuários"
-              icon={
-                <PersonOffIcon
-                  sx={{
-                    fontSize: theme.spacing(10),
-                  }}
+          <List>
+            {userList.length > 0 ? (
+              userList.map((user) => (
+                <UserListItem
+                  deleteUser={async () =>
+                    handlePopUpOpen('delete', user.userId)
+                  }
+                  editUser={async () => editUser(user.userId)}
+                  key={user.userId}
+                  user={user}
+                  statusColor={user.status === 'ACTIVE' ? 'success' : 'error'}
                 />
-              }
-            />
-          )}
+              ))
+            ) : (
+              <EmptyListResponse
+                message="Sem Usuários"
+                icon={
+                  <PersonOffIcon
+                    sx={{
+                      fontSize: theme.spacing(10),
+                    }}
+                  />
+                }
+              />
+            )}
+          </List>
         </ContainerSimpleList>
       </LayoutBase>
       {SnackbarAlert}
