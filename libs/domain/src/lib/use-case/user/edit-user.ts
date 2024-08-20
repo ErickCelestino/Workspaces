@@ -34,7 +34,10 @@ export class EditUser
   async execute(
     input: EditUserDto
   ): Promise<Either<InsufficientCharacters | EntityNotExists, string>> {
-    const { id, name, status, loggedUserId } = input;
+    const {
+      body: { id, name, status },
+      loggedUserId,
+    } = input;
 
     if (Object.keys(id).length < 1) {
       return left(new EntityNotEmpty('id'));

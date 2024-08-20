@@ -18,7 +18,7 @@ export class EditUserController {
     @Query('loggedUserId') loggedUserId: string
   ) {
     const result = await this.editUserService.edit({
-      ...input,
+      body: input,
       loggedUserId,
     });
 

@@ -35,10 +35,12 @@ const makeSut = (): SutTypes => {
     new VerifyUserPermissionsByIdRepositoryMock();
 
   const editUserDto: EditUserDto = {
-    id: userMock.userId,
-    name: userMock.name,
-    birthDate: new Date(),
-    status: 'ACTIVE',
+    body: {
+      id: userMock.userId,
+      name: userMock.name,
+      birthDate: new Date(),
+      status: 'ACTIVE',
+    },
     loggedUserId: userMock.userId,
   };
 
@@ -70,7 +72,7 @@ describe('EditUser', () => {
 
   it('should return EntityNotEmpty if this id is empty', async () => {
     const { sut, editUserDto } = makeSut();
-    editUserDto.id = '';
+    editUserDto.body.id = '';
 
     const result = await sut.execute(editUserDto);
 
@@ -80,7 +82,7 @@ describe('EditUser', () => {
 
   it('should return EntityNotEmpty if this status is empty', async () => {
     const { sut, editUserDto } = makeSut();
-    editUserDto.status = {} as StatusUser;
+    editUserDto.body.status = {} as StatusUser;
 
     const result = await sut.execute(editUserDto);
 
@@ -90,7 +92,7 @@ describe('EditUser', () => {
 
   it('should return InsufficientCharacters when a incorrect name', async () => {
     const { sut, editUserDto } = makeSut();
-    editUserDto.name = '';
+    editUserDto.body.name = '';
 
     const result = await sut.execute(editUserDto);
 

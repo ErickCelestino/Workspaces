@@ -2,6 +2,19 @@ import { EditUserDto } from '@workspaces/domain';
 import { generalApi } from '../axios-config';
 
 export async function EditUserRequest(input: EditUserDto) {
-  const resultId = await generalApi.put('edit-user', input);
+  const resultId = await generalApi.put(
+    'edit-user',
+    {
+      id: input.body.id,
+      name: input.body.name,
+      birthDate: input.body.birthDate,
+      status: input.body.status,
+    },
+    {
+      params: {
+        loggedUserId: input.loggedUserId,
+      },
+    }
+  );
   return resultId.data;
 }

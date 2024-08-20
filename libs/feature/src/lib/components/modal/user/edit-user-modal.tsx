@@ -1,7 +1,7 @@
 import { FC, useCallback, useEffect, useState } from 'react';
 import { useLoggedUser } from '../../../contexts';
 import {
-  EditUserDto,
+  BodyUserDto,
   ErrorResponse,
   FindUserByIdDto,
 } from '@workspaces/domain';
@@ -57,7 +57,7 @@ export const EditUserModal: FC<EditUserModalProps> = ({
     register,
     formState: { errors },
     reset,
-  } = useForm<EditUserDto>({
+  } = useForm<BodyUserDto>({
     mode: 'all',
     criteriaMode: 'all',
     resolver: zodResolver(EditUserSchema),
@@ -86,7 +86,7 @@ export const EditUserModal: FC<EditUserModalProps> = ({
           name: result.name,
           birthDate: formattedBirthDate as Date,
         });
-
+        setDataLoaded(true);
         setStatus(result.status);
       } catch (error) {
         console.error(error);
@@ -99,7 +99,7 @@ export const EditUserModal: FC<EditUserModalProps> = ({
         }
       }
     },
-    [reset, ValidationsError]
+    [reset, showAlert]
   );
 
   useEffect(() => {
@@ -113,12 +113,14 @@ export const EditUserModal: FC<EditUserModalProps> = ({
     }
   }, [loggedUser, idToEdit, dataLoaded, open, getUserData]);
 
-  const editUser = async (request: EditUserDto) => {
+  const editUser = async (request: BodyUserDto) => {
     try {
-      request.id = idToEdit;
       const result = await EditUserRequest({
-        ...request,
-        id: idToEdit,
+        body: {
+          ...request,
+          id: idToEdit,
+        },
+        loggedUserId: loggedUser?.id ?? '',
       });
       return result;
     } catch (error) {
@@ -134,7 +136,7 @@ export const EditUserModal: FC<EditUserModalProps> = ({
     }
   };
 
-  const handleUserData = async (data: EditUserDto) => {
+  const handleUserData = async (data: BodyUserDto) => {
     setSuccess(false);
     setLoading(true);
     const editedUser = await editUser(data);
@@ -222,7 +224,7 @@ export const EditUserModal: FC<EditUserModalProps> = ({
           margin="normal"
           type="date"
           disabled={loading}
-          error={!!errors.birthDate}
+          error={!!errors?.birthDate}
           helperText={errors.birthDate?.message}
           InputLabelProps={{ shrink: true, required: true }}
           label={birthDateLabel}
