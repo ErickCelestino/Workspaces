@@ -1,4 +1,6 @@
 import {
+  CompanyDataDto,
+  ConsultCompanyByCnpjRepository,
   CreateCompany,
   CreateCompanyDto,
   CreateCompanyRepository,
@@ -6,6 +8,7 @@ import {
   EntityNotCreated,
   EntityNotEmpty,
   EntityNotExists,
+  EntityNotValid,
   FindCompanyByCnpjRepository,
   FindUserByIdRepository,
   UserList,
@@ -15,6 +18,7 @@ import {
   FindUserByIdRepositoryMock,
   FindCompanyByCnpjRepositoryMock,
   CreateCompanyRepositoryMock,
+  ConsultCompanyByCnpjRepositoryMock,
 } from '../../repository';
 
 interface SutTypes {
@@ -22,12 +26,15 @@ interface SutTypes {
   createCompanyDto: CreateCompanyDto;
   findUserByIdRepository: FindUserByIdRepository;
   findCompanyByCnpjRepository: FindCompanyByCnpjRepository;
+  consultCompanyByCnpjRepository: ConsultCompanyByCnpjRepository;
   createCompanyRepository: CreateCompanyRepository;
 }
 
 const makeSut = (): SutTypes => {
   const findUserByIdRepository = new FindUserByIdRepositoryMock();
   const findCompanyByCnpjRepository = new FindCompanyByCnpjRepositoryMock();
+  const consultCompanyByCnpjRepository =
+    new ConsultCompanyByCnpjRepositoryMock();
   const createCompanyRepository = new CreateCompanyRepositoryMock();
 
   const createCompanyDto: CreateCompanyDto = {
@@ -42,6 +49,7 @@ const makeSut = (): SutTypes => {
   const sut = new CreateCompany(
     findUserByIdRepository,
     findCompanyByCnpjRepository,
+    consultCompanyByCnpjRepository,
     createCompanyRepository
   );
 
@@ -50,6 +58,7 @@ const makeSut = (): SutTypes => {
     createCompanyDto,
     findUserByIdRepository,
     findCompanyByCnpjRepository,
+    consultCompanyByCnpjRepository,
     createCompanyRepository,
   };
 };
@@ -139,5 +148,17 @@ describe('CreateCompany', () => {
     expect(result.isRight()).toBe(false);
     expect(result.isLeft()).toBe(true);
     expect(result.value).toBeInstanceOf(EntityNotCreated);
+  });
+
+  it('should return EntityNotValid when not exist cnpj in federal revenue', async () => {
+    const { sut, createCompanyDto } = makeSut();
+    jest
+      .spyOn(sut['consultCompanyByCnpjRepository'], 'consult')
+      .mockResolvedValueOnce({} as CompanyDataDto);
+    const result = await sut.execute(createCompanyDto);
+
+    expect(result.isRight()).toBe(false);
+    expect(result.isLeft()).toBe(true);
+    expect(result.value).toBeInstanceOf(EntityNotValid);
   });
 });

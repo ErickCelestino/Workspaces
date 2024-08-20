@@ -182,7 +182,7 @@ model Company_Data {
   opening String
   port String
   situation String
-  legal_natural  String
+  legal_nature  String
 
   company Company @relation(fields: [company_id], references: [company_id])
 

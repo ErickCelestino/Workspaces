@@ -5,8 +5,10 @@ import {
   EntityAlreadyExists,
   EntityNotCreated,
   EntityNotEmpty,
+  EntityNotValid,
 } from '../../error';
 import {
+  ConsultCompanyByCnpjRepository,
   CreateCompanyRepository,
   FindCompanyByCnpjRepository,
   FindUserByIdRepository,
@@ -22,6 +24,8 @@ export class CreateCompany
     private findUserByIdRepository: FindUserByIdRepository,
     @Inject('FindCompanyByCnpjRepository')
     private findCompanyByCnpjRepository: FindCompanyByCnpjRepository,
+    @Inject('ConsultCompanyByCnpjRepository')
+    private consultCompanyByCnpjRepository: ConsultCompanyByCnpjRepository,
     @Inject('CreateCompanyRepository')
     private createCompanyRepository: CreateCompanyRepository
   ) {}
@@ -62,6 +66,14 @@ export class CreateCompany
 
     if (Object.keys(filteredCompany?.id ?? filteredCompany).length > 0) {
       return left(new EntityAlreadyExists('Company'));
+    }
+
+    const consultCompany = await this.consultCompanyByCnpjRepository.consult(
+      cnpj
+    );
+
+    if (Object.keys(consultCompany).length < 1) {
+      return left(new EntityNotValid('Company'));
     }
 
     const createdCompany = await this.createCompanyRepository.create(input);
