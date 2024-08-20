@@ -3,6 +3,7 @@ import { CreateCompanyService } from './create-company.service';
 import { CreateCompanyController } from './create-company.controller';
 import { CreateCompany } from '@workspaces/domain';
 import {
+  ConsultCompanyByCnpjRepositoryImpl,
   CreateCompanyRepositoryImpl,
   FindCompanyByCnpjRepositoryImpl,
   FindUserByIdRepositoryImpl,
@@ -25,6 +26,10 @@ import {
     {
       provide: 'FindCompanyByCnpjRepository',
       useClass: FindCompanyByCnpjRepositoryImpl,
+    },
+    {
+      provide: 'ConsultCompanyByCnpjRepository',
+      useClass: ConsultCompanyByCnpjRepositoryImpl,
     },
     {
       provide: 'CreateCompanyRepository',
