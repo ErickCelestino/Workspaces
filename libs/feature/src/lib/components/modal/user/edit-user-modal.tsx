@@ -4,6 +4,8 @@ import {
   BodyUserDto,
   ErrorResponse,
   FindUserByIdDto,
+  StatusUser,
+  userTypes,
 } from '@workspaces/domain';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -30,6 +32,7 @@ interface EditUserModalProps {
   successMessage?: string;
   statusLabel?: string;
   birthDateLabel?: string;
+  typeLabel?: string;
 }
 
 export const EditUserModal: FC<EditUserModalProps> = ({
@@ -42,6 +45,7 @@ export const EditUserModal: FC<EditUserModalProps> = ({
   statusLabel = 'Status',
   birthDateLabel = 'Data de Nascimento',
   successMessage = 'Usuário Editado com Sucesso',
+  typeLabel = 'Tipo do Usuário',
 }) => {
   const { loggedUser } = useLoggedUser();
   const theme = useTheme();
@@ -51,6 +55,8 @@ export const EditUserModal: FC<EditUserModalProps> = ({
   const [status, setStatus] = useState('');
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [typeList, setTypeList] = useState<string[]>([]);
+  const [type, setType] = useState<string>('');
 
   const {
     handleSubmit,
@@ -65,6 +71,7 @@ export const EditUserModal: FC<EditUserModalProps> = ({
       name: '',
       id: '',
       birthDate: new Date(),
+      type: '',
     },
   });
 
@@ -85,8 +92,10 @@ export const EditUserModal: FC<EditUserModalProps> = ({
           id: result.userId,
           name: result.name,
           birthDate: formattedBirthDate as Date,
+          type: result.type,
         });
         setDataLoaded(true);
+        setType(result.type);
         setStatus(result.status);
       } catch (error) {
         console.error(error);
@@ -102,6 +111,18 @@ export const EditUserModal: FC<EditUserModalProps> = ({
     [reset, showAlert]
   );
 
+  const mappedUserTypes = (type: string) => {
+    const list: userTypes[] = ['DEFAULT', 'DEFAULT_ADMIN'];
+    switch (type) {
+      case 'ADMIN':
+        list.push('ADMIN');
+        setTypeList(list);
+      case 'DEFAULT_ADMIN':
+        list.filter((item) => item !== 'ADMIN');
+        setTypeList(list);
+    }
+  };
+
   useEffect(() => {
     if (open && idToEdit && !dataLoaded) {
       const loggedUserId = loggedUser?.id ?? '';
@@ -110,6 +131,8 @@ export const EditUserModal: FC<EditUserModalProps> = ({
         id: idToEdit,
         loggedUserId: loggedUserId,
       });
+
+      mappedUserTypes(loggedUser?.type ?? '');
     }
   }, [loggedUser, idToEdit, dataLoaded, open, getUserData]);
 
@@ -119,6 +142,8 @@ export const EditUserModal: FC<EditUserModalProps> = ({
         body: {
           ...request,
           id: idToEdit,
+          type: type,
+          status: status as StatusUser,
         },
         loggedUserId: loggedUser?.id ?? '',
       });
@@ -151,46 +176,62 @@ export const EditUserModal: FC<EditUserModalProps> = ({
 
   const statusList = ['ACTIVE', 'INACTIVE'];
 
-  const handleChangeStatus = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setStatus(event.target.value);
-  };
+  const handleChange =
+    (setter: React.Dispatch<React.SetStateAction<string>>) =>
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setter(event.target.value);
+    };
 
   return (
     <SimpleFormModal
-      height={smDown ? theme.spacing(65) : theme.spacing(62)}
+      height={smDown ? theme.spacing(65) : theme.spacing(70)}
       width={smDown ? '90%' : theme.spacing(100)}
       open={open}
       handlePopUpClose={handlePopUpClose}
       title={title}
     >
       <Box component="form" onSubmit={handleSubmit(handleUserData)}>
+        <TextField
+          sx={{
+            width: smDown
+              ? '100%'
+              : mdDown
+              ? theme.spacing(45)
+              : theme.spacing(50),
+          }}
+          margin="normal"
+          InputLabelProps={{ shrink: true, required: true }}
+          disabled={true}
+          error={!!errors.id}
+          helperText={errors.id?.message}
+          id="id"
+          label="id"
+          {...register('id')}
+          autoComplete="id"
+        />
         <Box display="flex" justifyContent="space-between">
           <TextField
             sx={{
-              width: smDown
-                ? '100%'
-                : mdDown
-                ? theme.spacing(45)
-                : theme.spacing(42),
+              width: '45%',
             }}
+            select
+            value={type}
             margin="normal"
-            InputLabelProps={{ shrink: true, required: true }}
-            disabled={true}
-            error={!!errors.id}
-            helperText={errors.id?.message}
-            id="id"
-            label="id"
-            {...register('id')}
-            autoComplete="id"
-          />
-
+            error={!!errors.type}
+            helperText={errors.type?.message}
+            id="type"
+            label={typeLabel}
+            {...register('type', { onChange: handleChange(setType) })}
+          >
+            {typeList.map((item) => (
+              <MenuItem key={item} value={item}>
+                {item}
+              </MenuItem>
+            ))}
+          </TextField>
           <TextField
             sx={{
-              width: smDown
-                ? '100%'
-                : mdDown
-                ? theme.spacing(45)
-                : theme.spacing(30),
+              width: '45%',
             }}
             select
             value={status}
@@ -199,7 +240,7 @@ export const EditUserModal: FC<EditUserModalProps> = ({
             helperText={errors.status?.message}
             id="status"
             label={statusLabel}
-            {...register('status', { onChange: handleChangeStatus })}
+            {...register('status', { onChange: handleChange(setStatus) })}
           >
             {statusList.map((item) => (
               <MenuItem key={item} value={item}>

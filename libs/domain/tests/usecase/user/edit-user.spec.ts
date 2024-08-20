@@ -13,7 +13,7 @@ import {
   UserList,
   VerifyUserPermissionsByIdRepository,
 } from '../../../src';
-import { userMock } from '../../entity';
+import { listUserMock, userMock } from '../../entity';
 import {
   EditUserRepositoryMock,
   FindUserByIdRepositoryMock,
@@ -40,6 +40,7 @@ const makeSut = (): SutTypes => {
       name: userMock.name,
       birthDate: new Date(),
       status: 'ACTIVE',
+      type: listUserMock[0].type,
     },
     loggedUserId: userMock.userId,
   };

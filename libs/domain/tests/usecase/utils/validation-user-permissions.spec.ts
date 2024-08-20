@@ -1,10 +1,12 @@
 import {
+  EntityNotActive,
   EntityNotEmpty,
   EntityNotPermissions,
   PermissionsUserResponseDto,
   ValidationUserPermisssions,
   VerifyUserPermissionsByIdRepository,
 } from '../../../src';
+import { PermissionsUserResponseMock, listUserMock } from '../../entity';
 import { VerifyUserPermissionsByIdRepositoryMock } from '../../repository';
 
 const makeSut = (
@@ -59,5 +61,20 @@ describe('ValidationUserPermisssions', () => {
     expect(result?.isLeft()).toBe(true);
     expect(result?.isRight()).toBe(false);
     expect(result?.value).toBeInstanceOf(EntityNotPermissions);
+  });
+
+  it('should return EntityNotActive when no pass incorrect user id', async () => {
+    PermissionsUserResponseMock.status = 'INACTIVE';
+    const mockRepository: VerifyUserPermissionsByIdRepository = {
+      verify: jest.fn(async () => PermissionsUserResponseMock),
+    };
+
+    const { sut } = makeSut('any_id', mockRepository);
+
+    const result = await sut;
+
+    expect(result?.isLeft()).toBe(true);
+    expect(result?.isRight()).toBe(false);
+    expect(result?.value).toBeInstanceOf(EntityNotActive);
   });
 });

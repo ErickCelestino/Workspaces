@@ -9,6 +9,7 @@ export async function EditUserRequest(input: EditUserDto) {
       name: input.body.name,
       birthDate: input.body.birthDate,
       status: input.body.status,
+      type: input.body.type,
     },
     {
       params: {

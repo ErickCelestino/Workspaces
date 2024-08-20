@@ -5,4 +5,5 @@ export interface BodyUserDto {
   name: string;
   birthDate?: Date;
   status: StatusUser;
+  type: string;
 }

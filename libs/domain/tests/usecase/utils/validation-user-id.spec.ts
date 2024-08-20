@@ -53,19 +53,4 @@ describe('ValidationUserId', () => {
     expect(result?.isRight()).toBe(false);
     expect(result?.value).toBeInstanceOf(EntityNotExists);
   });
-
-  it('should return EntityNotActive when no pass incorrect user id', async () => {
-    listUserMock[0].status = 'INACTIVE';
-    const mockEmptyRepository: FindUserByIdRepository = {
-      find: jest.fn(async () => listUserMock[0]),
-    };
-
-    const { sut } = makeSut('any_id', mockEmptyRepository);
-
-    const result = await sut;
-
-    expect(result?.isLeft()).toBe(true);
-    expect(result?.isRight()).toBe(false);
-    expect(result?.value).toBeInstanceOf(EntityNotActive);
-  });
 });

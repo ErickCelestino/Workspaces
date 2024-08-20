@@ -1,4 +1,5 @@
 import {
+  EntityNotActive,
   EntityNotEmpty,
   EntityNotExists,
   EntityNotPermissions,
@@ -29,6 +30,10 @@ export async function ValidationUserPermisssions(
 
   if (!validation) {
     return left(new EntityNotPermissions(id));
+  }
+
+  if (filteredPermissions.status !== 'ACTIVE') {
+    return left(new EntityNotActive('User'));
   }
 
   return right(undefined);
