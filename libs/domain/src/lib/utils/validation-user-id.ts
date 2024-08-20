@@ -16,5 +16,9 @@ export async function ValidationUserId(
     return left(new EntityNotExists('User'));
   }
 
+  if (filteredUser.status !== 'ACTIVE') {
+    return left(new EntityNotActive('User'));
+  }
+
   return right(undefined);
 }

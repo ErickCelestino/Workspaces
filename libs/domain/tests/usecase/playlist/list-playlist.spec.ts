@@ -5,7 +5,6 @@ import {
   ListPlaylist,
   ListPlaylistDto,
   ListPlaylistRepository,
-  User,
   UserList,
 } from '../../../src';
 import { ListPlaylistResponseMock, userMock } from '../../entity';
