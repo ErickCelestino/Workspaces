@@ -1,0 +1,72 @@
+import { Inject } from '@nestjs/common';
+import { UseCase } from '../../base/use-case';
+import { CreateCompanyDto } from '../../dto';
+import {
+  EntityAlreadyExists,
+  EntityNotCreated,
+  EntityNotEmpty,
+} from '../../error';
+import {
+  CreateCompanyRepository,
+  FindCompanyByCnpjRepository,
+  FindUserByIdRepository,
+} from '../../repository';
+import { Either, left, right } from '../../shared/either';
+import { ValidationUserId } from '../../utils';
+
+export class CreateCompany
+  implements UseCase<CreateCompanyDto, Either<EntityNotEmpty, string>>
+{
+  constructor(
+    @Inject('FindUserByIdRepository')
+    private findUserByIdRepository: FindUserByIdRepository,
+    @Inject('FindCompanyByCnpjRepository')
+    private findCompanyByCnpjRepository: FindCompanyByCnpjRepository,
+    @Inject('CreateCompanyRepository')
+    private createCompanyRepository: CreateCompanyRepository
+  ) {}
+  async execute(
+    input: CreateCompanyDto
+  ): Promise<Either<EntityNotEmpty, string>> {
+    const { cnpj, fantasyName, socialReason, loggedUserId } = input;
+
+    if (Object.keys(cnpj).length < 1) {
+      return left(new EntityNotEmpty('CNPJ'));
+    }
+
+    if (Object.keys(loggedUserId).length < 1) {
+      return left(new EntityNotEmpty('Logged User ID'));
+    }
+
+    if (Object.keys(fantasyName).length < 1) {
+      return left(new EntityNotEmpty('Fantasy Name'));
+    }
+
+    if (Object.keys(socialReason).length < 1) {
+      return left(new EntityNotEmpty('Social Reason'));
+    }
+
+    const userValidation = await ValidationUserId(
+      loggedUserId,
+      this.findUserByIdRepository
+    );
+
+    if (userValidation.isLeft()) {
+      return left(userValidation.value);
+    }
+
+    const filteredCompany = await this.findCompanyByCnpjRepository.find(cnpj);
+
+    if (Object.keys(filteredCompany).length > 0) {
+      return left(new EntityAlreadyExists('Company'));
+    }
+
+    const createdCompany = await this.createCompanyRepository.create(input);
+
+    if (Object.keys(createdCompany).length < 1) {
+      return left(new EntityNotCreated('Company'));
+    }
+
+    return right(createdCompany);
+  }
+}
