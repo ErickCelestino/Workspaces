@@ -3,8 +3,10 @@ import { ListUserController } from './list-user.controller';
 import { ListUserService } from './list-user.service';
 import {
   BtrinSanitizeRepositoryImpl,
+  FindUserByIdRepositoryImpl,
   ListUserRepositoryImpl,
   PrismaService,
+  VerifyUserPermissionsByIdRepositoryImpl,
 } from '@workspaces/data-access';
 import { Module } from '@nestjs/common';
 
@@ -20,6 +22,14 @@ import { Module } from '@nestjs/common';
     {
       provide: 'BtrinSanatizeRepository',
       useClass: BtrinSanitizeRepositoryImpl,
+    },
+    {
+      provide: 'FindUserByIdRepository',
+      useClass: FindUserByIdRepositoryImpl,
+    },
+    {
+      provide: 'VerifyUserPermissionsByIdRepository',
+      useClass: VerifyUserPermissionsByIdRepositoryImpl,
     },
     {
       provide: 'PrismaService',

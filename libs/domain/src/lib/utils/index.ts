@@ -8,4 +8,5 @@ export * from './validation-playlist-id';
 export * from './validation-scheduling-id';
 export * from './validation-start-end-time';
 export * from './validation-user-id';
+export * from './validation-user-permissions';
 export * from './validaton-content-file-id';

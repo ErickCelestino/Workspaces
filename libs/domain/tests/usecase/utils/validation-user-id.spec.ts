@@ -1,10 +1,12 @@
 import {
+  EntityNotActive,
   EntityNotEmpty,
   EntityNotExists,
   FindUserByIdRepository,
   UserList,
   ValidationUserId,
 } from '../../../src';
+import { listUserMock } from '../../entity';
 import { FindUserByIdRepositoryMock } from '../../repository';
 
 const makeSut = (id: string, repository: FindUserByIdRepository) => {
@@ -26,7 +28,7 @@ describe('ValidationUserId', () => {
     expect(result?.value).toStrictEqual(undefined);
   });
 
-  it('should return EntityNotEmpty when no pass correct user id', async () => {
+  it('should return EntityNotEmpty when no pass incorrect user id', async () => {
     const { sut } = makeSut('', new FindUserByIdRepositoryMock());
 
     const result = await sut;
@@ -36,12 +38,13 @@ describe('ValidationUserId', () => {
     expect(result?.value).toBeInstanceOf(EntityNotEmpty);
   });
 
-  it('should return EntityNotExists when no pass correct user id', async () => {
+  it('should return EntityNotExists when no pass incorrect user id', async () => {
     const mockEmptyItem = {} as UserList;
 
     const mockEmptyRepository: FindUserByIdRepository = {
       find: jest.fn(async () => mockEmptyItem),
     };
+
     const { sut } = makeSut('any_id', mockEmptyRepository);
 
     const result = await sut;

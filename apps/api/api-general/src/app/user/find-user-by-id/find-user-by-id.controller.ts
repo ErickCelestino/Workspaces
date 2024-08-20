@@ -1,4 +1,4 @@
-import { Controller, Get, Param, UsePipes } from '@nestjs/common';
+import { Controller, Get, Param, Query, UsePipes } from '@nestjs/common';
 import { FindUserByIdService } from './find-user-by-id.service';
 import { ZodValidationPipe } from '../../pipes/zod-validation-pipe';
 import { ErrorMessageResult, findUserByIdSchema } from '@workspaces/domain';
@@ -9,8 +9,14 @@ export class FindUserByIdController {
 
   @UsePipes(new ZodValidationPipe(findUserByIdSchema))
   @Get(':id')
-  async create(@Param('id') id: string) {
-    const result = await this.findUserByIdService.find(id);
+  async create(
+    @Param('id') id: string,
+    @Query('loggedUserId') loggedUserId: string
+  ) {
+    const result = await this.findUserByIdService.find({
+      id,
+      loggedUserId,
+    });
 
     if (result.isRight()) return result.value;
     else await ErrorMessageResult(result.value.name, result.value.message);

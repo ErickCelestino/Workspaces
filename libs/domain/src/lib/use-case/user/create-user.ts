@@ -1,7 +1,7 @@
 import { UseCase } from '../../base/use-case';
 import { CreateUserDto } from '../../dto';
 import {
-  CreateError,
+  EntityNotCreated,
   EntityAlreadyExists,
   EntityNotEmpty,
   EntityNotExists,
@@ -20,7 +20,8 @@ export class CreateUser
         | InsufficientCharacters
         | EntityAlreadyExists
         | EntityNotEmpty
-        | EntityNotExists,
+        | EntityNotExists
+        | EntityNotCreated,
         string
       >
     >
@@ -41,7 +42,8 @@ export class CreateUser
       | InsufficientCharacters
       | EntityAlreadyExists
       | EntityNotEmpty
-      | EntityNotExists,
+      | EntityNotExists
+      | EntityNotCreated,
       string
     >
   > {
@@ -75,7 +77,7 @@ export class CreateUser
     const fiterUser = await this.createUserRepository.create(input);
 
     if (Object.keys(fiterUser).length < 1) {
-      return left(new CreateError('User'));
+      return left(new EntityNotCreated('User'));
     }
 
     return right(fiterUser);

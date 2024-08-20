@@ -32,6 +32,7 @@ export const ContainerSimpleList: FC<ContainerSimpleListProps> = ({
   const theme = useTheme();
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
   const mdUp = useMediaQuery(theme.breakpoints.up('md'));
+  const mdDown = useMediaQuery(theme.breakpoints.down('md'));
 
   return (
     <Box
@@ -85,7 +86,7 @@ export const ContainerSimpleList: FC<ContainerSimpleListProps> = ({
           }}
         >
           <Box
-            width={smDown ? '100%' : '65%'}
+            width={smDown ? '100%' : mdDown ? '85%' : '65%'}
             sx={{
               marginLeft: smDown ? -3 : '',
             }}

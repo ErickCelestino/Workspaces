@@ -1,7 +1,7 @@
-import { Body, Controller, Put, UsePipes } from '@nestjs/common';
+import { Body, Controller, Put, Query, UsePipes } from '@nestjs/common';
 import { EditUserService } from './edit-user.service';
 import {
-  EditUserDto,
+  BodyUserDto,
   editUserSchema,
   ErrorMessageResult,
 } from '@workspaces/domain';
@@ -13,10 +13,16 @@ export class EditUserController {
 
   @Put()
   @UsePipes(new ZodValidationPipe(editUserSchema))
-  async edit(@Body() input: EditUserDto) {
-    const result = await this.editUserService.edit(input);
+  async edit(
+    @Body() input: BodyUserDto,
+    @Query('loggedUserId') loggedUserId: string
+  ) {
+    const result = await this.editUserService.edit({
+      body: input,
+      loggedUserId,
+    });
 
-    if (result.isRight()) return result.value;
+    if (result.isRight()) return { userId: result.value };
     else await ErrorMessageResult(result.value.name, result.value.message);
   }
 }

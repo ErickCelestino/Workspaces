@@ -6,12 +6,10 @@ import {
 import { listUserMock } from '../../entity';
 
 export class ListUserRepositoryMock implements ListUserRepository {
-  listUser: ListUserDto = {
-    input: '',
-  };
+  listUser = {} as ListUserDto;
 
   async list(input: ListUserDto): Promise<ListUserResponseDto> {
-    this.listUser.input = input.input;
+    this.listUser = input;
     return {
       total: 1,
       totalPages: 1,

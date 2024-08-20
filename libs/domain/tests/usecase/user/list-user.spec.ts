@@ -1,13 +1,23 @@
 import {
   BtrinSanitizeRepository,
+  EntityNotEmpty,
+  EntityNotExists,
+  FindUserByIdRepository,
   ListUser,
   ListUserDto,
   ListUserRepository,
+  EntityNotPermissions,
+  PermissionsUserResponseDto,
   SyntaxError,
+  UserList,
+  VerifyUserPermissionsByIdRepository,
 } from '../../../src';
+import { userMock } from '../../entity';
 import {
   BtrinSanitizeRepositoryMock,
+  FindUserByIdRepositoryMock,
   ListUserRepositoryMock,
+  VerifyUserPermissionsByIdRepositoryMock,
 } from '../../repository';
 
 interface SutTypes {
@@ -15,23 +25,35 @@ interface SutTypes {
   listUserDto: ListUserDto;
   listUserRepository: ListUserRepository;
   btrinSanitizeRepository: BtrinSanitizeRepository;
+  findUserByIdRepository: FindUserByIdRepository;
+  verifyUserPermissionsByIdRepository: VerifyUserPermissionsByIdRepository;
 }
 
 const makeSut = (): SutTypes => {
   const listUserRepository = new ListUserRepositoryMock();
   const btrinSanitizeRepository = new BtrinSanitizeRepositoryMock();
-
+  const findUserByIdRepository = new FindUserByIdRepositoryMock();
+  const verifyUserPermissionsByIdRepository =
+    new VerifyUserPermissionsByIdRepositoryMock();
   const listUserDto: ListUserDto = {
-    input: 'any_input',
+    filter: 'any_input',
+    loggedUserId: userMock.userId,
   };
 
-  const sut = new ListUser(listUserRepository, btrinSanitizeRepository);
+  const sut = new ListUser(
+    listUserRepository,
+    btrinSanitizeRepository,
+    findUserByIdRepository,
+    verifyUserPermissionsByIdRepository
+  );
 
   return {
     sut,
     listUserDto,
     listUserRepository,
     btrinSanitizeRepository,
+    findUserByIdRepository,
+    verifyUserPermissionsByIdRepository,
   };
 };
 
@@ -58,5 +80,39 @@ describe('ListUser', () => {
     expect(result.isLeft()).toBe(true);
     expect(result.isRight()).toBe(false);
     expect(result.value).toBeInstanceOf(SyntaxError);
+  });
+
+  it('should return EntityNotEmpty when a pass incorrect Logged User ID', async () => {
+    const { listUserDto, sut } = makeSut();
+    listUserDto.loggedUserId = '';
+    const result = await sut.execute(listUserDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
+    expect(result.value).toBeInstanceOf(EntityNotEmpty);
+  });
+
+  it('should return EntityNotExists when a pass incorrect Logged User ID', async () => {
+    const { listUserDto, sut } = makeSut();
+    jest
+      .spyOn(sut['findUserByIdRepository'], 'find')
+      .mockResolvedValueOnce({} as UserList);
+    const result = await sut.execute(listUserDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
+    expect(result.value).toBeInstanceOf(EntityNotExists);
+  });
+
+  it('should return EntityNotPermissions when a pass invalid logged User ID', async () => {
+    const { listUserDto, sut } = makeSut();
+    jest
+      .spyOn(sut['verifyUserPermissionByIdRepository'], 'verify')
+      .mockResolvedValueOnce({} as PermissionsUserResponseDto);
+    const result = await sut.execute(listUserDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
+    expect(result.value).toBeInstanceOf(EntityNotPermissions);
   });
 });

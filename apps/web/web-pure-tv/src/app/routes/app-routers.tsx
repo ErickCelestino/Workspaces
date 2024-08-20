@@ -1,6 +1,5 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 import {
-  EditUserContainer,
   ListUserContainer,
   TestContainer,
   useDrawerContext,
@@ -10,14 +9,16 @@ import {
   ListDirectoryContainer,
   ListSchedulesContainer,
   ListDeviceContainer,
+  useLoggedUser,
 } from '@workspaces/feature';
 import { useEffect } from 'react';
 
 export const AppRouters = () => {
+  const { loggedUser } = useLoggedUser();
   const { setDrawerOptions } = useDrawerContext();
 
   useEffect(() => {
-    setDrawerOptions({
+    const drawerOptions = {
       'Página Inicial': [
         {
           label: 'Página Inicial',
@@ -25,20 +26,6 @@ export const AppRouters = () => {
           path: '/home',
         },
       ],
-      Usuários: [
-        {
-          label: 'Usuários',
-          icon: 'list',
-          path: '/list-user',
-        },
-      ],
-      // Arquivos: [
-      //   {
-      //     label: 'Arquivos',
-      //     icon: 'folder',
-      //     path: '/files',
-      //   },
-      // ],
       Diretorios: [
         {
           label: 'Diretórios',
@@ -72,14 +59,25 @@ export const AppRouters = () => {
           path: '/device',
         },
       ],
-    });
-  }, [setDrawerOptions]);
+    };
+    loggedUser?.type === 'ADMIN'
+      ? setDrawerOptions({
+          ...drawerOptions,
+          Usuários: [
+            {
+              label: 'Usuários',
+              icon: 'manage_accounts',
+              path: '/user',
+            },
+          ],
+        })
+      : setDrawerOptions(drawerOptions);
+  }, [setDrawerOptions, loggedUser]);
 
   return (
     <Routes>
       <Route path="/home" element={<TestContainer />} />
-      <Route path="/edit-user" element={<EditUserContainer />} />
-      <Route path="list-user" element={<ListUserContainer />} />
+      <Route path="user" element={<ListUserContainer />} />
       <Route path="/files" element={<ListContanteFilesContainer />} />
       <Route path="/directory" element={<ListDirectoryContainer />} />
       <Route path="playlist" element={<ListPlaylistContainer />} />

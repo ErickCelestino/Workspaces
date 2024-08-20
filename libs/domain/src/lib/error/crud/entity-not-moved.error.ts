@@ -1,4 +1,4 @@
-import { UseCaseError } from '../base/use-case-error';
+import { UseCaseError } from '../../base/use-case-error';
 
 export class EntityNotMoved extends Error implements UseCaseError {
   constructor(entity: string) {

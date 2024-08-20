@@ -8,6 +8,7 @@ import {
   EntityNotCreated,
   EntityNotEmpty,
   EntityNotNegativeNumber,
+  NotPermission,
   StartTimeCannotBeGreaterEndTime,
 } from '../../messages';
 
@@ -36,6 +37,9 @@ export function ValidationsError(
 
     case 'EntityNotNegativeNumber':
       return EntityNotNegativeNumber(entitie, 'PT-BR');
+
+    case 'NotPermissionError':
+      return NotPermission('PT-BR');
 
     default:
       return ConnectionError('PT-BR');
