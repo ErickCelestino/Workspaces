@@ -1,6 +1,6 @@
+import { BodyCompanyDto } from './body-company.dto';
+
 export interface CreateCompanyDto {
-  fantasyName: string;
-  socialReason: string;
-  cnpj: string;
+  body: BodyCompanyDto;
   loggedUserId: string;
 }

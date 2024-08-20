@@ -28,7 +28,10 @@ export class CreateCompany
   async execute(
     input: CreateCompanyDto
   ): Promise<Either<EntityNotEmpty, string>> {
-    const { cnpj, fantasyName, socialReason, loggedUserId } = input;
+    const {
+      body: { cnpj, fantasyName, socialReason },
+      loggedUserId,
+    } = input;
 
     if (Object.keys(cnpj).length < 1) {
       return left(new EntityNotEmpty('CNPJ'));
@@ -57,7 +60,7 @@ export class CreateCompany
 
     const filteredCompany = await this.findCompanyByCnpjRepository.find(cnpj);
 
-    if (Object.keys(filteredCompany).length > 0) {
+    if (Object.keys(filteredCompany?.id ?? filteredCompany).length > 0) {
       return left(new EntityAlreadyExists('Company'));
     }
 

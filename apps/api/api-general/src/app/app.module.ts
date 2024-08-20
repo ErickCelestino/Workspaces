@@ -11,6 +11,7 @@ import {
   CreateUserModule,
   FindUserByEmailModule,
 } from './user';
+import { CreateCompanyModule } from './company';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import {
     FindUserByIdModule,
     DeleteUserByIdModule,
     FindUserByEmailModule,
+    CreateCompanyModule,
   ],
   controllers: [AppController],
   providers: [AppService],

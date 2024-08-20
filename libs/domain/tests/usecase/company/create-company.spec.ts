@@ -7,7 +7,6 @@ import {
   EntityNotEmpty,
   EntityNotExists,
   FindCompanyByCnpjRepository,
-  FindUserById,
   FindUserByIdRepository,
   UserList,
 } from '../../../src';
@@ -32,10 +31,12 @@ const makeSut = (): SutTypes => {
   const createCompanyRepository = new CreateCompanyRepositoryMock();
 
   const createCompanyDto: CreateCompanyDto = {
-    cnpj: CompanyMock.cnpj,
-    fantasyName: CompanyMock.fantasyName,
+    body: {
+      cnpj: CompanyMock.cnpj,
+      fantasyName: CompanyMock.fantasyName,
+      socialReason: CompanyMock.socialReason,
+    },
     loggedUserId: userMock.userId,
-    socialReason: CompanyMock.socialReason,
   };
 
   const sut = new CreateCompany(
@@ -76,7 +77,7 @@ describe('CreateCompany', () => {
 
   it('should return EntityNotEmpty when pass incorrect CNPJ', async () => {
     const { sut, createCompanyDto } = makeSut();
-    createCompanyDto.cnpj = '';
+    createCompanyDto.body.cnpj = '';
     const result = await sut.execute(createCompanyDto);
 
     expect(result.isRight()).toBe(false);
@@ -86,7 +87,7 @@ describe('CreateCompany', () => {
 
   it('should return EntityNotEmpty when pass incorrect Fantasy name', async () => {
     const { sut, createCompanyDto } = makeSut();
-    createCompanyDto.fantasyName = '';
+    createCompanyDto.body.fantasyName = '';
     const result = await sut.execute(createCompanyDto);
 
     expect(result.isRight()).toBe(false);
@@ -96,7 +97,7 @@ describe('CreateCompany', () => {
 
   it('should return EntityNotEmpty when pass incorrect Social Reason', async () => {
     const { sut, createCompanyDto } = makeSut();
-    createCompanyDto.socialReason = '';
+    createCompanyDto.body.socialReason = '';
     const result = await sut.execute(createCompanyDto);
 
     expect(result.isRight()).toBe(false);
