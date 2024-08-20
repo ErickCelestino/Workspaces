@@ -74,6 +74,8 @@ model User {
   scheduling Scheduling[]
   playlistCategory Playlist_Category[]
   device Device[]
+  company Company[]
+  departament Departament[]
 
   @@schema("general")
 }
@@ -121,6 +123,7 @@ model User_X_Departament {
 
 model Departament {
   departament_id String @id @default(uuid())
+  user_id String
   name String @db.VarChar(100)
   description String
   status Status @default(ACTIVE)
@@ -130,6 +133,7 @@ model Departament {
 
   user_x_departament User_X_Departament[]
   departament_x_company Departament_X_Company[]
+  user User @relation(fields: [user_id], references: [user_id])
 
   @@schema("general")
 }
@@ -154,6 +158,7 @@ model Company {
   fantasy_name String @db.VarChar(200)
   social_reason String  @db.VarChar(200)
   cnpj String @db.VarChar(14)
+  user_id String
   status Status @default(ACTIVE)
   created_at DateTime @default(now())
   updated_at DateTime @default(now())
@@ -164,6 +169,7 @@ model Company {
   user_x_company User_X_Company[]
   company_data Company_Data[]
   company_responsible Company_Responsible[]
+  user User @relation(fields: [user_id], references: [user_id])
 
   @@schema("general")
 }

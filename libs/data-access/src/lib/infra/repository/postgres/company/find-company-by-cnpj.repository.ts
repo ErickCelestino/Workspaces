@@ -16,6 +16,12 @@ export class FindCompanyByCnpjRepositoryImpl
         cnpj: true,
         fantasy_name: true,
         social_reason: true,
+        created_at: true,
+        user: {
+          select: {
+            nick_name: true,
+          },
+        },
       },
     });
 
@@ -24,6 +30,8 @@ export class FindCompanyByCnpjRepositoryImpl
       fantasyName: filteredCompany?.fantasy_name ?? '',
       id: filteredCompany?.company_id ?? '',
       socialReason: filteredCompany?.social_reason ?? '',
+      createdBy: filteredCompany?.user?.nick_name ?? '',
+      cretedAt: filteredCompany?.created_at ?? new Date(),
     };
   }
 }

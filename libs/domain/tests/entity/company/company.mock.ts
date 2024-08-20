@@ -6,4 +6,6 @@ export const CompanyMock: Company = {
   cnpj: '27199213000140',
   fantasyName: faker.company.name(),
   socialReason: faker.company.name(),
+  createdBy: faker.string.uuid(),
+  cretedAt: faker.date.recent(),
 };

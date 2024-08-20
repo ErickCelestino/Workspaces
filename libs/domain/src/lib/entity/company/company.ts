@@ -3,4 +3,6 @@ export interface Company {
   cnpj: string;
   fantasyName: string;
   socialReason: string;
+  createdBy: string;
+  cretedAt: Date;
 }
