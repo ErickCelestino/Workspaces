@@ -101,7 +101,7 @@ export const CreateCompanyModal: FC<CreateCompanyModalProps> = ({
     <SimpleFormModal
       open={open}
       handlePopUpClose={handlePopUpClose}
-      height={theme.spacing(43)}
+      height={theme.spacing(70)}
       width={smDown ? '90%' : theme.spacing(90)}
       title={title}
     >
@@ -133,7 +133,6 @@ export const CreateCompanyModal: FC<CreateCompanyModalProps> = ({
           disabled={loading}
           label={cnpjLabel}
           autoComplete="cnpj"
-          autoFocus
           {...register('cnpj')}
         />
         <TextField
@@ -146,7 +145,6 @@ export const CreateCompanyModal: FC<CreateCompanyModalProps> = ({
           disabled={loading}
           label={socialReasonLabel}
           autoComplete="socialReason"
-          autoFocus
           {...register('socialReason')}
         />
         <Box

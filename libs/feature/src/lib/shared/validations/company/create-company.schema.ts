@@ -4,7 +4,7 @@ import {
   EntityMaxLength,
   EntityMinLength,
 } from '../../messages';
-import { isValidCNPJ } from '@workspaces/domain';
+import { isValidCNPJ } from '../utils';
 
 export const CreateCompanyFormSchema = z.object({
   fantasyName: z

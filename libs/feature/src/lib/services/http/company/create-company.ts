@@ -1,8 +1,8 @@
 import { CreateCompanyDto } from '@workspaces/domain';
-import { pureTvApi } from '../axios-config';
+import { generalApi } from '../axios-config';
 
 export async function CreateCompanyRequest(input: CreateCompanyDto) {
-  const result = await pureTvApi.post(
+  const result = await generalApi.post(
     'create-company',
     {
       fantasyName: input.body.fantasyName,
