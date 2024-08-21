@@ -17,7 +17,6 @@ import {
 } from '@workspaces/domain';
 import { CreateAuth, getItemLocalStorage } from '../../../services';
 import axios, { AxiosError } from 'axios';
-import { useNavigate } from 'react-router-dom';
 
 interface ConfirmPassword {
   email: string;
@@ -29,10 +28,10 @@ export const FormAuthConfirm: FC<AuthConfirmProps> = ({
   emailLabel = 'Digite seu e-mail',
   passwordLabel = 'Digite sua senha',
   confirmPasswordLabel = 'Digite sua senha novamente',
-  buttonTitle = 'Finalizar Cadastro',
+  buttonTitle = 'Próxima Etapa',
   showAlert,
+  handlePopUpClose,
 }) => {
-  const history = useNavigate();
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -61,7 +60,9 @@ export const FormAuthConfirm: FC<AuthConfirmProps> = ({
   const createAuth = async (request: CreateAuthDto) => {
     try {
       await CreateAuth(request);
-      history('/login');
+      setSuccess(true);
+      handlePopUpClose();
+      setSuccess(false);
     } catch (error) {
       console.error((error as { message: string }).message);
       if (axios.isAxiosError(error)) {

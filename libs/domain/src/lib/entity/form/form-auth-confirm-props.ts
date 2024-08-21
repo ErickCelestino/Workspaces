@@ -4,4 +4,5 @@ export interface AuthConfirmProps {
   confirmPasswordLabel?: string;
   buttonTitle?: string;
   showAlert?: (message: string) => void;
+  handlePopUpClose: () => void;
 }

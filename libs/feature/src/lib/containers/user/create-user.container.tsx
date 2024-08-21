@@ -2,6 +2,7 @@ import { FC, useState } from 'react';
 import {
   FormAuthCard,
   FormAuthConfirm,
+  FormCreateCompany,
   StepperCustomHorizontal,
 } from '../../components';
 import { Avatar, Box, Container, useTheme } from '@mui/material';
@@ -59,7 +60,18 @@ export const CreateUser: FC<CreateUserProps> = ({ cardImage, logo }) => {
                   showAlert={showErrorAlert}
                 />
               )}
-              {step === 1 && <FormAuthConfirm showAlert={showErrorAlert} />}
+              {step === 1 && (
+                <FormAuthConfirm
+                  showAlert={showErrorAlert}
+                  handlePopUpClose={() => handleCreateUser(2)}
+                />
+              )}
+              {step === 2 && (
+                <FormCreateCompany
+                  showAlert={showErrorAlert}
+                  handlePopUpClose={() => handleCreateUser(3)}
+                />
+              )}
             </Box>
           </Box>
         </Container>
