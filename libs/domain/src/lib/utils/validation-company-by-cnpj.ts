@@ -6,10 +6,11 @@ export async function ValidationCompanyByCnpj(
   cnpj: string,
   findCompanyByCnpjRepository: FindCompanyByCnpjRepository
 ): Promise<Either<EntityNotEmpty | EntityNotExists, void>> {
-  const formatedcnpj = cnpj.replace(/[^\d]+/g, '');
-  if (Object.keys(formatedcnpj).length < 1) {
+  if (Object.keys(cnpj).length < 1) {
     return left(new EntityNotEmpty('Cnpj'));
   }
+
+  const formatedcnpj = cnpj.replace(/[^\d]+/g, '');
 
   const filteredCompany = await findCompanyByCnpjRepository.find(formatedcnpj);
 
