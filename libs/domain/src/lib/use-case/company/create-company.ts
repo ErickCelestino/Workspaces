@@ -36,11 +36,12 @@ export class CreateCompany
       body: { cnpj, fantasyName, socialReason },
       loggedUserId,
     } = input;
-    const formatedcnpj = cnpj.replace(/[^\d]+/g, '');
 
-    if (Object.keys(formatedcnpj).length < 1) {
+    if (Object.keys(cnpj).length < 1) {
       return left(new EntityNotEmpty('CNPJ'));
     }
+
+    const formatedcnpj = cnpj.replace(/[^\d]+/g, '');
 
     if (Object.keys(loggedUserId).length < 1) {
       return left(new EntityNotEmpty('Logged User ID'));

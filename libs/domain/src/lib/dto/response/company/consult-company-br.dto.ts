@@ -5,7 +5,7 @@ interface PrincipalActive {
 
 export interface ConsultCompanyBrDto {
   cnpj: string;
-  razao_social: string;
+  nome: string;
   fantasia: string;
   atividade_principal: PrincipalActive[];
   data_situacao: string;
@@ -22,5 +22,7 @@ export interface ConsultCompanyBrDto {
   complemento: string;
   cep: string;
   motivo_situacao: string;
-  porta: string;
+  porte: string;
+  municipio: string;
+  bairro: string;
 }
