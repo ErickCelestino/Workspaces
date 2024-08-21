@@ -36,8 +36,9 @@ export class CreateCompany
       body: { cnpj, fantasyName, socialReason },
       loggedUserId,
     } = input;
+    const formatedcnpj = cnpj.replace(/[^\d]+/g, '');
 
-    if (Object.keys(cnpj).length < 1) {
+    if (Object.keys(formatedcnpj).length < 1) {
       return left(new EntityNotEmpty('CNPJ'));
     }
 
@@ -62,21 +63,29 @@ export class CreateCompany
       return left(userValidation.value);
     }
 
-    const filteredCompany = await this.findCompanyByCnpjRepository.find(cnpj);
+    const filteredCompany = await this.findCompanyByCnpjRepository.find(
+      formatedcnpj
+    );
 
     if (Object.keys(filteredCompany?.id ?? filteredCompany).length > 0) {
       return left(new EntityAlreadyExists('Company'));
     }
 
     const consultCompany = await this.consultCompanyByCnpjRepository.consult(
-      cnpj
+      formatedcnpj
     );
 
-    if (Object.keys(consultCompany).length < 1) {
+    if (Object.keys(consultCompany?.situation ?? consultCompany).length < 1) {
       return left(new EntityNotValid('Company'));
     }
 
-    const createdCompany = await this.createCompanyRepository.create(input);
+    const createdCompany = await this.createCompanyRepository.create({
+      body: {
+        ...input.body,
+        cnpj: formatedcnpj,
+      },
+      loggedUserId,
+    });
 
     if (Object.keys(createdCompany).length < 1) {
       return left(new EntityNotCreated('Company'));
