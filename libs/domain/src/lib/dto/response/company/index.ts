@@ -1,2 +1,2 @@
-export * from './company-data.dto';
+export * from './company-data-response.dto';
 export * from './consult-company-br.dto';

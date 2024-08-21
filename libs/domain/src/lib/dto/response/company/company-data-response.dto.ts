@@ -1,4 +1,4 @@
-export interface CompanyDataDto {
+export interface CompanyDataResponseDto {
   port: string;
   opening: string;
   situation: string;

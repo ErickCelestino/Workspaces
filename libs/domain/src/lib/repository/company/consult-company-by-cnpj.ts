@@ -1,5 +1,5 @@
-import { CompanyDataDto } from '../../dto';
+import { CompanyDataResponseDto } from '../../dto';
 
 export interface ConsultCompanyByCnpjRepository {
-  consult(cnpj: string): Promise<CompanyDataDto>;
+  consult(cnpj: string): Promise<CompanyDataResponseDto>;
 }

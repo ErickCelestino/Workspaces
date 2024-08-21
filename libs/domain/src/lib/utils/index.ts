@@ -1,6 +1,7 @@
 export * from './buffer-to-stream';
 export * from './error-message-result';
 export * from './format-date-in-time';
+export * from './validation-company-by-cnpj';
 export * from './validation-device-by-id';
 export * from './validation-directory-id';
 export * from './validation-playlist-category-id';

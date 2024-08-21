@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker';
-import { CompanyDataDto } from '../../../src';
+import { CompanyDataResponseDto } from '../../../src';
 
-export const CompanyDataMock: CompanyDataDto = {
+export const CompanyDataMock: CompanyDataResponseDto = {
   port: faker.string.alpha(3),
   legalNature: faker.string.alpha(3),
   opening: faker.string.alpha(3),
