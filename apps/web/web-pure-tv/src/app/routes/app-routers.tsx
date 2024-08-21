@@ -60,18 +60,31 @@ export const AppRouters = () => {
           path: '/device',
         },
       ],
-      Empresa: [
-        {
-          label: 'Empresas',
-          icon: 'add_business',
-          path: '/company',
-        },
-      ],
     };
+
+    loggedUser?.type === 'DEFAULT_ADMIN'
+      ? setDrawerOptions({
+          ...drawerOptions,
+          Empresa: [
+            {
+              label: 'Empresas',
+              icon: 'add_business',
+              path: '/company',
+            },
+          ],
+        })
+      : setDrawerOptions(drawerOptions);
 
     loggedUser?.type === 'ADMIN'
       ? setDrawerOptions({
           ...drawerOptions,
+          Empresa: [
+            {
+              label: 'Empresas',
+              icon: 'add_business',
+              path: '/company',
+            },
+          ],
           Usuários: [
             {
               label: 'Usuários',
