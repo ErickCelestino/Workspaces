@@ -1,15 +1,4 @@
-import {
-  Box,
-  Modal,
-  Fade,
-  useTheme,
-  useMediaQuery,
-  Typography,
-  IconButton,
-  Divider,
-  TextField,
-} from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
+import { Box, useTheme, useMediaQuery, TextField } from '@mui/material';
 import { FC, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import {

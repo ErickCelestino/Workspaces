@@ -1,7 +1,7 @@
 import { Body, Controller, Post, Query, UsePipes } from '@nestjs/common';
 import { CreateCompanyService } from './create-company.service';
 import {
-  BodyCompanyDto,
+  CompanyBodyDto,
   createCompanySchema,
   ErrorMessageResult,
 } from '@workspaces/domain';
@@ -14,7 +14,7 @@ export class CreateCompanyController {
   @Post()
   @UsePipes(new ZodValidationPipe(createCompanySchema))
   async create(
-    @Body() body: BodyCompanyDto,
+    @Body() body: CompanyBodyDto,
     @Query('loggedUserId') loggedUserId: string
   ) {
     const result = await this.createCompanyService.create({

@@ -1,4 +1,4 @@
-export interface BodyCompanyDto {
+export interface CompanyBodyDto {
   fantasyName: string;
   socialReason: string;
   cnpj: string;

@@ -1,6 +1,6 @@
-import { BodyCompanyDto } from './body-company.dto';
+import { CompanyBodyDto } from './company-body.dto';
 
 export interface CreateCompanyDto {
-  body: BodyCompanyDto;
+  body: CompanyBodyDto;
   loggedUserId: string;
 }

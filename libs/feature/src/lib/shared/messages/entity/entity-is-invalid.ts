@@ -1,14 +1,14 @@
 import { Langue } from '@workspaces/domain';
 
-export const InvalidEmail = (langue: Langue) => {
+export const EntityIsInvalid = (entity: string, langue: Langue) => {
   let message: string;
 
   switch (langue) {
     case 'EN':
-      message = `The email address is invalid!`;
+      message = `The ${entity} is invalid!`;
       break;
     default:
-      message = `O endereço de email é inválido!`;
+      message = `O(a) ${entity} é inválido!`;
       break;
   }
 
