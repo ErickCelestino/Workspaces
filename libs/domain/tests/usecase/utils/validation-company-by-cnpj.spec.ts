@@ -15,7 +15,7 @@ const makeSut = (id: string, repository: FindCompanyByCnpjRepository) => {
   };
 };
 
-describe('ValidationDeviceId', () => {
+describe('ValidationCompanyByCnpj', () => {
   it('should return undefined when exist cnpj in database', async () => {
     const { sut } = makeSut('any_id', new FindCompanyByCnpjRepositoryMock());
 
@@ -26,7 +26,7 @@ describe('ValidationDeviceId', () => {
     expect(result.value).toStrictEqual(undefined);
   });
 
-  it('should return EntityNotEmpty when no pass correct device id', async () => {
+  it('should return EntityNotEmpty when no pass correct cnpj', async () => {
     const { sut } = makeSut('', new FindCompanyByCnpjRepositoryMock());
 
     const result = await sut;
@@ -36,7 +36,7 @@ describe('ValidationDeviceId', () => {
     expect(result.value).toBeInstanceOf(EntityNotEmpty);
   });
 
-  it('should return EntityNotExists when no exist device in database', async () => {
+  it('should return EntityNotExists when no exist company in database', async () => {
     const mockEmptyRepository: FindCompanyByCnpjRepository = {
       find: jest.fn(async () => CompanyMock),
     };
