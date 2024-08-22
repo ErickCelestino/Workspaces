@@ -4,6 +4,7 @@ import {
   CompanyBodyDto,
   CreateCompanyDto,
   ErrorResponse,
+  StepItem,
 } from '@workspaces/domain';
 import { useForm } from 'react-hook-form';
 import { CreateCompanyFormSchema } from '../../../shared/validations/company/create-company.schema';
@@ -17,19 +18,23 @@ import { useLoggedUser } from '../../../contexts';
 interface FormCreateCompanyProps {
   showAlert: (message: string, success: boolean) => void;
   handlePopUpClose: () => void;
+  step: StepItem;
   fantasyNameLabel?: string;
   cnpjLabel?: string;
   socialReasonLabel?: string;
   successMessage?: string;
+  buttonTitle?: string;
 }
 
 export const FormCreateCompany: FC<FormCreateCompanyProps> = ({
   showAlert,
   handlePopUpClose,
+  step: { stepPosition = 1, stepTitle = 'Etapa' },
   fantasyNameLabel = 'Nome Fantasia',
   cnpjLabel = 'CNPJ',
   socialReasonLabel = 'Razão Social',
   successMessage = 'Empresa criada com sucesso',
+  buttonTitle = 'Adicionar Empresa',
 }) => {
   const { loggedUser } = useLoggedUser();
 
@@ -52,7 +57,7 @@ export const FormCreateCompany: FC<FormCreateCompanyProps> = ({
     },
   });
 
-  const createDevice = async (input: CreateCompanyDto) => {
+  const createCompany = async (input: CreateCompanyDto) => {
     try {
       const result = await CreateCompanyRequest(input);
       return result;
@@ -73,7 +78,7 @@ export const FormCreateCompany: FC<FormCreateCompanyProps> = ({
   const handleCompanyData = async (data: CompanyBodyDto) => {
     setLoading(true);
     setSuccess(false);
-    const result = await createDevice({
+    const result = await createCompany({
       body: data,
       loggedUserId: loggedUser?.id ?? '',
     });
@@ -142,7 +147,11 @@ export const FormCreateCompany: FC<FormCreateCompanyProps> = ({
         }}
       >
         <Box width="80%">
-          <FormButton buttonTitle="Criar" loading={loading} success={success} />
+          <FormButton
+            buttonTitle={`${buttonTitle} (${stepTitle} - ${stepPosition})`}
+            loading={loading}
+            success={success}
+          />
         </Box>
       </Box>
     </Box>

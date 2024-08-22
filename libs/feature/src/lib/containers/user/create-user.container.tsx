@@ -2,13 +2,13 @@ import { FC, useState } from 'react';
 import {
   FormAuthCard,
   FormAuthConfirm,
-  FormCreateCompany,
   StepperCustomHorizontal,
 } from '../../components';
 import { Avatar, Box, Container, useTheme } from '@mui/material';
 import { FormCreateUser } from '../../components';
 import { FormCreateUserProps } from '@workspaces/domain';
 import { useSnackbarAlert } from '../../hooks';
+import { CompanyStepper } from '../../components/stepper/company/company-stepper';
 
 interface CreateUserProps {
   cardImage: string;
@@ -21,11 +21,11 @@ export const CreateUser: FC<CreateUserProps> = ({ cardImage, logo }) => {
   const theme = useTheme();
   const [step, setStep] = useState(0);
 
-  const handleCreateUser = (stepPosition: number) => {
+  const changeStage = (stepPosition: number) => {
     setStep(stepPosition);
   };
 
-  const showErrorAlert = (message: string) => {
+  const showAlert = (message: string) => {
     showSnackbarAlert({
       message: message,
       severity: 'error',
@@ -55,21 +55,18 @@ export const CreateUser: FC<CreateUserProps> = ({ cardImage, logo }) => {
             <Box sx={{ mt: 1 }}>
               <StepperCustomHorizontal activeStep={step} />
               {step === 0 && (
-                <FormCreateUser
-                  onData={handleCreateUser}
-                  showAlert={showErrorAlert}
-                />
+                <FormCreateUser onData={changeStage} showAlert={showAlert} />
               )}
               {step === 1 && (
                 <FormAuthConfirm
-                  showAlert={showErrorAlert}
-                  handlePopUpClose={() => handleCreateUser(2)}
+                  showAlert={showAlert}
+                  handlePopUpClose={() => changeStage(2)}
                 />
               )}
               {step === 2 && (
-                <FormCreateCompany
-                  showAlert={showErrorAlert}
-                  handlePopUpClose={() => handleCreateUser(3)}
+                <CompanyStepper
+                  handlePopUpClose={() => changeStage(3)}
+                  showAlert={showAlert}
                 />
               )}
             </Box>

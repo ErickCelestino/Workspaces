@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { useMediaQuery, useTheme } from '@mui/material';
 import { SimpleFormModal } from '../simple';
-import { FormCreateCompany } from '../../form';
+import { CompanyStepper } from '../../stepper/company/company-stepper';
 
 interface CreateCompanyModalProps {
   open: boolean;
@@ -35,13 +35,9 @@ export const CreateCompanyModal: FC<CreateCompanyModalProps> = ({
       width={smDown ? '90%' : theme.spacing(90)}
       title={title}
     >
-      <FormCreateCompany
+      <CompanyStepper
         handlePopUpClose={handlePopUpClose}
         showAlert={showAlert}
-        fantasyNameLabel={fantasyNameLabel}
-        cnpjLabel={cnpjLabel}
-        socialReasonLabel={socialReasonLabel}
-        successMessage={successMessage}
       />
     </SimpleFormModal>
   );
