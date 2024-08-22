@@ -25,7 +25,7 @@ export class CreateCompanyData
     input: CreateCompanyDataDto
   ): Promise<Either<EntityNotEmpty, string>> {
     const {
-      body: { legalNature, opening, phone, port, situation },
+      body: { legalNature, opening, phone, port, situation, responsibleEmail },
       companyId,
       loggedUserId,
     } = input;
@@ -59,6 +59,10 @@ export class CreateCompanyData
       return left(new EntityNotEmpty('Situation'));
     }
 
+    if (Object.keys(responsibleEmail).length < 1) {
+      return left(new EntityNotEmpty('Responsible Email'));
+    }
+
     const userValidation = await ValidationUserId(
       loggedUserId,
       this.findUserByIdRepository
@@ -84,6 +88,7 @@ export class CreateCompanyData
         phone: formatedPhone,
         port,
         situation,
+        responsibleEmail,
       },
       companyId,
       loggedUserId,

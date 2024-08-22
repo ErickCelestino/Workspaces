@@ -8,6 +8,7 @@ export interface CompanyDataResponseDto {
   situation: string;
   legalNature: string;
   phone: string;
+  responsibleEmail: string;
   simple: companySimpleResponseDto;
-  address: CompanyAddressResponseDto;
+  address: CompanyAddressResponseDto[];
 }

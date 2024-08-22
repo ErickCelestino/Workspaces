@@ -9,5 +9,5 @@ export const CompanyAddressMock: CompanyAddressResponseDto = {
   state: faker.location.state(),
   street: faker.location.street(),
   zipcode: faker.location.zipCode(),
-  complement: faker.lorem.word(),
+  complement: faker.location.streetAddress(),
 };

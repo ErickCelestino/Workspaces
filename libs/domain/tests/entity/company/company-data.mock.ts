@@ -10,6 +10,7 @@ export const CompanyDataMock: CompanyDataResponseDto = {
   phone: faker.phone.number(),
   port: faker.lorem.word(),
   situation: faker.lorem.word(),
-  address: CompanyAddressMock,
+  address: [CompanyAddressMock],
   simple: CompanyMock,
+  responsibleEmail: faker.internet.email(),
 };

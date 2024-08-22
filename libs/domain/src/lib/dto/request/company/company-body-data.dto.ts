@@ -4,4 +4,5 @@ export interface CompanyDataBodyDto {
   situation: string;
   legalNature: string;
   phone: string;
+  responsibleEmail: string;
 }

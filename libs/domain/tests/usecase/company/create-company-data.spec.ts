@@ -39,6 +39,7 @@ const makeSut = (): SutTypes => {
       phone: CompanyDataMock.phone,
       port: CompanyDataMock.port,
       situation: CompanyDataMock.situation,
+      responsibleEmail: CompanyDataMock.responsibleEmail,
     },
     companyId: CompanyDataMock.id,
     loggedUserId: userMock.userId,
