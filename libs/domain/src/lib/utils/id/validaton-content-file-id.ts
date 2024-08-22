@@ -1,6 +1,6 @@
-import { EntityNotEmpty, EntityNotExists } from '../error';
-import { FindContentFileByIdRepository } from '../repository';
-import { Either, left, right } from '../shared/either';
+import { EntityNotEmpty, EntityNotExists } from '../../error';
+import { FindContentFileByIdRepository } from '../../repository';
+import { Either, left, right } from '../../shared/either';
 
 export async function ValidationContentFileId(
   id: string,

@@ -19,6 +19,7 @@ export class ConsultCompanyByCnpjRepositoryImpl
     }
 
     return {
+      id: '',
       port: data.porte,
       legalNature: data.natureza_juridica,
       opening: data.abertura,

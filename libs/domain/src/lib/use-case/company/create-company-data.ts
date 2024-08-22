@@ -1,17 +1,25 @@
 import { Inject } from '@nestjs/common';
 import { UseCase } from '../../base/use-case';
 import { CreateCompanyDataDto } from '../../dto';
-import { EntityNotEmpty } from '../../error';
-import { FindUserByIdRepository } from '../../repository';
+import { EntityNotCreated, EntityNotEmpty } from '../../error';
+import {
+  CreateCompanyDataRepository,
+  FindCompanyByIdRepository,
+  FindUserByIdRepository,
+} from '../../repository';
 import { Either, left, right } from '../../shared/either';
-import { ValidationUserId } from '../../utils';
+import { ValidationCompanyId, ValidationUserId } from '../../utils';
 
 export class CreateCompanyData
   implements UseCase<CreateCompanyDataDto, Either<EntityNotEmpty, string>>
 {
   constructor(
     @Inject('FindUserByIdRepository')
-    private findUserByIdRepository: FindUserByIdRepository
+    private findUserByIdRepository: FindUserByIdRepository,
+    @Inject('FindCompanyByIdRepository')
+    private findCompanyByIdRepository: FindCompanyByIdRepository,
+    @Inject('CreateCompanyDataRepository')
+    private createCompanyDataRepository: CreateCompanyDataRepository
   ) {}
   async execute(
     input: CreateCompanyDataDto
@@ -41,6 +49,7 @@ export class CreateCompanyData
     if (Object.keys(phone).length < 1) {
       return left(new EntityNotEmpty('Phone'));
     }
+    const formatedPhone = phone.replace(/[^\d]+/g, '');
 
     if (Object.keys(port).length < 1) {
       return left(new EntityNotEmpty('Port'));
@@ -59,6 +68,31 @@ export class CreateCompanyData
       return left(userValidation.value);
     }
 
-    return right('');
+    const companyValidation = await ValidationCompanyId(
+      companyId,
+      this.findCompanyByIdRepository
+    );
+
+    if (companyValidation.isLeft()) {
+      return left(companyValidation.value);
+    }
+
+    const createdCompanyData = await this.createCompanyDataRepository.create({
+      body: {
+        legalNature,
+        opening,
+        phone: formatedPhone,
+        port,
+        situation,
+      },
+      companyId,
+      loggedUserId,
+    });
+
+    if (Object.keys(createdCompanyData).length < 1) {
+      return left(new EntityNotCreated('Company'));
+    }
+
+    return right(createdCompanyData);
   }
 }

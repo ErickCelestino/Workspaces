@@ -1,6 +1,6 @@
-import { EntityNotEmpty, EntityNotExists } from '../error';
-import { FindPlaylistCategoryByIdRepository } from '../repository';
-import { Either, left, right } from '../shared/either';
+import { EntityNotEmpty, EntityNotExists } from '../../error';
+import { FindPlaylistCategoryByIdRepository } from '../../repository';
+import { Either, left, right } from '../../shared/either';
 
 export async function ValidationPlaylistCategoryId(
   id: string,

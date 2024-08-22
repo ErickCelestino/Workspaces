@@ -4,6 +4,7 @@ import { CompanyMock } from './company.mock';
 import { CompanyAddressMock } from './company-address.mock';
 
 export const CompanyDataMock: CompanyDataResponseDto = {
+  id: CompanyMock.id,
   legalNature: faker.lorem.word(),
   opening: faker.date.recent().toString(),
   phone: faker.phone.number(),
