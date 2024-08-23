@@ -13,6 +13,14 @@ export async function ValidationAddressByIds(
     return left(new EntityNotEmpty('Country ID'));
   }
 
+  if (Object.keys(input.cityId).length < 1) {
+    return left(new EntityNotEmpty('City ID'));
+  }
+
+  if (Object.keys(input.stateId).length < 1) {
+    return left(new EntityNotEmpty('State ID'));
+  }
+
   const filteredCountry = await respositories.findCountryById.find(
     input.countryId
   );
