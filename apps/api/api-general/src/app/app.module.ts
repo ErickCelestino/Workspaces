@@ -11,8 +11,7 @@ import {
   CreateUserModule,
   FindUserByEmailModule,
 } from './user';
-import { CreateCompanyModule } from './company';
-import { ConsultCompanyByCnpjModule } from './consult-company-by-cnpj/consult-company-by-cnpj.module';
+import { CreateCompanyModule, ConsultCompanyByCnpjModule } from './company';
 
 @Module({
   imports: [
