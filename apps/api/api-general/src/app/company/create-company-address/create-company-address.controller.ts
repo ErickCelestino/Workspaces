@@ -1,6 +1,11 @@
-import { Body, Controller, Post, Query } from '@nestjs/common';
+import { Body, Controller, Post, Query, UsePipes } from '@nestjs/common';
 import { CreateCompanyAddressService } from './create-company-address.service';
-import { CompanyBodyAddressDto, ErrorMessageResult } from '@workspaces/domain';
+import {
+  CompanyBodyAddressDto,
+  createCompanyAddressSchema,
+  ErrorMessageResult,
+} from '@workspaces/domain';
+import { ZodValidationPipe } from '../../pipes/zod-validation-pipe';
 
 @Controller('create-company-address')
 export class CreateCompanyAddressController {
@@ -9,6 +14,7 @@ export class CreateCompanyAddressController {
   ) {}
 
   @Post()
+  @UsePipes(new ZodValidationPipe(createCompanyAddressSchema))
   async create(
     @Query('loggedUserId') loggedUserId: string,
     @Query('companyId') companyId: string,
