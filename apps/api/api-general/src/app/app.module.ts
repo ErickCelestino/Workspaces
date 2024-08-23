@@ -12,6 +12,7 @@ import {
   FindUserByEmailModule,
 } from './user';
 import { CreateCompanyModule, ConsultCompanyByCnpjModule } from './company';
+import { CreateCompanyDataModule } from './create-company-data/create-company-data.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { CreateCompanyModule, ConsultCompanyByCnpjModule } from './company';
     FindUserByEmailModule,
     CreateCompanyModule,
     ConsultCompanyByCnpjModule,
+    CreateCompanyDataModule,
   ],
   controllers: [AppController],
   providers: [AppService],

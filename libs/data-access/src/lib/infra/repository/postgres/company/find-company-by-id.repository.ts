@@ -91,7 +91,7 @@ export class FindCompanyByIdRepositoryImpl
       opening: filteredCompany?.company_data[0]?.opening ?? '',
       port: filteredCompany?.company_data[0]?.port ?? '',
       responsibleEmail:
-        filteredCompany?.company_data[0].responsible_email ?? '',
+        filteredCompany?.company_data[0]?.responsible_email ?? '',
       simple: {
         cnpj: filteredCompany?.cnpj ?? '',
         fantasyName: filteredCompany?.fantasy_name ?? '',
