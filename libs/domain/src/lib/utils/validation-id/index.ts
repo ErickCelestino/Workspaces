@@ -1,3 +1,4 @@
+export * from './validation-address-by-ids';
 export * from './validation-company-by-id';
 export * from './validation-device-by-id';
 export * from './validation-directory-id';
