@@ -141,6 +141,16 @@ describe('CreateCompanyData', () => {
     expect(result.value).toBeInstanceOf(EntityNotEmpty);
   });
 
+  it('should return EntityNotEmpty when pass incorrect Responsible Email', async () => {
+    const { sut, createCompanyDataDto } = makeSut();
+    createCompanyDataDto.body.responsibleEmail = '';
+    const result = await sut.execute(createCompanyDataDto);
+
+    expect(result.isRight()).toBe(false);
+    expect(result.isLeft()).toBe(true);
+    expect(result.value).toBeInstanceOf(EntityNotEmpty);
+  });
+
   it('should return EntityNotExists when a exist User in system', async () => {
     const { createCompanyDataDto, sut } = makeSut();
     jest

@@ -1,4 +1,5 @@
 export interface CompanyAddressResponseDto {
+  id: string;
   number: string;
   district: string;
   city: string;

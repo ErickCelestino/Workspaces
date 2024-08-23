@@ -42,12 +42,12 @@ export class CreateCompanyAddress
   ): Promise<Either<EntityNotEmpty, string>> {
     const {
       body: {
-        city,
+        cityId,
         complement,
-        country,
+        countryId,
         district,
         number,
-        state,
+        stateId,
         street,
         zipcode,
       },
@@ -62,15 +62,11 @@ export class CreateCompanyAddress
       return left(new EntityNotEmpty('Company ID'));
     }
 
-    if (Object.keys(city).length < 1) {
+    if (Object.keys(cityId).length < 1) {
       return left(new EntityNotEmpty('City'));
     }
 
-    if (Object.keys(complement).length < 1) {
-      return left(new EntityNotEmpty('Complement'));
-    }
-
-    if (Object.keys(country).length < 1) {
+    if (Object.keys(countryId).length < 1) {
       return left(new EntityNotEmpty('Country'));
     }
 
@@ -82,7 +78,7 @@ export class CreateCompanyAddress
       return left(new EntityNotEmpty('Number'));
     }
 
-    if (Object.keys(state).length < 1) {
+    if (Object.keys(stateId).length < 1) {
       return left(new EntityNotEmpty('State'));
     }
 
@@ -114,9 +110,9 @@ export class CreateCompanyAddress
 
     const addressValidation = await ValidationAddressByIds(
       {
-        cityId: city,
-        countryId: country,
-        stateId: state,
+        cityId,
+        countryId,
+        stateId,
       },
       {
         findCityById: this.findCityByIdRepository,

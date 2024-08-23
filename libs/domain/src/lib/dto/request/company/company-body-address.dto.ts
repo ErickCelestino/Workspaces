@@ -1,10 +1,10 @@
 export interface CompanyBodyAddressDto {
   district: string;
   street: string;
-  number: number;
-  complement: string;
+  number: string;
+  complement?: string;
   zipcode: string;
-  city: string;
-  state: string;
-  country: string;
+  cityId: string;
+  stateId: string;
+  countryId: string;
 }
