@@ -28,6 +28,7 @@ export class ConsultCompanyByCnpjRepositoryImpl
       responsibleEmail: data.email,
       address: [
         {
+          id: '',
           city: data.municipio,
           complement: data.complemento,
           country: 'Brasil',

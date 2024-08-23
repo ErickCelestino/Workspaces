@@ -58,6 +58,7 @@ export class FindCompanyByIdRepositoryImpl
                     },
                   },
                 },
+                address_id: true,
                 complement: true,
                 district: true,
                 number: true,
@@ -72,6 +73,7 @@ export class FindCompanyByIdRepositoryImpl
 
     const mappedCompanyAddress: CompanyAddressResponseDto[] =
       filteredCompany?.company_x_address?.map((address) => ({
+        id: address?.address?.address_id ?? '',
         city: address?.address?.city?.name ?? '',
         state: address?.address?.city?.state?.name ?? '',
         street: address?.address?.street ?? '',

@@ -16,6 +16,7 @@ import {
   ConsultCompanyByCnpjModule,
   CreateCompanyDataModule,
 } from './company';
+import { CreateCompanyAddressModule } from './create-company-address/create-company-address.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import {
     CreateCompanyModule,
     ConsultCompanyByCnpjModule,
     CreateCompanyDataModule,
+    CreateCompanyAddressModule,
   ],
   controllers: [AppController],
   providers: [AppService],
