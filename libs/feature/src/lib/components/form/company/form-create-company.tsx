@@ -18,6 +18,7 @@ import { useLoggedUser } from '../../../contexts';
 interface FormCreateCompanyProps {
   showAlert: (message: string, success: boolean) => void;
   handlePopUpClose: () => void;
+  changeCompanyId: (companyId: string) => void;
   step: StepItem;
   fantasyNameLabel?: string;
   cnpjLabel?: string;
@@ -29,6 +30,7 @@ interface FormCreateCompanyProps {
 export const FormCreateCompany: FC<FormCreateCompanyProps> = ({
   showAlert,
   handlePopUpClose,
+  changeCompanyId,
   step: { stepPosition = 1, stepTitle = 'Etapa' },
   fantasyNameLabel = 'Nome Fantasia',
   cnpjLabel = 'CNPJ',
@@ -83,6 +85,7 @@ export const FormCreateCompany: FC<FormCreateCompanyProps> = ({
       loggedUserId: loggedUser?.id ?? '',
     });
     if (result) {
+      changeCompanyId(result);
       setLoading(false);
       setSuccess(true);
       setSuccess(false);

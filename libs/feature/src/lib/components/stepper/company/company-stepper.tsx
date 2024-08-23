@@ -1,5 +1,5 @@
 import { FC, useState } from 'react';
-import { FormCreateCompany } from '../../form';
+import { FormCreateCompany, FormCreateCompanyData } from '../../form';
 import { Box } from '@mui/material';
 
 interface CompanyStepperProps {
@@ -14,21 +14,40 @@ export const CompanyStepper: FC<CompanyStepperProps> = ({
   totalPosition = 3,
 }) => {
   const [step, setStep] = useState(1);
+  const [companyId, setCompanyId] = useState('');
 
   const changeStage = (stepPosition: number) => {
     setStep(stepPosition);
   };
 
+  const changeCompanyId = (companyId: string) => {
+    setCompanyId(companyId);
+  };
+
   return (
     <Box>
-      <FormCreateCompany
-        showAlert={showAlert}
-        handlePopUpClose={() => changeStage(1)}
-        step={{
-          stepPosition: step,
-          totalPositions: totalPosition,
-        }}
-      />
+      {step === 1 && (
+        <FormCreateCompany
+          showAlert={showAlert}
+          handlePopUpClose={() => changeStage(2)}
+          changeCompanyId={changeCompanyId}
+          step={{
+            stepPosition: step,
+            totalPositions: totalPosition,
+          }}
+        />
+      )}
+      {step === 2 && (
+        <FormCreateCompanyData
+          showAlert={showAlert}
+          handlePopUpClose={() => changeStage(2)}
+          step={{
+            stepPosition: step,
+            totalPositions: totalPosition,
+          }}
+          companyId={companyId}
+        />
+      )}
     </Box>
   );
 };
