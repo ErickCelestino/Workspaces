@@ -4,7 +4,7 @@ import {
   ErrorResponse,
   StepItem,
 } from '@workspaces/domain';
-import { FC, useState } from 'react';
+import { FC, useRef, useState } from 'react';
 import { useLoggedUser } from '../../../contexts';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -14,7 +14,7 @@ import axios, { AxiosError } from 'axios';
 import { ValidationsError } from '../../../shared';
 import { Box, TextField } from '@mui/material';
 import { FormButton } from '../form-button.component';
-
+import { MaskedInput } from '../../text-field';
 interface FormCreateCompanyDataProps {
   showAlert: (message: string, success: boolean) => void;
   handlePopUpClose: () => void;
@@ -48,6 +48,7 @@ export const FormCreateCompanyData: FC<FormCreateCompanyDataProps> = ({
 
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const {
     handleSubmit,
@@ -117,58 +118,81 @@ export const FormCreateCompanyData: FC<FormCreateCompanyDataProps> = ({
       component="form"
       onSubmit={handleSubmit(handleCompanyData)}
     >
-      <TextField
-        margin="normal"
-        required
-        fullWidth
-        error={!!errors.legalNature}
-        helperText={errors.legalNature ? errors.legalNature.message : ''}
-        id="legalNature"
-        disabled={loading}
-        label={legalNatureLabel}
-        autoComplete="legalNature"
-        autoFocus
-        {...register('legalNature')}
-      />
-      <TextField
-        margin="normal"
-        required
-        fullWidth
-        error={!!errors.opening}
-        helperText={errors.opening ? errors.opening.message : ''}
-        id="opening"
-        disabled={loading}
-        label={openingLabel}
-        autoComplete="opening"
-        autoFocus
-        {...register('opening')}
-      />
-      <TextField
-        margin="normal"
-        required
-        fullWidth
-        error={!!errors.phone}
-        helperText={errors.phone ? errors.phone.message : ''}
-        id="phone"
-        disabled={loading}
-        label={phoneLabel}
-        autoComplete="phone"
-        autoFocus
-        {...register('phone')}
-      />
-      <TextField
-        margin="normal"
-        required
-        fullWidth
-        error={!!errors.port}
-        helperText={errors.port ? errors.port.message : ''}
-        id="port"
-        disabled={loading}
-        label={portLabel}
-        autoComplete="port"
-        autoFocus
-        {...register('port')}
-      />
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+        }}
+      >
+        <Box width="48%">
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            error={!!errors.legalNature}
+            helperText={errors.legalNature ? errors.legalNature.message : ''}
+            id="legalNature"
+            disabled={loading}
+            label={legalNatureLabel}
+            autoComplete="legalNature"
+            autoFocus
+            {...register('legalNature')}
+          />
+        </Box>
+        <Box width="48%">
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            type="date"
+            error={!!errors.opening}
+            helperText={errors.opening ? errors.opening.message : ''}
+            InputLabelProps={{ shrink: true, required: true }}
+            id="opening"
+            disabled={loading}
+            label={openingLabel}
+            autoComplete="opening"
+            {...register('opening')}
+          />
+        </Box>
+      </Box>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+        }}
+      >
+        <Box width="48%">
+          <MaskedInput
+            maskType="phone"
+            margin="normal"
+            required
+            fullWidth
+            error={!!errors.phone}
+            helperText={errors.phone ? errors.phone.message : ''}
+            id="phone"
+            disabled={loading}
+            label={phoneLabel}
+            autoComplete="phone"
+            {...register('phone')}
+            inputRef={inputRef}
+          />
+        </Box>
+        <Box width="48%">
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            error={!!errors.port}
+            helperText={errors.port ? errors.port.message : ''}
+            id="port"
+            disabled={loading}
+            label={portLabel}
+            autoComplete="port"
+            {...register('port')}
+          />
+        </Box>
+      </Box>
       <TextField
         margin="normal"
         required
@@ -181,7 +205,6 @@ export const FormCreateCompanyData: FC<FormCreateCompanyDataProps> = ({
         disabled={loading}
         label={responsibleEmailLabel}
         autoComplete="responsibleEmail"
-        autoFocus
         {...register('responsibleEmail')}
       />
       <TextField
@@ -194,7 +217,6 @@ export const FormCreateCompanyData: FC<FormCreateCompanyDataProps> = ({
         disabled={loading}
         label={situationLabel}
         autoComplete="situation"
-        autoFocus
         {...register('situation')}
       />
       <Box

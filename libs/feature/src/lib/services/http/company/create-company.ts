@@ -2,7 +2,7 @@ import { CreateCompanyDto } from '@workspaces/domain';
 import { generalApi } from '../axios-config';
 
 export async function CreateCompanyRequest(input: CreateCompanyDto) {
-  const result = await generalApi.post(
+  const result = await generalApi.post<{ companyId: string }>(
     'create-company',
     {
       fantasyName: input.body.fantasyName,

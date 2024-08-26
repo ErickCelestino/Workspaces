@@ -31,7 +31,7 @@ export const CreateCompanyModal: FC<CreateCompanyModalProps> = ({
     <SimpleFormModal
       open={open}
       handlePopUpClose={handlePopUpClose}
-      height={theme.spacing(70)}
+      height={theme.spacing(78)}
       width={smDown ? '90%' : theme.spacing(90)}
       title={title}
     >

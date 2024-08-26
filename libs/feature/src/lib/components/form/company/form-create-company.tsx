@@ -85,7 +85,7 @@ export const FormCreateCompany: FC<FormCreateCompanyProps> = ({
       loggedUserId: loggedUser?.id ?? '',
     });
     if (result) {
-      changeCompanyId(result);
+      changeCompanyId(result.companyId);
       setLoading(false);
       setSuccess(true);
       setSuccess(false);

@@ -54,7 +54,7 @@ export const CreateUser: FC<CreateUserProps> = ({ cardImage, logo }) => {
             />
             <Box sx={{ mt: 1 }}>
               <StepperCustomHorizontal activeStep={step} />
-              {step === 0 && (
+              {step === 2 && (
                 <FormCreateUser onData={changeStage} showAlert={showAlert} />
               )}
               {step === 1 && (
@@ -63,7 +63,7 @@ export const CreateUser: FC<CreateUserProps> = ({ cardImage, logo }) => {
                   handlePopUpClose={() => changeStage(2)}
                 />
               )}
-              {step === 2 && (
+              {step === 0 && (
                 <CompanyStepper
                   handlePopUpClose={() => changeStage(3)}
                   showAlert={showAlert}
