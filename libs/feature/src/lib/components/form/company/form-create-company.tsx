@@ -20,6 +20,7 @@ interface FormCreateCompanyProps {
   handlePopUpClose: () => void;
   changeCompanyId: (companyId: string) => void;
   step: StepItem;
+  totalPosition: number;
   fantasyNameLabel?: string;
   cnpjLabel?: string;
   socialReasonLabel?: string;
@@ -31,6 +32,7 @@ export const FormCreateCompany: FC<FormCreateCompanyProps> = ({
   showAlert,
   handlePopUpClose,
   changeCompanyId,
+  totalPosition,
   step: { stepPosition = 1, stepTitle = 'Etapa' },
   fantasyNameLabel = 'Nome Fantasia',
   cnpjLabel = 'CNPJ',
@@ -151,7 +153,7 @@ export const FormCreateCompany: FC<FormCreateCompanyProps> = ({
       >
         <Box width="80%">
           <FormButton
-            buttonTitle={`${buttonTitle} (${stepTitle} - ${stepPosition})`}
+            buttonTitle={`${buttonTitle} (${stepTitle} - ${stepPosition}/${totalPosition})`}
             loading={loading}
             success={success}
           />

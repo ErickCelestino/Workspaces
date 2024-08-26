@@ -6,7 +6,7 @@ import {
 } from '@workspaces/domain';
 import { generalApi } from '../axios-config';
 
-export async function ConsultCompanyByCnpjReques(
+export async function ConsultCompanyByCnpjRequest(
   input: ConsultCompanyByCnpjDto
 ) {
   const result = await generalApi.get<CompanyDataResponseDto>(

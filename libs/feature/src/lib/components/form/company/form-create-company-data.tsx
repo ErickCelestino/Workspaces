@@ -20,6 +20,7 @@ interface FormCreateCompanyDataProps {
   handlePopUpClose: () => void;
   step: StepItem;
   companyId: string;
+  totalPosition: number;
   portLabel?: string;
   openingLabel?: string;
   situationLabel?: string;
@@ -35,6 +36,7 @@ export const FormCreateCompanyData: FC<FormCreateCompanyDataProps> = ({
   handlePopUpClose,
   companyId,
   step: { stepPosition = 1, stepTitle = 'Etapa' },
+  totalPosition,
   portLabel = 'Porto',
   openingLabel = 'Abertura',
   situationLabel = 'Situação',
@@ -228,7 +230,7 @@ export const FormCreateCompanyData: FC<FormCreateCompanyDataProps> = ({
       >
         <Box width="80%">
           <FormButton
-            buttonTitle={`${buttonTitle} (${stepTitle} - ${stepPosition})`}
+            buttonTitle={`${buttonTitle} (${stepTitle} - ${stepPosition}/${totalPosition})`}
             loading={loading}
             success={success}
           />

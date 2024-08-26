@@ -1,6 +1,11 @@
 import { FC, useState } from 'react';
-import { FormCreateCompany, FormCreateCompanyData } from '../../form';
+import {
+  FormCreateCompany,
+  FormCreateCompanyData,
+  FormConsultCompanyByCnpj,
+} from '../../form';
 import { Box } from '@mui/material';
+import { CompanyDataResponseDto } from '@workspaces/domain';
 
 interface CompanyStepperProps {
   showAlert: (message: string, success: boolean) => void;
@@ -11,13 +16,20 @@ interface CompanyStepperProps {
 export const CompanyStepper: FC<CompanyStepperProps> = ({
   showAlert,
   handlePopUpClose,
-  totalPosition = 3,
+  totalPosition = 4,
 }) => {
   const [step, setStep] = useState(1);
   const [companyId, setCompanyId] = useState('');
+  const [companyData, setCompanyData] = useState<CompanyDataResponseDto>(
+    {} as CompanyDataResponseDto
+  );
 
   const changeStage = (stepPosition: number) => {
     setStep(stepPosition);
+  };
+
+  const changeCompany = (company: CompanyDataResponseDto) => {
+    setCompanyData(company);
   };
 
   const changeCompanyId = (companyId: string) => {
@@ -27,25 +39,41 @@ export const CompanyStepper: FC<CompanyStepperProps> = ({
   return (
     <Box>
       {step === 1 && (
-        <FormCreateCompany
+        <FormConsultCompanyByCnpj
           showAlert={showAlert}
           handlePopUpClose={() => changeStage(2)}
+          changeCompany={changeCompany}
+          step={{
+            stepPosition: step,
+            totalPositions: totalPosition,
+          }}
+          totalPosition={totalPosition}
+        />
+      )}
+
+      {step === 2 && (
+        <FormCreateCompany
+          showAlert={showAlert}
+          handlePopUpClose={() => changeStage(3)}
           changeCompanyId={changeCompanyId}
           step={{
             stepPosition: step,
             totalPositions: totalPosition,
           }}
+          totalPosition={totalPosition}
         />
       )}
-      {step === 2 && (
+
+      {step === 3 && (
         <FormCreateCompanyData
           showAlert={showAlert}
-          handlePopUpClose={() => changeStage(3)}
+          handlePopUpClose={() => changeStage(4)}
           step={{
             stepPosition: step,
             totalPositions: totalPosition,
           }}
           companyId={companyId}
+          totalPosition={totalPosition}
         />
       )}
     </Box>
