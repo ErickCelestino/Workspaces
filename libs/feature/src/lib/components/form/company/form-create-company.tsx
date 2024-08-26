@@ -15,6 +15,7 @@ import axios, { AxiosError } from 'axios';
 import { ValidationsError } from '../../../shared';
 import { FormButton } from '../form-button.component';
 import { useLoggedUser } from '../../../contexts';
+import { MaskedInput } from '../../text-field';
 
 interface FormCreateCompanyProps {
   showAlert: (message: string, success: boolean) => void;
@@ -123,7 +124,8 @@ export const FormCreateCompany: FC<FormCreateCompanyProps> = ({
         autoFocus
         {...register('fantasyName')}
       />
-      <TextField
+      <MaskedInput
+        maskType="cnpj"
         margin="normal"
         required
         fullWidth

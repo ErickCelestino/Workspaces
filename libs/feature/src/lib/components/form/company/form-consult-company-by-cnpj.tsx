@@ -60,6 +60,7 @@ export const FormConsultCompanyByCnpj: FC<FormConsultCompanyByCnpjProps> = ({
 
   const searchData = async (input: ConsultCompanyByCnpjDto) => {
     try {
+      console.log(input);
       const result = await ConsultCompanyByCnpjRequest(input);
       return result;
     } catch (error) {

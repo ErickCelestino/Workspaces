@@ -1,5 +1,6 @@
 import {
   CompanyDataBodyDto,
+  CompanyDataResponseDto,
   CreateCompanyDataDto,
   ErrorResponse,
   StepItem,
@@ -21,6 +22,7 @@ interface FormCreateCompanyDataProps {
   step: StepItem;
   companyId: string;
   totalPosition: number;
+  companyData: CompanyDataResponseDto;
   portLabel?: string;
   openingLabel?: string;
   situationLabel?: string;
@@ -35,6 +37,7 @@ export const FormCreateCompanyData: FC<FormCreateCompanyDataProps> = ({
   showAlert,
   handlePopUpClose,
   companyId,
+  companyData,
   step: { stepPosition = 1, stepTitle = 'Etapa' },
   totalPosition,
   portLabel = 'Porto',
@@ -62,12 +65,12 @@ export const FormCreateCompanyData: FC<FormCreateCompanyDataProps> = ({
     criteriaMode: 'all',
     resolver: zodResolver(CreateCompanyDataFormSchema),
     defaultValues: {
-      legalNature: '',
-      opening: '',
-      phone: '',
-      port: '',
-      responsibleEmail: '',
-      situation: '',
+      legalNature: companyData.legalNature,
+      opening: companyData.opening,
+      phone: companyData.phone,
+      port: companyData.port,
+      responsibleEmail: companyData.responsibleEmail,
+      situation: companyData.situation,
     },
   });
 

@@ -61,7 +61,7 @@ export class ConsultCompanyByCnpj
     );
 
     if (
-      Object.keys(consultedCompany?.simple?.id ?? consultedCompany).length < 1
+      Object.keys(consultedCompany?.simple?.cnpj ?? consultedCompany).length < 1
     ) {
       return left(new EntityNotExists('Company'));
     }
