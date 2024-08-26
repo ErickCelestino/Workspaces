@@ -1,6 +1,3 @@
-import { CompanyAddressResponseDto } from './company-address-response.dto';
-import { companySimpleResponseDto } from './company-simple-response.dto';
-
 export interface CompanyDataResponseDto {
   id: string;
   port: string;
@@ -9,6 +6,4 @@ export interface CompanyDataResponseDto {
   legalNature: string;
   phone: string;
   responsibleEmail: string;
-  simple: companySimpleResponseDto;
-  address: CompanyAddressResponseDto[];
 }

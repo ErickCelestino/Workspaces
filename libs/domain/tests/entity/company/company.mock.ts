@@ -1,11 +1,10 @@
-import { faker } from '@faker-js/faker';
-import { Company } from '../../../src';
+import { CompanyResponseDto } from '../../../src';
+import { CompanySimpleMock } from './company-simple.mock';
+import { CompanyAddressMock } from './company-address.mock';
+import { CompanyDataMock } from './company-data.mock';
 
-export const CompanyMock: Company = {
-  id: faker.string.uuid(),
-  cnpj: '27199213000140',
-  fantasyName: faker.company.name(),
-  socialReason: faker.company.name(),
-  createdBy: faker.string.uuid(),
-  cretedAt: faker.date.recent(),
+export const CompanyMock: CompanyResponseDto = {
+  data: CompanyDataMock,
+  address: [CompanyAddressMock],
+  simple: CompanySimpleMock,
 };

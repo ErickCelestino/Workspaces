@@ -5,7 +5,7 @@ import {
   FormConsultCompanyByCnpj,
 } from '../../form';
 import { Box } from '@mui/material';
-import { CompanyDataResponseDto } from '@workspaces/domain';
+import { CompanyResponseDto } from '@workspaces/domain';
 
 interface CompanyStepperProps {
   showAlert: (message: string, success: boolean) => void;
@@ -20,15 +20,15 @@ export const CompanyStepper: FC<CompanyStepperProps> = ({
 }) => {
   const [step, setStep] = useState(1);
   const [companyId, setCompanyId] = useState('');
-  const [companyData, setCompanyData] = useState<CompanyDataResponseDto>(
-    {} as CompanyDataResponseDto
+  const [companyData, setCompanyData] = useState<CompanyResponseDto>(
+    {} as CompanyResponseDto
   );
 
   const changeStage = (stepPosition: number) => {
     setStep(stepPosition);
   };
 
-  const changeCompany = (company: CompanyDataResponseDto) => {
+  const changeCompany = (company: CompanyResponseDto) => {
     setCompanyData(company);
   };
 

@@ -1,6 +1,6 @@
 import { Inject } from '@nestjs/common';
 import { UseCase } from '../../base/use-case';
-import { CompanyDataResponseDto, ConsultCompanyByCnpjDto } from '../../dto';
+import { CompanyResponseDto, ConsultCompanyByCnpjDto } from '../../dto';
 import { EntityNotEmpty, EntityNotExists } from '../../error';
 import { Either, left, right } from '../../shared/either';
 import {
@@ -14,7 +14,7 @@ export class ConsultCompanyByCnpj
   implements
     UseCase<
       ConsultCompanyByCnpjDto,
-      Either<EntityNotEmpty, CompanyDataResponseDto>
+      Either<EntityNotEmpty, CompanyResponseDto>
     >
 {
   constructor(
@@ -27,7 +27,7 @@ export class ConsultCompanyByCnpj
   ) {}
   async execute(
     input: ConsultCompanyByCnpjDto
-  ): Promise<Either<EntityNotEmpty, CompanyDataResponseDto>> {
+  ): Promise<Either<EntityNotEmpty, CompanyResponseDto>> {
     const { cnpj, loggedUserId } = input;
 
     if (Object.keys(cnpj).length < 1) {
@@ -61,7 +61,7 @@ export class ConsultCompanyByCnpj
     );
 
     if (
-      Object.keys(consultedCompany?.situation ?? consultedCompany).length < 1
+      Object.keys(consultedCompany?.simple?.id ?? consultedCompany).length < 1
     ) {
       return left(new EntityNotExists('Company'));
     }

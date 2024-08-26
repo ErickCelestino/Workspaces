@@ -1,15 +1,13 @@
 import {
-  CompanyDataResponseDto,
+  CompanyResponseDto,
   ConsultCompanyByCnpjDto,
-  Device,
-  FindDeviceByIdDto,
 } from '@workspaces/domain';
 import { generalApi } from '../axios-config';
 
 export async function ConsultCompanyByCnpjRequest(
   input: ConsultCompanyByCnpjDto
 ) {
-  const result = await generalApi.get<CompanyDataResponseDto>(
+  const result = await generalApi.get<CompanyResponseDto>(
     `consult-company-by-cnpj/${input.cnpj}`,
     {
       params: {

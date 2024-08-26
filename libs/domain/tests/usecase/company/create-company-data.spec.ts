@@ -1,7 +1,5 @@
 import {
-  Company,
-  CompanyDataBodyDto,
-  CompanyDataResponseDto,
+  CompanyResponseDto,
   CreateCompanyData,
   CreateCompanyDataDto,
   CreateCompanyDataRepository,
@@ -167,7 +165,7 @@ describe('CreateCompanyData', () => {
     const { createCompanyDataDto, sut } = makeSut();
     jest
       .spyOn(sut['findCompanyByIdRepository'], 'find')
-      .mockResolvedValueOnce({} as CompanyDataResponseDto);
+      .mockResolvedValueOnce({} as CompanyResponseDto);
     const result = await sut.execute(createCompanyDataDto);
 
     expect(result.isLeft()).toBe(true);

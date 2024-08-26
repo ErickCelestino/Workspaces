@@ -12,7 +12,7 @@ export async function ValidationCompanyId(
 
   const filteredCompany = await findCompanyByIdRepository.find(id);
 
-  if (Object.keys(filteredCompany?.id ?? filteredCompany).length < 1) {
+  if (Object.keys(filteredCompany?.simple?.id ?? filteredCompany).length < 1) {
     return left(new EntityNotExists('Company'));
   }
 

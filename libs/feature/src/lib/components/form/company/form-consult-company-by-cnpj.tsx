@@ -3,7 +3,7 @@ import { FC, useState } from 'react';
 import { FormButton } from '../form-button.component';
 import { useForm } from 'react-hook-form';
 import {
-  CompanyDataResponseDto,
+  CompanyResponseDto,
   ConsultCompanyByCnpjDto,
   ErrorResponse,
   StepItem,
@@ -18,7 +18,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 interface FormConsultCompanyByCnpjProps {
   showAlert: (message: string, success: boolean) => void;
   handlePopUpClose: () => void;
-  changeCompany: (company: CompanyDataResponseDto) => void;
+  changeCompany: (company: CompanyResponseDto) => void;
   totalPosition: number;
   step: StepItem;
   title?: string;

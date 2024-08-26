@@ -1,6 +1,7 @@
 import {
   Company,
   CompanyDataResponseDto,
+  CompanyResponseDto,
   ConsultCompanyByCnpj,
   ConsultCompanyByCnpjDto,
   ConsultCompanyByCnpjRepository,
@@ -11,7 +12,12 @@ import {
   FindUserByIdRepository,
   UserList,
 } from '../../../src';
-import { CompanyDataMock, CompanyMock, userMock } from '../../entity';
+import {
+  CompanyDataMock,
+  CompanyMock,
+  CompanySimpleMock,
+  userMock,
+} from '../../entity';
 import {
   ConsultCompanyByCnpjRepositoryMock,
   FindCompanyByCnpjRepositoryMock,
@@ -33,7 +39,7 @@ const makeSut = (): SutTypes => {
     new ConsultCompanyByCnpjRepositoryMock();
 
   const consultCompanyByCnpjDto: ConsultCompanyByCnpjDto = {
-    cnpj: CompanyMock.cnpj,
+    cnpj: CompanySimpleMock.cnpj,
     loggedUserId: userMock.userId,
   };
 
@@ -60,7 +66,7 @@ describe('ConsultCompanyByCnpj', () => {
 
     expect(result.isLeft()).toBe(false);
     expect(result.isRight()).toBe(true);
-    expect(result.value).toStrictEqual(CompanyDataMock);
+    expect(result.value).toStrictEqual(CompanyMock);
   });
 
   it('should return EntityNotEmpty when pass incorrect Logged User id', async () => {
@@ -99,7 +105,7 @@ describe('ConsultCompanyByCnpj', () => {
     const { sut, consultCompanyByCnpjDto } = makeSut();
     jest
       .spyOn(sut['findCompanyByCnpjRepository'], 'find')
-      .mockResolvedValueOnce(CompanyMock);
+      .mockResolvedValueOnce(CompanySimpleMock);
     const result = await sut.execute(consultCompanyByCnpjDto);
 
     expect(result.isRight()).toBe(false);
@@ -111,7 +117,7 @@ describe('ConsultCompanyByCnpj', () => {
     const { sut, consultCompanyByCnpjDto } = makeSut();
     jest
       .spyOn(sut['consultCompanyByCnpjRepository'], 'consult')
-      .mockResolvedValueOnce({} as CompanyDataResponseDto);
+      .mockResolvedValueOnce({} as CompanyResponseDto);
     const result = await sut.execute(consultCompanyByCnpjDto);
 
     expect(result.isRight()).toBe(false);

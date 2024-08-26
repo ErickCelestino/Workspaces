@@ -2,30 +2,33 @@ import {
   CompanyDataResponseDto,
   ConsultCompanyByCnpjRepository,
   ConsultCompanyBrDto,
+  CompanyResponseDto,
 } from '@workspaces/domain';
 import axios from 'axios';
 
 export class ConsultCompanyByCnpjRepositoryImpl
   implements ConsultCompanyByCnpjRepository
 {
-  async consult(cnpj: string): Promise<CompanyDataResponseDto> {
+  async consult(cnpj: string): Promise<CompanyResponseDto> {
     const url = process.env['NX_APP_CONSULT_CNPJ_URL'] ?? '';
 
     const response = await axios.get<ConsultCompanyBrDto>(`${url}/${cnpj}`);
 
     const { data } = response;
     if (!data?.cnpj) {
-      return {} as CompanyDataResponseDto;
+      return {} as CompanyResponseDto;
     }
 
     return {
-      id: '',
-      port: data.porte,
-      legalNature: data.natureza_juridica,
-      opening: data.abertura,
-      situation: data.situacao,
-      phone: data.telefone,
-      responsibleEmail: data.email,
+      data: {
+        id: '',
+        port: data.porte,
+        legalNature: data.natureza_juridica,
+        opening: data.abertura,
+        situation: data.situacao,
+        phone: data.telefone,
+        responsibleEmail: data.email,
+      },
       address: [
         {
           id: '',
@@ -40,6 +43,7 @@ export class ConsultCompanyByCnpjRepositoryImpl
         },
       ],
       simple: {
+        id: '',
         cnpj,
         fantasyName: data.fantasia,
         socialReason: data.nome,

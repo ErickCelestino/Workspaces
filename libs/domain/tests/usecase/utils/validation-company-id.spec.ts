@@ -1,5 +1,6 @@
 import {
   CompanyDataResponseDto,
+  CompanyResponseDto,
   EntityNotEmpty,
   EntityNotExists,
   FindCompanyByIdRepository,
@@ -37,7 +38,7 @@ describe('ValidationCompanyId', () => {
   });
 
   it('should return EntityNotExists when no pass incorrect company id', async () => {
-    const mockEmptyItem = {} as CompanyDataResponseDto;
+    const mockEmptyItem = {} as CompanyResponseDto;
 
     const mockEmptyRepository: FindCompanyByIdRepository = {
       find: jest.fn(async () => mockEmptyItem),

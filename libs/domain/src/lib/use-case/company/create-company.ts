@@ -76,7 +76,7 @@ export class CreateCompany
       formatedcnpj
     );
 
-    if (Object.keys(consultCompany?.situation ?? consultCompany).length < 1) {
+    if (Object.keys(consultCompany?.simple?.id ?? consultCompany).length < 1) {
       return left(new EntityNotValid('Company'));
     }
 

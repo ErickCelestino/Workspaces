@@ -2,6 +2,7 @@ import { Inject } from '@nestjs/common';
 import {
   CompanyAddressResponseDto,
   CompanyDataResponseDto,
+  CompanyResponseDto,
   FindCompanyByIdRepository,
 } from '@workspaces/domain';
 import { PrismaService } from 'nestjs-prisma';
@@ -11,7 +12,7 @@ export class FindCompanyByIdRepositoryImpl
 {
   constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
 
-  async find(id: string): Promise<CompanyDataResponseDto> {
+  async find(id: string): Promise<CompanyResponseDto> {
     const filteredCompany = await this.prismaService.company.findFirst({
       where: {
         company_id: id,
@@ -27,6 +28,7 @@ export class FindCompanyByIdRepositoryImpl
             company_id: id,
           },
           select: {
+            company_data_id: true,
             legal_nature: true,
             opening: true,
             phone: true,
@@ -84,17 +86,20 @@ export class FindCompanyByIdRepositoryImpl
         country: address?.address?.city?.state?.country?.name ?? '',
       })) || [];
 
-    const mappedCompany: CompanyDataResponseDto = {
-      id: filteredCompany?.company_id ?? '',
+    const mappedCompany: CompanyResponseDto = {
+      data: {
+        id: filteredCompany?.company_data[0]?.company_data_id ?? '',
+        phone: filteredCompany?.company_data[0]?.phone ?? '',
+        situation: filteredCompany?.company_data[0]?.situation ?? '',
+        legalNature: filteredCompany?.company_data[0]?.legal_nature ?? '',
+        opening: filteredCompany?.company_data[0]?.opening ?? '',
+        port: filteredCompany?.company_data[0]?.port ?? '',
+        responsibleEmail:
+          filteredCompany?.company_data[0]?.responsible_email ?? '',
+      },
       address: mappedCompanyAddress,
-      phone: filteredCompany?.company_data[0]?.phone ?? '',
-      situation: filteredCompany?.company_data[0]?.situation ?? '',
-      legalNature: filteredCompany?.company_data[0]?.legal_nature ?? '',
-      opening: filteredCompany?.company_data[0]?.opening ?? '',
-      port: filteredCompany?.company_data[0]?.port ?? '',
-      responsibleEmail:
-        filteredCompany?.company_data[0]?.responsible_email ?? '',
       simple: {
+        id: filteredCompany?.company_id ?? '',
         cnpj: filteredCompany?.cnpj ?? '',
         fantasyName: filteredCompany?.fantasy_name ?? '',
         socialReason: filteredCompany?.social_reason ?? '',

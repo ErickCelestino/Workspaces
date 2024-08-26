@@ -1,15 +1,15 @@
 import {
-  CompanyDataResponseDto,
+  CompanyResponseDto,
   ConsultCompanyByCnpjRepository,
 } from '../../../src';
-import { CompanyDataMock } from '../../entity';
+import { CompanyMock } from '../../entity';
 
 export class ConsultCompanyByCnpjRepositoryMock
   implements ConsultCompanyByCnpjRepository
 {
   inputMock = '';
-  async consult(cnpj: string): Promise<CompanyDataResponseDto> {
+  async consult(cnpj: string): Promise<CompanyResponseDto> {
     this.inputMock = cnpj;
-    return CompanyDataMock;
+    return CompanyMock;
   }
 }

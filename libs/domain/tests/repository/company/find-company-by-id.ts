@@ -1,15 +1,12 @@
-import {
-  CompanyDataResponseDto,
-  FindCompanyByIdRepository,
-} from '../../../src';
-import { CompanyDataMock } from '../../entity/company/company-data.mock';
+import { CompanyResponseDto, FindCompanyByIdRepository } from '../../../src';
+import { CompanyMock } from '../../entity';
 
 export class FindCompanyByIdRepositoryMock
   implements FindCompanyByIdRepository
 {
   inputMock = '';
-  async find(id: string): Promise<CompanyDataResponseDto> {
+  async find(id: string): Promise<CompanyResponseDto> {
     this.inputMock = id;
-    return CompanyDataMock;
+    return CompanyMock;
   }
 }

@@ -1,6 +1,6 @@
 import {
   CityResponseDto,
-  CompanyDataResponseDto,
+  CompanyResponseDto,
   CreateCompanyAddress,
   CreateCompanyAddressDto,
   CreateCompanyAddressRepository,
@@ -14,7 +14,7 @@ import {
   FindUserByIdRepository,
   UserList,
 } from '../../../src';
-import { CompanyAddressMock, CompanyMock, userMock } from '../../entity';
+import { CompanyAddressMock, CompanySimpleMock, userMock } from '../../entity';
 import {
   CreateCompanyAddressRepositoryMock,
   FindCityByIdRepositoryMock,
@@ -55,7 +55,7 @@ const makeSut = (): SutTypes => {
       street: CompanyAddressMock.street,
       zipcode: CompanyAddressMock.zipcode,
     },
-    companyId: CompanyMock.id,
+    companyId: CompanySimpleMock.id,
     loggedUserId: userMock.userId,
   };
 
@@ -196,7 +196,7 @@ describe('CreateCompanyAddress', () => {
     const { createCompanyAddressDto, sut } = makeSut();
     jest
       .spyOn(sut['findCompanyByIdRepository'], 'find')
-      .mockResolvedValueOnce({} as CompanyDataResponseDto);
+      .mockResolvedValueOnce({} as CompanyResponseDto);
     const result = await sut.execute(createCompanyAddressDto);
 
     expect(result.isLeft()).toBe(true);

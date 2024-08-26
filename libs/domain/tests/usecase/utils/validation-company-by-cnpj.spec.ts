@@ -4,7 +4,7 @@ import {
   FindCompanyByCnpjRepository,
   ValidationCompanyByCnpj,
 } from '../../../src';
-import { CompanyMock } from '../../entity';
+import { CompanySimpleMock } from '../../entity';
 import { FindCompanyByCnpjRepositoryMock } from '../../repository';
 
 const makeSut = (id: string, repository: FindCompanyByCnpjRepository) => {
@@ -38,7 +38,7 @@ describe('ValidationCompanyByCnpj', () => {
 
   it('should return EntityNotExists when no exist company in database', async () => {
     const mockEmptyRepository: FindCompanyByCnpjRepository = {
-      find: jest.fn(async () => CompanyMock),
+      find: jest.fn(async () => CompanySimpleMock),
     };
     const { sut } = makeSut('any_id', mockEmptyRepository);
 
