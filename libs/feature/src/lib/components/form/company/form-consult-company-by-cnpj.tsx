@@ -4,7 +4,6 @@ import { FormButton } from '../form-button.component';
 import { useForm } from 'react-hook-form';
 import {
   CompanyDataResponseDto,
-  companySimpleResponseDto,
   ConsultCompanyByCnpjDto,
   ErrorResponse,
   StepItem,
@@ -98,26 +97,33 @@ export const FormConsultCompanyByCnpj: FC<FormConsultCompanyByCnpjProps> = ({
   };
   return (
     <Box component="form" onSubmit={handleSubmit(handleCompanyData)}>
-      <Typography variant="h2">{title}</Typography>
-      <TextField
-        margin="normal"
-        required
-        fullWidth
-        error={!!errors.cnpj}
-        helperText={errors.cnpj ? errors.cnpj.message : ''}
-        autoComplete="cnpj"
-        id="cnpj"
-        disabled={loading}
-        label={cnpjLabel}
-        {...register('cnpj')}
-      />
-
-      <Box width="80%">
-        <FormButton
-          buttonTitle={`${buttonTitle} (${stepTitle} - ${stepPosition}/${totalPosition})`}
-          loading={loading}
-          success={success}
+      <Box
+        display="flex"
+        flexDirection="column"
+        alignItems="center"
+        justifyContent="center"
+      >
+        <Typography variant="h5">{title}</Typography>
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          error={!!errors.cnpj}
+          helperText={errors.cnpj ? errors.cnpj.message : ''}
+          autoComplete="cnpj"
+          id="cnpj"
+          disabled={loading}
+          label={cnpjLabel}
+          {...register('cnpj')}
         />
+
+        <Box width="80%">
+          <FormButton
+            buttonTitle={`${buttonTitle} (${stepTitle} - ${stepPosition}/${totalPosition})`}
+            loading={loading}
+            success={success}
+          />
+        </Box>
       </Box>
     </Box>
   );

@@ -2,6 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Box, TextField } from '@mui/material';
 import {
   CompanyBodyDto,
+  companySimpleResponseDto,
   CreateCompanyDto,
   ErrorResponse,
   StepItem,
@@ -19,6 +20,7 @@ interface FormCreateCompanyProps {
   showAlert: (message: string, success: boolean) => void;
   handlePopUpClose: () => void;
   changeCompanyId: (companyId: string) => void;
+  company: companySimpleResponseDto;
   step: StepItem;
   totalPosition: number;
   fantasyNameLabel?: string;
@@ -32,6 +34,7 @@ export const FormCreateCompany: FC<FormCreateCompanyProps> = ({
   showAlert,
   handlePopUpClose,
   changeCompanyId,
+  company,
   totalPosition,
   step: { stepPosition = 1, stepTitle = 'Etapa' },
   fantasyNameLabel = 'Nome Fantasia',
@@ -55,9 +58,9 @@ export const FormCreateCompany: FC<FormCreateCompanyProps> = ({
     criteriaMode: 'all',
     resolver: zodResolver(CreateCompanyFormSchema),
     defaultValues: {
-      cnpj: '',
-      fantasyName: '',
-      socialReason: '',
+      cnpj: company.cnpj,
+      fantasyName: company.fantasyName,
+      socialReason: company.socialReason,
     },
   });
 
@@ -68,7 +71,7 @@ export const FormCreateCompany: FC<FormCreateCompanyProps> = ({
     } catch (error) {
       setLoading(false);
       setSuccess(false);
-      console.log(error);
+      console.error(error);
       if (axios.isAxiosError(error)) {
         const axiosError = error as AxiosError<ErrorResponse>;
         const errors = ValidationsError(axiosError, 'Empresa');

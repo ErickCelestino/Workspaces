@@ -61,6 +61,7 @@ export const CompanyStepper: FC<CompanyStepperProps> = ({
             totalPositions: totalPosition,
           }}
           totalPosition={totalPosition}
+          company={companyData.simple}
         />
       )}
 
