@@ -39,7 +39,7 @@ export const FormCreateCompanyData: FC<FormCreateCompanyDataProps> = ({
   companyData,
   step: { stepPosition = 1, stepTitle = 'Etapa' },
   totalPosition,
-  portLabel = 'Porto',
+  portLabel = 'Porte',
   openingLabel = 'Abertura',
   situationLabel = 'Situação',
   legalNatureLabel = 'Natureza Jurídica',
@@ -66,7 +66,7 @@ export const FormCreateCompanyData: FC<FormCreateCompanyDataProps> = ({
     resolver: zodResolver(CreateCompanyDataFormSchema),
     defaultValues: {
       legalNature: companyData.legalNature,
-      opening: new Date(companyData.opening),
+      opening: '',
       phone: companyData.phone,
       port: companyData.port,
       responsibleEmail: companyData.responsibleEmail,
@@ -81,7 +81,7 @@ export const FormCreateCompanyData: FC<FormCreateCompanyDataProps> = ({
     } catch (error) {
       setLoading(false);
       setSuccess(false);
-      console.log(error);
+      console.error(error);
       if (axios.isAxiosError(error)) {
         const axiosError = error as AxiosError<ErrorResponse>;
         const errors = ValidationsError(axiosError, 'Dados da Empresa');
@@ -106,7 +106,7 @@ export const FormCreateCompanyData: FC<FormCreateCompanyDataProps> = ({
       setSuccess(false);
       reset({
         legalNature: '',
-        opening: new Date(),
+        opening: '',
         phone: '',
         port: '',
         responsibleEmail: '',
@@ -118,12 +118,14 @@ export const FormCreateCompanyData: FC<FormCreateCompanyDataProps> = ({
   };
 
   useEffect(() => {
+    const [dia, mes, ano] = companyData.opening.split('/');
+    const formatedOpening = new Date(`${ano}-${mes}-${dia}`)
+      .toISOString()
+      .split('T')[0];
+
+    setValue('opening', formatedOpening);
     setValue('phone', formatValueMask(companyData.phone, 'phone'));
-    // const formattedOpening = companyData.opening
-    // ? new Date(companyData.opening)
-    // : new Date();
-    // setValue('opening', formattedOpening);
-  }, [companyData.phone, setValue]);
+  }, [companyData.phone, companyData.opening, setValue]);
 
   return (
     <Box
@@ -131,6 +133,19 @@ export const FormCreateCompanyData: FC<FormCreateCompanyDataProps> = ({
       component="form"
       onSubmit={handleSubmit(handleCompanyData)}
     >
+      <TextField
+        margin="normal"
+        required
+        fullWidth
+        error={!!errors.legalNature}
+        helperText={errors.legalNature ? errors.legalNature.message : ''}
+        id="legalNature"
+        disabled={loading}
+        label={legalNatureLabel}
+        autoComplete="legalNature"
+        autoFocus
+        {...register('legalNature')}
+      />
       <Box
         sx={{
           display: 'flex',
@@ -142,14 +157,13 @@ export const FormCreateCompanyData: FC<FormCreateCompanyDataProps> = ({
             margin="normal"
             required
             fullWidth
-            error={!!errors.legalNature}
-            helperText={errors.legalNature ? errors.legalNature.message : ''}
-            id="legalNature"
+            error={!!errors.situation}
+            helperText={errors.situation ? errors.situation.message : ''}
+            id="situation"
             disabled={loading}
-            label={legalNatureLabel}
-            autoComplete="legalNature"
-            autoFocus
-            {...register('legalNature')}
+            label={situationLabel}
+            autoComplete="situation"
+            {...register('situation')}
           />
         </Box>
         <Box width="48%">
@@ -183,7 +197,7 @@ export const FormCreateCompanyData: FC<FormCreateCompanyDataProps> = ({
             render={({ field }) => (
               <TextField
                 {...field}
-                label="phone"
+                label={phoneLabel}
                 fullWidth
                 margin="normal"
                 error={!!errors.phone}
@@ -224,18 +238,6 @@ export const FormCreateCompanyData: FC<FormCreateCompanyDataProps> = ({
         label={responsibleEmailLabel}
         autoComplete="responsibleEmail"
         {...register('responsibleEmail')}
-      />
-      <TextField
-        margin="normal"
-        required
-        fullWidth
-        error={!!errors.situation}
-        helperText={errors.situation ? errors.situation.message : ''}
-        id="situation"
-        disabled={loading}
-        label={situationLabel}
-        autoComplete="situation"
-        {...register('situation')}
       />
       <Box
         sx={{

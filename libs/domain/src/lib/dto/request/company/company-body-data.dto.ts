@@ -1,6 +1,6 @@
 export interface CompanyDataBodyDto {
   port: string;
-  opening: Date;
+  opening: string;
   situation: string;
   legalNature: string;
   phone: string;

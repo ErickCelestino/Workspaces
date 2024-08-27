@@ -13,5 +13,4 @@ export * from './popup';
 export * from './scroll';
 export * from './search';
 export * from './stepper';
-export * from './text-field';
 export * from './toolbar';
