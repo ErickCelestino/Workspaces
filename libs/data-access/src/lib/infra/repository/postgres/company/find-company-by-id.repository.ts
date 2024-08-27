@@ -1,7 +1,5 @@
 import { Inject } from '@nestjs/common';
 import {
-  CompanyAddressResponseDto,
-  CompanyDataResponseDto,
   CompanyResponseDto,
   FindCompanyByIdRepository,
 } from '@workspaces/domain';
@@ -73,19 +71,6 @@ export class FindCompanyByIdRepositoryImpl
       },
     });
 
-    const mappedCompanyAddress: CompanyAddressResponseDto[] =
-      filteredCompany?.company_x_address?.map((address) => ({
-        id: address?.address?.address_id ?? '',
-        city: address?.address?.city?.name ?? '',
-        state: address?.address?.city?.state?.name ?? '',
-        street: address?.address?.street ?? '',
-        number: address?.address?.number ?? '',
-        district: address?.address?.district ?? '',
-        zipcode: address?.address?.zipcode ?? '',
-        complement: address?.address?.complement ?? '',
-        country: address?.address?.city?.state?.country?.name ?? '',
-      })) || [];
-
     const mappedCompany: CompanyResponseDto = {
       data: {
         id: filteredCompany?.company_data[0]?.company_data_id ?? '',
@@ -97,7 +82,21 @@ export class FindCompanyByIdRepositoryImpl
         responsibleEmail:
           filteredCompany?.company_data[0]?.responsible_email ?? '',
       },
-      address: mappedCompanyAddress,
+      address: {
+        city: filteredCompany?.company_x_address[0]?.address.city.name ?? '',
+        complement:
+          filteredCompany?.company_x_address[0]?.address.complement ?? '',
+        country:
+          filteredCompany?.company_x_address[0]?.address.city.state.country
+            .name ?? '',
+        district: filteredCompany?.company_x_address[0]?.address.district ?? '',
+        number: filteredCompany?.company_x_address[0]?.address.number ?? '',
+        state:
+          filteredCompany?.company_x_address[0]?.address.city.state.name ?? '',
+        street: filteredCompany?.company_x_address[0]?.address.street ?? '',
+        zipcode: filteredCompany?.company_x_address[0]?.address.zipcode ?? '',
+        id: '',
+      },
       simple: {
         id: filteredCompany?.company_id ?? '',
         cnpj: filteredCompany?.cnpj ?? '',

@@ -5,6 +5,6 @@ import { CompanyDataMock } from './company-data.mock';
 
 export const CompanyMock: CompanyResponseDto = {
   data: CompanyDataMock,
-  address: [CompanyAddressMock],
+  address: CompanyAddressMock,
   simple: CompanySimpleMock,
 };

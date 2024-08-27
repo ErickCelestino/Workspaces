@@ -3,6 +3,7 @@ import {
   FormCreateCompany,
   FormCreateCompanyData,
   FormConsultCompanyByCnpj,
+  FormCreateCompanyAddress,
 } from '../../form';
 import { Box } from '@mui/material';
 import { CompanyResponseDto } from '@workspaces/domain';
@@ -75,6 +76,20 @@ export const CompanyStepper: FC<CompanyStepperProps> = ({
           }}
           companyId={companyId}
           companyData={companyData.data}
+          totalPosition={totalPosition}
+        />
+      )}
+
+      {step === 4 && (
+        <FormCreateCompanyAddress
+          showAlert={showAlert}
+          handlePopUpClose={handlePopUpClose}
+          step={{
+            stepPosition: step,
+            totalPositions: totalPosition,
+          }}
+          companyId={companyId}
+          companyAddress={companyData.address}
           totalPosition={totalPosition}
         />
       )}

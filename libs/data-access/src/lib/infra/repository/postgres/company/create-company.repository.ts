@@ -1,9 +1,5 @@
 import { Inject } from '@nestjs/common';
-import {
-  Company,
-  CreateCompanyDto,
-  CreateCompanyRepository,
-} from '@workspaces/domain';
+import { CreateCompanyDto, CreateCompanyRepository } from '@workspaces/domain';
 import { PrismaService } from 'nestjs-prisma';
 
 export class CreateCompanyRepositoryImpl implements CreateCompanyRepository {

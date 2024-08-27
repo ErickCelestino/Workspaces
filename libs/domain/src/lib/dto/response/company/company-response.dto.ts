@@ -5,5 +5,5 @@ import { companySimpleResponseDto } from './company-simple-response.dto';
 export interface CompanyResponseDto {
   data: CompanyDataResponseDto;
   simple: companySimpleResponseDto;
-  address: CompanyAddressResponseDto[];
+  address: CompanyAddressResponseDto;
 }

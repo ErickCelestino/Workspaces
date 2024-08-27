@@ -1,5 +1,4 @@
 import {
-  CompanyDataResponseDto,
   ConsultCompanyByCnpjRepository,
   ConsultCompanyBrDto,
   CompanyResponseDto,
@@ -29,19 +28,17 @@ export class ConsultCompanyByCnpjRepositoryImpl
         phone: data.telefone,
         responsibleEmail: data.email,
       },
-      address: [
-        {
-          id: '',
-          city: data.municipio,
-          complement: data.complemento,
-          country: 'Brasil',
-          district: data.bairro,
-          number: data.numero,
-          state: data.uf,
-          street: data.logradouro,
-          zipcode: data.cep,
-        },
-      ],
+      address: {
+        id: '',
+        city: data.municipio,
+        complement: data.complemento,
+        country: 'Brasil',
+        district: data.bairro,
+        number: data.numero,
+        state: data.uf,
+        street: data.logradouro,
+        zipcode: data.cep,
+      },
       simple: {
         id: '',
         cnpj,
