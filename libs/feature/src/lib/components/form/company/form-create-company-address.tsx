@@ -67,9 +67,9 @@ export const FormCreateCompanyAddress: FC<FormCreateCompanyAddressProps> = ({
     mode: 'all',
     criteriaMode: 'all',
     defaultValues: {
-      cityId: '',
-      countryId: '',
-      stateId: '',
+      cityId: companyAddress.city,
+      countryId: companyAddress.country,
+      stateId: companyAddress.state,
       complement: companyAddress.complement,
       district: companyAddress.district,
       number: companyAddress.number,
@@ -193,6 +193,45 @@ export const FormCreateCompanyAddress: FC<FormCreateCompanyAddressProps> = ({
         label={complementLabel}
         autoComplete="complement"
         {...register('complement')}
+      />
+
+      <TextField
+        margin="normal"
+        required
+        fullWidth
+        error={!!errors.cityId}
+        helperText={errors.cityId ? errors.cityId.message : ''}
+        id="cityId"
+        disabled={loading}
+        label={cityLabel}
+        autoComplete="cityId"
+        {...register('cityId')}
+      />
+
+      <TextField
+        margin="normal"
+        required
+        fullWidth
+        error={!!errors.countryId}
+        helperText={errors.countryId ? errors.countryId.message : ''}
+        id="countryId"
+        disabled={loading}
+        label={countryLabel}
+        autoComplete="countryId"
+        {...register('countryId')}
+      />
+
+      <TextField
+        margin="normal"
+        required
+        fullWidth
+        error={!!errors.stateId}
+        helperText={errors.stateId ? errors.stateId.message : ''}
+        id="stateId"
+        disabled={loading}
+        label={stateLabel}
+        autoComplete="stateId"
+        {...register('stateId')}
       />
       <Box
         sx={{
