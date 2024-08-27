@@ -60,13 +60,13 @@ export const FormConsultCompanyByCnpj: FC<FormConsultCompanyByCnpjProps> = ({
 
   const searchData = async (input: ConsultCompanyByCnpjDto) => {
     try {
-      console.log(input);
+      input.cnpj = input.cnpj.replace(/[^\d]+/g, '');
       const result = await ConsultCompanyByCnpjRequest(input);
       return result;
     } catch (error) {
       setLoading(false);
       setSuccess(false);
-      console.log(error);
+      console.error(error);
       if (axios.isAxiosError(error)) {
         const axiosError = error as AxiosError<ErrorResponse>;
         const errors = ValidationsError(axiosError, 'Empresa');

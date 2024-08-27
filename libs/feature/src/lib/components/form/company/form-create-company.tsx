@@ -7,15 +7,14 @@ import {
   ErrorResponse,
   StepItem,
 } from '@workspaces/domain';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { CreateCompanyFormSchema } from '../../../shared/validations/company/create-company.schema';
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { CreateCompanyRequest } from '../../../services';
 import axios, { AxiosError } from 'axios';
-import { ValidationsError } from '../../../shared';
+import { formatValueMask, ValidationsError } from '../../../shared';
 import { FormButton } from '../form-button.component';
 import { useLoggedUser } from '../../../contexts';
-import { MaskedInput } from '../../text-field';
 
 interface FormCreateCompanyProps {
   showAlert: (message: string, success: boolean) => void;
@@ -53,6 +52,8 @@ export const FormCreateCompany: FC<FormCreateCompanyProps> = ({
     handleSubmit,
     register,
     reset,
+    control,
+    setValue,
     formState: { errors },
   } = useForm<CompanyBodyDto>({
     mode: 'all',
@@ -67,6 +68,7 @@ export const FormCreateCompany: FC<FormCreateCompanyProps> = ({
 
   const createCompany = async (input: CreateCompanyDto) => {
     try {
+      input.body.cnpj = input.body.cnpj.replace(/[^\d]+/g, '');
       const result = await CreateCompanyRequest(input);
       return result;
     } catch (error) {
@@ -82,6 +84,10 @@ export const FormCreateCompany: FC<FormCreateCompanyProps> = ({
       }
     }
   };
+
+  useEffect(() => {
+    setValue('cnpj', formatValueMask(company.cnpj, 'cnpj'));
+  }, [company.cnpj, setValue]);
 
   const handleCompanyData = async (data: CompanyBodyDto) => {
     setLoading(true);
@@ -124,18 +130,24 @@ export const FormCreateCompany: FC<FormCreateCompanyProps> = ({
         autoFocus
         {...register('fantasyName')}
       />
-      <MaskedInput
-        maskType="cnpj"
-        margin="normal"
-        required
-        fullWidth
-        error={!!errors.cnpj}
-        helperText={errors.cnpj ? errors.cnpj.message : ''}
-        id="cnpj"
-        disabled={loading}
-        label={cnpjLabel}
-        autoComplete="cnpj"
-        {...register('cnpj')}
+      <Controller
+        name="cnpj"
+        control={control}
+        defaultValue=""
+        render={({ field }) => (
+          <TextField
+            {...field}
+            label="CNPJ"
+            fullWidth
+            margin="normal"
+            error={!!errors.cnpj}
+            helperText={errors.cnpj ? errors.cnpj.message : ''}
+            onChange={(e) =>
+              field.onChange(formatValueMask(e.target.value, 'cnpj'))
+            }
+            inputProps={{ maxLength: 18 }}
+          />
+        )}
       />
       <TextField
         margin="normal"

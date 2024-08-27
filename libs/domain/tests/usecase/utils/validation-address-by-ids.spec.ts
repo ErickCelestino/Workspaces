@@ -133,7 +133,7 @@ describe('ValidationAddressByIds', () => {
     );
 
     const result = await sut;
-    console.log(result);
+
     expect(result.isLeft()).toBe(true);
     expect(result.isRight()).toBe(false);
     expect(result.value).toBeInstanceOf(EntityNotExists);
@@ -159,7 +159,6 @@ describe('ValidationAddressByIds', () => {
     );
 
     const result = await sut;
-    console.log(result);
     expect(result.isLeft()).toBe(true);
     expect(result.isRight()).toBe(false);
     expect(result.value).toBeInstanceOf(EntityNotExists);
@@ -185,7 +184,6 @@ describe('ValidationAddressByIds', () => {
     );
 
     const result = await sut;
-    console.log(result);
     expect(result.isLeft()).toBe(true);
     expect(result.isRight()).toBe(false);
     expect(result.value).toBeInstanceOf(EntityNotExists);
