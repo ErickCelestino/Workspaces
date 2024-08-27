@@ -1,3 +1,4 @@
+export * from './company';
 export * from './crud-type';
 export * from './file-content-type';
 export * from './file-types';

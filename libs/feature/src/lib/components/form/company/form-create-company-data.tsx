@@ -4,6 +4,8 @@ import {
   CreateCompanyDataDto,
   ErrorResponse,
   StepItem,
+  PortType,
+  SituationType,
 } from '@workspaces/domain';
 import { FC, useEffect, useState } from 'react';
 import { useLoggedUser } from '../../../contexts';
@@ -13,8 +15,9 @@ import { CreateCompanyDataFormSchema } from '../../../shared/validations/company
 import { CreateCompanyDataRequest } from '../../../services';
 import axios, { AxiosError } from 'axios';
 import { formatValueMask, ValidationsError } from '../../../shared';
-import { Box, TextField } from '@mui/material';
+import { Box, MenuItem, TextField } from '@mui/material';
 import { FormButton } from '../form-button.component';
+
 interface FormCreateCompanyDataProps {
   showAlert: (message: string, success: boolean) => void;
   handlePopUpClose: () => void;
@@ -52,6 +55,10 @@ export const FormCreateCompanyData: FC<FormCreateCompanyDataProps> = ({
 
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [portTypeList, setPortTypeList] = useState<string[]>([]);
+  const [situationTypeList, setSituationTypeList] = useState<string[]>([]);
+  const [port, setPort] = useState('');
+  const [situation, setSituation] = useState('');
 
   const {
     handleSubmit,
@@ -122,10 +129,38 @@ export const FormCreateCompanyData: FC<FormCreateCompanyDataProps> = ({
     const formatedOpening = new Date(`${ano}-${mes}-${dia}`)
       .toISOString()
       .split('T')[0];
+    const portInitialList: PortType[] = [
+      'DEMAIS',
+      'EMPRESA DE PEQUENO PORTE',
+      'MICRO EMPRESA',
+    ];
+    const situationInitialList: SituationType[] = [
+      'ATIVA',
+      'BAIXADA',
+      'INAPTA',
+      'SUSPENSA',
+      'NULA',
+    ];
 
+    setPortTypeList(portInitialList);
+    setSituationTypeList(situationInitialList);
+    setPort(companyData.port);
+    setSituation(companyData.situation);
     setValue('opening', formatedOpening);
     setValue('phone', formatValueMask(companyData.phone, 'phone'));
-  }, [companyData.phone, companyData.opening, setValue]);
+  }, [
+    companyData.phone,
+    companyData.opening,
+    companyData.situation,
+    companyData.port,
+    setValue,
+  ]);
+
+  const handleChange =
+    (setter: React.Dispatch<React.SetStateAction<string>>) =>
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setter(event.target.value);
+    };
 
   return (
     <Box
@@ -154,17 +189,22 @@ export const FormCreateCompanyData: FC<FormCreateCompanyDataProps> = ({
       >
         <Box width="48%">
           <TextField
-            margin="normal"
-            required
             fullWidth
+            select
+            value={situation}
+            margin="normal"
             error={!!errors.situation}
-            helperText={errors.situation ? errors.situation.message : ''}
+            helperText={errors.situation?.message}
             id="situation"
-            disabled={loading}
             label={situationLabel}
-            autoComplete="situation"
-            {...register('situation')}
-          />
+            {...register('situation', { onChange: handleChange(setSituation) })}
+          >
+            {situationTypeList.map((item) => (
+              <MenuItem key={item} value={item}>
+                {item}
+              </MenuItem>
+            ))}
+          </TextField>
         </Box>
         <Box width="48%">
           <TextField
@@ -212,17 +252,22 @@ export const FormCreateCompanyData: FC<FormCreateCompanyDataProps> = ({
         </Box>
         <Box width="48%">
           <TextField
-            margin="normal"
-            required
             fullWidth
+            select
+            value={port}
+            margin="normal"
             error={!!errors.port}
-            helperText={errors.port ? errors.port.message : ''}
+            helperText={errors.port?.message}
             id="port"
-            disabled={loading}
             label={portLabel}
-            autoComplete="port"
-            {...register('port')}
-          />
+            {...register('port', { onChange: handleChange(setPort) })}
+          >
+            {portTypeList.map((item) => (
+              <MenuItem key={item} value={item}>
+                {item}
+              </MenuItem>
+            ))}
+          </TextField>
         </Box>
       </Box>
       <TextField
