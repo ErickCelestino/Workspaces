@@ -5,17 +5,16 @@ import {
   ErrorResponse,
   StepItem,
 } from '@workspaces/domain';
-import { FC, useRef, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { useLoggedUser } from '../../../contexts';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CreateCompanyDataFormSchema } from '../../../shared/validations/company';
 import { CreateCompanyDataRequest } from '../../../services';
 import axios, { AxiosError } from 'axios';
-import { ValidationsError } from '../../../shared';
+import { formatValueMask, ValidationsError } from '../../../shared';
 import { Box, TextField } from '@mui/material';
 import { FormButton } from '../form-button.component';
-import { MaskedInput } from '../../text-field';
 interface FormCreateCompanyDataProps {
   showAlert: (message: string, success: boolean) => void;
   handlePopUpClose: () => void;
@@ -53,12 +52,13 @@ export const FormCreateCompanyData: FC<FormCreateCompanyDataProps> = ({
 
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-  const inputRef = useRef<HTMLInputElement>(null);
 
   const {
     handleSubmit,
     register,
     reset,
+    control,
+    setValue,
     formState: { errors },
   } = useForm<CompanyDataBodyDto>({
     mode: 'all',
@@ -66,7 +66,7 @@ export const FormCreateCompanyData: FC<FormCreateCompanyDataProps> = ({
     resolver: zodResolver(CreateCompanyDataFormSchema),
     defaultValues: {
       legalNature: companyData.legalNature,
-      opening: companyData.opening,
+      opening: new Date(companyData.opening),
       phone: companyData.phone,
       port: companyData.port,
       responsibleEmail: companyData.responsibleEmail,
@@ -106,7 +106,7 @@ export const FormCreateCompanyData: FC<FormCreateCompanyDataProps> = ({
       setSuccess(false);
       reset({
         legalNature: '',
-        opening: '',
+        opening: new Date(),
         phone: '',
         port: '',
         responsibleEmail: '',
@@ -116,6 +116,14 @@ export const FormCreateCompanyData: FC<FormCreateCompanyDataProps> = ({
       handlePopUpClose();
     }
   };
+
+  useEffect(() => {
+    setValue('phone', formatValueMask(companyData.phone, 'phone'));
+    // const formattedOpening = companyData.opening
+    // ? new Date(companyData.opening)
+    // : new Date();
+    // setValue('opening', formattedOpening);
+  }, [companyData.phone, setValue]);
 
   return (
     <Box
@@ -168,19 +176,24 @@ export const FormCreateCompanyData: FC<FormCreateCompanyDataProps> = ({
         }}
       >
         <Box width="48%">
-          <MaskedInput
-            maskType="phone"
-            margin="normal"
-            required
-            fullWidth
-            error={!!errors.phone}
-            helperText={errors.phone ? errors.phone.message : ''}
-            id="phone"
-            disabled={loading}
-            label={phoneLabel}
-            autoComplete="phone"
-            {...register('phone')}
-            inputRef={inputRef}
+          <Controller
+            name="phone"
+            control={control}
+            defaultValue=""
+            render={({ field }) => (
+              <TextField
+                {...field}
+                label="phone"
+                fullWidth
+                margin="normal"
+                error={!!errors.phone}
+                helperText={errors.phone ? errors.phone.message : ''}
+                onChange={(e) =>
+                  field.onChange(formatValueMask(e.target.value, 'phone'))
+                }
+                inputProps={{ maxLength: 18 }}
+              />
+            )}
           />
         </Box>
         <Box width="48%">

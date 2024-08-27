@@ -18,7 +18,7 @@ export class CreateCompanyDataRepositoryImpl
     const createdCompany = await this.prismaService.company_Data.create({
       data: {
         legal_nature: legalNature,
-        opening: opening,
+        opening: `${opening}`,
         phone: phone,
         port: port,
         situation: situation,

@@ -65,7 +65,6 @@ export class ConsultCompanyByCnpj
     ) {
       return left(new EntityNotExists('Company'));
     }
-
     return right(consultedCompany);
   }
 }
