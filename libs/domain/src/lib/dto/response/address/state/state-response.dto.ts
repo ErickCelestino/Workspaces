@@ -1,4 +1,4 @@
-import { CityResponseDto } from '../city-response.dto';
+import { CityResponseDto } from '../city';
 
 export interface StateResponseDto {
   id: string;
