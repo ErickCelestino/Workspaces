@@ -43,7 +43,7 @@ export class ListSimpleCountry
       return left(userValidation.value);
     }
 
-    const listCountry = await this.listSimpleCountryRepository.list(input);
+    const listCountry = await this.listSimpleCountryRepository.list();
 
     return right(listCountry);
   }

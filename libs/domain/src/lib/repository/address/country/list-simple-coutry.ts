@@ -4,5 +4,5 @@ import {
 } from '../../../dto';
 
 export interface ListSimpleCountryRepository {
-  list(input: ListSimpleCountryDto): Promise<ListSimpleCountryResponseDto[]>;
+  list(): Promise<ListSimpleCountryResponseDto[]>;
 }
