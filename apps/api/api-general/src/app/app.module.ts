@@ -17,8 +17,7 @@ import {
   CreateCompanyDataModule,
   CreateCompanyAddressModule,
 } from './company';
-import { ListSimpleStateModule } from './address';
-import { ListSimpleCountryModule } from './list-simple-country/list-simple-country.module';
+import { ListSimpleStateModule, ListSimpleCountryModule } from './address';
 
 @Module({
   imports: [
