@@ -130,21 +130,19 @@ export const FormCreateCompanyAddress: FC<FormCreateCompanyAddressProps> = ({
   }, []);
 
   useEffect(() => {
-    if (stepPosition != 1 && !dataLoaded) {
+    if (stepPosition != 4 && !dataLoaded) {
       const country = getCountry({
         loggedUserId: loggedUser?.id ?? '',
       });
-      let filteredCountry: ListSimpleCountryResponseDto | undefined;
 
       country.then((result) => {
-        filteredCountry = result?.filter(
+        const filteredCountry = result?.filter(
           (item) => item.name === companyAddress.country
         )[0];
-      });
-
-      getState({
-        loggedUserId: loggedUser?.id ?? '',
-        countryId: filteredCountry?.id ?? '',
+        getState({
+          loggedUserId: loggedUser?.id ?? '',
+          countryId: filteredCountry?.id ?? '',
+        });
       });
     }
   }, [stepPosition, loggedUser, dataLoaded]);
