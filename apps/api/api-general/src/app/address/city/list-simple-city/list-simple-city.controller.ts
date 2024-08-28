@@ -1,12 +1,14 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Query, UsePipes } from '@nestjs/common';
 import { ListSimpleCityService } from './list-simple-city.service';
-import { ErrorMessageResult } from '@workspaces/domain';
+import { ErrorMessageResult, listSimpleCitySchema } from '@workspaces/domain';
+import { ZodValidationPipe } from '../../../pipes/zod-validation-pipe';
 
 @Controller('list-simple-city')
 export class ListSimpleCityController {
   constructor(private readonly listSimpleCityService: ListSimpleCityService) {}
 
   @Get()
+  @UsePipes(new ZodValidationPipe(listSimpleCitySchema))
   async list(
     @Query('loggedUserId') loggedUserId: string,
     @Query('stateId') stateId: string
