@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
 import { CountryResponseDto } from '../../../src';
-import { StateMock } from './state.mock';
+import { StateMock } from './state';
 
 export const CountryMock: CountryResponseDto = {
   id: faker.string.uuid(),

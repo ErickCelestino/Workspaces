@@ -14,7 +14,7 @@ export class ListSimpleState
   implements
     UseCase<
       ListSimpleStateDto,
-      Either<EntityNotEmpty, ListSimpleStateResponseDto>
+      Either<EntityNotEmpty, ListSimpleStateResponseDto[]>
     >
 {
   constructor(
@@ -27,7 +27,7 @@ export class ListSimpleState
   ) {}
   async execute(
     input: ListSimpleStateDto
-  ): Promise<Either<EntityNotEmpty, ListSimpleStateResponseDto>> {
+  ): Promise<Either<EntityNotEmpty, ListSimpleStateResponseDto[]>> {
     const { countryId, loggedUserId } = input;
 
     if (Object.keys(countryId).length < 1) {
