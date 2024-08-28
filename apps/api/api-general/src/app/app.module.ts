@@ -17,7 +17,7 @@ import {
   CreateCompanyDataModule,
   CreateCompanyAddressModule,
 } from './company';
-import { ListSimpleStateModule } from './list-simple-state/list-simple-state.module';
+import { ListSimpleStateModule } from './address';
 
 @Module({
   imports: [

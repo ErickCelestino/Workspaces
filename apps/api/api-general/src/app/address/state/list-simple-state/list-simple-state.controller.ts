@@ -1,6 +1,7 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Query, UsePipes } from '@nestjs/common';
 import { ListSimpleStateService } from './list-simple-state.service';
-import { ErrorMessageResult } from '@workspaces/domain';
+import { ErrorMessageResult, listSimpleStateSchema } from '@workspaces/domain';
+import { ZodValidationPipe } from '../../../pipes/zod-validation-pipe';
 
 @Controller('list-simple-state')
 export class ListSimpleStateController {
@@ -9,6 +10,7 @@ export class ListSimpleStateController {
   ) {}
 
   @Get()
+  @UsePipes(new ZodValidationPipe(listSimpleStateSchema))
   async list(
     @Query('countryId') countryId: string,
     @Query('loggedUserId') loggedUserId: string
