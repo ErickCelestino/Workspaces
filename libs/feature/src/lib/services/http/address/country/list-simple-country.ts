@@ -5,7 +5,7 @@ import {
 import { generalApi } from '../../axios-config';
 
 export async function ListSimpleCountryRequest(input: ListSimpleCountryDto) {
-  const result = await generalApi.get<ListSimpleCountryResponseDto>(
+  const result = await generalApi.get<ListSimpleCountryResponseDto[]>(
     'list-simple-country',
     {
       params: {

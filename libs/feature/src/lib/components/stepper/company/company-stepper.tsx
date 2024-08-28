@@ -52,7 +52,7 @@ export const CompanyStepper: FC<CompanyStepperProps> = ({
         />
       )}
 
-      {step === 2 && (
+      {step === 4 && (
         <FormCreateCompany
           showAlert={showAlert}
           handlePopUpClose={() => changeStage(3)}
@@ -80,7 +80,7 @@ export const CompanyStepper: FC<CompanyStepperProps> = ({
         />
       )}
 
-      {step === 4 && (
+      {step === 2 && (
         <FormCreateCompanyAddress
           showAlert={showAlert}
           handlePopUpClose={handlePopUpClose}

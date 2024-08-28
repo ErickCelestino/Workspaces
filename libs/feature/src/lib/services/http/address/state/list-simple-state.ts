@@ -5,7 +5,7 @@ import {
 import { generalApi } from '../../axios-config';
 
 export async function ListSimpleStateRequest(input: ListSimpleStateDto) {
-  const result = await generalApi.get<ListSimpleStateResponseDto>(
+  const result = await generalApi.get<ListSimpleStateResponseDto[]>(
     'list-simple-state',
     {
       params: {

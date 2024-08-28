@@ -3,16 +3,25 @@ import {
   CompanyBodyAddressDto,
   CreateCompanyAddressDto,
   ErrorResponse,
+  ListSimpleCountryDto,
+  ListSimpleCountryResponseDto,
+  ListSimpleStateDto,
+  ListSimpleStateResponseDto,
   StepItem,
 } from '@workspaces/domain';
-import { FC, useState } from 'react';
+import { FC, useCallback, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useLoggedUser } from '../../../contexts';
 import { CreateCompanyAddressRequest } from '../../../services';
-import { Box, TextField } from '@mui/material';
+import { Box, MenuItem, TextField } from '@mui/material';
 import axios, { AxiosError } from 'axios';
 import { ValidationsError } from '../../../shared';
 import { FormButton } from '../form-button.component';
+import {
+  ListSimpleCountryRequest,
+  ListSimpleStateRequest,
+} from '../../../services';
+import { StringValidation } from 'zod';
 
 interface FormCreateCompanyAddressProps {
   showAlert: (message: string, success: boolean) => void;
@@ -55,6 +64,13 @@ export const FormCreateCompanyAddress: FC<FormCreateCompanyAddressProps> = ({
 
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [dataLoaded, setDataLoaded] = useState(false);
+  const [listCoutry, setListCountry] = useState<ListSimpleCountryResponseDto[]>(
+    []
+  );
+  const [listState, setListState] = useState<ListSimpleStateResponseDto[]>([]);
+  const [country, setCountry] = useState('');
+  const [state, setState] = useState('');
 
   const {
     handleSubmit,
@@ -77,6 +93,67 @@ export const FormCreateCompanyAddress: FC<FormCreateCompanyAddressProps> = ({
       zipcode: companyAddress.zipcode,
     },
   });
+
+  const getCountry = useCallback(async (data: ListSimpleCountryDto) => {
+    try {
+      const result = await ListSimpleCountryRequest(data);
+      setDataLoaded(true);
+      setListCountry(result);
+      return result;
+    } catch (error) {
+      console.error(error);
+      if (axios.isAxiosError(error)) {
+        const axiosError = error as AxiosError<ErrorResponse>;
+        const errors = ValidationsError(axiosError, 'Dados da Empresa');
+        if (errors) {
+          showAlert(errors, false);
+        }
+      }
+    }
+  }, []);
+
+  const getState = useCallback(async (data: ListSimpleStateDto) => {
+    try {
+      const result = await ListSimpleStateRequest(data);
+      setListState(result);
+      return result;
+    } catch (error) {
+      console.error(error);
+      if (axios.isAxiosError(error)) {
+        const axiosError = error as AxiosError<ErrorResponse>;
+        const errors = ValidationsError(axiosError, 'Dados da Empresa');
+        if (errors) {
+          showAlert(errors, false);
+        }
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    if (stepPosition != 1 && !dataLoaded) {
+      const country = getCountry({
+        loggedUserId: loggedUser?.id ?? '',
+      });
+      let filteredCountry: ListSimpleCountryResponseDto | undefined;
+
+      country.then((result) => {
+        filteredCountry = result?.filter(
+          (item) => item.name === companyAddress.country
+        )[0];
+      });
+
+      getState({
+        loggedUserId: loggedUser?.id ?? '',
+        countryId: filteredCountry?.id ?? '',
+      });
+    }
+  }, [stepPosition, loggedUser, dataLoaded]);
+
+  useEffect(() => {
+    if (stepPosition != 1) {
+      setDataLoaded(false);
+    }
+  }, [stepPosition]);
 
   const createCompanyAddress = async (input: CreateCompanyAddressDto) => {
     try {
@@ -123,6 +200,31 @@ export const FormCreateCompanyAddress: FC<FormCreateCompanyAddressProps> = ({
     }
   };
 
+  useEffect(() => {
+    setCountry(companyAddress.country);
+    setState(companyAddress.state);
+  }, [companyAddress, setValue]);
+
+  const handleChange =
+    (
+      setter: React.Dispatch<React.SetStateAction<string>>,
+      field: 'country' | 'state' | 'city'
+    ) =>
+    (event: React.ChangeEvent<{ value: string; key: string }>) => {
+      switch (field) {
+        case 'country':
+          console.log(event);
+          setter(event.target.value);
+          break;
+        case 'state':
+          setter(event.target.value);
+          break;
+        case 'city':
+          setter(event.target.value);
+          break;
+      }
+    };
+
   return (
     <Box
       sx={{ mt: 2 }}
@@ -143,57 +245,112 @@ export const FormCreateCompanyAddress: FC<FormCreateCompanyAddressProps> = ({
         {...register('zipcode')}
       />
 
-      <TextField
-        margin="normal"
-        required
-        fullWidth
-        error={!!errors.district}
-        helperText={errors.district ? errors.district.message : ''}
-        id="district"
-        disabled={loading}
-        label={districtLabel}
-        autoComplete="district"
-        {...register('district')}
-      />
+      <Box display="flex" justifyContent="space-between">
+        <Box sx={{ width: '48%' }}>
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            error={!!errors.district}
+            helperText={errors.district ? errors.district.message : ''}
+            id="district"
+            disabled={loading}
+            label={districtLabel}
+            autoComplete="district"
+            {...register('district')}
+          />
+        </Box>
+        <Box sx={{ width: '48%' }}>
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            error={!!errors.number}
+            helperText={errors.number ? errors.number.message : ''}
+            id="number"
+            disabled={loading}
+            label={numberLabel}
+            autoComplete="number"
+            {...register('number')}
+          />
+        </Box>
+      </Box>
+      <Box display="flex" justifyContent="space-between">
+        <Box sx={{ width: '48%' }}>
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            error={!!errors.street}
+            helperText={errors.street ? errors.street.message : ''}
+            id="street"
+            disabled={loading}
+            label={streetLabel}
+            autoComplete="street"
+            {...register('street')}
+          />
+        </Box>
 
-      <TextField
-        margin="normal"
-        required
-        fullWidth
-        error={!!errors.number}
-        helperText={errors.number ? errors.number.message : ''}
-        id="number"
-        disabled={loading}
-        label={numberLabel}
-        autoComplete="number"
-        {...register('number')}
-      />
+        <Box sx={{ width: '48%' }}>
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            error={!!errors.complement}
+            helperText={errors.complement ? errors.complement.message : ''}
+            id="complement"
+            disabled={loading}
+            label={complementLabel}
+            autoComplete="complement"
+            {...register('complement')}
+          />
+        </Box>
+      </Box>
 
-      <TextField
-        margin="normal"
-        required
-        fullWidth
-        error={!!errors.street}
-        helperText={errors.street ? errors.street.message : ''}
-        id="street"
-        disabled={loading}
-        label={streetLabel}
-        autoComplete="street"
-        {...register('street')}
-      />
-
-      <TextField
-        margin="normal"
-        required
-        fullWidth
-        error={!!errors.complement}
-        helperText={errors.complement ? errors.complement.message : ''}
-        id="complement"
-        disabled={loading}
-        label={complementLabel}
-        autoComplete="complement"
-        {...register('complement')}
-      />
+      <Box display="flex" justifyContent="space-between">
+        <Box sx={{ width: '48%' }}>
+          <TextField
+            fullWidth
+            select
+            value={country}
+            margin="normal"
+            error={!!errors.countryId}
+            helperText={errors.countryId?.message}
+            id="port"
+            label={countryLabel}
+            {...register('countryId', {
+              onChange: handleChange(setCountry, 'country'),
+            })}
+          >
+            {listCoutry.map((item) => (
+              <MenuItem key={item.id} value={item.name}>
+                {item.name}
+              </MenuItem>
+            ))}
+          </TextField>
+        </Box>
+        <Box sx={{ width: '48%' }}>
+          <TextField
+            fullWidth
+            select
+            value={state}
+            margin="normal"
+            error={!!errors.stateId}
+            helperText={errors.stateId ? errors.stateId.message : ''}
+            id="port"
+            label={stateLabel}
+            {...register('stateId', {
+              onChange: handleChange(setState, 'state'),
+            })}
+          >
+            {listState.map((item) => (
+              <MenuItem key={item.id} value={item.uf}>
+                {item.name}
+              </MenuItem>
+            ))}
+          </TextField>
+        </Box>
+      </Box>
 
       <TextField
         margin="normal"
@@ -206,32 +363,6 @@ export const FormCreateCompanyAddress: FC<FormCreateCompanyAddressProps> = ({
         label={cityLabel}
         autoComplete="cityId"
         {...register('cityId')}
-      />
-
-      <TextField
-        margin="normal"
-        required
-        fullWidth
-        error={!!errors.countryId}
-        helperText={errors.countryId ? errors.countryId.message : ''}
-        id="countryId"
-        disabled={loading}
-        label={countryLabel}
-        autoComplete="countryId"
-        {...register('countryId')}
-      />
-
-      <TextField
-        margin="normal"
-        required
-        fullWidth
-        error={!!errors.stateId}
-        helperText={errors.stateId ? errors.stateId.message : ''}
-        id="stateId"
-        disabled={loading}
-        label={stateLabel}
-        autoComplete="stateId"
-        {...register('stateId')}
       />
       <Box
         sx={{
