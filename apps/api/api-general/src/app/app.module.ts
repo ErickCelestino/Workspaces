@@ -17,6 +17,7 @@ import {
   CreateCompanyDataModule,
   CreateCompanyAddressModule,
 } from './company';
+import { ListSimpleStateModule } from './list-simple-state/list-simple-state.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import {
     ConsultCompanyByCnpjModule,
     CreateCompanyDataModule,
     CreateCompanyAddressModule,
+    ListSimpleStateModule,
   ],
   controllers: [AppController],
   providers: [AppService],
