@@ -1,4 +1,4 @@
-import { StateResponseDto } from './state';
+import { StateResponseDto } from '../state';
 
 export interface CountryResponseDto {
   id: string;
