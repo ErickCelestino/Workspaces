@@ -1,8 +1,10 @@
 import {
+  CityResponseDto,
   CompanyAddressResponseDto,
   CompanyBodyAddressDto,
   CreateCompanyAddressDto,
   ErrorResponse,
+  ListSimpleCityDto,
   ListSimpleCountryDto,
   ListSimpleCountryResponseDto,
   ListSimpleStateDto,
@@ -12,7 +14,10 @@ import {
 import { FC, useCallback, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useLoggedUser } from '../../../contexts';
-import { CreateCompanyAddressRequest } from '../../../services';
+import {
+  CreateCompanyAddressRequest,
+  ListSimpleCityRequest,
+} from '../../../services';
 import { Box, MenuItem, TextField } from '@mui/material';
 import axios, { AxiosError } from 'axios';
 import { ValidationsError } from '../../../shared';
@@ -69,8 +74,10 @@ export const FormCreateCompanyAddress: FC<FormCreateCompanyAddressProps> = ({
     []
   );
   const [listState, setListState] = useState<ListSimpleStateResponseDto[]>([]);
+  const [listCity, setListCity] = useState<CityResponseDto[]>([]);
   const [country, setCountry] = useState('');
   const [state, setState] = useState('');
+  const [city, setCity] = useState('');
 
   const {
     handleSubmit,
@@ -104,7 +111,7 @@ export const FormCreateCompanyAddress: FC<FormCreateCompanyAddressProps> = ({
       console.error(error);
       if (axios.isAxiosError(error)) {
         const axiosError = error as AxiosError<ErrorResponse>;
-        const errors = ValidationsError(axiosError, 'Dados da Empresa');
+        const errors = ValidationsError(axiosError, 'País');
         if (errors) {
           showAlert(errors, false);
         }
@@ -121,7 +128,24 @@ export const FormCreateCompanyAddress: FC<FormCreateCompanyAddressProps> = ({
       console.error(error);
       if (axios.isAxiosError(error)) {
         const axiosError = error as AxiosError<ErrorResponse>;
-        const errors = ValidationsError(axiosError, 'Dados da Empresa');
+        const errors = ValidationsError(axiosError, 'Estado');
+        if (errors) {
+          showAlert(errors, false);
+        }
+      }
+    }
+  }, []);
+
+  const getCity = useCallback(async (data: ListSimpleCityDto) => {
+    try {
+      const result = await ListSimpleCityRequest(data);
+      setListCity(result);
+      return result;
+    } catch (error) {
+      console.error(error);
+      if (axios.isAxiosError(error)) {
+        const axiosError = error as AxiosError<ErrorResponse>;
+        const errors = ValidationsError(axiosError, 'Cidade');
         if (errors) {
           showAlert(errors, false);
         }
@@ -131,24 +155,30 @@ export const FormCreateCompanyAddress: FC<FormCreateCompanyAddressProps> = ({
 
   useEffect(() => {
     if (stepPosition != 4 && !dataLoaded) {
-      const country = getCountry({
+      getCountry({
         loggedUserId: loggedUser?.id ?? '',
-      });
-
-      country.then((result) => {
-        const filteredCountry = result?.filter(
+      }).then((country) => {
+        const filteredCountry = country?.filter(
           (item) => item.name === companyAddress.country
         )[0];
         getState({
           loggedUserId: loggedUser?.id ?? '',
           countryId: filteredCountry?.id ?? '',
+        }).then((state) => {
+          const filteredState = state?.filter(
+            (item) => item.uf === companyAddress.state
+          )[0];
+          getCity({
+            loggedUserId: loggedUser?.id ?? '',
+            stateId: filteredState?.id ?? '',
+          });
         });
       });
     }
   }, [stepPosition, loggedUser, dataLoaded]);
 
   useEffect(() => {
-    if (stepPosition != 1) {
+    if (stepPosition != 4) {
       setDataLoaded(false);
     }
   }, [stepPosition]);
@@ -199,6 +229,7 @@ export const FormCreateCompanyAddress: FC<FormCreateCompanyAddressProps> = ({
   };
 
   useEffect(() => {
+    setCity(companyAddress.city);
     setCountry(companyAddress.country);
     setState(companyAddress.state);
   }, [companyAddress, setValue]);
@@ -314,7 +345,7 @@ export const FormCreateCompanyAddress: FC<FormCreateCompanyAddressProps> = ({
             margin="normal"
             error={!!errors.countryId}
             helperText={errors.countryId?.message}
-            id="port"
+            id="countryId"
             label={countryLabel}
             {...register('countryId', {
               onChange: handleChange(setCountry, 'country'),
@@ -335,7 +366,7 @@ export const FormCreateCompanyAddress: FC<FormCreateCompanyAddressProps> = ({
             margin="normal"
             error={!!errors.stateId}
             helperText={errors.stateId ? errors.stateId.message : ''}
-            id="port"
+            id="stateId"
             label={stateLabel}
             {...register('stateId', {
               onChange: handleChange(setState, 'state'),
@@ -349,19 +380,25 @@ export const FormCreateCompanyAddress: FC<FormCreateCompanyAddressProps> = ({
           </TextField>
         </Box>
       </Box>
-
       <TextField
-        margin="normal"
-        required
         fullWidth
+        select
+        value={city}
+        margin="normal"
         error={!!errors.cityId}
         helperText={errors.cityId ? errors.cityId.message : ''}
         id="cityId"
-        disabled={loading}
         label={cityLabel}
-        autoComplete="cityId"
-        {...register('cityId')}
-      />
+        {...register('cityId', {
+          onChange: handleChange(setState, 'city'),
+        })}
+      >
+        {listCity.map((item) => (
+          <MenuItem key={item.id} value={item.name}>
+            {item.name}
+          </MenuItem>
+        ))}
+      </TextField>
       <Box
         sx={{
           display: 'flex',

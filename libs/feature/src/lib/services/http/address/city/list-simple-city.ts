@@ -2,7 +2,7 @@ import { CityResponseDto, ListSimpleCityDto } from '@workspaces/domain';
 import { generalApi } from '../../axios-config';
 
 export async function ListSimpleCityRequest(input: ListSimpleCityDto) {
-  const result = await generalApi.get<CityResponseDto>('list-simple-city', {
+  const result = await generalApi.get<CityResponseDto[]>('list-simple-city', {
     params: {
       loggedUserId: input.loggedUserId,
       stateId: input.stateId,
