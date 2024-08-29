@@ -1,9 +1,11 @@
-import { Body, Controller, Post, Query } from '@nestjs/common';
+import { Body, Controller, Post, Query, UsePipes } from '@nestjs/common';
 import { CreateCompanyResponsibleService } from './create-company-responsible.service';
 import {
   CompanyBodyResponsibleDto,
+  createCompanyResponsibleSchema,
   ErrorMessageResult,
 } from '@workspaces/domain';
+import { ZodValidationPipe } from '../../pipes/zod-validation-pipe';
 
 @Controller('create-company-responsible')
 export class CreateCompanyResponsibleController {
@@ -12,6 +14,7 @@ export class CreateCompanyResponsibleController {
   ) {}
 
   @Post()
+  @UsePipes(new ZodValidationPipe(createCompanyResponsibleSchema))
   async create(
     @Query('loggedUserId') loggedUserId: string,
     @Query('companyId') companyId: string,

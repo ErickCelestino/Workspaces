@@ -16,13 +16,13 @@ import {
   ConsultCompanyByCnpjModule,
   CreateCompanyDataModule,
   CreateCompanyAddressModule,
+  CreateCompanyResponsibleModule,
 } from './company';
 import {
   ListSimpleStateModule,
   ListSimpleCountryModule,
   ListSimpleCityModule,
 } from './address';
-import { CreateCompanyResponsibleModule } from './create-company-responsible/create-company-responsible.module';
 
 @Module({
   imports: [
