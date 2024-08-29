@@ -26,7 +26,6 @@ import {
   ListSimpleCountryRequest,
   ListSimpleStateRequest,
 } from '../../../services';
-import { StringValidation } from 'zod';
 
 interface FormCreateCompanyAddressProps {
   showAlert: (message: string, success: boolean) => void;
@@ -90,9 +89,9 @@ export const FormCreateCompanyAddress: FC<FormCreateCompanyAddressProps> = ({
     mode: 'all',
     criteriaMode: 'all',
     defaultValues: {
-      cityId: companyAddress.city,
-      countryId: companyAddress.country,
-      stateId: companyAddress.state,
+      cityId: '',
+      countryId: '',
+      stateId: '',
       complement: companyAddress.complement,
       district: companyAddress.district,
       number: companyAddress.number,
@@ -171,6 +170,10 @@ export const FormCreateCompanyAddress: FC<FormCreateCompanyAddressProps> = ({
           getCity({
             loggedUserId: loggedUser?.id ?? '',
             stateId: filteredState?.id ?? '',
+          }).then(() => {
+            setCity(companyAddress.city);
+            setCountry(companyAddress.country);
+            setState(companyAddress.state);
           });
         });
       });
@@ -228,24 +231,33 @@ export const FormCreateCompanyAddress: FC<FormCreateCompanyAddressProps> = ({
     }
   };
 
-  useEffect(() => {
-    setCity(companyAddress.city);
-    setCountry(companyAddress.country);
-    setState(companyAddress.state);
-  }, [companyAddress, setValue]);
-
   const handleChange =
     (
       setter: React.Dispatch<React.SetStateAction<string>>,
       field: 'country' | 'state' | 'city'
     ) =>
-    (event: React.ChangeEvent<{ value: string; key: string }>) => {
+    (event: React.ChangeEvent<{ value: string }>) => {
       switch (field) {
         case 'country':
-          console.log(event);
+          const filteredCountry = listCoutry?.filter(
+            (item) => item.name === event.target.value
+          )[0];
+          getState({
+            loggedUserId: loggedUser?.id ?? '',
+            countryId: filteredCountry?.id ?? '',
+          });
+          setState('');
           setter(event.target.value);
           break;
         case 'state':
+          const filteredState = listState?.filter(
+            (item) => item.uf === event.target.value
+          )[0];
+          getCity({
+            loggedUserId: loggedUser?.id ?? '',
+            stateId: filteredState?.id ?? '',
+          });
+          setCity('');
           setter(event.target.value);
           break;
         case 'city':
@@ -367,6 +379,7 @@ export const FormCreateCompanyAddress: FC<FormCreateCompanyAddressProps> = ({
             error={!!errors.stateId}
             helperText={errors.stateId ? errors.stateId.message : ''}
             id="stateId"
+            disabled={listState.length > 0 ? false : true}
             label={stateLabel}
             {...register('stateId', {
               onChange: handleChange(setState, 'state'),
@@ -388,6 +401,7 @@ export const FormCreateCompanyAddress: FC<FormCreateCompanyAddressProps> = ({
         error={!!errors.cityId}
         helperText={errors.cityId ? errors.cityId.message : ''}
         id="cityId"
+        disabled={listCity.length > 0 ? false : true}
         label={cityLabel}
         {...register('cityId', {
           onChange: handleChange(setState, 'city'),
