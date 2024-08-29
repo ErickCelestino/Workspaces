@@ -21,7 +21,6 @@ interface FormConsultCompanyByCnpjProps {
   changeCompany: (company: CompanyResponseDto) => void;
   totalPosition: number;
   step: StepItem;
-  title?: string;
   cnpjLabel?: string;
   buttonTitle?: string;
   successMessage?: string;
@@ -33,8 +32,7 @@ export const FormConsultCompanyByCnpj: FC<FormConsultCompanyByCnpjProps> = ({
   changeCompany,
   totalPosition,
   step: { stepPosition = 1, stepTitle = 'Etapa' },
-  title = 'Buscar CNPJ',
-  cnpjLabel = 'CNPJ',
+  cnpjLabel = 'Burscar CNPJ',
   buttonTitle = 'Buscar',
   successMessage = 'Empresa consultada com sucesso',
 }) => {
@@ -104,7 +102,6 @@ export const FormConsultCompanyByCnpj: FC<FormConsultCompanyByCnpjProps> = ({
         alignItems="center"
         justifyContent="center"
       >
-        <Typography variant="h5">{title}</Typography>
         <TextField
           margin="normal"
           required

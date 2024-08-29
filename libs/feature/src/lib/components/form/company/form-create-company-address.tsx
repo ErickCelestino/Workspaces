@@ -156,22 +156,22 @@ export const FormCreateCompanyAddress: FC<FormCreateCompanyAddressProps> = ({
         loggedUserId: loggedUser?.id ?? '',
       }).then((country) => {
         const filteredCountry = country?.filter(
-          (item) => item.name === companyAddress.country
+          (item) => item.name === companyAddress.country.toUpperCase()
         )[0];
         getState({
           loggedUserId: loggedUser?.id ?? '',
           countryId: filteredCountry?.id ?? '',
         }).then((state) => {
           const filteredState = state?.filter(
-            (item) => item.uf === companyAddress.state
+            (item) => item.uf === companyAddress.state.toUpperCase()
           )[0];
           getCity({
             loggedUserId: loggedUser?.id ?? '',
             stateId: filteredState?.id ?? '',
           }).then(() => {
-            setCity(companyAddress.city);
-            setCountry(companyAddress.country);
-            setState(companyAddress.state);
+            setCity(companyAddress.city.toUpperCase());
+            setCountry(companyAddress.country.toUpperCase());
+            setState(companyAddress.state.toUpperCase());
           });
         });
       });

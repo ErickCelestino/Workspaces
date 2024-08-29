@@ -9,6 +9,7 @@ import { FormCreateUser } from '../../components';
 import { FormCreateUserProps } from '@workspaces/domain';
 import { useSnackbarAlert } from '../../hooks';
 import { CompanyStepper } from '../../components/stepper/company/company-stepper';
+import { useNavigate } from 'react-router-dom';
 
 interface CreateUserProps {
   cardImage: string;
@@ -20,6 +21,7 @@ export const CreateUser: FC<CreateUserProps> = ({ cardImage, logo }) => {
   const { showSnackbarAlert, SnackbarAlert } = useSnackbarAlert();
   const theme = useTheme();
   const [step, setStep] = useState(0);
+  const navigate = useNavigate();
 
   const changeStage = (stepPosition: number) => {
     setStep(stepPosition);
@@ -66,7 +68,7 @@ export const CreateUser: FC<CreateUserProps> = ({ cardImage, logo }) => {
               )}
               {step === 2 && (
                 <CompanyStepper
-                  handlePopUpClose={() => changeStage(3)}
+                  handlePopUpClose={() => navigate('/login')}
                   showAlert={showAlert}
                 />
               )}
