@@ -5,7 +5,7 @@ import {
 } from '@workspaces/domain';
 import { PrismaService } from 'nestjs-prisma';
 
-export class CreateCompanyResposibleRepositoryImpl
+export class CreateCompanyResponsibleRespositoryImpl
   implements CreateCompanyResponsibleRespository
 {
   constructor(@Inject('PrismaService') private prismaService: PrismaService) {}

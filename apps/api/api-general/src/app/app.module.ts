@@ -22,6 +22,7 @@ import {
   ListSimpleCountryModule,
   ListSimpleCityModule,
 } from './address';
+import { CreateCompanyResponsibleModule } from './create-company-responsible/create-company-responsible.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import {
     ListSimpleStateModule,
     ListSimpleCountryModule,
     ListSimpleCityModule,
+    CreateCompanyResponsibleModule,
   ],
   controllers: [AppController],
   providers: [AppService],
