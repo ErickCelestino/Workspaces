@@ -4,7 +4,7 @@ import {
 } from '@workspaces/domain';
 import { generalApi } from '../axios-config';
 
-export async function CreateCompanyDataRequest(
+export async function CreateCompanyResponsibleRequest(
   input: CreateCompanyResponsibleDto
 ) {
   const result = await generalApi.post<{ companyResponsibleId: string }>(
