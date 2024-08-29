@@ -1,12 +1,18 @@
 import { Inject } from '@nestjs/common';
 import { UseCase } from '../../base/use-case';
 import { CreateCompanyResponsibleDto } from '../../dto';
-import { EntityNotEmpty, EntityNotExists } from '../../error';
+import {
+  EntityAlreadyExists,
+  EntityNotCreated,
+  EntityNotEmpty,
+  EntityNotExists,
+} from '../../error';
 import { Either, left, right } from '../../shared/either';
 import {
   FindCompanyByIdRepository,
   FindUserByIdRepository,
   CreateCompanyResponsibleRespository,
+  FindCompanyResponsibleByDocumentRepository,
 } from '../../repository';
 import { ValidationCompanyId, ValidationUserId } from '../../utils';
 
@@ -14,7 +20,7 @@ export class CreateCompanyResponsible
   implements
     UseCase<
       CreateCompanyResponsibleDto,
-      Either<EntityNotEmpty | EntityNotExists, string>
+      Either<EntityNotEmpty | EntityNotExists | EntityNotCreated, string>
     >
 {
   constructor(
@@ -22,16 +28,21 @@ export class CreateCompanyResponsible
     private findUserByIdRepository: FindUserByIdRepository,
     @Inject('FindCompanyByIdRepository')
     private findCompanyByIdRepository: FindCompanyByIdRepository,
+    @Inject('FindCompanyResponsibleByDocumentRepository')
+    private findCompanyResponsibleByDocumentRepository: FindCompanyResponsibleByDocumentRepository,
+    @Inject('CreateCompanyResponsibleRespository')
     private createCompanyResponsibleRepository: CreateCompanyResponsibleRespository
   ) {}
 
   async execute(
     input: CreateCompanyResponsibleDto
-  ): Promise<Either<EntityNotEmpty | EntityNotExists, string>> {
+  ): Promise<
+    Either<EntityNotEmpty | EntityNotExists | EntityNotCreated, string>
+  > {
     const {
       companyId,
       loggedUserId,
-      body: { name, birthdate, cpf, email, phone },
+      body: { name, birthdate, document, email, phone },
     } = input;
 
     if (Object.keys(loggedUserId).length < 1) {
@@ -46,12 +57,12 @@ export class CreateCompanyResponsible
       return left(new EntityNotEmpty('Name'));
     }
 
-    if (Object.keys(birthdate).length < 1) {
+    if (Object.keys(birthdate?.setTime?.toString() ?? birthdate).length < 1) {
       return left(new EntityNotEmpty('Birth Date'));
     }
 
-    if (Object.keys(cpf).length < 1) {
-      return left(new EntityNotEmpty('CPF'));
+    if (Object.keys(document).length < 1) {
+      return left(new EntityNotEmpty('Document'));
     }
 
     if (Object.keys(email).length < 1) {
@@ -62,7 +73,7 @@ export class CreateCompanyResponsible
       return left(new EntityNotEmpty('Phone'));
     }
     const formatedPhone = phone.replace(/[^\d]+/g, '');
-    const formatedCpf = cpf.replace(/[^\d]+/g, '');
+    const formatedDocument = document.replace(/[^\d]+/g, '');
 
     const userValidation = await ValidationUserId(
       loggedUserId,
@@ -82,11 +93,21 @@ export class CreateCompanyResponsible
       return left(companyValidation.value);
     }
 
+    const filteredCompanyResponsible =
+      await this.findCompanyResponsibleByDocumentRepository.find(document);
+
+    if (
+      Object.keys(filteredCompanyResponsible?.id ?? filteredCompanyResponsible)
+        .length > 0
+    ) {
+      return left(new EntityAlreadyExists('Company Responsible'));
+    }
+
     const createdCompanyResponsible =
       await this.createCompanyResponsibleRepository.create({
         body: {
           birthdate,
-          cpf: formatedCpf,
+          document: formatedDocument,
           phone: formatedPhone,
           email,
           name,
@@ -96,7 +117,7 @@ export class CreateCompanyResponsible
       });
 
     if (Object.keys(createdCompanyResponsible).length < 1) {
-      return left(new EntityNotExists('Company Responsible'));
+      return left(new EntityNotCreated('Company Responsible'));
     }
 
     return right(createdCompanyResponsible);

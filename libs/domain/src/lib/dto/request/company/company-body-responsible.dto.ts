@@ -1,7 +1,7 @@
 export interface CompanyBodyResponsibleDto {
   name: string;
   email: string;
-  cpf: string;
+  document: string;
   phone: string;
-  birthdate: string;
+  birthdate: Date;
 }

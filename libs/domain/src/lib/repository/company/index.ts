@@ -5,3 +5,4 @@ export * from './create-company-responsible';
 export * from './create-company';
 export * from './find-company-by-cnpj';
 export * from './find-company-by-id';
+export * from './find-company-responsible-by-document';
