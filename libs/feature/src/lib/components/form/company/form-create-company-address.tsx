@@ -82,8 +82,6 @@ export const FormCreateCompanyAddress: FC<FormCreateCompanyAddressProps> = ({
     handleSubmit,
     register,
     reset,
-    control,
-    setValue,
     formState: { errors },
   } = useForm<CompanyBodyAddressDto>({
     mode: 'all',
@@ -153,7 +151,7 @@ export const FormCreateCompanyAddress: FC<FormCreateCompanyAddressProps> = ({
   }, []);
 
   useEffect(() => {
-    if (stepPosition != 4 && !dataLoaded) {
+    if (stepPosition === 4 && !dataLoaded) {
       getCountry({
         loggedUserId: loggedUser?.id ?? '',
       }).then((country) => {
@@ -188,6 +186,7 @@ export const FormCreateCompanyAddress: FC<FormCreateCompanyAddressProps> = ({
 
   const createCompanyAddress = async (input: CreateCompanyAddressDto) => {
     try {
+      input.body.zipcode = input.body.zipcode.replace(/[^\d]+/g, '');
       const result = await CreateCompanyAddressRequest(input);
       return result;
     } catch (error) {
@@ -208,7 +207,13 @@ export const FormCreateCompanyAddress: FC<FormCreateCompanyAddressProps> = ({
     setLoading(true);
     setSuccess(false);
     const result = await createCompanyAddress({
-      body: data,
+      body: {
+        ...data,
+        cityId: listCity?.filter((item) => item.name === city)[0]?.id ?? '',
+        stateId: listState?.filter((item) => item.uf === state)[0]?.id ?? '',
+        countryId:
+          listCoutry?.filter((item) => item.name === country)[0]?.id ?? '',
+      },
       loggedUserId: loggedUser?.id ?? '',
       companyId,
     });
