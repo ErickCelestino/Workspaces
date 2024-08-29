@@ -53,7 +53,7 @@ export class FindCompanyByIdRepositoryImpl
                           },
                         },
                         name: true,
-                        ur: true,
+                        uf: true,
                       },
                     },
                   },

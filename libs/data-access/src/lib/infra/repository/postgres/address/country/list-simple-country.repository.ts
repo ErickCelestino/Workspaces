@@ -13,7 +13,7 @@ export class ListSimpleCountryRepositoryImpl
     const listCountry = await this.prismaService.country.findMany({
       select: {
         name: true,
-        ur: true,
+        uf: true,
         country_id: true,
       },
     });
@@ -23,7 +23,7 @@ export class ListSimpleCountryRepositoryImpl
         return {
           id: country?.country_id ?? '',
           name: country?.name ?? '',
-          uf: country?.ur ?? '',
+          uf: country?.uf ?? '',
         };
       }
     );

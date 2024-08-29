@@ -16,7 +16,7 @@ export class FindStateByIdRepositoryImpl implements FindStateByIdRepository {
       select: {
         state_id: true,
         name: true,
-        ur: true,
+        uf: true,
         city: {
           select: {
             city_id: true,
@@ -37,7 +37,7 @@ export class FindStateByIdRepositoryImpl implements FindStateByIdRepository {
     return {
       id: filteredState?.state_id ?? '',
       name: filteredState?.name ?? '',
-      uf: filteredState?.ur ?? '',
+      uf: filteredState?.uf ?? '',
       cities: mappedCity,
     };
   }

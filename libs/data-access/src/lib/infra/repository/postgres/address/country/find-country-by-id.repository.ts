@@ -17,12 +17,12 @@ export class FindCountryByIdRepositoryImpl
       select: {
         country_id: true,
         name: true,
-        ur: true,
+        uf: true,
         state: {
           select: {
             state_id: true,
             name: true,
-            ur: true,
+            uf: true,
             city: {
               select: {
                 city_id: true,
@@ -47,7 +47,7 @@ export class FindCountryByIdRepositoryImpl
         return {
           id: state?.state_id ?? '',
           name: state?.name ?? '',
-          uf: state?.ur ?? '',
+          uf: state?.uf ?? '',
           cities: mappedCity,
         };
       }) ?? [];
@@ -55,7 +55,7 @@ export class FindCountryByIdRepositoryImpl
     return {
       id: filteredCountry?.country_id ?? '',
       name: filteredCountry?.name ?? '',
-      uf: filteredCountry?.ur ?? '',
+      uf: filteredCountry?.uf ?? '',
       states: mappedState,
     };
   }

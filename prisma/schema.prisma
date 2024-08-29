@@ -195,6 +195,8 @@ model Company_Responsible {
   company_id String
   cpf String @db.VarChar(11)
   birth_date DateTime
+  email String
+  phone String
   created_at DateTime @default(now())
   updated_at DateTime @default(now())
   deleted_at DateTime?
@@ -285,7 +287,7 @@ model State {
   state_id String @id @default(uuid())
   name String
   coutry_id String
-  ur String @db.VarChar(2)
+  uf String @db.VarChar(2)
 
   country Country @relation(fields: [coutry_id], references: [country_id])
 
@@ -296,7 +298,7 @@ model State {
 model Country {
   country_id String @id @default(uuid())
   name String
-  ur String @db.VarChar(2)
+  uf String @db.VarChar(2)
 
   state State[]
 

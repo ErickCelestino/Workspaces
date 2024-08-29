@@ -16,7 +16,7 @@ export class ListSimpleStateRepositoryImpl
         coutry_id: input.countryId,
       },
       select: {
-        ur: true,
+        uf: true,
         name: true,
         state_id: true,
       },
@@ -27,7 +27,7 @@ export class ListSimpleStateRepositoryImpl
         return {
           id: state.state_id,
           name: state.name,
-          uf: state.ur,
+          uf: state.uf,
         };
       }
     );
