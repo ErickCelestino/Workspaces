@@ -422,7 +422,7 @@ export const FormCreateCompanyAddress: FC<FormCreateCompanyAddressProps> = ({
         sx={{
           display: 'flex',
           justifyContent: 'center',
-          mt: 2,
+          mt: 1.5,
         }}
       >
         <Box width="80%">

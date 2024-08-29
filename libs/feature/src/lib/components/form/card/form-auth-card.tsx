@@ -26,7 +26,7 @@ export const FormAuthCard: FC<FormAuthCardProps> = ({
       <Card
         sx={{
           textAlign: 'center',
-          height: smDown ? '100vh' : theme.spacing(85),
+          height: smDown ? '100vh' : theme.spacing(88),
           width: smDown
             ? '100%'
             : mdDown

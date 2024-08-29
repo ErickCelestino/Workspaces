@@ -42,7 +42,7 @@ export const FormButton: FC<FormButtonProps> = ({
               mt: theme.spacing(1),
               mb: theme.spacing(1),
               height: smDown ? theme.spacing(6) : theme.spacing(7),
-              fontSize: smDown ? '1rem' : '1.3rem',
+              fontSize: '1rem',
               bgcolor: loading ? grey[500] : 'primay',
               '&:hover': {
                 bgcolor: loading ? grey[700] : 'primary',

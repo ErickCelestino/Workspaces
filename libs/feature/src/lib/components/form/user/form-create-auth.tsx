@@ -8,7 +8,11 @@ import {
 import { FC, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { CreateAuthSchema, EntityExist } from '../../../shared';
+import {
+  CreateAuthSchema,
+  EntityExist,
+  ValidationsError,
+} from '../../../shared';
 import { FormButton } from '../form-button.component';
 import {
   AuthConfirmProps,
@@ -64,12 +68,12 @@ export const FormAuthConfirm: FC<AuthConfirmProps> = ({
       handlePopUpClose();
       setSuccess(false);
     } catch (error) {
-      console.error((error as { message: string }).message);
+      console.error(error);
       if (axios.isAxiosError(error)) {
         const axiosError = error as AxiosError<ErrorResponse>;
-        if (axiosError.response?.data.error.name === 'EntityAlreadyExists') {
-          const message = EntityExist(request.email, 'e-mail');
-          showAlert?.(message);
+        const errors = ValidationsError(axiosError, 'Autenticação');
+        if (errors) {
+          showAlert?.(errors, false);
         }
       }
       setLoading(false);

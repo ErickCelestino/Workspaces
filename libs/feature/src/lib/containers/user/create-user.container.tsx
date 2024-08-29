@@ -25,10 +25,10 @@ export const CreateUser: FC<CreateUserProps> = ({ cardImage, logo }) => {
     setStep(stepPosition);
   };
 
-  const showAlert = (message: string) => {
+  const showAlert = (message: string, success: boolean) => {
     showSnackbarAlert({
       message: message,
-      severity: 'error',
+      severity: success ? 'success' : 'error',
     });
   };
 
@@ -45,16 +45,17 @@ export const CreateUser: FC<CreateUserProps> = ({ cardImage, logo }) => {
           >
             <Avatar
               sx={{
+                mt: theme.spacing(1),
                 mb: theme.spacing(1),
                 bgcolor: 'secondary.main',
-                height: theme.spacing(15),
-                width: theme.spacing(15),
+                height: theme.spacing(12),
+                width: theme.spacing(12),
               }}
               src={logo}
             />
             <Box sx={{ mt: 1 }}>
               <StepperCustomHorizontal activeStep={step} />
-              {step === 2 && (
+              {step === 0 && (
                 <FormCreateUser onData={changeStage} showAlert={showAlert} />
               )}
               {step === 1 && (
@@ -63,7 +64,7 @@ export const CreateUser: FC<CreateUserProps> = ({ cardImage, logo }) => {
                   handlePopUpClose={() => changeStage(2)}
                 />
               )}
-              {step === 0 && (
+              {step === 2 && (
                 <CompanyStepper
                   handlePopUpClose={() => changeStage(3)}
                   showAlert={showAlert}
