@@ -41,16 +41,7 @@ export class CreateCompanyAddress
     input: CreateCompanyAddressDto
   ): Promise<Either<EntityNotEmpty, string>> {
     const {
-      body: {
-        cityId,
-        complement,
-        countryId,
-        district,
-        number,
-        stateId,
-        street,
-        zipcode,
-      },
+      body: { cityId, countryId, district, number, stateId, street, zipcode },
       companyId,
       loggedUserId,
     } = input;
