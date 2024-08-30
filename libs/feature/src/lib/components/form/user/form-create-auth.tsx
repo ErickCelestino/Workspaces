@@ -8,16 +8,25 @@ import {
 import { FC, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { CreateAuthSchema, EntityExist } from '../../../shared';
+import {
+  CreateAuthSchema,
+  EntityExist,
+  ValidationsError,
+} from '../../../shared';
 import { FormButton } from '../form-button.component';
 import {
   AuthConfirmProps,
   CreateAuthDto,
   ErrorResponse,
+  LoggedUser,
 } from '@workspaces/domain';
-import { CreateAuth, getItemLocalStorage } from '../../../services';
+import {
+  CreateAuth,
+  FindUserByEmailRequest,
+  getItemLocalStorage,
+} from '../../../services';
 import axios, { AxiosError } from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useLoggedUser } from '../../../contexts';
 
 interface ConfirmPassword {
   email: string;
@@ -29,14 +38,15 @@ export const FormAuthConfirm: FC<AuthConfirmProps> = ({
   emailLabel = 'Digite seu e-mail',
   passwordLabel = 'Digite sua senha',
   confirmPasswordLabel = 'Digite sua senha novamente',
-  buttonTitle = 'Finalizar Cadastro',
+  buttonTitle = 'Próxima Etapa',
   showAlert,
+  handlePopUpClose,
 }) => {
-  const history = useNavigate();
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const { setLoggedUser } = useLoggedUser();
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
@@ -61,14 +71,17 @@ export const FormAuthConfirm: FC<AuthConfirmProps> = ({
   const createAuth = async (request: CreateAuthDto) => {
     try {
       await CreateAuth(request);
-      history('/login');
+      await setLoggedUserId(request.email);
+      setSuccess(true);
+      handlePopUpClose();
+      setSuccess(false);
     } catch (error) {
-      console.error((error as { message: string }).message);
+      console.error(error);
       if (axios.isAxiosError(error)) {
         const axiosError = error as AxiosError<ErrorResponse>;
-        if (axiosError.response?.data.error.name === 'EntityAlreadyExists') {
-          const message = EntityExist(request.email, 'e-mail');
-          showAlert?.(message);
+        const errors = ValidationsError(axiosError, 'Autenticação');
+        if (errors) {
+          showAlert?.(errors, false);
         }
       }
       setLoading(false);
@@ -86,6 +99,21 @@ export const FormAuthConfirm: FC<AuthConfirmProps> = ({
       userId: userId,
     };
     await createAuth(request);
+  };
+
+  const setLoggedUserId = async (email: string) => {
+    const user = await FindUserByEmailRequest({ email });
+
+    if (Object.keys(user).length > 0) {
+      const loggedUser: LoggedUser = {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        type: user.type,
+        status: user.status,
+      };
+      setLoggedUser(loggedUser);
+    }
   };
 
   return (

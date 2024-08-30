@@ -11,6 +11,19 @@ import {
   CreateUserModule,
   FindUserByEmailModule,
 } from './user';
+import {
+  CreateCompanyModule,
+  ConsultCompanyByCnpjModule,
+  CreateCompanyDataModule,
+  CreateCompanyAddressModule,
+  CreateCompanyResponsibleModule,
+} from './company';
+import {
+  ListSimpleStateModule,
+  ListSimpleCountryModule,
+  ListSimpleCityModule,
+  ConsultZipcodeModule,
+} from './address';
 
 @Module({
   imports: [
@@ -22,6 +35,15 @@ import {
     FindUserByIdModule,
     DeleteUserByIdModule,
     FindUserByEmailModule,
+    CreateCompanyModule,
+    ConsultCompanyByCnpjModule,
+    CreateCompanyDataModule,
+    CreateCompanyAddressModule,
+    ListSimpleStateModule,
+    ListSimpleCountryModule,
+    ListSimpleCityModule,
+    CreateCompanyResponsibleModule,
+    ConsultZipcodeModule,
   ],
   controllers: [AppController],
   providers: [AppService],

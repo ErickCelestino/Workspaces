@@ -10,6 +10,7 @@ import {
   ListSchedulesContainer,
   ListDeviceContainer,
   useLoggedUser,
+  ListCompanyContainer,
 } from '@workspaces/feature';
 import { useEffect } from 'react';
 
@@ -60,9 +61,30 @@ export const AppRouters = () => {
         },
       ],
     };
+
+    loggedUser?.type === 'DEFAULT_ADMIN'
+      ? setDrawerOptions({
+          ...drawerOptions,
+          Empresa: [
+            {
+              label: 'Empresas',
+              icon: 'add_business',
+              path: '/company',
+            },
+          ],
+        })
+      : setDrawerOptions(drawerOptions);
+
     loggedUser?.type === 'ADMIN'
       ? setDrawerOptions({
           ...drawerOptions,
+          Empresa: [
+            {
+              label: 'Empresas',
+              icon: 'add_business',
+              path: '/company',
+            },
+          ],
           Usuários: [
             {
               label: 'Usuários',
@@ -87,6 +109,7 @@ export const AppRouters = () => {
       />
       <Route path="scheduling" element={<ListSchedulesContainer />} />
       <Route path="device" element={<ListDeviceContainer />} />
+      <Route path="company" element={<ListCompanyContainer />} />
 
       <Route path="*" element={<Navigate to="/home" />} />
     </Routes>

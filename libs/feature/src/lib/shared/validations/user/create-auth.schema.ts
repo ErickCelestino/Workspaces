@@ -2,7 +2,7 @@ import { z } from 'zod';
 import {
   EntityMaxLength,
   EntityMinLength,
-  InvalidEmail,
+  EntityIsInvalid,
   NotConfirmedPassword,
 } from '../../messages';
 
@@ -11,7 +11,7 @@ export const CreateAuthSchema = z
     email: z
       .string()
       .email({
-        message: InvalidEmail('PT-BR'),
+        message: EntityIsInvalid('Email', 'PT-BR'),
       })
       .min(2, {
         message: EntityMinLength({ entity: 'email', minOrMax: 2 }, 'PT-BR'),

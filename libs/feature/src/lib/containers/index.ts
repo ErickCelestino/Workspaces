@@ -1,3 +1,5 @@
+export * from './company';
+export * from './device';
 export * from './directory';
 export * from './file';
 export * from './login';
@@ -7,4 +9,3 @@ export * from './scheduling';
 export * from './test-page';
 export * from './user';
 export * from './utils';
-export * from './device';

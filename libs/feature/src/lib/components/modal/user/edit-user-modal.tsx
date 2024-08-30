@@ -1,3 +1,4 @@
+/* eslint-disable no-fallthrough */
 import { FC, useCallback, useEffect, useState } from 'react';
 import { useLoggedUser } from '../../../contexts';
 import {

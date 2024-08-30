@@ -4,5 +4,5 @@ export interface FormCreateUserProps {
   nicknameLabel?: string;
   birthDateLabel?: string;
   onData?: (stepPosition: number) => void;
-  showAlert?: (message: string) => void;
+  showAlert?: (message: string, success: boolean) => void;
 }
