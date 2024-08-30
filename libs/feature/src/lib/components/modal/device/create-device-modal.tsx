@@ -75,6 +75,7 @@ export const CreateDeviceModal: FC<CreateDeviceModalProps> = ({
     const result = await createDevice({
       body: data,
       loggedUserId: loggedUser?.id ?? '',
+      companyId: loggedUser?.selectedCompany?.id ?? '',
     });
     if (result) {
       setLoading(false);

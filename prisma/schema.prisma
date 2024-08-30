@@ -169,6 +169,7 @@ model Company {
   user_x_company User_X_Company[]
   company_data Company_Data[]
   company_responsible Company_Responsible[]
+  device Device[]
   user User @relation(fields: [user_id], references: [user_id])
 
   @@schema("general")
@@ -177,7 +178,7 @@ model Company {
 model Company_Data {
   company_data_id String @id @default(uuid())
   responsible_email String
-  company_id String
+  company_id String @unique
   phone String
   opening String
   port String
@@ -192,7 +193,7 @@ model Company_Data {
 model Company_Responsible {
   company_responsible_id String @id @default(uuid())
   name String
-  company_id String
+  company_id String @unique
   cpf String @db.VarChar(11)
   birth_date DateTime
   email String
@@ -447,11 +448,13 @@ model Device {
   created_at DateTime @default(now())
   updated_at DateTime @default(now())
   deleted_at DateTime?
+  company_id String
 
   scheduling_X_Device Scheduling_X_Device[]
   location_device Location_Device[]
   device_data Device_Data[]
   user User @relation(fields: [user_id], references: [user_id])
+  company Company @relation(fields: [company_id], references: [company_id])
   @@schema("pure_tv")
 }
 

@@ -78,6 +78,8 @@ export const LoginContainer: React.FC<LoginContainerProps> = ({
         name: user.name,
         type: user.type,
         status: user.status,
+        selectedCompany: user.companies[0],
+        companies: user.companies,
       };
       setItemLocalStorage(JSON.stringify(loggedUser), 'lu');
       setLoggedUser(loggedUser);

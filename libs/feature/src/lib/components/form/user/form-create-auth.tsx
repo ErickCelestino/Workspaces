@@ -111,6 +111,8 @@ export const FormAuthConfirm: FC<AuthConfirmProps> = ({
         name: user.name,
         type: user.type,
         status: user.status,
+        selectedCompany: user.companies[0],
+        companies: user.companies,
       };
       setLoggedUser(loggedUser);
     }
