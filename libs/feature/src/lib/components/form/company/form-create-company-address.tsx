@@ -420,7 +420,6 @@ export const FormCreateCompanyAddress: FC<FormCreateCompanyAddressProps> = ({
         <Box sx={{ width: '48%' }}>
           <TextField
             margin="normal"
-            required
             fullWidth
             error={!!errors.complement}
             helperText={errors.complement ? errors.complement.message : ''}

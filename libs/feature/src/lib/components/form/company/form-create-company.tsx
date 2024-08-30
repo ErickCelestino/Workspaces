@@ -120,16 +120,17 @@ export const FormCreateCompany: FC<FormCreateCompanyProps> = ({
       <TextField
         margin="normal"
         required
-        fullWidth
-        error={!!errors.fantasyName}
-        helperText={errors.fantasyName ? errors.fantasyName.message : ''}
-        id="fantasyName"
-        disabled={loading}
-        label={fantasyNameLabel}
-        autoComplete="fantasyName"
         autoFocus
-        {...register('fantasyName')}
+        fullWidth
+        error={!!errors.socialReason}
+        helperText={errors.socialReason ? errors.socialReason.message : ''}
+        id="socialReason"
+        disabled={loading}
+        label={socialReasonLabel}
+        autoComplete="socialReason"
+        {...register('socialReason')}
       />
+
       <Controller
         name="cnpj"
         control={control}
@@ -149,17 +150,17 @@ export const FormCreateCompany: FC<FormCreateCompanyProps> = ({
           />
         )}
       />
+
       <TextField
         margin="normal"
-        required
         fullWidth
-        error={!!errors.socialReason}
-        helperText={errors.socialReason ? errors.socialReason.message : ''}
-        id="socialReason"
+        error={!!errors.fantasyName}
+        helperText={errors.fantasyName ? errors.fantasyName.message : ''}
+        id="fantasyName"
         disabled={loading}
-        label={socialReasonLabel}
-        autoComplete="socialReason"
-        {...register('socialReason')}
+        label={fantasyNameLabel}
+        autoComplete="fantasyName"
+        {...register('fantasyName')}
       />
       <Box
         sx={{

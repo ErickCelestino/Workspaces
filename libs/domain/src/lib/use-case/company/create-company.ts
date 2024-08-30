@@ -33,7 +33,7 @@ export class CreateCompany
     input: CreateCompanyDto
   ): Promise<Either<EntityNotEmpty, string>> {
     const {
-      body: { cnpj, fantasyName, socialReason },
+      body: { cnpj, socialReason },
       loggedUserId,
     } = input;
 
@@ -45,10 +45,6 @@ export class CreateCompany
 
     if (Object.keys(loggedUserId).length < 1) {
       return left(new EntityNotEmpty('Logged User ID'));
-    }
-
-    if (Object.keys(fantasyName).length < 1) {
-      return left(new EntityNotEmpty('Fantasy Name'));
     }
 
     if (Object.keys(socialReason).length < 1) {
