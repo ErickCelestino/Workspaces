@@ -24,6 +24,7 @@ import {
   ListSimpleCityModule,
   ConsultZipcodeModule,
 } from './address';
+import { ListCompanyModule } from './list-company/list-company.module';
 
 @Module({
   imports: [
@@ -44,6 +45,7 @@ import {
     ListSimpleCityModule,
     CreateCompanyResponsibleModule,
     ConsultZipcodeModule,
+    ListCompanyModule,
   ],
   controllers: [AppController],
   providers: [AppService],
