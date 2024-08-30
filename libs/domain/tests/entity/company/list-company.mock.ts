@@ -1,8 +1,8 @@
 import { ListCompanyResponseDto } from '../../../src';
-import { CompanySimpleMock } from './company-simple.mock';
+import { ListSimpleCompanyMock } from './list-simple-company.mock';
 
 export const ListCompanyMock: ListCompanyResponseDto = {
-  companies: [CompanySimpleMock],
+  companies: [ListSimpleCompanyMock],
   filteredTotal: 1,
   total: 1,
   totalPages: 1,

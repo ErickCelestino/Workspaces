@@ -4,6 +4,7 @@ import {
   ListCompanyDto,
   ListCompanyRepository,
   ListCompanyResponseDto,
+  ListSimpleCompanyResponseDto,
 } from '@workspaces/domain';
 import { PrismaService } from 'nestjs-prisma';
 
@@ -19,10 +20,29 @@ export class ListCompanyRepositoryImpl implements ListCompanyRepository {
       user_id: loggedUserId,
       ...(filter !== ''
         ? {
-            name: {
-              contains: filter,
-              mode: 'insensitive' as const,
-            },
+            user_id: loggedUserId,
+            ...(filter !== ''
+              ? {
+                  OR: [
+                    {
+                      company: {
+                        social_reason: {
+                          contains: filter,
+                          mode: 'insensitive' as const,
+                        },
+                      },
+                    },
+                    {
+                      company: {
+                        fantasy_name: {
+                          contains: filter,
+                          mode: 'insensitive' as const,
+                        },
+                      },
+                    },
+                  ],
+                }
+              : {}),
           }
         : {}),
     };
@@ -44,6 +64,19 @@ export class ListCompanyRepositoryImpl implements ListCompanyRepository {
                     nick_name: true,
                   },
                 },
+                company_x_address: {
+                  select: {
+                    address: {
+                      select: {
+                        city: {
+                          select: {
+                            name: true,
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
               },
             },
           },
@@ -62,13 +95,16 @@ export class ListCompanyRepositoryImpl implements ListCompanyRepository {
 
     const totalPages = Math.ceil(filteredTotal / take);
 
-    const mappedCompany: companySimpleResponseDto[] = companies.map(
+    const mappedCompany: ListSimpleCompanyResponseDto[] = companies.map(
       (company) => {
         return {
+          id: company.company.company_id,
           cnpj: company.company.cnpj,
           fantasyName: company.company.fantasy_name,
           socialReason: company.company.social_reason,
-          id: company.company.company_id,
+          city: company.company.company_x_address[0].address.city.name,
+          createdBy: company.company.user.nick_name,
+          createdAt: company.created_at,
         };
       }
     );

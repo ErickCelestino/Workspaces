@@ -1,20 +1,28 @@
-import { Box, useTheme } from '@mui/material';
+import { Box, List, useTheme } from '@mui/material';
 import AddBusinessIcon from '@mui/icons-material/AddBusiness';
+import StoreIcon from '@mui/icons-material/Store';
 import { useLoggedUser } from '../../contexts';
 import { FC, useCallback, useEffect, useState } from 'react';
 import {
-  Company,
+  companySimpleResponseDto,
   CrudType,
   ErrorResponse,
   IconMenuItem,
+  ListCompanyDto,
+  ListSimpleCompanyResponseDto,
 } from '@workspaces/domain';
 import { useSnackbarAlert } from '../../hooks';
 import axios, { AxiosError } from 'axios';
 import { ValidationsError } from '../../shared';
 import { ContainerSimpleList } from '../utils';
 import { LayoutBase } from '../../layout';
-import { ToolbarPureTV } from '../../components';
+import {
+  CompanyItem,
+  EmptyListResponse,
+  ToolbarPureTV,
+} from '../../components';
 import { CreateCompanyModal } from '../../components/modal/company';
+import { ListCompanyRequest } from '../../services';
 
 interface ListCompanyContainerProps {
   createCompanyButtonTitle?: string;
@@ -27,7 +35,9 @@ export const ListCompanyContainer: FC<ListCompanyContainerProps> = ({
   const theme = useTheme();
   const { showSnackbarAlert, SnackbarAlert } = useSnackbarAlert();
 
-  const [listCompany, setListCompany] = useState<Company[]>([]);
+  const [listCompany, setListCompany] = useState<
+    ListSimpleCompanyResponseDto[]
+  >([]);
   const [search, setSearch] = useState(false);
   const [totalPage, setTotalPage] = useState<number>(1);
   const [createCompanyPopUp, setCreateCompanyPopUp] = useState(false);
@@ -42,9 +52,19 @@ export const ListCompanyContainer: FC<ListCompanyContainerProps> = ({
     [showSnackbarAlert]
   );
   const handleData = useCallback(
-    async (data: string) => {
+    async (data: ListCompanyDto) => {
       try {
-        // More Implementation
+        const result = await ListCompanyRequest({
+          loggedUserId: data.loggedUserId,
+          filter: data.filter,
+          skip: data.skip,
+          take: data.take,
+        });
+        if (result) {
+          setListCompany(result.companies);
+          setTotalPage(result.totalPages);
+        }
+        return result;
       } catch (error) {
         console.error(error);
         if (axios.isAxiosError(error)) {
@@ -61,13 +81,23 @@ export const ListCompanyContainer: FC<ListCompanyContainerProps> = ({
 
   useEffect(() => {
     if (!search) {
-      handleData('');
+      handleData({
+        filter: '',
+        loggedUserId: loggedUser?.id ?? '',
+      });
     }
   }, [handleData, loggedUser, search]);
 
   const searchData = async (input: string) => {
     setSearch(true);
-    const result = await handleData('');
+    const result = await handleData({
+      filter: input,
+      loggedUserId: loggedUser?.id ?? '',
+    });
+    if (result) {
+      setListCompany(result.companies);
+      setTotalPage(result.totalPages);
+    }
   };
 
   const handleChange = async (
@@ -75,7 +105,15 @@ export const ListCompanyContainer: FC<ListCompanyContainerProps> = ({
     value: number
   ) => {
     setSearch(true);
-    // More Implementation
+    const result = await handleData({
+      loggedUserId: loggedUser?.id ?? '',
+      filter: '',
+      skip: (value - 1) * 6,
+    });
+    if (result) {
+      setListCompany(result.companies);
+      setTotalPage(result.totalPages);
+    }
   };
 
   const handlePopUpOpen = (types: CrudType, id?: string) => {
@@ -109,14 +147,31 @@ export const ListCompanyContainer: FC<ListCompanyContainerProps> = ({
       >
         <ContainerSimpleList
           search={{
-            placeholder: 'Pesquisar por Nome da Empresa',
+            placeholder: 'Pesquisar Empresa',
             searchData: searchData,
             createPopUp: () => handlePopUpOpen('create'),
           }}
           totalPage={totalPage}
           handleChange={handleChange}
         >
-          <Box></Box>
+          <List>
+            {listCompany.length > 0 ? (
+              listCompany.map((company) => (
+                <CompanyItem company={company} key={company.id} />
+              ))
+            ) : (
+              <EmptyListResponse
+                message="Sem Empresas"
+                icon={
+                  <StoreIcon
+                    sx={{
+                      fontSize: theme.spacing(10),
+                    }}
+                  />
+                }
+              />
+            )}
+          </List>
         </ContainerSimpleList>
       </LayoutBase>
       {SnackbarAlert}

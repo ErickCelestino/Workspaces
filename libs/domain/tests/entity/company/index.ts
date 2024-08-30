@@ -4,3 +4,4 @@ export * from './company-responsible.mock';
 export * from './company-simple.mock';
 export * from './company.mock';
 export * from './list-company.mock';
+export * from './list-simple-company.mock';

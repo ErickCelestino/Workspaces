@@ -3,3 +3,4 @@ export * from './create-company-address';
 export * from './create-company-data';
 export * from './create-company-responsible';
 export * from './create-company';
+export * from './list-company';

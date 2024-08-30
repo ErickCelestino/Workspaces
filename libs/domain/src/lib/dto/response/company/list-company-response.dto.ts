@@ -1,8 +1,8 @@
-import { companySimpleResponseDto } from './company-simple-response.dto';
+import { ListSimpleCompanyResponseDto } from './list-simple-company-response.dto';
 
 export interface ListCompanyResponseDto {
   total: number;
   filteredTotal: number;
   totalPages: number;
-  companies: companySimpleResponseDto[];
+  companies: ListSimpleCompanyResponseDto[];
 }
