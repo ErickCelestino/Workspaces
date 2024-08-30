@@ -50,10 +50,10 @@ export class ListCompanyRepositoryImpl implements ListCompanyRepository {
           skip: parseInt(skip.toString()),
           take: parseInt(take.toString()),
         }),
-        this.prismaService.playlist.count({
+        this.prismaService.user_X_Company.count({
           where: whereClause,
         }),
-        this.prismaService.playlist.count({
+        this.prismaService.user_X_Company.count({
           where: {
             user_id: loggedUserId,
           },

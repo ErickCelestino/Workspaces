@@ -1,12 +1,14 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Query, UsePipes } from '@nestjs/common';
 import { ListCompanyService } from './list-company.service';
-import { ErrorMessageResult } from '@workspaces/domain';
+import { ErrorMessageResult, lisCompanySchema } from '@workspaces/domain';
+import { ZodValidationPipe } from '../../pipes/zod-validation-pipe';
 
 @Controller('list-company')
 export class ListCompanyController {
   constructor(private readonly listCompanyService: ListCompanyService) {}
 
   @Get()
+  @UsePipes(new ZodValidationPipe(lisCompanySchema))
   async list(
     @Query('filter') filter: string,
     @Query('loggedUserId') loggedUserId: string,

@@ -17,6 +17,7 @@ import {
   CreateCompanyDataModule,
   CreateCompanyAddressModule,
   CreateCompanyResponsibleModule,
+  ListCompanyModule,
 } from './company';
 import {
   ListSimpleStateModule,
@@ -24,7 +25,6 @@ import {
   ListSimpleCityModule,
   ConsultZipcodeModule,
 } from './address';
-import { ListCompanyModule } from './list-company/list-company.module';
 
 @Module({
   imports: [
