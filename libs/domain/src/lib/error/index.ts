@@ -5,6 +5,7 @@ export * from './entity-not-associate.error';
 export * from './entity-not-converted.error';
 export * from './entity-not-empty.error';
 export * from './entity-not-exists.error';
+export * from './entity-not-found.error';
 export * from './entity-not-loaded.error';
 export * from './entity-not-negative-number.error';
 export * from './entity-not-permission.error';
