@@ -19,6 +19,13 @@ export class CreateCompanyRepositoryImpl implements CreateCompanyRepository {
       },
     });
 
+    await this.prismaService.user_X_Company.create({
+      data: {
+        company_id: createdCompany?.company_id ?? '',
+        user_id: loggedUserId,
+      },
+    });
+
     return createdCompany?.company_id ?? '';
   }
 }

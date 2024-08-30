@@ -18,12 +18,15 @@ export class ConsultZipcodeRepositoryImpl implements ConsultZipcodeRepository {
     }
 
     return {
-      city: data.localidade,
-      country: 'Brasil',
+      city: data.localidade
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toUpperCase(),
+      country: 'Brasil'.toUpperCase(),
       district: data.bairro,
       state: data.uf,
       street: data.logradouro,
-      zipcode: data.cep,
+      zipcode: data.cep.replace(/[^\d]+/g, ''),
     };
   }
 }

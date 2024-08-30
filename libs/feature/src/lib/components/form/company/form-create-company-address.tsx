@@ -1,7 +1,9 @@
 import {
+  AjustListsDto,
   CityResponseDto,
   CompanyAddressResponseDto,
   CompanyBodyAddressDto,
+  ConsultZipcodeDto,
   CreateCompanyAddressDto,
   ErrorResponse,
   ListSimpleCityDto,
@@ -9,16 +11,25 @@ import {
   ListSimpleCountryResponseDto,
   ListSimpleStateDto,
   ListSimpleStateResponseDto,
+  SimpleAddressResponseDto,
   StepItem,
 } from '@workspaces/domain';
+import SearchIcon from '@mui/icons-material/Search';
 import { FC, useCallback, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useLoggedUser } from '../../../contexts';
 import {
+  ConsultZipcodeRequest,
   CreateCompanyAddressRequest,
   ListSimpleCityRequest,
 } from '../../../services';
-import { Box, MenuItem, TextField } from '@mui/material';
+import {
+  Box,
+  IconButton,
+  InputAdornment,
+  MenuItem,
+  TextField,
+} from '@mui/material';
 import axios, { AxiosError } from 'axios';
 import { ValidationsError } from '../../../shared';
 import { FormButton } from '../form-button.component';
@@ -74,9 +85,13 @@ export const FormCreateCompanyAddress: FC<FormCreateCompanyAddressProps> = ({
   );
   const [listState, setListState] = useState<ListSimpleStateResponseDto[]>([]);
   const [listCity, setListCity] = useState<CityResponseDto[]>([]);
+  const [simpleAddress, setSimpleAddress] = useState<SimpleAddressResponseDto>(
+    {} as SimpleAddressResponseDto
+  );
   const [country, setCountry] = useState('');
   const [state, setState] = useState('');
   const [city, setCity] = useState('');
+  const [zipcode, setZipcode] = useState('');
 
   const {
     handleSubmit,
@@ -150,30 +165,59 @@ export const FormCreateCompanyAddress: FC<FormCreateCompanyAddressProps> = ({
     }
   }, []);
 
+  const ajustLists = useCallback(async (input: AjustListsDto) => {
+    getCountry({
+      loggedUserId: loggedUser?.id ?? '',
+    }).then((country) => {
+      const filteredCountry = country?.filter(
+        (item) => item.name === input.country.toUpperCase()
+      )[0];
+      getState({
+        loggedUserId: loggedUser?.id ?? '',
+        countryId: filteredCountry?.id ?? '',
+      }).then((state) => {
+        const filteredState = state?.filter(
+          (item) => item.uf === input.state.toUpperCase()
+        )[0];
+        getCity({
+          loggedUserId: loggedUser?.id ?? '',
+          stateId: filteredState?.id ?? '',
+        }).then((city) => {
+          const filteredCity = city?.filter(
+            (item) => item.name === input.city.toUpperCase()
+          )[0];
+
+          setCountry(filteredCountry?.name.toUpperCase() ?? '');
+          setState(filteredState?.uf.toUpperCase() ?? '');
+          setCity(filteredCity?.name.toUpperCase() ?? '');
+        });
+      });
+    });
+  }, []);
+
+  const getZipcode = useCallback(async (data: ConsultZipcodeDto) => {
+    try {
+      const result = await ConsultZipcodeRequest(data);
+      setSimpleAddress(result);
+      return result;
+    } catch (error) {
+      console.error(error);
+      if (axios.isAxiosError(error)) {
+        const axiosError = error as AxiosError<ErrorResponse>;
+        const errors = ValidationsError(axiosError, 'Endereço');
+        if (errors) {
+          showAlert(errors, false);
+        }
+      }
+    }
+  }, []);
+
   useEffect(() => {
     if (stepPosition === 4 && !dataLoaded) {
-      getCountry({
-        loggedUserId: loggedUser?.id ?? '',
-      }).then((country) => {
-        const filteredCountry = country?.filter(
-          (item) => item.name === companyAddress.country.toUpperCase()
-        )[0];
-        getState({
-          loggedUserId: loggedUser?.id ?? '',
-          countryId: filteredCountry?.id ?? '',
-        }).then((state) => {
-          const filteredState = state?.filter(
-            (item) => item.uf === companyAddress.state.toUpperCase()
-          )[0];
-          getCity({
-            loggedUserId: loggedUser?.id ?? '',
-            stateId: filteredState?.id ?? '',
-          }).then(() => {
-            setCity(companyAddress.city.toUpperCase());
-            setCountry(companyAddress.country.toUpperCase());
-            setState(companyAddress.state.toUpperCase());
-          });
-        });
+      ajustLists({
+        city: companyAddress.city,
+        country: companyAddress.country,
+        state: companyAddress.state,
       });
     }
   }, [stepPosition, loggedUser, dataLoaded]);
@@ -271,6 +315,30 @@ export const FormCreateCompanyAddress: FC<FormCreateCompanyAddressProps> = ({
       }
     };
 
+  const consultZipCode = () => {
+    getZipcode({
+      loggedUserId: loggedUser?.id ?? '',
+      zipcode,
+    }).then((result) => {
+      ajustLists({
+        city: result?.city ?? '',
+        country: result?.country ?? '',
+        state: result?.state ?? '',
+      });
+
+      reset({
+        cityId: '',
+        countryId: '',
+        stateId: '',
+        complement: '',
+        district: result?.district ?? '',
+        number: '',
+        street: result?.street ?? '',
+        zipcode: result?.zipcode ?? '',
+      });
+    });
+  };
+
   return (
     <Box
       sx={{ mt: 2 }}
@@ -288,9 +356,21 @@ export const FormCreateCompanyAddress: FC<FormCreateCompanyAddressProps> = ({
         label={zipcodeLabel}
         autoComplete="zipcode"
         autoFocus
-        {...register('zipcode')}
+        {...register('zipcode', {
+          onChange(event) {
+            setZipcode(event.target.value);
+          },
+        })}
+        InputProps={{
+          endAdornment: (
+            <InputAdornment position="end">
+              <IconButton onClick={consultZipCode}>
+                <SearchIcon />
+              </IconButton>
+            </InputAdornment>
+          ),
+        }}
       />
-
       <Box display="flex" justifyContent="space-between">
         <Box sx={{ width: '48%' }}>
           <TextField
