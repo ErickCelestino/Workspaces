@@ -6,3 +6,4 @@ export * from './create-company';
 export * from './find-company-by-cnpj';
 export * from './find-company-by-id';
 export * from './find-company-responsible-by-document';
+export * from './list-company';
