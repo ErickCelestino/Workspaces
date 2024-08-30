@@ -5,3 +5,4 @@ export * from './create-company.repository';
 export * from './find-company-by-cnpj.repository';
 export * from './find-company-by-id.repository';
 export * from './find-company-responsible-by-document.repository';
+export * from './list-company.repository';
