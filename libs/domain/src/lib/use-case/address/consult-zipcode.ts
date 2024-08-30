@@ -25,13 +25,13 @@ export class ConsultZipcode
   async execute(
     input: ConsultZipcodeDto
   ): Promise<Either<EntityNotEmpty, SimpleAddressResponseDto>> {
-    const { loggedUserId, zipCode } = input;
+    const { loggedUserId, zipcode } = input;
 
     if (Object.keys(loggedUserId).length < 1) {
       return left(new EntityNotEmpty('Logged User ID'));
     }
 
-    if (Object.keys(zipCode).length < 1) {
+    if (Object.keys(zipcode).length < 1) {
       return left(new EntityNotEmpty('Zipcode'));
     }
 
