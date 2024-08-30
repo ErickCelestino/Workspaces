@@ -18,9 +18,15 @@ import {
   AuthConfirmProps,
   CreateAuthDto,
   ErrorResponse,
+  LoggedUser,
 } from '@workspaces/domain';
-import { CreateAuth, getItemLocalStorage } from '../../../services';
+import {
+  CreateAuth,
+  FindUserByEmailRequest,
+  getItemLocalStorage,
+} from '../../../services';
 import axios, { AxiosError } from 'axios';
+import { useLoggedUser } from '../../../contexts';
 
 interface ConfirmPassword {
   email: string;
@@ -40,6 +46,7 @@ export const FormAuthConfirm: FC<AuthConfirmProps> = ({
   const [success, setSuccess] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const { setLoggedUser } = useLoggedUser();
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
@@ -64,6 +71,7 @@ export const FormAuthConfirm: FC<AuthConfirmProps> = ({
   const createAuth = async (request: CreateAuthDto) => {
     try {
       await CreateAuth(request);
+      await setLoggedUserId(request.email);
       setSuccess(true);
       handlePopUpClose();
       setSuccess(false);
@@ -91,6 +99,21 @@ export const FormAuthConfirm: FC<AuthConfirmProps> = ({
       userId: userId,
     };
     await createAuth(request);
+  };
+
+  const setLoggedUserId = async (email: string) => {
+    const user = await FindUserByEmailRequest({ email });
+
+    if (Object.keys(user).length > 0) {
+      const loggedUser: LoggedUser = {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        type: user.type,
+        status: user.status,
+      };
+      setLoggedUser(loggedUser);
+    }
   };
 
   return (

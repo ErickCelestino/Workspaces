@@ -22,8 +22,8 @@ import {
   ListSimpleStateModule,
   ListSimpleCountryModule,
   ListSimpleCityModule,
+  ConsultZipcodeModule,
 } from './address';
-import { ConsultZipcodeModule } from './consult-zipcode/consult-zipcode.module';
 
 @Module({
   imports: [

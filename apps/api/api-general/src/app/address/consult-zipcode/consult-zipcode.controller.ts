@@ -1,12 +1,14 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import { Controller, Get, Param, Query, UsePipes } from '@nestjs/common';
 import { ConsultZipcodeService } from './consult-zipcode.service';
-import { ErrorMessageResult } from '@workspaces/domain';
+import { consultZipcodeSchema, ErrorMessageResult } from '@workspaces/domain';
+import { ZodValidationPipe } from '../../pipes/zod-validation-pipe';
 
 @Controller('consult-zipcode')
 export class ConsultZipcodeController {
   constructor(private readonly consultZipcodeService: ConsultZipcodeService) {}
 
   @Get(':zipcode')
+  @UsePipes(new ZodValidationPipe(consultZipcodeSchema))
   async consult(
     @Query('loggedUserId') loggedUserId: string,
     @Param('zipcode') zipcode: string

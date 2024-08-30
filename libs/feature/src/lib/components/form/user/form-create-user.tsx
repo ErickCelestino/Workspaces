@@ -61,11 +61,10 @@ export const FormCreateUser: FC<FormCreateUserProps> = ({
     setSuccess(false);
     setLoading(true);
     data.appId = appId;
-    const createdUserId = await createUser(data);
-    if (createdUserId !== undefined) {
-      setItemLocalStorage(createdUserId, 'ui');
+    await createUser(data).then((result) => {
+      setItemLocalStorage(result, 'ui');
       onData?.(1);
-    }
+    });
   };
   return (
     <Box component="form" onSubmit={handleSubmit(handleData)}>
