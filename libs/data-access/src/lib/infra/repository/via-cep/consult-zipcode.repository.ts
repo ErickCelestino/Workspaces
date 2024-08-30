@@ -9,7 +9,7 @@ import axios from 'axios';
 export class ConsultZipcodeRepositoryImpl implements ConsultZipcodeRepository {
   async consult(input: ConsultZipcodeDto): Promise<SimpleAddressResponseDto> {
     const response = await axios.get<ViaCepAddressResponseDto>(
-      `https://viacep.com.br/ws/01001000/json//${input.zipcode}`
+      `https://viacep.com.br/ws/${input.zipcode}/json/`
     );
 
     const { data } = response;
@@ -21,7 +21,7 @@ export class ConsultZipcodeRepositoryImpl implements ConsultZipcodeRepository {
       city: data.localidade,
       country: 'Brasil',
       district: data.bairro,
-      state: data.localidade,
+      state: data.uf,
       street: data.logradouro,
       zipcode: data.cep,
     };

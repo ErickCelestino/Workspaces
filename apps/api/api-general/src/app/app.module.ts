@@ -23,6 +23,7 @@ import {
   ListSimpleCountryModule,
   ListSimpleCityModule,
 } from './address';
+import { ConsultZipcodeModule } from './consult-zipcode/consult-zipcode.module';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import {
     ListSimpleCountryModule,
     ListSimpleCityModule,
     CreateCompanyResponsibleModule,
+    ConsultZipcodeModule,
   ],
   controllers: [AppController],
   providers: [AppService],
