@@ -10,11 +10,16 @@ import {
 import { Either, left, right } from '../../shared/either';
 import {
   CreatePlaylistRepository,
+  FindCompanyByIdRepository,
   FindPlaylistByNameRepository,
   FindPlaylistCategoryByIdRepository,
   FindUserByIdRepository,
 } from '../../repository';
-import { ValidationPlaylistCategoryId, ValidationUserId } from '../../utils';
+import {
+  ValidationCompanyId,
+  ValidationPlaylistCategoryId,
+  ValidationUserId,
+} from '../../utils';
 
 export class CreatePlaylist
   implements
@@ -32,6 +37,8 @@ export class CreatePlaylist
   constructor(
     @Inject('FindUserByIdRepository')
     private findUserByIdRepository: FindUserByIdRepository,
+    @Inject('FindCompanyByIdRepository')
+    private findCompanyByIdRepository: FindCompanyByIdRepository,
     @Inject('FindPlaylistCategoryByIdRepository')
     private findPlaylistCategoryByIdRepository: FindPlaylistCategoryByIdRepository,
     @Inject('FindPlaylistByNameRepository')
@@ -47,7 +54,7 @@ export class CreatePlaylist
       string
     >
   > {
-    const { loggedUserId, playlistCategoryId, name } = input;
+    const { loggedUserId, playlistCategoryId, companyId, name } = input;
 
     if (Object.keys(loggedUserId).length < 1) {
       return left(new EntityNotEmpty('Logged User'));
@@ -68,6 +75,15 @@ export class CreatePlaylist
 
     if (userValidation.isLeft()) {
       return left(userValidation.value);
+    }
+
+    const companyValidation = await ValidationCompanyId(
+      companyId,
+      this.findCompanyByIdRepository
+    );
+
+    if (companyValidation.isLeft()) {
+      return left(companyValidation.value);
     }
     const playlistCategoryValidation = await ValidationPlaylistCategoryId(
       playlistCategoryId,

@@ -170,6 +170,7 @@ model Company {
   company_data Company_Data[]
   company_responsible Company_Responsible[]
   device Device[]
+  playlist Playlist[]
   user User @relation(fields: [user_id], references: [user_id])
 
   @@schema("general")
@@ -368,12 +369,14 @@ model Playlist {
   name String
   user_id String
   category_id String
+  company_id String
   created_at DateTime @default(now())
   updated_at DateTime @default(now())
   deleted_at DateTime?
 
   user User @relation(fields: [user_id], references: [user_id])
   category Playlist_Category @relation(fields: [category_id], references: [playlist_category_id])
+  company Company @relation(fields: [company_id], references: [company_id])
   playlist_scheduling Playlist_X_Scheduling[]
   playlist_content_files Playlist_X_Content_Files[]
 
