@@ -64,6 +64,10 @@ export class CreatePlaylist
       return left(new EntityNotEmpty('Playlist Category'));
     }
 
+    if (Object.keys(companyId).length < 1) {
+      return left(new EntityNotEmpty('Company ID'));
+    }
+
     if (Object.keys(name).length < 1) {
       return left(new EntityNotEmpty('Name'));
     }
