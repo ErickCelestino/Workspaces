@@ -1,5 +1,6 @@
 import { Inject } from '@nestjs/common';
 import {
+  companySimpleResponseDto,
   FindUserByEmailDto,
   FindUserByEmailRepository,
   LoggedUser,
@@ -34,8 +35,30 @@ export class FindUserByEmailRepositoryImpl
             user_id: false,
           },
         },
+        user_x_company: {
+          select: {
+            company: {
+              select: {
+                fantasy_name: true,
+                company_id: true,
+                cnpj: true,
+                social_reason: true,
+              },
+            },
+          },
+        },
       },
     });
+
+    const userCompanies: companySimpleResponseDto[] =
+      filteredUser?.user_x_company.map((company) => {
+        return {
+          id: company?.company?.company_id ?? '',
+          cnpj: company?.company?.cnpj ?? '',
+          fantasyName: company?.company?.fantasy_name ?? '',
+          socialReason: company?.company?.social_reason ?? '',
+        };
+      }) ?? [];
 
     return {
       id: filteredUser?.user_id ?? '',
@@ -43,6 +66,8 @@ export class FindUserByEmailRepositoryImpl
       email: filteredUser?.auth[0].email ?? '',
       type: filteredUser?.type ?? '',
       status: filteredUser?.status ?? '',
+      companies: userCompanies,
+      selectedCompany: userCompanies[0],
     };
   }
 }

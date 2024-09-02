@@ -123,6 +123,7 @@ export const CreateSchedulingModal: FC<CreateSchedulingModalProps> = ({
     setLoading(true);
     await createScheduling({
       body: data,
+      companyId: loggedUser?.selectedCompany.id ?? '',
       loggedUserId: loggedUser?.id ?? '',
     });
   };

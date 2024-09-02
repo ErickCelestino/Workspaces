@@ -16,6 +16,7 @@ export class CreatePlaylistCategoryController {
   @UsePipes(new ZodValidationPipe(createPlaylistCategorySchema))
   @Post()
   async create(
+    @Query('companyId') companyId: string,
     @Query('loggedUserId') loggedUserId: string,
     @Body() body: PlaylistCategoryBodyDto
   ) {
@@ -25,6 +26,7 @@ export class CreatePlaylistCategoryController {
         name: body?.name ?? '',
       },
       loggedUserId,
+      companyId,
     });
 
     if (result.isRight()) return { playlistCategoryId: result.value };
