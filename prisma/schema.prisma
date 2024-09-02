@@ -170,7 +170,19 @@ model Company {
   company_data Company_Data[]
   company_responsible Company_Responsible[]
   device Device[]
+  confirm_Delete_Company Confirm_Delete_Company[]
   user User @relation(fields: [user_id], references: [user_id])
+
+  @@schema("general")
+}
+
+model Confirm_Delete_Company {
+  id String @id @default(uuid())
+  responsibly_user String
+  company_id String
+  description String @db.VarChar(1000)
+  created_at DateTime @default(now())
+  company Company @relation(fields: [company_id], references: [company_id])
 
   @@schema("general")
 }
