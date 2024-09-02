@@ -14,10 +14,18 @@ import {
   EntityNotLoaded,
   GenerateThumbnailRepository,
   EntityNotConverted,
+  FindCompanyByIdRepository,
+  CompanyResponseDto,
 } from '../../../src';
-import { ContentFileMock, DirectoryMock, userMock } from '../../entity';
+import {
+  CompanySimpleMock,
+  ContentFileMock,
+  DirectoryMock,
+  userMock,
+} from '../../entity';
 import {
   CreateContentFileRepositoryMock,
+  FindCompanyByIdRepositoryMock,
   FindDirectoryByIdRespositoryMock,
   FindUserByIdRepositoryMock,
   GenerateThumbnailRepositoryMock,
@@ -28,6 +36,7 @@ interface SutTypes {
   sut: CreateContentFile;
   CreateContentFileDto: CreateContentFileDto;
   findUserByIdRepository: FindUserByIdRepository;
+  findCompanyByIdRepository: FindCompanyByIdRepository;
   findDirectoryByIdRepository: FindDirectoryByIdRepository;
   CreateContentFileRepository: CreateContentFileRepository;
   generateThumbnailRepository: GenerateThumbnailRepository;
@@ -37,6 +46,7 @@ interface SutTypes {
 const makeSut = (): SutTypes => {
   const CreateContentFileRepository = new CreateContentFileRepositoryMock();
   const findUserByIdRepository = new FindUserByIdRepositoryMock();
+  const findCompanyByIdRepository = new FindCompanyByIdRepositoryMock();
   const findDirectoryByIdRepository = new FindDirectoryByIdRespositoryMock();
   const generateThumbnailRepository = new GenerateThumbnailRepositoryMock();
   const uploadContentFileRepository = new UploadContentFileRepositoryMock();
@@ -44,6 +54,7 @@ const makeSut = (): SutTypes => {
   const CreateContentFileDto: CreateContentFileDto = {
     directoryId: DirectoryMock.id,
     loggedUserId: userMock.userId,
+    companyId: CompanySimpleMock.id,
     file: [
       {
         fieldname: 'any_fieldname',
@@ -61,6 +72,7 @@ const makeSut = (): SutTypes => {
   const sut = new CreateContentFile(
     CreateContentFileRepository,
     findUserByIdRepository,
+    findCompanyByIdRepository,
     findDirectoryByIdRepository,
     generateThumbnailRepository,
     uploadContentFileRepository
@@ -69,6 +81,7 @@ const makeSut = (): SutTypes => {
   return {
     CreateContentFileRepository,
     findUserByIdRepository,
+    findCompanyByIdRepository,
     findDirectoryByIdRepository,
     generateThumbnailRepository,
     uploadContentFileRepository,
@@ -91,6 +104,16 @@ describe('CreateContentFile', () => {
   it('should return EntityNotEmpty when a pass incorrect logged user id', async () => {
     const { CreateContentFileDto, sut } = makeSut();
     CreateContentFileDto.loggedUserId = '';
+    const result = await sut.execute(CreateContentFileDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
+    expect(result.value).toBeInstanceOf(EntityNotEmpty);
+  });
+
+  it('should return EntityNotEmpty when a pass incorrect Company id', async () => {
+    const { CreateContentFileDto, sut } = makeSut();
+    CreateContentFileDto.companyId = '';
     const result = await sut.execute(CreateContentFileDto);
 
     expect(result.isLeft()).toBe(true);
@@ -206,5 +229,17 @@ describe('CreateContentFile', () => {
     expect(result.isLeft()).toBe(true);
     expect(result.isRight()).toBe(false);
     expect(result.value).toBeInstanceOf(EntityNotLoaded);
+  });
+
+  it('should return EntityNotExists when a no exist company in system', async () => {
+    const { CreateContentFileDto, sut } = makeSut();
+    jest
+      .spyOn(sut['findCompanyByIdRepository'], 'find')
+      .mockResolvedValueOnce({} as CompanyResponseDto);
+    const result = await sut.execute(CreateContentFileDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
+    expect(result.value).toBeInstanceOf(EntityNotExists);
   });
 });

@@ -11,6 +11,7 @@ import {
 } from '../../error';
 import {
   CreateContentFileRepository,
+  FindCompanyByIdRepository,
   FindDirectoryByIdRepository,
   FindUserByIdRepository,
   GenerateThumbnailRepository,
@@ -18,7 +19,11 @@ import {
 } from '../../repository';
 import { Either, left, right } from '../../shared/either';
 import { FileTypes } from '../../type';
-import { ValidationDirectoryId, ValidationUserId } from '../../utils';
+import {
+  ValidationCompanyId,
+  ValidationDirectoryId,
+  ValidationUserId,
+} from '../../utils';
 import { bufferToStream } from '../../utils';
 
 export class CreateContentFile
@@ -33,6 +38,8 @@ export class CreateContentFile
     private createContentFileRepository: CreateContentFileRepository,
     @Inject('FindUserByIdRepository')
     private findUserByIdRepository: FindUserByIdRepository,
+    @Inject('FindCompanyByIdRepository')
+    private findCompanyByIdRepository: FindCompanyByIdRepository,
     @Inject('FindDirectoryByIdRepository')
     private findDirectoryByIdRepository: FindDirectoryByIdRepository,
     @Inject('GenerateThumbnailRepository')
@@ -46,10 +53,14 @@ export class CreateContentFile
     Either<EntityNotEmpty | EntityNotExists | EntityNotCreated, string[]>
   > {
     const listId = [];
-    const { loggedUserId, directoryId, file } = input;
+    const { loggedUserId, directoryId, companyId, file } = input;
 
     if (Object.keys(loggedUserId).length < 1) {
       return left(new EntityNotEmpty('logged User ID'));
+    }
+
+    if (Object.keys(companyId).length < 1) {
+      return left(new EntityNotEmpty('Company ID'));
     }
 
     if (Object.keys(directoryId).length < 1) {
@@ -67,6 +78,15 @@ export class CreateContentFile
 
     if (userValidation.isLeft()) {
       return left(userValidation.value);
+    }
+
+    const companyValidation = await ValidationCompanyId(
+      companyId,
+      this.findCompanyByIdRepository
+    );
+
+    if (companyValidation.isLeft()) {
+      return left(companyValidation.value);
     }
 
     const directoryValidation = await ValidationDirectoryId(

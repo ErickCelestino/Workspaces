@@ -4,6 +4,7 @@ import { CreateContentFileController } from './create-content-file.controller';
 import { CreateContentFile } from '@workspaces/domain';
 import {
   CreateContentFileRepositoryImpl,
+  FindCompanyByIdRepositoryImpl,
   FindDirectoryByIdRepositoryImpl,
   FindUserByIdRepositoryImpl,
   GenerateThumbnailRepositoryImpl,
@@ -26,6 +27,10 @@ import {
     {
       provide: 'FindUserByIdRepository',
       useClass: FindUserByIdRepositoryImpl,
+    },
+    {
+      provide: 'FindCompanyByIdRepository',
+      useClass: FindCompanyByIdRepositoryImpl,
     },
     {
       provide: 'FindDirectoryByIdRepository',
