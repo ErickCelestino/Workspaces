@@ -16,7 +16,7 @@ export class DeleteCompanyById
   constructor(
     @Inject('FindUserByIdRepository')
     private findUserByIdRepository: FindUserByIdRepository,
-    @Inject('FindCompanyByCnpjRepository')
+    @Inject('FindCompanyByIdRepository')
     private findCompanyByIdRepository: FindCompanyByIdRepository,
     @Inject('DeleteCompanyByIdRepository')
     private deleteCompanyByIdRepository: DeleteCompanyByIdRepository
