@@ -4,4 +4,5 @@ export interface FileConfigs {
   filesToUpload: FileWithProgress[];
   directoryId: string;
   loggedUserId: string;
+  companyId: string;
 }

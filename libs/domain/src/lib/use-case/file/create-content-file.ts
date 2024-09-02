@@ -162,6 +162,7 @@ export class CreateContentFile
           directoryId,
           loggedUserId,
           thumbnail: thumbNailUrl,
+          companyId,
         });
       if (Object.keys(filteredContentFileId).length < 1) {
         return left(new EntityNotCreated('Content File'));

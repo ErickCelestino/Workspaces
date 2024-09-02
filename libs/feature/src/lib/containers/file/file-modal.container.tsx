@@ -161,6 +161,7 @@ export const FileModalContainer: FC<FileModalContainerProps> = ({
         directoryId: createdDirectoryId ?? '',
         loggedUserId: loggedUserId,
         filesToUpload: filesToUpload,
+        companyId: loggedUser?.selectedCompany.id ?? '',
       },
       updateProgress
     );
@@ -173,10 +174,13 @@ export const FileModalContainer: FC<FileModalContainerProps> = ({
       });
     }
   }, [
+    directoryId,
+    fileValidate,
     filesToUpload,
     handleClose,
-    loggedUser?.id,
+    loggedUser,
     onFinish,
+    setDirectoryId,
     showSnackbarAlert,
     sucessAlertMessage,
     updateProgress,

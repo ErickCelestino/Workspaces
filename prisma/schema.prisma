@@ -173,6 +173,7 @@ model Company {
   playlist Playlist[]
   scheduling Scheduling[]
   playlist_Category Playlist_Category[]
+  content_Files Content_Files[]
   user User @relation(fields: [user_id], references: [user_id])
 
   @@schema("general")
@@ -333,6 +334,7 @@ model Directory {
 
 model Content_Files {
   Content_Files_id String @id @default(uuid())
+  company_id String
   file_name String
   original_name String
   user_id String
@@ -349,6 +351,7 @@ model Content_Files {
   deleted_at DateTime?
   playlist_content_files Playlist_X_Content_Files[]
   user User @relation(fields: [user_id], references: [user_id])
+  company Company @relation(fields: [company_id], references: [company_id])
   directory Directory @relation(fields: [directory_id], references: [directory_id])
 
   @@schema("pure_tv")
