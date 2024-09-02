@@ -20,7 +20,10 @@ import {
   EmptyListResponse,
   ToolbarPureTV,
 } from '../../components';
-import { CreateCompanyModal } from '../../components/modal/company';
+import {
+  CreateCompanyModal,
+  DeleteCompanyModal,
+} from '../../components/modal/company';
 import { ListCompanyRequest } from '../../services';
 
 interface ListCompanyContainerProps {
@@ -40,6 +43,8 @@ export const ListCompanyContainer: FC<ListCompanyContainerProps> = ({
   const [search, setSearch] = useState(false);
   const [totalPage, setTotalPage] = useState<number>(1);
   const [createCompanyPopUp, setCreateCompanyPopUp] = useState(false);
+  const [selectedId, setSelectedId] = useState<string>('');
+  const [deleteCompanyPopUp, setDeleteCompanyPopUp] = useState(false);
 
   const showAlert = useCallback(
     (message: string, success: boolean) => {
@@ -120,6 +125,10 @@ export const ListCompanyContainer: FC<ListCompanyContainerProps> = ({
       case 'create':
         setCreateCompanyPopUp(true);
         break;
+      case 'delete':
+        setSelectedId(id ?? '');
+        setDeleteCompanyPopUp(true);
+        break;
     }
   };
 
@@ -138,6 +147,13 @@ export const ListCompanyContainer: FC<ListCompanyContainerProps> = ({
         title="Cadastrar Empresa"
         handlePopUpClose={() => setCreateCompanyPopUp(false)}
         showAlert={showAlert}
+      />
+      <DeleteCompanyModal
+        open={deleteCompanyPopUp}
+        title="Deletar Empresa"
+        handlePopUpClose={() => setDeleteCompanyPopUp(false)}
+        showAlert={showAlert}
+        idToDelete={selectedId}
       />
       <LayoutBase
         title="Listagem de Empresas"
@@ -159,6 +175,9 @@ export const ListCompanyContainer: FC<ListCompanyContainerProps> = ({
                 <CompanyItem
                   statusColor={
                     company.status === 'ACTIVE' ? 'success' : 'error'
+                  }
+                  deleteCompany={async () =>
+                    handlePopUpOpen('delete', company.id)
                   }
                   company={company}
                   key={company.id}

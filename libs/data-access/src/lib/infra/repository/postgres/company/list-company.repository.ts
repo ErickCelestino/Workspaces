@@ -99,14 +99,15 @@ export class ListCompanyRepositoryImpl implements ListCompanyRepository {
     const mappedCompany: ListSimpleCompanyResponseDto[] = companies.map(
       (company) => {
         return {
-          id: company.company.company_id,
-          cnpj: company.company.cnpj,
-          fantasyName: company.company.fantasy_name,
-          socialReason: company.company.social_reason,
-          city: company.company.company_x_address[0].address.city.name,
-          createdBy: company.company.user.nick_name,
-          createdAt: company.created_at,
-          status: company.company.status,
+          id: company?.company.company_id ?? '',
+          cnpj: company?.company?.cnpj ?? '',
+          fantasyName: company?.company?.fantasy_name ?? '',
+          socialReason: company?.company?.social_reason ?? '',
+          city:
+            company.company?.company_x_address[0]?.address?.city?.name ?? '',
+          createdBy: company?.company?.user?.nick_name ?? '',
+          createdAt: company?.created_at ?? '',
+          status: company?.company?.status ?? 'INACTIVE',
         };
       }
     );

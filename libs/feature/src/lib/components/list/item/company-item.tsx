@@ -29,6 +29,7 @@ interface CompanyItemProps {
   titleCity?: string;
   statusTitle?: string;
   statusColor: StatusColor;
+  deleteCompany: () => Promise<void>;
 }
 
 export const CompanyItem: FC<CompanyItemProps> = ({
@@ -42,6 +43,7 @@ export const CompanyItem: FC<CompanyItemProps> = ({
   titleCity = 'Cidade',
   statusTitle = 'Status',
   statusColor,
+  deleteCompany,
 }) => {
   const theme = useTheme();
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
@@ -50,7 +52,7 @@ export const CompanyItem: FC<CompanyItemProps> = ({
     {
       icon: <DeleteIcon />,
       title: deleteTitle,
-      handleClick: async () => {},
+      handleClick: deleteCompany,
     },
   ];
 
