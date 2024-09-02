@@ -7,6 +7,7 @@ import {
   PrismaService,
   CreatePlaylistCategoryRepositoryImpl,
   FindPlaylistCategoryByNameRepositoryImpl,
+  FindCompanyByIdRepositoryImpl,
 } from '@workspaces/data-access';
 
 @Module({
@@ -21,6 +22,10 @@ import {
     {
       provide: 'FindUserByIdRepository',
       useClass: FindUserByIdRepositoryImpl,
+    },
+    {
+      provide: 'FindCompanyByIdRepository',
+      useClass: FindCompanyByIdRepositoryImpl,
     },
     {
       provide: 'CreatePlaylistCategoryRepository',

@@ -18,6 +18,7 @@ export class CreateSchedulingController {
   @Post()
   async create(
     @Query('loggedUserId') loggedUserId: string,
+    @Query('companyId') companyId: string,
     @Body() body: CreateSchedulingBodyDto
   ) {
     const result = await this.createSchedulingService.create({
@@ -29,6 +30,7 @@ export class CreateSchedulingController {
         priority: body?.priority ?? 0,
       },
       loggedUserId,
+      companyId,
     });
 
     const response: CreateSchedulingResponseDto = {

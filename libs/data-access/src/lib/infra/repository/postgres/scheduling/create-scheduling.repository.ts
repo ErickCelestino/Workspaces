@@ -12,12 +12,14 @@ export class CreateSchedulingRepositoryImpl
   async create(input: CreateSchedulingDto): Promise<string> {
     const {
       loggedUserId,
+      companyId,
       body: { name, priority, startTime, endTime, lopping },
     } = input;
 
     const schedulingResult = await this.prismaService.scheduling.create({
       data: {
         user_id: loggedUserId,
+        company_id: companyId,
         name,
         start_time: startTime,
         end_time: endTime,

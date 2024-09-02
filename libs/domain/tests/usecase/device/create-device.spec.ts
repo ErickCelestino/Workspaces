@@ -113,7 +113,7 @@ describe('CreateDevice', () => {
     expect(result.value).toBeInstanceOf(EntityNotExists);
   });
 
-  it('should return EntityNotExists when a pass incorrect Logged User ID', async () => {
+  it('should return EntityNotExists when a no exist company in system', async () => {
     const { createDeviceDto, sut } = makeSut();
     jest
       .spyOn(sut['findCompanyByIdRepository'], 'find')

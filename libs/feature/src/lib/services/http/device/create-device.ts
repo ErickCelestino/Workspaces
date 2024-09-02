@@ -1,4 +1,4 @@
-import { CreateDeviceDto, CreateDirectoryDto } from '@workspaces/domain';
+import { CreateDeviceDto } from '@workspaces/domain';
 import { pureTvApi } from '../axios-config';
 
 export async function CreateDeviceRequest(input: CreateDeviceDto) {
@@ -10,6 +10,7 @@ export async function CreateDeviceRequest(input: CreateDeviceDto) {
     {
       params: {
         loggedUserId: input.loggedUserId,
+        companyId: input.companyId,
       },
     }
   );

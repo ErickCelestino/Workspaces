@@ -8,12 +8,13 @@ import {
 } from '../../error';
 import {
   CreateDirectoryRepository,
+  FindCompanyByIdRepository,
   FindUserByIdRepository,
 } from '../../repository';
 import { Either, left, right } from '../../shared/either';
 import { FindDirectoryByNameRepository } from '../../repository/directory/find-directory-by-name';
 import { Inject } from '@nestjs/common';
-import { ValidationUserId } from '../../utils';
+import { ValidationCompanyId, ValidationUserId } from '../../utils';
 
 export class CreateDirectory
   implements
@@ -31,6 +32,8 @@ export class CreateDirectory
   constructor(
     @Inject('FindUserByIdRepository')
     private findUserByIdRepository: FindUserByIdRepository,
+    @Inject('FindCompanyByIdRepository')
+    private findCompanyByIdRepository: FindCompanyByIdRepository,
     @Inject('FindDirectoryByNameRepository')
     private findDirectoryByNameRepository: FindDirectoryByNameRepository,
     @Inject('CreateDirectoryRepository')
@@ -45,7 +48,7 @@ export class CreateDirectory
       string
     >
   > {
-    const { body, loggedUserId } = input;
+    const { body, loggedUserId, companyId } = input;
 
     if (Object.keys(body.name).length < 1) {
       return left(new EntityNotEmpty('Name'));
@@ -55,6 +58,10 @@ export class CreateDirectory
       return left(new EntityNotEmpty('Logged User ID'));
     }
 
+    if (Object.keys(companyId).length < 1) {
+      return left(new EntityNotEmpty('Company ID'));
+    }
+
     const userValidation = await ValidationUserId(
       loggedUserId,
       this.findUserByIdRepository
@@ -62,6 +69,15 @@ export class CreateDirectory
 
     if (userValidation.isLeft()) {
       return left(userValidation.value);
+    }
+
+    const companyValidation = await ValidationCompanyId(
+      companyId,
+      this.findCompanyByIdRepository
+    );
+
+    if (companyValidation.isLeft()) {
+      return left(companyValidation.value);
     }
 
     const findDirectory = await this.findDirectoryByNameRepository.find({

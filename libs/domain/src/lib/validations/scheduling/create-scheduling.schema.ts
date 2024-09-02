@@ -9,4 +9,5 @@ export const createSchedulingSchema = {
     priority: z.string().min(1),
   }),
   loggedUserId: z.string().min(1),
+  companyId: z.string().min(1),
 };

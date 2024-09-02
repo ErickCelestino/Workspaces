@@ -10,6 +10,7 @@ export async function CreateDirectoryRequest(input: CreateDirectoryDto) {
     {
       params: {
         loggedUserId: input.loggedUserId,
+        companyId: input.companyId,
       },
     }
   );
