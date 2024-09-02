@@ -83,6 +83,7 @@ export const CreatePlaylistCategoryModal: FC<
     const result = await createCategory({
       body: data,
       loggedUserId: loggedUser?.id ?? '',
+      companyId: loggedUser?.selectedCompany.id ?? '',
     });
     if (result) {
       setLoading(false);

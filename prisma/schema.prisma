@@ -172,6 +172,7 @@ model Company {
   device Device[]
   playlist Playlist[]
   scheduling Scheduling[]
+  playlist_Category Playlist_Category[]
   user User @relation(fields: [user_id], references: [user_id])
 
   @@schema("general")
@@ -387,6 +388,7 @@ model Playlist {
 model Playlist_Category {
   playlist_category_id String @id @default(uuid())
   user_id String
+  company_id String
   name String
   description String
   created_at DateTime @default(now())
@@ -394,6 +396,7 @@ model Playlist_Category {
   deleted_at DateTime?
 
   user User @relation(fields: [user_id], references: [user_id])
+  company Company @relation(fields: [company_id], references: [company_id])
   playlist Playlist[]
 
   @@schema("pure_tv")
