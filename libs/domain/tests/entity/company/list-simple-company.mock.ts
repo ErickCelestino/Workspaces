@@ -9,4 +9,5 @@ export const ListSimpleCompanyMock: ListSimpleCompanyResponseDto = {
   createdBy: faker.string.uuid(),
   createdAt: faker.date.recent(),
   city: faker.location.city(),
+  status: 'ACTIVE',
 };

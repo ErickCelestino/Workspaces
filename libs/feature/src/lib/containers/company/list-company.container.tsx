@@ -1,10 +1,9 @@
-import { Box, List, useTheme } from '@mui/material';
+import { List, useTheme } from '@mui/material';
 import AddBusinessIcon from '@mui/icons-material/AddBusiness';
 import StoreIcon from '@mui/icons-material/Store';
 import { useLoggedUser } from '../../contexts';
 import { FC, useCallback, useEffect, useState } from 'react';
 import {
-  companySimpleResponseDto,
   CrudType,
   ErrorResponse,
   IconMenuItem,
@@ -157,7 +156,13 @@ export const ListCompanyContainer: FC<ListCompanyContainerProps> = ({
           <List>
             {listCompany.length > 0 ? (
               listCompany.map((company) => (
-                <CompanyItem company={company} key={company.id} />
+                <CompanyItem
+                  statusColor={
+                    company.status === 'ACTIVE' ? 'success' : 'error'
+                  }
+                  company={company}
+                  key={company.id}
+                />
               ))
             ) : (
               <EmptyListResponse
