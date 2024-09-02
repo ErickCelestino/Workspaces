@@ -14,6 +14,7 @@ export async function CreateSchedulingRequest(input: CreateSchedulingDto) {
     {
       params: {
         loggedUserId: input.loggedUserId,
+        companyId: input.companyId,
       },
     }
   );

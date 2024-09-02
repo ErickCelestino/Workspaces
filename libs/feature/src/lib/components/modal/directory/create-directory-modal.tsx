@@ -75,6 +75,7 @@ export const CreateDirectoryModal: FC<CreateDirectoryModalProps> = ({
     const result = await createDirectory({
       body: data,
       loggedUserId: loggedUser?.id ?? '',
+      companyId: loggedUser?.selectedCompany.id ?? '',
     });
     if (result) {
       setLoading(false);

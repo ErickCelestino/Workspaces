@@ -26,6 +26,7 @@ import {
   removeItemLocalStorage,
 } from '../../services';
 import { ProgressFilePopUp } from '../../components/popup';
+import { log } from 'console';
 
 interface FileModalContainerProps {
   modalTitle?: string;
@@ -135,6 +136,7 @@ export const FileModalContainer: FC<FileModalContainerProps> = ({
         if (fileredDirectory.directories.length < 1) {
           const createdDirectory = await CreateDirectoryRequest({
             loggedUserId: loggedUser?.id ?? '',
+            companyId: loggedUser?.selectedCompany.id ?? '',
             body: {
               name: 'Base',
             },
