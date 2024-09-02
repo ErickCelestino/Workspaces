@@ -1,6 +1,17 @@
-import { Body, Controller, Delete, Param, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Param,
+  Query,
+  UsePipes,
+} from '@nestjs/common';
 import { DeleteCompanyByIdService } from './delete-company-by-id.service';
-import { ErrorMessageResult } from '@workspaces/domain';
+import {
+  deleteCompanyByIdSchema,
+  ErrorMessageResult,
+} from '@workspaces/domain';
+import { ZodValidationPipe } from '../../pipes/zod-validation-pipe';
 
 @Controller('delete-company-by-id')
 export class DeleteCompanyByIdController {
@@ -9,6 +20,7 @@ export class DeleteCompanyByIdController {
   ) {}
 
   @Delete(':companyId')
+  @UsePipes(new ZodValidationPipe(deleteCompanyByIdSchema))
   async delete(
     @Query('loggedUserId') loggedUserId: string,
     @Param('companyId') companyId: string,
