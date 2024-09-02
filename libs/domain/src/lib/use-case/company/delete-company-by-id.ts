@@ -58,7 +58,7 @@ export class DeleteCompanyById
 
     const deleteCompany = await this.deleteCompanyByIdRepository.delete(input);
 
-    if (Object.keys(description).length < 1) {
+    if (Object.keys(deleteCompany).length < 1) {
       return left(new EntityNotDeleted('Company'));
     }
 
