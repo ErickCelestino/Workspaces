@@ -1,10 +1,9 @@
-import { Box, List, useTheme } from '@mui/material';
+import { List, useTheme } from '@mui/material';
 import AddBusinessIcon from '@mui/icons-material/AddBusiness';
 import StoreIcon from '@mui/icons-material/Store';
 import { useLoggedUser } from '../../contexts';
 import { FC, useCallback, useEffect, useState } from 'react';
 import {
-  companySimpleResponseDto,
   CrudType,
   ErrorResponse,
   IconMenuItem,
@@ -21,7 +20,10 @@ import {
   EmptyListResponse,
   ToolbarPureTV,
 } from '../../components';
-import { CreateCompanyModal } from '../../components/modal/company';
+import {
+  CreateCompanyModal,
+  DeleteCompanyModal,
+} from '../../components/modal/company';
 import { ListCompanyRequest } from '../../services';
 
 interface ListCompanyContainerProps {
@@ -41,6 +43,8 @@ export const ListCompanyContainer: FC<ListCompanyContainerProps> = ({
   const [search, setSearch] = useState(false);
   const [totalPage, setTotalPage] = useState<number>(1);
   const [createCompanyPopUp, setCreateCompanyPopUp] = useState(false);
+  const [selectedId, setSelectedId] = useState<string>('');
+  const [deleteCompanyPopUp, setDeleteCompanyPopUp] = useState(false);
 
   const showAlert = useCallback(
     (message: string, success: boolean) => {
@@ -121,6 +125,10 @@ export const ListCompanyContainer: FC<ListCompanyContainerProps> = ({
       case 'create':
         setCreateCompanyPopUp(true);
         break;
+      case 'delete':
+        setSelectedId(id ?? '');
+        setDeleteCompanyPopUp(true);
+        break;
     }
   };
 
@@ -140,6 +148,13 @@ export const ListCompanyContainer: FC<ListCompanyContainerProps> = ({
         handlePopUpClose={() => setCreateCompanyPopUp(false)}
         showAlert={showAlert}
       />
+      <DeleteCompanyModal
+        open={deleteCompanyPopUp}
+        title="Deletar Empresa"
+        handlePopUpClose={() => setDeleteCompanyPopUp(false)}
+        showAlert={showAlert}
+        idToDelete={selectedId}
+      />
       <LayoutBase
         title="Listagem de Empresas"
         iconMenuItemList={rightClickMenuList}
@@ -157,7 +172,16 @@ export const ListCompanyContainer: FC<ListCompanyContainerProps> = ({
           <List>
             {listCompany.length > 0 ? (
               listCompany.map((company) => (
-                <CompanyItem company={company} key={company.id} />
+                <CompanyItem
+                  statusColor={
+                    company.status === 'ACTIVE' ? 'success' : 'error'
+                  }
+                  deleteCompany={async () =>
+                    handlePopUpOpen('delete', company.id)
+                  }
+                  company={company}
+                  key={company.id}
+                />
               ))
             ) : (
               <EmptyListResponse

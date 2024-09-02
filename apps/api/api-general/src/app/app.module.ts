@@ -18,6 +18,7 @@ import {
   CreateCompanyAddressModule,
   CreateCompanyResponsibleModule,
   ListCompanyModule,
+  DeleteCompanyByIdModule,
 } from './company';
 import {
   ListSimpleStateModule,
@@ -46,6 +47,7 @@ import {
     CreateCompanyResponsibleModule,
     ConsultZipcodeModule,
     ListCompanyModule,
+    DeleteCompanyByIdModule,
   ],
   controllers: [AppController],
   providers: [AppService],

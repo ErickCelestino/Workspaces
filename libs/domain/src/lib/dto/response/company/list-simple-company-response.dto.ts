@@ -6,4 +6,5 @@ export interface ListSimpleCompanyResponseDto {
   createdBy: string;
   createdAt: Date;
   city: string;
+  status: string;
 }

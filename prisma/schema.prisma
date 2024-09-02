@@ -76,6 +76,7 @@ model User {
   device Device[]
   company Company[]
   departament Departament[]
+  confirm_Delete_Company Confirm_Delete_Company[]
 
   @@schema("general")
 }
@@ -170,12 +171,25 @@ model Company {
   company_data Company_Data[]
   company_responsible Company_Responsible[]
   device Device[]
+  confirm_Delete_Company Confirm_Delete_Company[]
   playlist Playlist[]
   scheduling Scheduling[]
   playlist_Category Playlist_Category[]
   content_Files Content_Files[]
   directory Directory[]
   user User @relation(fields: [user_id], references: [user_id])
+
+  @@schema("general")
+}
+
+model Confirm_Delete_Company {
+  id String @id @default(uuid())
+  responsibly_user String
+  company_id String
+  description String @db.VarChar(1000)
+  created_at DateTime @default(now())
+  company Company @relation(fields: [company_id], references: [company_id])
+  user User @relation(fields: [responsibly_user], references: [user_id])
 
   @@schema("general")
 }

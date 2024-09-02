@@ -1,5 +1,6 @@
 import {
   Box,
+  Chip,
   Divider,
   ListItem,
   ListItemText,
@@ -7,7 +8,11 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
-import { IconMenuItem, ListSimpleCompanyResponseDto } from '@workspaces/domain';
+import {
+  IconMenuItem,
+  ListSimpleCompanyResponseDto,
+  StatusColor,
+} from '@workspaces/domain';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { FC } from 'react';
 import { ButtonFileMenu } from '../../menu';
@@ -22,6 +27,9 @@ interface CompanyItemProps {
   titleCreatedAt?: string;
   titleId?: string;
   titleCity?: string;
+  statusTitle?: string;
+  statusColor: StatusColor;
+  deleteCompany: () => Promise<void>;
 }
 
 export const CompanyItem: FC<CompanyItemProps> = ({
@@ -33,6 +41,9 @@ export const CompanyItem: FC<CompanyItemProps> = ({
   titleCreatedAt = 'Criado em',
   titleId = 'Cod.',
   titleCity = 'Cidade',
+  statusTitle = 'Status',
+  statusColor,
+  deleteCompany,
 }) => {
   const theme = useTheme();
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
@@ -41,7 +52,7 @@ export const CompanyItem: FC<CompanyItemProps> = ({
     {
       icon: <DeleteIcon />,
       title: deleteTitle,
-      handleClick: async () => {},
+      handleClick: deleteCompany,
     },
   ];
 
@@ -196,6 +207,35 @@ export const CompanyItem: FC<CompanyItemProps> = ({
                   >
                     {formatBrDate(new Date(company.createdAt))}
                   </Typography>
+                </Box>
+              </Box>
+              <Box
+                component="span"
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'end',
+                  marginTop: theme.spacing(1),
+                }}
+              >
+                <Box component="span">
+                  <Typography
+                    sx={{ display: 'inline' }}
+                    component="span"
+                    variant="body2"
+                    color="text.primary"
+                  >
+                    {statusTitle}:
+                  </Typography>
+                  <Chip
+                    component="span"
+                    sx={{
+                      marginLeft: theme.spacing(1),
+                    }}
+                    color={statusColor}
+                    label={company.status}
+                  />
                 </Box>
               </Box>
             </Box>

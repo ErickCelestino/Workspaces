@@ -7,4 +7,5 @@ export * from './create-company-address.dto';
 export * from './create-company-data.dto';
 export * from './create-company-responsible.dto';
 export * from './create-company.dto';
+export * from './delete-company-by-id.dto';
 export * from './list-company.dto';
