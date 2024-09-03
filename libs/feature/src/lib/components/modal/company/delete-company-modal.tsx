@@ -11,11 +11,7 @@ import {
 } from '@mui/material';
 import { DeleteCompanyByIdRequest } from '../../../services';
 import axios, { AxiosError } from 'axios';
-import {
-  DeleteCompanyByIdDto,
-  DeleteUserByIdDto,
-  ErrorResponse,
-} from '@workspaces/domain';
+import { DeleteCompanyByIdDto, ErrorResponse } from '@workspaces/domain';
 import { DeleteUserSchema, ValidationsError } from '../../../shared';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';

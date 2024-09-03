@@ -2,25 +2,25 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Box, TextField } from '@mui/material';
 import {
   CompanyBodyDto,
-  companySimpleResponseDto,
+  CompanySimpleResponseDto,
   CreateCompanyDto,
   ErrorResponse,
   StepItem,
 } from '@workspaces/domain';
 import { Controller, useForm } from 'react-hook-form';
-import { CreateCompanyFormSchema } from '../../../shared/validations/company/create-company.schema';
+import { CreateCompanyFormSchema } from '../../../../shared/validations/company/create-company.schema';
 import { FC, useEffect, useState } from 'react';
-import { CreateCompanyRequest } from '../../../services';
+import { CreateCompanyRequest } from '../../../../services';
 import axios, { AxiosError } from 'axios';
-import { formatValueMask, ValidationsError } from '../../../shared';
-import { FormButton } from '../form-button.component';
-import { useLoggedUser } from '../../../contexts';
+import { formatValueMask, ValidationsError } from '../../../../shared';
+import { FormButton } from '../../form-button.component';
+import { useLoggedUser } from '../../../../contexts';
 
 interface FormCreateCompanyProps {
   showAlert: (message: string, success: boolean) => void;
   handlePopUpClose: () => void;
   changeCompanyId: (companyId: string) => void;
-  company: companySimpleResponseDto;
+  company: CompanySimpleResponseDto;
   step: StepItem;
   totalPosition: number;
   fantasyNameLabel?: string;

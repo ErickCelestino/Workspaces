@@ -8,7 +8,7 @@ import { Avatar, Box, Container, useTheme } from '@mui/material';
 import { FormCreateUser } from '../../components';
 import { FormCreateUserProps } from '@workspaces/domain';
 import { useSnackbarAlert } from '../../hooks';
-import { CompanyStepper } from '../../components/stepper/company/company-stepper';
+import { CreateCompanyStepper } from '../../components/stepper/company/create-company-stepper';
 import { useNavigate } from 'react-router-dom';
 
 interface CreateUserProps {
@@ -67,7 +67,7 @@ export const CreateUser: FC<CreateUserProps> = ({ cardImage, logo }) => {
                 />
               )}
               {step === 2 && (
-                <CompanyStepper
+                <CreateCompanyStepper
                   handlePopUpClose={() => navigate('/login')}
                   showAlert={showAlert}
                 />

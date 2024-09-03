@@ -15,7 +15,7 @@ interface CompanyStepperProps {
   totalPosition?: number;
 }
 
-export const CompanyStepper: FC<CompanyStepperProps> = ({
+export const CreateCompanyStepper: FC<CompanyStepperProps> = ({
   showAlert,
   handlePopUpClose,
   totalPosition = 5,
