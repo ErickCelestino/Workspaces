@@ -1,8 +1,14 @@
-import { Body, Controller, Param, Put, Query } from '@nestjs/common';
+import { Body, Controller, Param, Put, Query, UsePipes } from '@nestjs/common';
 import { EditCompanyService } from './edit-company.service';
-import { CompanyBodyDto, ErrorMessageResult } from '@workspaces/domain';
+import {
+  CompanyBodyDto,
+  editCompanySchema,
+  ErrorMessageResult,
+} from '@workspaces/domain';
+import { ZodValidationPipe } from '../../pipes/zod-validation-pipe';
 
 @Controller('edit-company')
+@UsePipes(new ZodValidationPipe(editCompanySchema))
 export class EditCompanyController {
   constructor(private readonly editCompanyService: EditCompanyService) {}
 
