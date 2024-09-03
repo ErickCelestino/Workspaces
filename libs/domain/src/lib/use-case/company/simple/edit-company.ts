@@ -25,7 +25,7 @@ export class EditCompany
     input: EditCompanyDto
   ): Promise<Either<EntityNotEmpty, string>> {
     const {
-      body: { cnpj, fantasyName, socialReason },
+      body: { cnpj, socialReason },
       companyId,
       loggedUserId,
     } = input;
@@ -40,10 +40,6 @@ export class EditCompany
 
     if (Object.keys(cnpj).length < 1) {
       return left(new EntityNotEmpty('CNPJ'));
-    }
-
-    if (Object.keys(fantasyName).length < 1) {
-      return left(new EntityNotEmpty('Fatasy Name'));
     }
 
     if (Object.keys(socialReason).length < 1) {

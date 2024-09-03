@@ -96,16 +96,6 @@ describe('EditCompany', () => {
     expect(result.value).toBeInstanceOf(EntityNotEmpty);
   });
 
-  it('should return EntityNotEmpty when pass incorrect Fantasy Name', async () => {
-    const { sut, editCompanyDto } = makeSut();
-    editCompanyDto.body.fantasyName = '';
-    const result = await sut.execute(editCompanyDto);
-
-    expect(result.isRight()).toBe(false);
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
   it('should return EntityNotEmpty when pass incorrect Social Reason', async () => {
     const { sut, editCompanyDto } = makeSut();
     editCompanyDto.body.socialReason = '';

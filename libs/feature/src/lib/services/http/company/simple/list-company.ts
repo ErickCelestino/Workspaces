@@ -1,5 +1,5 @@
 import { ListCompanyDto, ListCompanyResponseDto } from '@workspaces/domain';
-import { generalApi } from '../axios-config';
+import { generalApi } from '../../axios-config';
 
 export async function ListCompanyRequest(input: ListCompanyDto) {
   const skip = input?.skip || 0;

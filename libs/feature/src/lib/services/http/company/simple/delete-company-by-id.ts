@@ -1,5 +1,5 @@
 import { DeleteCompanyByIdDto } from '@workspaces/domain';
-import { generalApi } from '../axios-config';
+import { generalApi } from '../../axios-config';
 
 export async function DeleteCompanyByIdRequest(input: DeleteCompanyByIdDto) {
   const result = await generalApi.delete(
