@@ -20,6 +20,7 @@ import {
   ListCompanyModule,
   DeleteCompanyByIdModule,
   EditCompanyModule,
+  FindSimpleCompanyByIdModule,
 } from './company';
 import {
   ListSimpleStateModule,
@@ -50,6 +51,7 @@ import {
     ListCompanyModule,
     DeleteCompanyByIdModule,
     EditCompanyModule,
+    FindSimpleCompanyByIdModule,
   ],
   controllers: [AppController],
   providers: [AppService],

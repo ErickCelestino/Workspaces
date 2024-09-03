@@ -22,7 +22,7 @@ export class FindSimpleCompanyById
   constructor(
     @Inject('FindUserByIdRepository')
     private findUserByIdRepository: FindUserByIdRepository,
-    @Inject('FindCompanyByIdRepository')
+    @Inject('FindSimpleCompanyByIdRepository')
     private findSimpleCompanyByIdRepository: FindSimpleCompanyByIdRepository
   ) {}
   async execute(
