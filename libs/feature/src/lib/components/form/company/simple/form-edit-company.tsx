@@ -6,7 +6,7 @@ import {
   StepItem,
 } from '@workspaces/domain';
 import axios, { AxiosError } from 'axios';
-import { FC, useEffect, useState } from 'react';
+import { FC, useCallback, useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { FormButton } from '../../form-button.component';
 import { ValidationsError, formatValueMask } from '../../../../shared';
@@ -42,6 +42,7 @@ export const FormEditCompany: FC<FormEditCompanyProps> = ({
 
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [dataLoaded, setDataLoaded] = useState(false);
 
   const {
     handleSubmit,
@@ -60,6 +61,34 @@ export const FormEditCompany: FC<FormEditCompanyProps> = ({
       socialReason: '',
     },
   });
+
+  useEffect(() => {
+    if (Object.keys(companyId).length > 0) {
+      setDataLoaded(false);
+    }
+  }, [companyId]);
+
+  // const getCompany = useCallback(
+  //   async (input: FindDeviceByIdDto) => {
+  //     try {
+  //       const result = await FindDeviceByIdRequest(input);
+  //       reset({
+  //         name: result.name,
+  //       });
+  //       setDataLoaded(true);
+  //     } catch (error) {
+  //       console.error(error);
+  //       if (axios.isAxiosError(error)) {
+  //         const axiosError = error as AxiosError<ErrorResponse>;
+  //         const errors = ValidationsError(axiosError, 'Device');
+  //         if (errors) {
+  //           showAlert(errors, false);
+  //         }
+  //       }
+  //     }
+  //   },
+  //   [showAlert, reset]
+  // );
 
   const editCompany = async (input: EditCompanyDto) => {
     try {
