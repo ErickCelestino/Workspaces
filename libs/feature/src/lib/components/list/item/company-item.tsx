@@ -14,6 +14,7 @@ import {
   StatusColor,
 } from '@workspaces/domain';
 import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 import { FC } from 'react';
 import { ButtonFileMenu } from '../../menu';
 import { formatBrDate } from '../../../shared';
@@ -21,6 +22,7 @@ import { formatBrDate } from '../../../shared';
 interface CompanyItemProps {
   company: ListSimpleCompanyResponseDto;
   deleteTitle?: string;
+  editTitle?: string;
   titleCnpj?: string;
   titleFantasyName?: string;
   titleCreatedBy?: string;
@@ -30,11 +32,13 @@ interface CompanyItemProps {
   statusTitle?: string;
   statusColor: StatusColor;
   deleteCompany: () => Promise<void>;
+  editCompany: () => Promise<void>;
 }
 
 export const CompanyItem: FC<CompanyItemProps> = ({
   company,
   deleteTitle = 'Deletar',
+  editTitle = 'Editar',
   titleCnpj = 'CNPJ',
   titleFantasyName = 'Nome Fantasia',
   titleCreatedBy = 'Criado por',
@@ -44,6 +48,7 @@ export const CompanyItem: FC<CompanyItemProps> = ({
   statusTitle = 'Status',
   statusColor,
   deleteCompany,
+  editCompany,
 }) => {
   const theme = useTheme();
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
@@ -53,6 +58,11 @@ export const CompanyItem: FC<CompanyItemProps> = ({
       icon: <DeleteIcon />,
       title: deleteTitle,
       handleClick: deleteCompany,
+    },
+    {
+      icon: <EditIcon />,
+      title: editTitle,
+      handleClick: editCompany,
     },
   ];
 

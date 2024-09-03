@@ -3,15 +3,24 @@ import {
   CompanyBodyDto,
   EditCompanyDto,
   ErrorResponse,
+  FindSimpleCompanyByIdDto,
   StepItem,
 } from '@workspaces/domain';
 import axios, { AxiosError } from 'axios';
 import { FC, useCallback, useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { FormButton } from '../../form-button.component';
-import { ValidationsError, formatValueMask } from '../../../../shared';
+import {
+  ValidationsError,
+  formatValueMask,
+  EditCompanyFormSchema,
+} from '../../../../shared';
 import { useLoggedUser } from '../../../../contexts';
-import { EditCompanyRequest } from '../../../../services';
+import {
+  EditCompanyRequest,
+  FindSimpleCompanyByIdRequest,
+} from '../../../../services';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 interface FormEditCompanyProps {
   showAlert: (message: string, success: boolean) => void;
@@ -54,7 +63,7 @@ export const FormEditCompany: FC<FormEditCompanyProps> = ({
   } = useForm<CompanyBodyDto>({
     mode: 'all',
     criteriaMode: 'all',
-    //resolver: zodResolver(CreateCompanyFormSchema),
+    resolver: zodResolver(EditCompanyFormSchema),
     defaultValues: {
       cnpj: '',
       fantasyName: '',
@@ -63,32 +72,47 @@ export const FormEditCompany: FC<FormEditCompanyProps> = ({
   });
 
   useEffect(() => {
-    if (Object.keys(companyId).length > 0) {
+    if (Object.keys(companyId).length < 1) {
       setDataLoaded(false);
     }
   }, [companyId]);
 
-  // const getCompany = useCallback(
-  //   async (input: FindDeviceByIdDto) => {
-  //     try {
-  //       const result = await FindDeviceByIdRequest(input);
-  //       reset({
-  //         name: result.name,
-  //       });
-  //       setDataLoaded(true);
-  //     } catch (error) {
-  //       console.error(error);
-  //       if (axios.isAxiosError(error)) {
-  //         const axiosError = error as AxiosError<ErrorResponse>;
-  //         const errors = ValidationsError(axiosError, 'Device');
-  //         if (errors) {
-  //           showAlert(errors, false);
-  //         }
-  //       }
-  //     }
-  //   },
-  //   [showAlert, reset]
-  // );
+  const getCompany = useCallback(
+    async (input: FindSimpleCompanyByIdDto) => {
+      try {
+        const result = await FindSimpleCompanyByIdRequest(input);
+        setDataLoaded(true);
+        return result;
+      } catch (error) {
+        console.error(error);
+        if (axios.isAxiosError(error)) {
+          const axiosError = error as AxiosError<ErrorResponse>;
+          const errors = ValidationsError(axiosError, 'Device');
+          if (errors) {
+            showAlert(errors, false);
+          }
+        }
+      }
+    },
+    [showAlert]
+  );
+
+  useEffect(() => {
+    if (companyId && !dataLoaded) {
+      const loggedUserId = loggedUser?.id ?? '';
+
+      getCompany({
+        companyId,
+        loggedUserId: loggedUserId,
+      }).then((company) => {
+        reset({
+          cnpj: formatValueMask(company?.cnpj ?? '', 'cnpj'),
+          fantasyName: company?.fantasyName ?? '',
+          socialReason: company?.socialReason ?? '',
+        });
+      });
+    }
+  }, [loggedUser, companyId, dataLoaded, getCompany, setValue, reset]);
 
   const editCompany = async (input: EditCompanyDto) => {
     try {
@@ -109,17 +133,13 @@ export const FormEditCompany: FC<FormEditCompanyProps> = ({
     }
   };
 
-  useEffect(() => {
-    setValue('cnpj', formatValueMask('', 'cnpj'));
-  }, [setValue]);
-
   const handleCompanyData = async (data: CompanyBodyDto) => {
     setLoading(true);
     setSuccess(false);
     const result = await editCompany({
       body: data,
       loggedUserId: loggedUser?.id ?? '',
-      companyId: '',
+      companyId,
     });
     if (result) {
       setLoading(false);
@@ -162,7 +182,7 @@ export const FormEditCompany: FC<FormEditCompanyProps> = ({
         render={({ field }) => (
           <TextField
             {...field}
-            label="CNPJ"
+            label={cnpjLabel}
             fullWidth
             margin="normal"
             error={!!errors.cnpj}
