@@ -4,7 +4,7 @@ import {
   ErrorMessageResult,
   findSimpleCompanyByIdSchema,
 } from '@workspaces/domain';
-import { ZodValidationPipe } from '../../pipes/zod-validation-pipe';
+import { ZodValidationPipe } from '../../../pipes/zod-validation-pipe';
 
 @Controller('find-simple-company-by-id')
 export class FindSimpleCompanyByIdController {

@@ -30,7 +30,7 @@ export class EditCompanyData
   ): Promise<Either<EntityNotEmpty | EntityNotExists | EntityNotEdit, string>> {
     const {
       body: { legalNature, opening, phone, port, responsibleEmail, situation },
-      companyId,
+      companyDataId,
       loggedUserId,
     } = input;
 
@@ -38,7 +38,7 @@ export class EditCompanyData
       return left(new EntityNotEmpty('Logged User ID'));
     }
 
-    if (Object.keys(companyId).length < 1) {
+    if (Object.keys(companyDataId).length < 1) {
       return left(new EntityNotEmpty('Company Data ID'));
     }
 
@@ -78,7 +78,7 @@ export class EditCompanyData
     }
 
     const filteredCompanyData = await this.findCompanyDataByIdRepository.find(
-      companyId
+      companyDataId
     );
 
     if (

@@ -1,7 +1,7 @@
 import { Controller, Get, Query, UsePipes } from '@nestjs/common';
 import { ListCompanyService } from './list-company.service';
 import { ErrorMessageResult, lisCompanySchema } from '@workspaces/domain';
-import { ZodValidationPipe } from '../../pipes/zod-validation-pipe';
+import { ZodValidationPipe } from '../../../pipes/zod-validation-pipe';
 
 @Controller('list-company')
 export class ListCompanyController {

@@ -5,7 +5,7 @@ import {
   editCompanySchema,
   ErrorMessageResult,
 } from '@workspaces/domain';
-import { ZodValidationPipe } from '../../pipes/zod-validation-pipe';
+import { ZodValidationPipe } from '../../../pipes/zod-validation-pipe';
 
 @Controller('edit-company')
 @UsePipes(new ZodValidationPipe(editCompanySchema))

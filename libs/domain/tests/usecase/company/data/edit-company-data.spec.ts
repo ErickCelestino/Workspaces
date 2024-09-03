@@ -42,7 +42,7 @@ const makeSut = (): SutTypes => {
       situation: CompanyDataMock.situation,
     },
     loggedUserId: userMock.userId,
-    companyId: CompanyDataMock.id,
+    companyDataId: CompanyDataMock.id,
   };
 
   const sut = new EditCompanyData(
@@ -82,7 +82,7 @@ describe('EditCompanyData', () => {
 
   it('should return EntityNotEmpty when pass incorrect Company id', async () => {
     const { sut, editCompanyDataDto } = makeSut();
-    editCompanyDataDto.companyId = '';
+    editCompanyDataDto.companyDataId = '';
     const result = await sut.execute(editCompanyDataDto);
 
     expect(result.isRight()).toBe(false);

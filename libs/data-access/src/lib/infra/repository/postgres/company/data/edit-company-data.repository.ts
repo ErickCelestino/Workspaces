@@ -12,12 +12,12 @@ export class EditCompanyDataRepositoryImpl
   async edit(input: EditCompanyDataDto): Promise<string> {
     const {
       body: { legalNature, opening, phone, port, responsibleEmail, situation },
-      companyId,
+      companyDataId,
     } = input;
 
     const editedCompany = await this.prismaService.company_Data.update({
       where: {
-        company_data_id: companyId,
+        company_data_id: companyDataId,
       },
       data: {
         legal_nature: legalNature,

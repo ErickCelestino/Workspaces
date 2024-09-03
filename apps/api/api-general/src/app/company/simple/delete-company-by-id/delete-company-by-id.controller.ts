@@ -11,7 +11,7 @@ import {
   deleteCompanyByIdSchema,
   ErrorMessageResult,
 } from '@workspaces/domain';
-import { ZodValidationPipe } from '../../pipes/zod-validation-pipe';
+import { ZodValidationPipe } from '../../../pipes/zod-validation-pipe';
 
 @Controller('delete-company-by-id')
 export class DeleteCompanyByIdController {
