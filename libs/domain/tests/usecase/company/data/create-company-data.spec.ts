@@ -9,13 +9,13 @@ import {
   FindCompanyByIdRepository,
   FindUserByIdRepository,
   UserList,
-} from '../../../src';
-import { CompanyDataMock, userMock } from '../../entity';
+} from '../../../../src';
+import { CompanyDataMock, userMock } from '../../../entity';
 import {
   CreateCompanyDataRepositoryMock,
   FindCompanyByIdRepositoryMock,
   FindUserByIdRepositoryMock,
-} from '../../repository';
+} from '../../../repository';
 
 interface SutTypes {
   sut: CreateCompanyData;

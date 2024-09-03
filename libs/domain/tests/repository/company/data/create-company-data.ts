@@ -1,8 +1,8 @@
 import {
   CreateCompanyDataDto,
   CreateCompanyDataRepository,
-} from '../../../src';
-import { CompanyDataMock } from '../../entity/company/company-data.mock';
+} from '../../../../src';
+import { CompanyDataMock } from '../../../entity/company/company-data.mock';
 
 export class CreateCompanyDataRepositoryMock
   implements CreateCompanyDataRepository
