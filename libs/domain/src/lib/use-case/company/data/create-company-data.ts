@@ -1,14 +1,14 @@
 import { Inject } from '@nestjs/common';
-import { UseCase } from '../../base/use-case';
-import { CreateCompanyDataDto } from '../../dto';
-import { EntityNotCreated, EntityNotEmpty } from '../../error';
+import { UseCase } from '../../../base/use-case';
+import { CreateCompanyDataDto } from '../../../dto';
+import { EntityNotCreated, EntityNotEmpty } from '../../../error';
 import {
   CreateCompanyDataRepository,
   FindCompanyByIdRepository,
   FindUserByIdRepository,
-} from '../../repository';
-import { Either, left, right } from '../../shared/either';
-import { ValidationCompanyId, ValidationUserId } from '../../utils';
+} from '../../../repository';
+import { Either, left, right } from '../../../shared/either';
+import { ValidationCompanyId, ValidationUserId } from '../../../utils';
 
 export class CreateCompanyData
   implements UseCase<CreateCompanyDataDto, Either<EntityNotEmpty, string>>
