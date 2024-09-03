@@ -1,14 +1,14 @@
 import { Inject } from '@nestjs/common';
-import { UseCase } from '../../base/use-case';
-import { DeleteCompanyByIdDto } from '../../dto';
-import { EntityNotDeleted, EntityNotEmpty } from '../../error';
-import { Either, left, right } from '../../shared/either';
+import { UseCase } from '../../../base/use-case';
+import { DeleteCompanyByIdDto } from '../../../dto';
+import { EntityNotDeleted, EntityNotEmpty } from '../../../error';
+import { Either, left, right } from '../../../shared/either';
 import {
   DeleteCompanyByIdRepository,
   FindCompanyByIdRepository,
   FindUserByIdRepository,
-} from '../../repository';
-import { ValidationCompanyId, ValidationUserId } from '../../utils';
+} from '../../../repository';
+import { ValidationCompanyId, ValidationUserId } from '../../../utils';
 
 export class DeleteCompanyById
   implements UseCase<DeleteCompanyByIdDto, Either<EntityNotEmpty, string>>

@@ -1,13 +1,13 @@
 import { Inject } from '@nestjs/common';
-import { UseCase } from '../../base/use-case';
-import { ListCompanyDto, ListCompanyResponseDto } from '../../dto';
-import { EntityNotEmpty } from '../../error';
-import { Either, left, right } from '../../shared/either';
+import { UseCase } from '../../../base/use-case';
+import { ListCompanyDto, ListCompanyResponseDto } from '../../../dto';
+import { EntityNotEmpty } from '../../../error';
+import { Either, left, right } from '../../../shared/either';
 import {
   FindUserByIdRepository,
   ListCompanyRepository,
-} from '../../repository';
-import { ValidationUserId } from '../../utils';
+} from '../../../repository';
+import { ValidationUserId } from '../../../utils';
 
 export class ListCompany
   implements

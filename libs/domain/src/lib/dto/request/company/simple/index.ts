@@ -1,0 +1,5 @@
+export * from './company-body.dto';
+export * from './create-company.dto';
+export * from './delete-company-by-id.dto';
+export * from './edit-company.dto';
+export * from './list-company.dto';
