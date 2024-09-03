@@ -1,7 +1,7 @@
 import {
   FindUserByIdRepositoryMock,
   ListCompanyRepositoryMock,
-} from '../../repository';
+} from '../../../repository';
 import {
   EntityNotEmpty,
   EntityNotExists,
@@ -10,8 +10,8 @@ import {
   ListCompanyDto,
   ListCompanyRepository,
   UserList,
-} from '../../../src';
-import { ListCompanyMock, userMock } from '../../entity';
+} from '../../../../src';
+import { ListCompanyMock, userMock } from '../../../entity';
 
 interface SutTypes {
   sut: ListCompany;

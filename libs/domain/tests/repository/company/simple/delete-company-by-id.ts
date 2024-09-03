@@ -1,8 +1,8 @@
 import {
   DeleteCompanyByIdDto,
   DeleteCompanyByIdRepository,
-} from '../../../src';
-import { CompanySimpleMock } from '../../entity';
+} from '../../../../src';
+import { CompanySimpleMock } from '../../../entity';
 
 export class DeleteCompanyByIdRepositoryMock
   implements DeleteCompanyByIdRepository

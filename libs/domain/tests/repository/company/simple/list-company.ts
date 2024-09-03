@@ -2,8 +2,8 @@ import {
   ListCompanyDto,
   ListCompanyRepository,
   ListCompanyResponseDto,
-} from '../../../src';
-import { ListCompanyMock } from '../../entity/company/list-company.mock';
+} from '../../../../src';
+import { ListCompanyMock } from '../../../entity/company/list-company.mock';
 
 export class ListCompanyRepositoryMock implements ListCompanyRepository {
   inputMock = {} as ListCompanyDto;

@@ -12,14 +12,14 @@ import {
   FindCompanyByCnpjRepository,
   FindUserByIdRepository,
   UserList,
-} from '../../../src';
-import { CompanySimpleMock, userMock } from '../../entity';
+} from '../../../../src';
+import { CompanySimpleMock, userMock } from '../../../entity';
 import {
   FindUserByIdRepositoryMock,
   FindCompanyByCnpjRepositoryMock,
   CreateCompanyRepositoryMock,
   ConsultCompanyByCnpjRepositoryMock,
-} from '../../repository';
+} from '../../../repository';
 
 interface SutTypes {
   sut: CreateCompany;

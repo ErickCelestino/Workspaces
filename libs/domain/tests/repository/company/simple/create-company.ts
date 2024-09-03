@@ -1,5 +1,5 @@
-import { CreateCompanyDto, CreateCompanyRepository } from '../../../src';
-import { CompanySimpleMock } from '../../entity';
+import { CreateCompanyDto, CreateCompanyRepository } from '../../../../src';
+import { CompanySimpleMock } from '../../../entity';
 
 export class CreateCompanyRepositoryMock implements CreateCompanyRepository {
   inputMock = {} as CreateCompanyDto;

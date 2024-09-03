@@ -1,5 +1,5 @@
-import { CompanyResponseDto, FindCompanyByIdRepository } from '../../../src';
-import { CompanyMock } from '../../entity';
+import { CompanyResponseDto, FindCompanyByIdRepository } from '../../../../src';
+import { CompanyMock } from '../../../entity';
 
 export class FindCompanyByIdRepositoryMock
   implements FindCompanyByIdRepository

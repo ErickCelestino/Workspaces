@@ -9,13 +9,13 @@ import {
   FindCompanyByIdRepository,
   FindUserByIdRepository,
   UserList,
-} from '../../../src';
-import { CompanySimpleMock, userMock } from '../../entity';
+} from '../../../../src';
+import { CompanySimpleMock, userMock } from '../../../entity';
 import {
   DeleteCompanyByIdRepositoryMock,
   FindCompanyByIdRepositoryMock,
   FindUserByIdRepositoryMock,
-} from '../../repository';
+} from '../../../repository';
 
 interface SutTypes {
   sut: DeleteCompanyById;
