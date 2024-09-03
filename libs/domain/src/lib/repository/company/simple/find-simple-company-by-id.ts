@@ -1,5 +1,8 @@
-import { CompanySimpleResponseDto, FindSimpleCompanyDto } from '../../../dto';
+import {
+  CompanySimpleResponseDto,
+  FindSimpleCompanyByIdDto,
+} from '../../../dto';
 
 export interface FindSimpleCompanyByIdRepository {
-  find(input: FindSimpleCompanyDto): Promise<CompanySimpleResponseDto>;
+  find(input: FindSimpleCompanyByIdDto): Promise<CompanySimpleResponseDto>;
 }

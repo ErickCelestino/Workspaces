@@ -1,4 +1,4 @@
-export interface FindSimpleCompanyDto {
+export interface FindSimpleCompanyByIdDto {
   loggedUserId: string;
   companyId: string;
 }

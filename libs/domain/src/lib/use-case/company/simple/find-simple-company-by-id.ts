@@ -1,6 +1,9 @@
 import { Inject } from '@nestjs/common';
 import { UseCase } from '../../../base/use-case';
-import { CompanySimpleResponseDto, FindSimpleCompanyDto } from '../../../dto';
+import {
+  CompanySimpleResponseDto,
+  FindSimpleCompanyByIdDto,
+} from '../../../dto';
 import { EntityNotEmpty, EntityNotExists } from '../../../error';
 import { Either, left, right } from '../../../shared/either';
 import {
@@ -12,7 +15,7 @@ import { ValidationUserId } from '../../../utils';
 export class FindSimpleCompanyById
   implements
     UseCase<
-      FindSimpleCompanyDto,
+      FindSimpleCompanyByIdDto,
       Either<EntityNotEmpty, CompanySimpleResponseDto>
     >
 {
@@ -23,7 +26,7 @@ export class FindSimpleCompanyById
     private findSimpleCompanyByIdRepository: FindSimpleCompanyByIdRepository
   ) {}
   async execute(
-    input: FindSimpleCompanyDto
+    input: FindSimpleCompanyByIdDto
   ): Promise<Either<EntityNotEmpty, CompanySimpleResponseDto>> {
     const { companyId, loggedUserId } = input;
 
