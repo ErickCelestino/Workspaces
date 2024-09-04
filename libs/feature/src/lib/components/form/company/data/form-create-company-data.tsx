@@ -8,15 +8,15 @@ import {
   SituationType,
 } from '@workspaces/domain';
 import { FC, useEffect, useState } from 'react';
-import { useLoggedUser } from '../../../contexts';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { CreateCompanyDataFormSchema } from '../../../shared/validations/company';
-import { CreateCompanyDataRequest } from '../../../services';
+import { CreateCompanyDataFormSchema } from '../../../../shared/validations/company';
+import { CreateCompanyDataRequest } from '../../../../services';
 import axios, { AxiosError } from 'axios';
-import { formatValueMask, ValidationsError } from '../../../shared';
+import { useLoggedUser } from '../../../../contexts';
+import { formatValueMask, ValidationsError } from '../../../../shared';
 import { Box, MenuItem, TextField } from '@mui/material';
-import { FormButton } from '../form-button.component';
+import { FormButton } from '../../form-button.component';
 
 interface FormCreateCompanyDataProps {
   showAlert: (message: string, success: boolean) => void;
@@ -172,6 +172,7 @@ export const FormCreateCompanyData: FC<FormCreateCompanyDataProps> = ({
         margin="normal"
         required
         fullWidth
+        InputLabelProps={{ shrink: true }}
         error={!!errors.legalNature}
         helperText={errors.legalNature ? errors.legalNature.message : ''}
         id="legalNature"
@@ -192,6 +193,7 @@ export const FormCreateCompanyData: FC<FormCreateCompanyDataProps> = ({
             fullWidth
             select
             value={situation}
+            InputLabelProps={{ shrink: true }}
             margin="normal"
             error={!!errors.situation}
             helperText={errors.situation?.message}

@@ -21,6 +21,7 @@ import {
   FindSimpleCompanyByIdRequest,
 } from '../../../../services';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { timeout } from 'rxjs';
 
 interface FormEditCompanyProps {
   showAlert: (message: string, success: boolean) => void;
@@ -72,7 +73,7 @@ export const FormEditCompany: FC<FormEditCompanyProps> = ({
   });
 
   useEffect(() => {
-    if (Object.keys(companyId).length < 1) {
+    if (Object.keys(companyId ?? '').length < 1) {
       setDataLoaded(false);
     }
   }, [companyId]);
@@ -100,7 +101,6 @@ export const FormEditCompany: FC<FormEditCompanyProps> = ({
   useEffect(() => {
     if (companyId && !dataLoaded) {
       const loggedUserId = loggedUser?.id ?? '';
-
       getCompany({
         companyId,
         loggedUserId: loggedUserId,
@@ -170,6 +170,7 @@ export const FormEditCompany: FC<FormEditCompanyProps> = ({
         helperText={errors.socialReason ? errors.socialReason.message : ''}
         id="socialReason"
         disabled={loading}
+        InputLabelProps={{ shrink: true }}
         label={socialReasonLabel}
         autoComplete="socialReason"
         {...register('socialReason')}
@@ -202,6 +203,7 @@ export const FormEditCompany: FC<FormEditCompanyProps> = ({
         helperText={errors.fantasyName ? errors.fantasyName.message : ''}
         id="fantasyName"
         disabled={loading}
+        InputLabelProps={{ shrink: true }}
         label={fantasyNameLabel}
         autoComplete="fantasyName"
         {...register('fantasyName')}
