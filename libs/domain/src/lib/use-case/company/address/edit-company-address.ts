@@ -91,7 +91,10 @@ export class EditCompanyAddress
     const filteredCompanyAddress =
       await this.findCompanyAddressByIdRepository.find(companyAddressId);
 
-    if (Object.keys(filteredCompanyAddress).length < 1) {
+    if (
+      Object.keys(filteredCompanyAddress?.id ?? filteredCompanyAddress).length <
+      1
+    ) {
       return left(new EntityNotExists('Company Address'));
     }
 
