@@ -63,7 +63,7 @@ export class FindAllCompanyIds
 
     if (
       Object.keys(
-        filteredAllCompanyIds?.simpleCompanyId ?? filteredAllCompanyIds
+        filteredAllCompanyIds?.companySimpleId ?? filteredAllCompanyIds
       ).length < 1
     ) {
       return left(new EntityNotExists('All IDs'));

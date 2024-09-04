@@ -1,5 +1,6 @@
 export interface CompanyAllIdsResponseDto {
-  simpleCompanyId: string;
+  companySimpleId: string;
   companyDataId: string;
   companyAddressId: string;
+  companyResponsibleId: string;
 }
