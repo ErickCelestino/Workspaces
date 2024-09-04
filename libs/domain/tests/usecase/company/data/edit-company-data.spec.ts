@@ -1,6 +1,4 @@
-import { exec } from 'child_process';
 import {
-  CompanyDataBodyDto,
   CompanyDataResponseDto,
   EditCompanyData,
   EditCompanyDataDto,
