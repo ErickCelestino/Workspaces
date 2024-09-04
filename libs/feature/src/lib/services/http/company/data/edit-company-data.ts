@@ -1,9 +1,9 @@
-import { CreateCompanyDataDto } from '@workspaces/domain';
-import { generalApi } from '../axios-config';
+import { EditCompanyDataDto } from '@workspaces/domain';
+import { generalApi } from '../../axios-config';
 
-export async function CreateCompanyDataRequest(input: CreateCompanyDataDto) {
-  const result = await generalApi.post(
-    'create-company-data',
+export async function EditCompanyDataRequest(input: EditCompanyDataDto) {
+  const result = await generalApi.put<{ companyDataId: string }>(
+    `edit-company-data/${input.companyDataId}`,
     {
       port: input.body.port,
       opening: input.body.opening,
@@ -15,10 +15,8 @@ export async function CreateCompanyDataRequest(input: CreateCompanyDataDto) {
     {
       params: {
         loggedUserId: input.loggedUserId,
-        companyId: input.companyId,
       },
     }
   );
-
   return result.data;
 }
