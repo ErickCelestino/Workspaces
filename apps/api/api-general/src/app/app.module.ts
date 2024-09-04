@@ -23,6 +23,7 @@ import {
   FindSimpleCompanyByIdModule,
   EditCompanyDataModule,
   FindCompanyDataByIdModule,
+  FindAllCompanyIdsModule,
 } from './company';
 import {
   ListSimpleStateModule,
@@ -30,7 +31,6 @@ import {
   ListSimpleCityModule,
   ConsultZipcodeModule,
 } from './address';
-import { FindAllCompanyIdsModule } from './find-all-company-ids/find-all-company-ids.module';
 
 @Module({
   imports: [
