@@ -1,6 +1,11 @@
-import { Body, Controller, Param, Put, Query } from '@nestjs/common';
+import { Body, Controller, Param, Put, Query, UsePipes } from '@nestjs/common';
 import { EditCompanyAddressService } from './edit-company-address.service';
-import { CompanyBodyAddressDto, ErrorMessageResult } from '@workspaces/domain';
+import {
+  CompanyBodyAddressDto,
+  editCompanyAddressSchema,
+  ErrorMessageResult,
+} from '@workspaces/domain';
+import { ZodValidationPipe } from '../../../pipes/zod-validation-pipe';
 
 @Controller('edit-company-address')
 export class EditCompanyAddressController {
@@ -9,6 +14,7 @@ export class EditCompanyAddressController {
   ) {}
 
   @Put(':companyAddressId')
+  @UsePipes(new ZodValidationPipe(editCompanyAddressSchema))
   async edit(
     @Query('loggedUserId') loggedUserId: string,
     @Param('companyAddressId') companyAddressId: string,
