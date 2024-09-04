@@ -87,7 +87,13 @@ export class EditCompanyData
       return left(new EntityNotExists('Company Data'));
     }
 
-    const editedCompanyData = await this.editCompanyDataRepository.edit(input);
+    const editedCompanyData = await this.editCompanyDataRepository.edit({
+      ...input,
+      body: {
+        ...input.body,
+        phone: formatedPhone,
+      },
+    });
 
     if (Object.keys(editedCompanyData).length < 1) {
       return left(new EntityNotEdit('Company Data'));
