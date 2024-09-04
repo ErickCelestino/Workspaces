@@ -11,12 +11,15 @@ import {
   useTheme,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import {
   ErrorResponse,
   ListDirectoryNameResponseDto,
 } from '@workspaces/domain';
-import { MoveFileToDirectoryRequest } from '../../../services';
+import {
+  ListDirectoryRequest,
+  MoveFileToDirectoryRequest,
+} from '../../../services';
 import axios, { AxiosError } from 'axios';
 import { ValidationsError } from '../../../shared';
 
@@ -45,13 +48,22 @@ export const MoveFileToDirectoryModal: FC<MoveFileToDirectoryModalProps> = ({
 }) => {
   const [directoryList, setDirectoryList] = useState<
     ListDirectoryNameResponseDto[]
-  >([
-    {
-      id: '2',
-      name: 'teste',
-    },
-  ]);
-  // Get Directory List Implementation
+  >([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const result = await ListDirectoryRequest({
+          userInput: '',
+          loggedUserId,
+        });
+        setDirectoryList(result.directories);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchData();
+  }, [loggedUserId]);
 
   const [selectedDirectoryId, setSelectedDirectoryId] = useState<string>('');
 

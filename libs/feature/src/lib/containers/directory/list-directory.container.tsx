@@ -8,6 +8,7 @@ import {
 import FolderOffIcon from '@mui/icons-material/FolderOff';
 import {
   CreateDirectoryModal,
+  DeleteDirectoryModal,
   DirectoryCard,
   EmptyListResponse,
   MobileButtonMenu,
@@ -43,6 +44,8 @@ export const ListDirectoryContainer = () => {
   const [search, setSearch] = useState(false);
   const [totalPage, setTotalPage] = useState<number>(1);
   const [listDirectory, setListDirectory] = useState<Directory[]>([]);
+  const [selectedId, setSelectedId] = useState<string>('');
+  const [deleteDirectoryPopUp, setDeleteDirectoryPopUp] = useState(false);
 
   const handlePopUpClose = (types: CrudType) => {
     switch (types) {
@@ -52,11 +55,14 @@ export const ListDirectoryContainer = () => {
     }
   };
 
-  const handlePopUpOpen = (types: CrudType) => {
+  const handlePopUpOpen = (types: CrudType, id?: string) => {
     switch (types) {
       case 'create':
         setCreateDirectoryPopUp(true);
         break;
+      case 'delete':
+        setSelectedId(id ?? '');
+        setDeleteDirectoryPopUp(true);
     }
   };
 
@@ -148,10 +154,17 @@ export const ListDirectoryContainer = () => {
   return (
     <>
       <CreateDirectoryModal
-        handlePopUpClose={() => handlePopUpClose('create')}
+        handlePopUpClose={() => setCreateDirectoryPopUp(false)}
         open={createDirectoryPopUp}
         showAlert={showAlert}
         title="Novo Diretório"
+      />
+      <DeleteDirectoryModal
+        handlePopUpClose={() => setDeleteDirectoryPopUp(false)}
+        idToDelete={selectedId}
+        open={deleteDirectoryPopUp}
+        showAlert={showAlert}
+        title="Deletar Diretório"
       />
       <LayoutBase
         title="Listagem de Diretórios"
@@ -175,6 +188,9 @@ export const ListDirectoryContainer = () => {
                     onClick={() => handleDirectoryClick(directory.id)}
                     idDirectory={directory.id}
                     name={directory.name}
+                    deleteDirectory={async () =>
+                      handlePopUpOpen('delete', directory.id)
+                    }
                   />
                 </Grid>
               ))}
