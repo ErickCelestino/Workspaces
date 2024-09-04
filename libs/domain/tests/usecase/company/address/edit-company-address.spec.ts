@@ -1,50 +1,51 @@
+import exp from 'constants';
 import {
   CityResponseDto,
-  CompanyResponseDto,
-  CreateCompanyAddress,
-  CreateCompanyAddressDto,
-  CreateCompanyAddressRepository,
-  EntityNotCreated,
+  CompanyAddressResponseDto,
+  EditCompanyAddress,
+  EditCompanyAddressDto,
+  EditCompanyAddressRepository,
+  EntityNotEdit,
   EntityNotEmpty,
   EntityNotExists,
   FindCityByIdRepository,
-  FindCompanyByIdRepository,
+  FindCompanyAddressByIdRepository,
   FindCountryByIdRepository,
   FindStateByIdRepository,
   FindUserByIdRepository,
   UserList,
-} from '../../../src';
-import { CompanyAddressMock, CompanySimpleMock, userMock } from '../../entity';
+} from '../../../../src';
+import { CompanyAddressMock, userMock } from '../../../entity';
 import {
-  CreateCompanyAddressRepositoryMock,
+  EditCompanyAddressRepositoryMock,
   FindCityByIdRepositoryMock,
-  FindCompanyByIdRepositoryMock,
+  FindCompanyAddressByIdRepositoryMock,
   FindCountryByIdRepositoryMock,
   FindStateByIdRepositoryMock,
   FindUserByIdRepositoryMock,
-} from '../../repository';
+} from '../../../repository';
 
 interface SutTypes {
-  sut: CreateCompanyAddress;
-  createCompanyAddressDto: CreateCompanyAddressDto;
+  sut: EditCompanyAddress;
+  editCompanyAddressDto: EditCompanyAddressDto;
   findUserByIdRespository: FindUserByIdRepository;
-  findCompanyByIdRepository: FindCompanyByIdRepository;
+  findCompanyAddressByIdRepository: FindCompanyAddressByIdRepository;
   findCountryByIdRepository: FindCountryByIdRepository;
   findStateByIdRepository: FindStateByIdRepository;
   findCityByIdRepository: FindCityByIdRepository;
-  createCompanyAddressRepository: CreateCompanyAddressRepository;
+  editCompanyAddressRepository: EditCompanyAddressRepository;
 }
 
 const makeSut = (): SutTypes => {
   const findUserByIdRespository = new FindUserByIdRepositoryMock();
-  const findCompanyByIdRepository = new FindCompanyByIdRepositoryMock();
+  const findCompanyAddressByIdRepository =
+    new FindCompanyAddressByIdRepositoryMock();
   const findCountryByIdRepository = new FindCountryByIdRepositoryMock();
   const findStateByIdRepository = new FindStateByIdRepositoryMock();
   const findCityByIdRepository = new FindCityByIdRepositoryMock();
-  const createCompanyAddressRepository =
-    new CreateCompanyAddressRepositoryMock();
+  const editCompanyAddressRepository = new EditCompanyAddressRepositoryMock();
 
-  const createCompanyAddressDto: CreateCompanyAddressDto = {
+  const editCompanyAddressDto: EditCompanyAddressDto = {
     body: {
       cityId: CompanyAddressMock.city,
       complement: CompanyAddressMock.complement ?? '',
@@ -55,55 +56,56 @@ const makeSut = (): SutTypes => {
       street: CompanyAddressMock.street,
       zipcode: CompanyAddressMock.zipcode,
     },
-    companyId: CompanySimpleMock.id,
+    companyAddressId: CompanyAddressMock.id,
     loggedUserId: userMock.userId,
   };
 
-  const sut = new CreateCompanyAddress(
+  const sut = new EditCompanyAddress(
     findUserByIdRespository,
-    findCompanyByIdRepository,
+    findCompanyAddressByIdRepository,
     findCountryByIdRepository,
     findStateByIdRepository,
     findCityByIdRepository,
-    createCompanyAddressRepository
+    editCompanyAddressRepository
   );
 
   return {
-    sut,
-    createCompanyAddressDto,
-    findUserByIdRespository,
-    findCompanyByIdRepository,
+    editCompanyAddressDto,
+    editCompanyAddressRepository,
+    findCityByIdRepository,
+    findCompanyAddressByIdRepository,
     findCountryByIdRepository,
     findStateByIdRepository,
-    findCityByIdRepository,
-    createCompanyAddressRepository,
+    findUserByIdRespository,
+    sut,
   };
 };
 
-describe('CreateCompanyAddress', () => {
-  it('should return company address id when pass correct CreateCompanyAddressDto', async () => {
-    const { sut, createCompanyAddressDto } = makeSut();
-    const response = await sut.execute(createCompanyAddressDto);
+describe('EditCompanyAddress', () => {
+  it('should return Company Address ID when pass correct EditCompanyAddressDto', async () => {
+    const { editCompanyAddressDto, sut } = makeSut();
 
-    expect(response.isRight()).toBeTruthy();
-    expect(response.isLeft()).toBeFalsy();
-    expect(response.value).toBe(CompanyAddressMock.id);
+    const result = await sut.execute(editCompanyAddressDto);
+
+    expect(result.isRight()).toBeTruthy();
+    expect(result.isLeft()).toBeFalsy();
+    expect(result.value).toBe(CompanyAddressMock.id);
   });
 
   it('should return EntityNotEmpty when pass incorrect Logged User id', async () => {
-    const { sut, createCompanyAddressDto } = makeSut();
-    createCompanyAddressDto.loggedUserId = '';
-    const result = await sut.execute(createCompanyAddressDto);
+    const { sut, editCompanyAddressDto } = makeSut();
+    editCompanyAddressDto.loggedUserId = '';
+    const result = await sut.execute(editCompanyAddressDto);
 
     expect(result.isRight()).toBe(false);
     expect(result.isLeft()).toBe(true);
     expect(result.value).toBeInstanceOf(EntityNotEmpty);
   });
 
-  it('should return EntityNotEmpty when pass incorrect Company id', async () => {
-    const { sut, createCompanyAddressDto } = makeSut();
-    createCompanyAddressDto.companyId = '';
-    const result = await sut.execute(createCompanyAddressDto);
+  it('should return EntityNotEmpty when pass incorrect Company Address id', async () => {
+    const { sut, editCompanyAddressDto } = makeSut();
+    editCompanyAddressDto.companyAddressId = '';
+    const result = await sut.execute(editCompanyAddressDto);
 
     expect(result.isRight()).toBe(false);
     expect(result.isLeft()).toBe(true);
@@ -111,9 +113,9 @@ describe('CreateCompanyAddress', () => {
   });
 
   it('should return EntityNotEmpty when pass incorrect City', async () => {
-    const { sut, createCompanyAddressDto } = makeSut();
-    createCompanyAddressDto.body.cityId = '';
-    const result = await sut.execute(createCompanyAddressDto);
+    const { sut, editCompanyAddressDto } = makeSut();
+    editCompanyAddressDto.body.cityId = '';
+    const result = await sut.execute(editCompanyAddressDto);
 
     expect(result.isRight()).toBe(false);
     expect(result.isLeft()).toBe(true);
@@ -121,9 +123,9 @@ describe('CreateCompanyAddress', () => {
   });
 
   it('should return EntityNotEmpty when pass incorrect Country', async () => {
-    const { sut, createCompanyAddressDto } = makeSut();
-    createCompanyAddressDto.body.countryId = '';
-    const result = await sut.execute(createCompanyAddressDto);
+    const { sut, editCompanyAddressDto } = makeSut();
+    editCompanyAddressDto.body.countryId = '';
+    const result = await sut.execute(editCompanyAddressDto);
 
     expect(result.isRight()).toBe(false);
     expect(result.isLeft()).toBe(true);
@@ -131,9 +133,9 @@ describe('CreateCompanyAddress', () => {
   });
 
   it('should return EntityNotEmpty when pass incorrect State', async () => {
-    const { sut, createCompanyAddressDto } = makeSut();
-    createCompanyAddressDto.body.stateId = '';
-    const result = await sut.execute(createCompanyAddressDto);
+    const { sut, editCompanyAddressDto } = makeSut();
+    editCompanyAddressDto.body.stateId = '';
+    const result = await sut.execute(editCompanyAddressDto);
 
     expect(result.isRight()).toBe(false);
     expect(result.isLeft()).toBe(true);
@@ -141,9 +143,9 @@ describe('CreateCompanyAddress', () => {
   });
 
   it('should return EntityNotEmpty when pass incorrect District', async () => {
-    const { sut, createCompanyAddressDto } = makeSut();
-    createCompanyAddressDto.body.district = '';
-    const result = await sut.execute(createCompanyAddressDto);
+    const { sut, editCompanyAddressDto } = makeSut();
+    editCompanyAddressDto.body.district = '';
+    const result = await sut.execute(editCompanyAddressDto);
 
     expect(result.isRight()).toBe(false);
     expect(result.isLeft()).toBe(true);
@@ -151,9 +153,9 @@ describe('CreateCompanyAddress', () => {
   });
 
   it('should return EntityNotEmpty when pass incorrect Number', async () => {
-    const { sut, createCompanyAddressDto } = makeSut();
-    createCompanyAddressDto.body.number = '';
-    const result = await sut.execute(createCompanyAddressDto);
+    const { sut, editCompanyAddressDto } = makeSut();
+    editCompanyAddressDto.body.number = '';
+    const result = await sut.execute(editCompanyAddressDto);
 
     expect(result.isRight()).toBe(false);
     expect(result.isLeft()).toBe(true);
@@ -161,9 +163,9 @@ describe('CreateCompanyAddress', () => {
   });
 
   it('should return EntityNotEmpty when pass incorrect Street', async () => {
-    const { sut, createCompanyAddressDto } = makeSut();
-    createCompanyAddressDto.body.street = '';
-    const result = await sut.execute(createCompanyAddressDto);
+    const { sut, editCompanyAddressDto } = makeSut();
+    editCompanyAddressDto.body.street = '';
+    const result = await sut.execute(editCompanyAddressDto);
 
     expect(result.isRight()).toBe(false);
     expect(result.isLeft()).toBe(true);
@@ -171,9 +173,9 @@ describe('CreateCompanyAddress', () => {
   });
 
   it('should return EntityNotEmpty when pass incorrect Zipcode', async () => {
-    const { sut, createCompanyAddressDto } = makeSut();
-    createCompanyAddressDto.body.zipcode = '';
-    const result = await sut.execute(createCompanyAddressDto);
+    const { sut, editCompanyAddressDto } = makeSut();
+    editCompanyAddressDto.body.zipcode = '';
+    const result = await sut.execute(editCompanyAddressDto);
 
     expect(result.isRight()).toBe(false);
     expect(result.isLeft()).toBe(true);
@@ -181,11 +183,11 @@ describe('CreateCompanyAddress', () => {
   });
 
   it('should return EntityNotExists when a exist User in system', async () => {
-    const { createCompanyAddressDto, sut } = makeSut();
+    const { editCompanyAddressDto, sut } = makeSut();
     jest
       .spyOn(sut['findUserByIdRepository'], 'find')
       .mockResolvedValueOnce({} as UserList);
-    const result = await sut.execute(createCompanyAddressDto);
+    const result = await sut.execute(editCompanyAddressDto);
 
     expect(result.isLeft()).toBe(true);
     expect(result.isRight()).toBe(false);
@@ -193,11 +195,11 @@ describe('CreateCompanyAddress', () => {
   });
 
   it('should return EntityNotExists when a exist Company in system', async () => {
-    const { createCompanyAddressDto, sut } = makeSut();
+    const { editCompanyAddressDto, sut } = makeSut();
     jest
-      .spyOn(sut['findCompanyByIdRepository'], 'find')
-      .mockResolvedValueOnce({} as CompanyResponseDto);
-    const result = await sut.execute(createCompanyAddressDto);
+      .spyOn(sut['findCompanyAddressByIdRepository'], 'find')
+      .mockResolvedValueOnce({} as CompanyAddressResponseDto);
+    const result = await sut.execute(editCompanyAddressDto);
 
     expect(result.isLeft()).toBe(true);
     expect(result.isRight()).toBe(false);
@@ -205,26 +207,26 @@ describe('CreateCompanyAddress', () => {
   });
 
   it('should return EntityNotExists when a exist City in system', async () => {
-    const { createCompanyAddressDto, sut } = makeSut();
+    const { editCompanyAddressDto, sut } = makeSut();
     jest
       .spyOn(sut['findCityByIdRepository'], 'find')
       .mockResolvedValueOnce({} as CityResponseDto);
-    const result = await sut.execute(createCompanyAddressDto);
+    const result = await sut.execute(editCompanyAddressDto);
 
     expect(result.isLeft()).toBe(true);
     expect(result.isRight()).toBe(false);
     expect(result.value).toBeInstanceOf(EntityNotExists);
   });
 
-  it('should return EntityNotCreated when not created Company Address in system', async () => {
-    const { createCompanyAddressDto, sut } = makeSut();
+  it('should return EntityNotEdit when a edited Company Address in system', async () => {
+    const { editCompanyAddressDto, sut } = makeSut();
     jest
-      .spyOn(sut['createCompanyAddressRepository'], 'create')
+      .spyOn(sut['editCompanyAddressRepository'], 'edit')
       .mockResolvedValueOnce('');
-    const result = await sut.execute(createCompanyAddressDto);
+    const result = await sut.execute(editCompanyAddressDto);
 
     expect(result.isLeft()).toBe(true);
     expect(result.isRight()).toBe(false);
-    expect(result.value).toBeInstanceOf(EntityNotCreated);
+    expect(result.value).toBeInstanceOf(EntityNotEdit);
   });
 });

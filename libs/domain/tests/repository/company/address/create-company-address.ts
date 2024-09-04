@@ -1,8 +1,8 @@
 import {
   CreateCompanyAddressDto,
   CreateCompanyAddressRepository,
-} from '../../../src';
-import { CompanyAddressMock } from '../../entity';
+} from '../../../../src';
+import { CompanyAddressMock } from '../../../entity';
 
 export class CreateCompanyAddressRepositoryMock
   implements CreateCompanyAddressRepository
