@@ -1,11 +1,12 @@
 import { FC, useState } from 'react';
 import { useLoggedUser } from '../../../contexts';
 import {
+  DeleteContentFileByIdRequest,
   DeleteDirectoryRequest,
   ListContentFilesRequest,
 } from '../../../services';
 import axios, { AxiosError } from 'axios';
-import { ErrorResponse } from '@workspaces/domain';
+import { ContentFile, ErrorResponse } from '@workspaces/domain';
 import { ValidationsError } from '../../../shared';
 import { SimpleConfimationModal } from '../simple';
 import { string } from 'zod';
@@ -41,6 +42,7 @@ export const DeleteDirectoryModal: FC<DeleteDirectoryModalProps> = ({
 
   const [action, setAction] = useState<string | null>(null);
   const [decisionModalOpen, setDecisionModalOpen] = useState<boolean>(false);
+  const [filesInDirectory, setFilesInDirectory] = useState<ContentFile[]>([]);
 
   const deleteDirectoryRequest = async () => {
     try {
@@ -51,6 +53,7 @@ export const DeleteDirectoryModal: FC<DeleteDirectoryModalProps> = ({
       });
       if (filesInDirectory.files.length > 0) {
         setDecisionModalOpen(true);
+        setFilesInDirectory(filesInDirectory.files);
       }
 
       await DeleteDirectoryRequest({
@@ -71,10 +74,38 @@ export const DeleteDirectoryModal: FC<DeleteDirectoryModalProps> = ({
     }
   };
 
+  const deleteAllFilesInDirectory = async () => {
+    let filesInDirectory = await ListContentFilesRequest({
+      userInput: '',
+      loggedUserId: loggedUser?.id ?? '',
+      directoryId: idToDelete,
+    });
+
+    while (filesInDirectory.files.length > 0) {
+      const deleteFilePromises = filesInDirectory.files.map((file) =>
+        DeleteContentFileByIdRequest({
+          idToDelete: file.id,
+          loggedUserId: loggedUser?.id ?? '',
+          directoryId: idToDelete,
+        })
+      );
+
+      await Promise.all(deleteFilePromises);
+
+      filesInDirectory = await ListContentFilesRequest({
+        userInput: '',
+        loggedUserId: loggedUser?.id ?? '',
+        directoryId: idToDelete,
+      });
+    }
+  };
+
   const handleUserAction = async (userAction: string) => {
     setAction(userAction);
     setDecisionModalOpen(false);
     if (userAction === 'delete') {
+      await deleteAllFilesInDirectory();
+
       await DeleteDirectoryRequest({
         id: idToDelete,
         loggedUserId: loggedUser?.id ?? '',
