@@ -25,6 +25,7 @@ import {
   EditCompanyDataModule,
   FindCompanyDataByIdModule,
   FindAllCompanyIdsModule,
+  FindCompanyAddressByIdModule,
 } from './company';
 import {
   ListSimpleStateModule,
@@ -60,6 +61,7 @@ import {
     FindCompanyDataByIdModule,
     FindAllCompanyIdsModule,
     EditCompanyAddressModule,
+    FindCompanyAddressByIdModule,
   ],
   controllers: [AppController],
   providers: [AppService],
