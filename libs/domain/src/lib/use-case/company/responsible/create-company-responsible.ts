@@ -1,20 +1,20 @@
 import { Inject } from '@nestjs/common';
-import { UseCase } from '../../base/use-case';
-import { CreateCompanyResponsibleDto } from '../../dto';
+import { UseCase } from '../../../base/use-case';
+import { CreateCompanyResponsibleDto } from '../../../dto';
 import {
   EntityAlreadyExists,
   EntityNotCreated,
   EntityNotEmpty,
   EntityNotExists,
-} from '../../error';
-import { Either, left, right } from '../../shared/either';
+} from '../../../error';
+import { Either, left, right } from '../../../shared/either';
 import {
   FindCompanyByIdRepository,
   FindUserByIdRepository,
   CreateCompanyResponsibleRespository,
   FindCompanyResponsibleByDocumentRepository,
-} from '../../repository';
-import { ValidationCompanyId, ValidationUserId } from '../../utils';
+} from '../../../repository';
+import { ValidationCompanyId, ValidationUserId } from '../../../utils';
 
 export class CreateCompanyResponsible
   implements
