@@ -11,18 +11,17 @@ import {
   ListSimpleCountryResponseDto,
   ListSimpleStateDto,
   ListSimpleStateResponseDto,
-  SimpleAddressResponseDto,
   StepItem,
 } from '@workspaces/domain';
 import SearchIcon from '@mui/icons-material/Search';
 import { FC, useCallback, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useLoggedUser } from '../../../contexts';
+import { useLoggedUser } from '../../../../contexts';
 import {
   ConsultZipcodeRequest,
   CreateCompanyAddressRequest,
   ListSimpleCityRequest,
-} from '../../../services';
+} from '../../../../services';
 import {
   Box,
   IconButton,
@@ -31,12 +30,12 @@ import {
   TextField,
 } from '@mui/material';
 import axios, { AxiosError } from 'axios';
-import { ValidationsError } from '../../../shared';
-import { FormButton } from '../form-button.component';
+import { ValidationsError } from '../../../../shared';
+import { FormButton } from '../../form-button.component';
 import {
   ListSimpleCountryRequest,
   ListSimpleStateRequest,
-} from '../../../services';
+} from '../../../../services';
 
 interface FormCreateCompanyAddressProps {
   showAlert: (message: string, success: boolean) => void;
@@ -85,9 +84,6 @@ export const FormCreateCompanyAddress: FC<FormCreateCompanyAddressProps> = ({
   );
   const [listState, setListState] = useState<ListSimpleStateResponseDto[]>([]);
   const [listCity, setListCity] = useState<CityResponseDto[]>([]);
-  const [simpleAddress, setSimpleAddress] = useState<SimpleAddressResponseDto>(
-    {} as SimpleAddressResponseDto
-  );
   const [country, setCountry] = useState('');
   const [state, setState] = useState('');
   const [city, setCity] = useState('');
@@ -113,104 +109,118 @@ export const FormCreateCompanyAddress: FC<FormCreateCompanyAddressProps> = ({
     },
   });
 
-  const getCountry = useCallback(async (data: ListSimpleCountryDto) => {
-    try {
-      const result = await ListSimpleCountryRequest(data);
-      setDataLoaded(true);
-      setListCountry(result);
-      return result;
-    } catch (error) {
-      console.error(error);
-      if (axios.isAxiosError(error)) {
-        const axiosError = error as AxiosError<ErrorResponse>;
-        const errors = ValidationsError(axiosError, 'País');
-        if (errors) {
-          showAlert(errors, false);
+  const getCountry = useCallback(
+    async (data: ListSimpleCountryDto) => {
+      try {
+        const result = await ListSimpleCountryRequest(data);
+        setDataLoaded(true);
+        setListCountry(result);
+        return result;
+      } catch (error) {
+        console.error(error);
+        if (axios.isAxiosError(error)) {
+          const axiosError = error as AxiosError<ErrorResponse>;
+          const errors = ValidationsError(axiosError, 'País');
+          if (errors) {
+            showAlert(errors, false);
+          }
         }
       }
-    }
-  }, []);
+    },
+    [showAlert]
+  );
 
-  const getState = useCallback(async (data: ListSimpleStateDto) => {
-    try {
-      const result = await ListSimpleStateRequest(data);
-      setListState(result);
-      return result;
-    } catch (error) {
-      console.error(error);
-      if (axios.isAxiosError(error)) {
-        const axiosError = error as AxiosError<ErrorResponse>;
-        const errors = ValidationsError(axiosError, 'Estado');
-        if (errors) {
-          showAlert(errors, false);
+  const getState = useCallback(
+    async (data: ListSimpleStateDto) => {
+      try {
+        const result = await ListSimpleStateRequest(data);
+        setListState(result);
+        return result;
+      } catch (error) {
+        console.error(error);
+        if (axios.isAxiosError(error)) {
+          const axiosError = error as AxiosError<ErrorResponse>;
+          const errors = ValidationsError(axiosError, 'Estado');
+          if (errors) {
+            showAlert(errors, false);
+          }
         }
       }
-    }
-  }, []);
+    },
+    [showAlert]
+  );
 
-  const getCity = useCallback(async (data: ListSimpleCityDto) => {
-    try {
-      const result = await ListSimpleCityRequest(data);
-      setListCity(result);
-      return result;
-    } catch (error) {
-      console.error(error);
-      if (axios.isAxiosError(error)) {
-        const axiosError = error as AxiosError<ErrorResponse>;
-        const errors = ValidationsError(axiosError, 'Cidade');
-        if (errors) {
-          showAlert(errors, false);
+  const getCity = useCallback(
+    async (data: ListSimpleCityDto) => {
+      try {
+        const result = await ListSimpleCityRequest(data);
+        setListCity(result);
+        return result;
+      } catch (error) {
+        console.error(error);
+        if (axios.isAxiosError(error)) {
+          const axiosError = error as AxiosError<ErrorResponse>;
+          const errors = ValidationsError(axiosError, 'Cidade');
+          if (errors) {
+            showAlert(errors, false);
+          }
         }
       }
-    }
-  }, []);
+    },
+    [showAlert]
+  );
 
-  const ajustLists = useCallback(async (input: AjustListsDto) => {
-    getCountry({
-      loggedUserId: loggedUser?.id ?? '',
-    }).then((country) => {
-      const filteredCountry = country?.filter(
-        (item) => item.name === input.country.toUpperCase()
-      )[0];
-      getState({
+  const ajustLists = useCallback(
+    async (input: AjustListsDto) => {
+      getCountry({
         loggedUserId: loggedUser?.id ?? '',
-        countryId: filteredCountry?.id ?? '',
-      }).then((state) => {
-        const filteredState = state?.filter(
-          (item) => item.uf === input.state.toUpperCase()
+      }).then((country) => {
+        const filteredCountry = country?.filter(
+          (item) => item.name === input.country.toUpperCase()
         )[0];
-        getCity({
+        getState({
           loggedUserId: loggedUser?.id ?? '',
-          stateId: filteredState?.id ?? '',
-        }).then((city) => {
-          const filteredCity = city?.filter(
-            (item) => item.name === input.city.toUpperCase()
+          countryId: filteredCountry?.id ?? '',
+        }).then((state) => {
+          const filteredState = state?.filter(
+            (item) => item.uf === input.state.toUpperCase()
           )[0];
+          getCity({
+            loggedUserId: loggedUser?.id ?? '',
+            stateId: filteredState?.id ?? '',
+          }).then((city) => {
+            const filteredCity = city?.filter(
+              (item) => item.name === input.city.toUpperCase()
+            )[0];
 
-          setCountry(filteredCountry?.name.toUpperCase() ?? '');
-          setState(filteredState?.uf.toUpperCase() ?? '');
-          setCity(filteredCity?.name.toUpperCase() ?? '');
+            setCountry(filteredCountry?.name.toUpperCase() ?? '');
+            setState(filteredState?.uf.toUpperCase() ?? '');
+            setCity(filteredCity?.name.toUpperCase() ?? '');
+          });
         });
       });
-    });
-  }, []);
+    },
+    [getCity, getCountry, getState, loggedUser]
+  );
 
-  const getZipcode = useCallback(async (data: ConsultZipcodeDto) => {
-    try {
-      const result = await ConsultZipcodeRequest(data);
-      setSimpleAddress(result);
-      return result;
-    } catch (error) {
-      console.error(error);
-      if (axios.isAxiosError(error)) {
-        const axiosError = error as AxiosError<ErrorResponse>;
-        const errors = ValidationsError(axiosError, 'Endereço');
-        if (errors) {
-          showAlert(errors, false);
+  const getZipcode = useCallback(
+    async (data: ConsultZipcodeDto) => {
+      try {
+        const result = await ConsultZipcodeRequest(data);
+        return result;
+      } catch (error) {
+        console.error(error);
+        if (axios.isAxiosError(error)) {
+          const axiosError = error as AxiosError<ErrorResponse>;
+          const errors = ValidationsError(axiosError, 'Endereço');
+          if (errors) {
+            showAlert(errors, false);
+          }
         }
       }
-    }
-  }, []);
+    },
+    [showAlert]
+  );
 
   useEffect(() => {
     if (stepPosition === 4 && !dataLoaded) {
@@ -220,10 +230,10 @@ export const FormCreateCompanyAddress: FC<FormCreateCompanyAddressProps> = ({
         state: companyAddress.state,
       });
     }
-  }, [stepPosition, loggedUser, dataLoaded]);
+  }, [stepPosition, loggedUser, dataLoaded, ajustLists, companyAddress]);
 
   useEffect(() => {
-    if (stepPosition != 4) {
+    if (stepPosition !== 4) {
       setDataLoaded(false);
     }
   }, [stepPosition]);
@@ -286,9 +296,11 @@ export const FormCreateCompanyAddress: FC<FormCreateCompanyAddressProps> = ({
       field: 'country' | 'state' | 'city'
     ) =>
     (event: React.ChangeEvent<{ value: string }>) => {
+      let filteredCountry;
+      let filteredState;
       switch (field) {
         case 'country':
-          const filteredCountry = listCoutry?.filter(
+          filteredCountry = listCoutry?.filter(
             (item) => item.name === event.target.value
           )[0];
           getState({
@@ -299,7 +311,7 @@ export const FormCreateCompanyAddress: FC<FormCreateCompanyAddressProps> = ({
           setter(event.target.value);
           break;
         case 'state':
-          const filteredState = listState?.filter(
+          filteredState = listState?.filter(
             (item) => item.uf === event.target.value
           )[0];
           getCity({

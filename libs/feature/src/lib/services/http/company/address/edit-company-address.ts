@@ -1,11 +1,9 @@
-import { CreateCompanyAddressDto } from '@workspaces/domain';
-import { generalApi } from '../axios-config';
+import { EditCompanyAddressDto } from '@workspaces/domain';
+import { generalApi } from '../../axios-config';
 
-export async function CreateCompanyAddressRequest(
-  input: CreateCompanyAddressDto
-) {
-  const result = await generalApi.post(
-    'create-company-address',
+export async function EditCompanyAddressRequest(input: EditCompanyAddressDto) {
+  const result = await generalApi.put<{ companyAddressId: string }>(
+    `edit-company-address/${input.companyAddressId}`,
     {
       cityId: input.body.cityId,
       stateId: input.body.stateId,
@@ -19,10 +17,8 @@ export async function CreateCompanyAddressRequest(
     {
       params: {
         loggedUserId: input.loggedUserId,
-        companyId: input.companyId,
       },
     }
   );
-
   return result.data;
 }

@@ -1,6 +1,10 @@
 import { Box } from '@mui/material';
 import { FC, useState } from 'react';
-import { FormEditCompany, FormEditCompanyData } from '../../form';
+import {
+  FormEditCompany,
+  FormEditCompanyAddress,
+  FormEditCompanyData,
+} from '../../form';
 import { CompanyAllIdsResponseDto } from '@workspaces/domain';
 
 interface CompanyStepperProps {
@@ -24,7 +28,7 @@ export const EditCompanyStepper: FC<CompanyStepperProps> = ({
 
   return (
     <Box>
-      {step === 1 && (
+      {step === 2 && (
         <FormEditCompany
           showAlert={showAlert}
           handlePopUpClose={() => changeStage(2)}
@@ -37,11 +41,24 @@ export const EditCompanyStepper: FC<CompanyStepperProps> = ({
         />
       )}
 
-      {step === 2 && (
+      {step === 3 && (
         <FormEditCompanyData
           companyDataId={companyIds.companyDataId}
           showAlert={showAlert}
-          handlePopUpClose={handlePopUpClose}
+          handlePopUpClose={() => changeStage(3)}
+          step={{
+            stepPosition: step,
+            totalPositions: totalPosition,
+          }}
+          totalPosition={totalPosition}
+        />
+      )}
+
+      {step === 1 && (
+        <FormEditCompanyAddress
+          companyAddressId={companyIds.companyAddressId}
+          handlePopUpClose={() => changeStage(4)}
+          showAlert={showAlert}
           step={{
             stepPosition: step,
             totalPositions: totalPosition,

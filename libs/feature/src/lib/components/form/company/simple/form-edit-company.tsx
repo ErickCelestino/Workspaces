@@ -21,7 +21,6 @@ import {
   FindSimpleCompanyByIdRequest,
 } from '../../../../services';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { timeout } from 'rxjs';
 
 interface FormEditCompanyProps {
   showAlert: (message: string, success: boolean) => void;
@@ -46,7 +45,7 @@ export const FormEditCompany: FC<FormEditCompanyProps> = ({
   cnpjLabel = 'CNPJ',
   socialReasonLabel = 'Razão Social',
   successMessage = 'Empresa criada com sucesso',
-  buttonTitle = 'Adicionar Empresa',
+  buttonTitle = 'Editar Empresa',
 }) => {
   const { loggedUser } = useLoggedUser();
 

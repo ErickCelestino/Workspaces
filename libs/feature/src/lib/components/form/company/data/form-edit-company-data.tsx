@@ -1,12 +1,9 @@
 import { Box, MenuItem, TextField } from '@mui/material';
 import {
-  CompanyBodyDto,
   CompanyDataBodyDto,
   EditCompanyDataDto,
-  EditCompanyDto,
   ErrorResponse,
   FindCompanyDataByIdDto,
-  FindSimpleCompanyByIdDto,
   PortType,
   SituationType,
   StepItem,
@@ -23,9 +20,7 @@ import {
 import { useLoggedUser } from '../../../../contexts';
 import {
   EditCompanyDataRequest,
-  EditCompanyRequest,
   FindCompanyDataByIdRequest,
-  FindSimpleCompanyByIdRequest,
 } from '../../../../services';
 import { zodResolver } from '@hookform/resolvers/zod';
 
@@ -58,7 +53,7 @@ export const FormEditCompanyData: FC<FormEditCompanyDataProps> = ({
   phoneLabel = 'Telefone',
   responsibleEmailLabel = 'Email Responsável',
   successMessage = 'Empresa criada com sucesso',
-  buttonTitle = 'Adicionar Empresa',
+  buttonTitle = 'Editar Empresa',
 }) => {
   const { loggedUser } = useLoggedUser();
 
@@ -119,6 +114,7 @@ export const FormEditCompanyData: FC<FormEditCompanyDataProps> = ({
 
   useEffect(() => {
     if (companyDataId && !dataLoaded) {
+      console.log('teste');
       const loggedUserId = loggedUser?.id ?? '';
 
       getCompanyData({
@@ -180,9 +176,16 @@ export const FormEditCompanyData: FC<FormEditCompanyDataProps> = ({
     }
   };
 
+  const handleChange =
+    (setter: React.Dispatch<React.SetStateAction<string>>) =>
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setter(event.target.value);
+    };
+
   const handleCompanyData = async (data: CompanyDataBodyDto) => {
     setLoading(true);
     setSuccess(false);
+    console.log('teste1');
     const result = await editCompany({
       body: data,
       loggedUserId: loggedUser?.id ?? '',
@@ -204,12 +207,6 @@ export const FormEditCompanyData: FC<FormEditCompanyDataProps> = ({
       handlePopUpClose();
     }
   };
-
-  const handleChange =
-    (setter: React.Dispatch<React.SetStateAction<string>>) =>
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      setter(event.target.value);
-    };
 
   return (
     <Box
