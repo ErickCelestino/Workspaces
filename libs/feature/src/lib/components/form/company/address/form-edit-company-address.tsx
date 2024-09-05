@@ -34,7 +34,7 @@ import {
   ListSimpleCountryRequest,
   ListSimpleStateRequest,
 } from '../../../../services';
-import { ValidationsError } from '../../../../shared';
+import { formatValueMask, ValidationsError } from '../../../../shared';
 import { FormButton } from '../../form-button.component';
 
 interface FormEditCompanyAddressProps {
@@ -59,7 +59,7 @@ export const FormEditCompanyAddress: FC<FormEditCompanyAddressProps> = ({
   showAlert,
   handlePopUpClose,
   companyAddressId,
-  step: { stepPosition = 4, stepTitle = 'Etapa' },
+  step: { stepPosition = 3, stepTitle = 'Etapa' },
   totalPosition,
   successMessage = 'Endereço criado com sucesso',
   zipcodeLabel = 'CEP',
@@ -82,8 +82,6 @@ export const FormEditCompanyAddress: FC<FormEditCompanyAddressProps> = ({
   );
   const [listState, setListState] = useState<ListSimpleStateResponseDto[]>([]);
   const [listCity, setListCity] = useState<CityResponseDto[]>([]);
-  const [companyAddress, setCompanyAddress] =
-    useState<CompanyAddressResponseDto>({} as CompanyAddressResponseDto);
   const [country, setCountry] = useState('');
   const [state, setState] = useState('');
   const [city, setCity] = useState('');
@@ -101,11 +99,11 @@ export const FormEditCompanyAddress: FC<FormEditCompanyAddressProps> = ({
       cityId: '',
       countryId: '',
       stateId: '',
-      complement: companyAddress.complement,
-      district: companyAddress.district,
-      number: companyAddress.number,
-      street: companyAddress.street,
-      zipcode: companyAddress.zipcode,
+      complement: '',
+      district: '',
+      number: '',
+      street: '',
+      zipcode: '',
     },
   });
 
@@ -183,7 +181,7 @@ export const FormEditCompanyAddress: FC<FormEditCompanyAddressProps> = ({
           countryId: filteredCountry?.id ?? '',
         }).then((state) => {
           const filteredState = state?.filter(
-            (item) => item.uf === input.state.toUpperCase()
+            (item) => item.name === input.state.toUpperCase()
           )[0];
           getCity({
             loggedUserId: loggedUser?.id ?? '',
@@ -243,16 +241,22 @@ export const FormEditCompanyAddress: FC<FormEditCompanyAddressProps> = ({
   );
 
   useEffect(() => {
-    if (stepPosition === 4 && !dataLoaded) {
+    if (companyAddressId && !dataLoaded) {
       getCompanyAddress({
         companyAddressId,
         loggedUserId: loggedUser?.id ?? '',
       }).then((address) => {
-        setCompanyAddress(address ?? ({} as CompanyAddressResponseDto));
         ajustLists({
           city: address?.city ?? '',
           country: address?.country ?? '',
           state: address?.state ?? '',
+        });
+        reset({
+          complement: address?.complement ?? '',
+          district: address?.district ?? '',
+          number: address?.number ?? '',
+          street: address?.street ?? '',
+          zipcode: address?.zipcode ?? '',
         });
       });
     }
@@ -266,7 +270,7 @@ export const FormEditCompanyAddress: FC<FormEditCompanyAddressProps> = ({
   ]);
 
   useEffect(() => {
-    if (stepPosition !== 4) {
+    if (!companyAddressId) {
       setDataLoaded(false);
     }
   }, [stepPosition]);
@@ -305,7 +309,6 @@ export const FormEditCompanyAddress: FC<FormEditCompanyAddressProps> = ({
       loggedUserId: loggedUser?.id ?? '',
       companyAddressId,
     });
-    console.log(result);
     if (result) {
       setLoading(false);
       setSuccess(true);
@@ -374,9 +377,6 @@ export const FormEditCompanyAddress: FC<FormEditCompanyAddressProps> = ({
       });
 
       reset({
-        cityId: '',
-        countryId: '',
-        stateId: '',
         complement: '',
         district: result?.district ?? '',
         number: '',
@@ -396,6 +396,7 @@ export const FormEditCompanyAddress: FC<FormEditCompanyAddressProps> = ({
         margin="normal"
         required
         fullWidth
+        InputLabelProps={{ shrink: true }}
         error={!!errors.zipcode}
         helperText={errors.zipcode ? errors.zipcode.message : ''}
         id="zipcode"
@@ -424,6 +425,7 @@ export const FormEditCompanyAddress: FC<FormEditCompanyAddressProps> = ({
             margin="normal"
             required
             fullWidth
+            InputLabelProps={{ shrink: true }}
             error={!!errors.district}
             helperText={errors.district ? errors.district.message : ''}
             id="district"
@@ -438,6 +440,7 @@ export const FormEditCompanyAddress: FC<FormEditCompanyAddressProps> = ({
             margin="normal"
             required
             fullWidth
+            InputLabelProps={{ shrink: true }}
             error={!!errors.number}
             helperText={errors.number ? errors.number.message : ''}
             id="number"
@@ -454,6 +457,7 @@ export const FormEditCompanyAddress: FC<FormEditCompanyAddressProps> = ({
             margin="normal"
             required
             fullWidth
+            InputLabelProps={{ shrink: true }}
             error={!!errors.street}
             helperText={errors.street ? errors.street.message : ''}
             id="street"
@@ -468,6 +472,7 @@ export const FormEditCompanyAddress: FC<FormEditCompanyAddressProps> = ({
           <TextField
             margin="normal"
             fullWidth
+            InputLabelProps={{ shrink: true }}
             error={!!errors.complement}
             helperText={errors.complement ? errors.complement.message : ''}
             id="complement"

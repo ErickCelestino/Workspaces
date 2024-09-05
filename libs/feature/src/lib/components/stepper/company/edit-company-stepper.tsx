@@ -28,7 +28,7 @@ export const EditCompanyStepper: FC<CompanyStepperProps> = ({
 
   return (
     <Box>
-      {step === 2 && (
+      {step === 1 && (
         <FormEditCompany
           showAlert={showAlert}
           handlePopUpClose={() => changeStage(2)}
@@ -41,7 +41,7 @@ export const EditCompanyStepper: FC<CompanyStepperProps> = ({
         />
       )}
 
-      {step === 3 && (
+      {step === 2 && (
         <FormEditCompanyData
           companyDataId={companyIds.companyDataId}
           showAlert={showAlert}
@@ -54,7 +54,7 @@ export const EditCompanyStepper: FC<CompanyStepperProps> = ({
         />
       )}
 
-      {step === 1 && (
+      {step === 3 && (
         <FormEditCompanyAddress
           companyAddressId={companyIds.companyAddressId}
           handlePopUpClose={() => changeStage(4)}
