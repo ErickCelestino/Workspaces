@@ -17,6 +17,7 @@ import {
   ListDirectoryNameResponseDto,
 } from '@workspaces/domain';
 import {
+  ListContentFilesRequest,
   ListDirectoryRequest,
   MoveFileToDirectoryRequest,
 } from '../../../services';
@@ -33,6 +34,7 @@ interface MoveFileToDirectoryModalProps {
   buttonTitle: string;
   fieldLabel?: string;
   successMessage?: string;
+  moveAllFiles?: boolean;
 }
 
 export const MoveFileToDirectoryModal: FC<MoveFileToDirectoryModalProps> = ({
@@ -45,6 +47,7 @@ export const MoveFileToDirectoryModal: FC<MoveFileToDirectoryModalProps> = ({
   buttonTitle,
   fieldLabel = 'Diretório',
   successMessage = 'Arquivo Movido com Sucesso!',
+  moveAllFiles = false,
 }) => {
   const [directoryList, setDirectoryList] = useState<
     ListDirectoryNameResponseDto[]
@@ -57,13 +60,18 @@ export const MoveFileToDirectoryModal: FC<MoveFileToDirectoryModalProps> = ({
           userInput: '',
           loggedUserId,
         });
+        if (moveAllFiles) {
+          result.directories = result.directories.filter(
+            (directory) => directory.id !== idToMove
+          );
+        }
         setDirectoryList(result.directories);
       } catch (error) {
         console.error(error);
       }
     };
     fetchData();
-  }, [loggedUserId]);
+  }, [idToMove, loggedUserId]);
 
   const [selectedDirectoryId, setSelectedDirectoryId] = useState<string>('');
 
@@ -72,6 +80,12 @@ export const MoveFileToDirectoryModal: FC<MoveFileToDirectoryModalProps> = ({
 
   const handleMoveFileData = async () => {
     try {
+      if (moveAllFiles) {
+        await handleMoveAllFilesData();
+        showAlert(successMessage, true);
+        onClose();
+        return;
+      }
       await MoveFileToDirectoryRequest({
         idToMove,
         idToMoveDirectory: selectedDirectoryId,
@@ -91,6 +105,42 @@ export const MoveFileToDirectoryModal: FC<MoveFileToDirectoryModalProps> = ({
     }
   };
 
+  const handleMoveAllFilesData = async () => {
+    try {
+      let filesInDirectory = await ListContentFilesRequest({
+        userInput: '',
+        loggedUserId,
+        directoryId: idToMove,
+      });
+
+      while (filesInDirectory.files.length > 0) {
+        const moveFilePromises = filesInDirectory.files.map((file) =>
+          MoveFileToDirectoryRequest({
+            idToMove: file.id,
+            idToMoveDirectory: selectedDirectoryId,
+            loggedUserId,
+          })
+        );
+
+        await Promise.all(moveFilePromises);
+
+        filesInDirectory = await ListContentFilesRequest({
+          userInput: '',
+          loggedUserId,
+          directoryId: idToMove,
+        });
+      }
+    } catch (error) {
+      console.error(error);
+      if (axios.isAxiosError(error)) {
+        const axiosError = error as AxiosError<ErrorResponse>;
+        const errors = ValidationsError(axiosError, 'arquivo ou diretório');
+        if (errors) {
+          showAlert(errors, false);
+        }
+      }
+    }
+  };
   const handleChangeMoveFile = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedDirectoryId(event.target.value);
   };

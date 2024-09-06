@@ -4,6 +4,7 @@ import {
   DeleteContentFileByIdRequest,
   DeleteDirectoryRequest,
   ListContentFilesRequest,
+  MoveFileToDirectoryRequest,
 } from '../../../services';
 import axios, { AxiosError } from 'axios';
 import { ContentFile, ErrorResponse } from '@workspaces/domain';
@@ -18,6 +19,7 @@ import {
   DialogContentText,
   DialogTitle,
 } from '@mui/material';
+import { MoveFileToDirectoryModal } from '../file';
 
 interface DeleteDirectoryModalProps {
   showAlert: (message: string, success: boolean) => void;
@@ -111,12 +113,12 @@ export const DeleteDirectoryModal: FC<DeleteDirectoryModalProps> = ({
         loggedUserId: loggedUser?.id ?? '',
       });
       showAlert(successMessage, true);
-    } else if (userAction === 'move') {
-      console.log('move');
-      // await MoveDirectoryFilesRequest({
-      //   id: idToDelete,
-      //   loggedUserId: loggedUser?.id ?? '',
-      // });
+    } else if (userAction === 'move2') {
+      console.log('move2');
+      await DeleteDirectoryRequest({
+        id: idToDelete,
+        loggedUserId: loggedUser?.id ?? '',
+      });
       showAlert('Arquivos movidos com sucesso', true);
     }
     handlePopUpClose();
@@ -124,6 +126,20 @@ export const DeleteDirectoryModal: FC<DeleteDirectoryModalProps> = ({
 
   return (
     <>
+      <MoveFileToDirectoryModal
+        buttonTitle="Mover Arquivos"
+        idToMove={idToDelete}
+        loggedUserId={loggedUser?.id ?? ''}
+        onClose={() => {
+          setAction('move2');
+          deleteDirectoryRequest();
+        }}
+        open={action === 'move'}
+        successMessage="Arquivos Movidos com Sucesso!"
+        title="Mover Arquivos"
+        showAlert={showAlert}
+        moveAllFiles={true}
+      />
       <SimpleConfimationModal
         onClose={handlePopUpClose}
         open={open}
