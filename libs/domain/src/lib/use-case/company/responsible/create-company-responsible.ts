@@ -57,7 +57,7 @@ export class CreateCompanyResponsible
       return left(new EntityNotEmpty('Name'));
     }
 
-    if (Object.keys(birthdate?.setTime?.toString() ?? birthdate).length < 1) {
+    if (Object.keys(birthdate?.toString() ?? birthdate).length < 1) {
       return left(new EntityNotEmpty('Birth Date'));
     }
 

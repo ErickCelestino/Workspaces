@@ -3,5 +3,5 @@ export interface CompanyBodyResponsibleDto {
   email: string;
   document: string;
   phone: string;
-  birthdate: Date;
+  birthdate: Date | string;
 }

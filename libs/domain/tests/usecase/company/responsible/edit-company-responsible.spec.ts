@@ -101,7 +101,7 @@ describe('EditCompanyResponsible', () => {
 
   it('should return EntityNotEmpty when pass incorrect BirthDate', async () => {
     const { sut, editCompanyResponsibleDto } = makeSut();
-    editCompanyResponsibleDto.body.birthdate = {} as Date;
+    editCompanyResponsibleDto.body.birthdate = '';
     const result = await sut.execute(editCompanyResponsibleDto);
 
     expect(result.isRight()).toBe(false);

@@ -39,7 +39,7 @@ export const FormEditCompanyResponsible: FC<
   showAlert,
   handlePopUpClose,
   companyResponsibleId,
-  step: { stepPosition = 5, stepTitle = 'Etapa', totalPositions },
+  step: { stepPosition = 4, stepTitle = 'Etapa', totalPositions },
   successMessage = 'Responsável da Empresa criado com sucesso',
   nameLabel = 'Nome',
   emailLabel = 'Email',
@@ -118,8 +118,10 @@ export const FormEditCompanyResponsible: FC<
         companyResponsibleId,
         loggedUserId: loggedUser?.id ?? '',
       }).then((responsible) => {
+        const formatedBirthdate =
+          responsible?.birthdate.toString().split('T')[0] ?? '';
         reset({
-          birthdate: new Date(),
+          birthdate: formatedBirthdate,
           document: formatValueMask(
             responsible?.document ?? '',
             maskDocumentType
@@ -182,6 +184,7 @@ export const FormEditCompanyResponsible: FC<
         helperText={errors.name ? errors.name.message : ''}
         id="name"
         disabled={loading}
+        InputLabelProps={{ shrink: true }}
         label={nameLabel}
         autoComplete="name"
         autoFocus
@@ -215,6 +218,7 @@ export const FormEditCompanyResponsible: FC<
         fullWidth
         type="email"
         error={!!errors.email}
+        InputLabelProps={{ shrink: true }}
         helperText={errors.email ? errors.email.message : ''}
         id="email"
         disabled={loading}
