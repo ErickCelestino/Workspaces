@@ -4,6 +4,7 @@ import {
   FormEditCompany,
   FormEditCompanyAddress,
   FormEditCompanyData,
+  FormEditCompanyResponsible,
 } from '../../form';
 import { CompanyAllIdsResponseDto } from '@workspaces/domain';
 
@@ -64,6 +65,18 @@ export const EditCompanyStepper: FC<CompanyStepperProps> = ({
             totalPositions: totalPosition,
           }}
           totalPosition={totalPosition}
+        />
+      )}
+
+      {step === 4 && (
+        <FormEditCompanyResponsible
+          companyResponsibleId={companyIds.companyResponsibleId}
+          showAlert={showAlert}
+          handlePopUpClose={handlePopUpClose}
+          step={{
+            stepPosition: step,
+            totalPositions: totalPosition,
+          }}
         />
       )}
     </Box>

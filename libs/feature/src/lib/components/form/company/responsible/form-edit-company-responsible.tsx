@@ -1,54 +1,59 @@
+import { FC, useCallback, useEffect, useState } from 'react';
 import {
   CompanyBodyResponsibleDto,
-  CreateCompanyResponsibleDto,
+  EditCompanyResponsibleDto,
   ErrorResponse,
+  FindCompanyResponsibleByIdDto,
   MaskType,
   StepItem,
 } from '@workspaces/domain';
-import { FC, useState } from 'react';
+import { useLoggedUser } from '../../../../contexts';
 import { Controller, useForm } from 'react-hook-form';
-import { CreateCompanyResponsibleRequest } from '../../../services';
+import {
+  EditCompanyResponsibleRequest,
+  FindCompanyResponsibleByIdRequest,
+} from '../../../../services';
 import axios, { AxiosError } from 'axios';
-import { useLoggedUser } from '../../../contexts';
-import { formatValueMask, ValidationsError } from '../../../shared';
+import { formatValueMask, ValidationsError } from '../../../../shared';
 import { Box, TextField } from '@mui/material';
-import { FormButton } from '../form-button.component';
+import { FormButton } from '../../form-button.component';
 
 interface FormCreateCompanyResponsibleProps {
   showAlert: (message: string, success: boolean) => void;
   handlePopUpClose: () => void;
   step: StepItem;
-  companyId: string;
+  companyResponsibleId: string;
   buttonTitle?: string;
   successMessage?: string;
-  nameLabel?: string;
   documentLabel?: string;
+  nameLabel?: string;
   emailLabel?: string;
   phoneLabel?: string;
   birthdateLabel?: string;
   maskDocumentType?: MaskType;
 }
 
-export const FormCreateCompanyResponsible: FC<
+export const FormEditCompanyResponsible: FC<
   FormCreateCompanyResponsibleProps
 > = ({
   showAlert,
   handlePopUpClose,
-  companyId,
+  companyResponsibleId,
   step: { stepPosition = 5, stepTitle = 'Etapa', totalPositions },
   successMessage = 'Responsável da Empresa criado com sucesso',
   nameLabel = 'Nome',
-  documentLabel = 'CPF',
   emailLabel = 'Email',
   phoneLabel = 'Telefone',
   birthdateLabel = 'Data de Nascimento',
-  maskDocumentType = 'cpf',
   buttonTitle = 'Adicionar Responsável',
+  documentLabel = 'CPF',
+  maskDocumentType = 'cpf',
 }) => {
   const { loggedUser } = useLoggedUser();
 
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [dataLoaded, setDataLoaded] = useState(false);
 
   const {
     handleSubmit,
@@ -69,11 +74,9 @@ export const FormCreateCompanyResponsible: FC<
     },
   });
 
-  const createCompanyResponsible = async (
-    input: CreateCompanyResponsibleDto
-  ) => {
+  const editCompanyResponsible = async (input: EditCompanyResponsibleDto) => {
     try {
-      const result = await CreateCompanyResponsibleRequest(input);
+      const result = await EditCompanyResponsibleRequest(input);
       return result;
     } catch (error) {
       setLoading(false);
@@ -89,13 +92,65 @@ export const FormCreateCompanyResponsible: FC<
     }
   };
 
+  const getCompanyResponsible = useCallback(
+    async (input: FindCompanyResponsibleByIdDto) => {
+      try {
+        const result = await FindCompanyResponsibleByIdRequest(input);
+        setDataLoaded(true);
+        return result;
+      } catch (error) {
+        console.error(error);
+        if (axios.isAxiosError(error)) {
+          const axiosError = error as AxiosError<ErrorResponse>;
+          const errors = ValidationsError(axiosError, 'Device');
+          if (errors) {
+            showAlert(errors, false);
+          }
+        }
+      }
+    },
+    [showAlert]
+  );
+
+  useEffect(() => {
+    if (companyResponsibleId && !dataLoaded) {
+      getCompanyResponsible({
+        companyResponsibleId,
+        loggedUserId: loggedUser?.id ?? '',
+      }).then((responsible) => {
+        reset({
+          birthdate: new Date(),
+          document: formatValueMask(
+            responsible?.document ?? '',
+            maskDocumentType
+          ),
+          email: responsible?.email ?? '',
+          name: responsible?.name ?? '',
+          phone: formatValueMask(responsible?.phone ?? '', 'phone'),
+        });
+      });
+    }
+  }, [
+    stepPosition,
+    loggedUser,
+    dataLoaded,
+    companyResponsibleId,
+    getCompanyResponsible,
+  ]);
+
+  useEffect(() => {
+    if (!companyResponsibleId) {
+      setDataLoaded(false);
+    }
+  }, [stepPosition]);
+
   const handleCompanyData = async (data: CompanyBodyResponsibleDto) => {
     setLoading(true);
     setSuccess(false);
-    const result = await createCompanyResponsible({
+    const result = await editCompanyResponsible({
       body: data,
       loggedUserId: loggedUser?.id ?? '',
-      companyId,
+      companyResponsibleId,
     });
     if (result) {
       setLoading(false);
@@ -103,8 +158,8 @@ export const FormCreateCompanyResponsible: FC<
       setSuccess(false);
       reset({
         birthdate: new Date(),
-        document: '',
         email: '',
+        document: '',
         name: '',
         phone: '',
       });
@@ -142,6 +197,7 @@ export const FormCreateCompanyResponsible: FC<
             {...field}
             label={documentLabel}
             fullWidth
+            disabled={true}
             margin="normal"
             error={!!errors.document}
             helperText={errors.document ? errors.document.message : ''}
