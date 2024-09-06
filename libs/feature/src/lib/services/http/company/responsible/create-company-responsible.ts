@@ -2,7 +2,7 @@ import {
   CreateCompanyDataDto,
   CreateCompanyResponsibleDto,
 } from '@workspaces/domain';
-import { generalApi } from '../axios-config';
+import { generalApi } from '../../axios-config';
 
 export async function CreateCompanyResponsibleRequest(
   input: CreateCompanyResponsibleDto
