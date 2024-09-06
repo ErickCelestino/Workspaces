@@ -1,7 +1,7 @@
 import {
   CompanyResponsibleResponseDto,
   FindCompanyResponsibleByDocumentRepository,
-} from '../../../src';
+} from '../../../../src';
 
 export class FindCompanyResponsibleByDocumentRepositoryMock
   implements FindCompanyResponsibleByDocumentRepository

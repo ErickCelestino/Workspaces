@@ -1,6 +1,5 @@
 import {
   CompanyResponseDto,
-  CompanyResponsibleResponseDto,
   CreateCompanyResponsible,
   CreateCompanyResponsibleDto,
   CreateCompanyResponsibleRespository,
@@ -12,14 +11,14 @@ import {
   UserList,
   EntityNotCreated,
   EntityAlreadyExists,
-} from '../../../src';
-import { CompanyMock, CompanyResponsibleMock, userMock } from '../../entity';
+} from '../../../../src';
+import { CompanyMock, CompanyResponsibleMock, userMock } from '../../../entity';
 import {
   CreateCompanyResponsibleRespositoryMock,
   FindCompanyByIdRepositoryMock,
   FindCompanyResponsibleByDocumentRepositoryMock,
   FindUserByIdRepositoryMock,
-} from '../../repository';
+} from '../../../repository';
 
 interface SutTypes {
   sut: CreateCompanyResponsible;

@@ -1,8 +1,8 @@
 import {
   CreateCompanyResponsibleDto,
   CreateCompanyResponsibleRespository,
-} from '../../../src';
-import { CompanyResponsibleMock } from '../../entity/company';
+} from '../../../../src';
+import { CompanyResponsibleMock } from '../../../entity';
 
 export class CreateCompanyResponsibleRespositoryMock
   implements CreateCompanyResponsibleRespository

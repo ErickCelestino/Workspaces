@@ -26,7 +26,7 @@ export class EditCompanyResponsible
     input: EditCompanyResponsibleDto
   ): Promise<Either<EntityNotEmpty, string>> {
     const {
-      body: { birthdate, document, email, name, phone },
+      body: { birthdate, email, name, phone },
       companyResponsibleId,
       loggedUserId,
     } = input;
@@ -47,10 +47,6 @@ export class EditCompanyResponsible
       return left(new EntityNotEmpty('Birth Date'));
     }
 
-    if (Object.keys(document).length < 1) {
-      return left(new EntityNotEmpty('Document'));
-    }
-
     if (Object.keys(email).length < 1) {
       return left(new EntityNotEmpty('Email'));
     }
@@ -59,7 +55,6 @@ export class EditCompanyResponsible
       return left(new EntityNotEmpty('Phone'));
     }
     const formatedPhone = phone.replace(/[^\d]+/g, '');
-    const formatedDocument = document.replace(/[^\d]+/g, '');
 
     const userValidation = await ValidationUserId(
       loggedUserId,
@@ -88,7 +83,6 @@ export class EditCompanyResponsible
         loggedUserId,
         body: {
           ...input.body,
-          document: formatedDocument,
           phone: formatedPhone,
         },
       });
