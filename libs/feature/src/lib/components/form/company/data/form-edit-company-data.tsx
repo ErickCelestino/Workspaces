@@ -4,8 +4,6 @@ import {
   EditCompanyDataDto,
   ErrorResponse,
   FindCompanyDataByIdDto,
-  PortType,
-  SituationType,
   StepItem,
 } from '@workspaces/domain';
 import axios, { AxiosError } from 'axios';
@@ -59,8 +57,18 @@ export const FormEditCompanyData: FC<FormEditCompanyDataProps> = ({
 
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [portTypeList, setPortTypeList] = useState<string[]>([]);
-  const [situationTypeList, setSituationTypeList] = useState<string[]>([]);
+  const [portTypeList, setPortTypeList] = useState<string[]>([
+    'DEMAIS',
+    'EMPRESA DE PEQUENO PORTE',
+    'MICRO EMPRESA',
+  ]);
+  const [situationTypeList, setSituationTypeList] = useState<string[]>([
+    'ATIVA',
+    'BAIXADA',
+    'INAPTA',
+    'SUSPENSA',
+    'NULA',
+  ]);
   const [port, setPort] = useState('');
   const [situation, setSituation] = useState('');
   const [dataLoaded, setDataLoaded] = useState(false);
@@ -86,12 +94,6 @@ export const FormEditCompanyData: FC<FormEditCompanyDataProps> = ({
     },
   });
 
-  useEffect(() => {
-    if (Object.keys(companyDataId ?? '').length < 1) {
-      setDataLoaded(false);
-    }
-  }, [companyDataId]);
-
   const getCompanyData = useCallback(
     async (input: FindCompanyDataByIdDto) => {
       try {
@@ -102,7 +104,7 @@ export const FormEditCompanyData: FC<FormEditCompanyDataProps> = ({
         console.error(error);
         if (axios.isAxiosError(error)) {
           const axiosError = error as AxiosError<ErrorResponse>;
-          const errors = ValidationsError(axiosError, 'Device');
+          const errors = ValidationsError(axiosError, 'Company Data');
           if (errors) {
             showAlert(errors, false);
           }
@@ -113,8 +115,13 @@ export const FormEditCompanyData: FC<FormEditCompanyDataProps> = ({
   );
 
   useEffect(() => {
+    if (!companyDataId) {
+      setDataLoaded(false);
+    }
+  }, [companyDataId]);
+
+  useEffect(() => {
     if (companyDataId && !dataLoaded) {
-      console.log('teste');
       const loggedUserId = loggedUser?.id ?? '';
 
       getCompanyData({
@@ -125,21 +132,6 @@ export const FormEditCompanyData: FC<FormEditCompanyDataProps> = ({
         const formatedOpening = new Date(`${ano}-${mes}-${dia}`)
           .toISOString()
           .split('T')[0];
-        const portInitialList: PortType[] = [
-          'DEMAIS',
-          'EMPRESA DE PEQUENO PORTE',
-          'MICRO EMPRESA',
-        ];
-        const situationInitialList: SituationType[] = [
-          'ATIVA',
-          'BAIXADA',
-          'INAPTA',
-          'SUSPENSA',
-          'NULA',
-        ];
-
-        setPortTypeList(portInitialList);
-        setSituationTypeList(situationInitialList);
         setPort(companyData?.port ?? '');
         setSituation(companyData?.situation ?? '');
         setValue('opening', formatedOpening);
@@ -176,12 +168,6 @@ export const FormEditCompanyData: FC<FormEditCompanyDataProps> = ({
     }
   };
 
-  const handleChange =
-    (setter: React.Dispatch<React.SetStateAction<string>>) =>
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      setter(event.target.value);
-    };
-
   const handleCompanyData = async (data: CompanyDataBodyDto) => {
     setLoading(true);
     setSuccess(false);
@@ -207,6 +193,12 @@ export const FormEditCompanyData: FC<FormEditCompanyDataProps> = ({
       handlePopUpClose();
     }
   };
+
+  const handleChange =
+    (setter: React.Dispatch<React.SetStateAction<string>>) =>
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setter(event.target.value);
+    };
 
   return (
     <Box

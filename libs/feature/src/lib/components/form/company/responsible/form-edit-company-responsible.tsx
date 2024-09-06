@@ -60,7 +60,6 @@ export const FormEditCompanyResponsible: FC<
     register,
     reset,
     control,
-    setValue,
     formState: { errors },
   } = useForm<CompanyBodyResponsibleDto>({
     mode: 'all',

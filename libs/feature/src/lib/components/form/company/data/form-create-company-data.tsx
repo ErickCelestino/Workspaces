@@ -55,8 +55,18 @@ export const FormCreateCompanyData: FC<FormCreateCompanyDataProps> = ({
 
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [portTypeList, setPortTypeList] = useState<string[]>([]);
-  const [situationTypeList, setSituationTypeList] = useState<string[]>([]);
+  const [portTypeList, setPortTypeList] = useState<string[]>([
+    'DEMAIS',
+    'EMPRESA DE PEQUENO PORTE',
+    'MICRO EMPRESA',
+  ]);
+  const [situationTypeList, setSituationTypeList] = useState<string[]>([
+    'ATIVA',
+    'BAIXADA',
+    'INAPTA',
+    'SUSPENSA',
+    'NULA',
+  ]);
   const [port, setPort] = useState('');
   const [situation, setSituation] = useState('');
 
@@ -129,21 +139,6 @@ export const FormCreateCompanyData: FC<FormCreateCompanyDataProps> = ({
     const formatedOpening = new Date(`${ano}-${mes}-${dia}`)
       .toISOString()
       .split('T')[0];
-    const portInitialList: PortType[] = [
-      'DEMAIS',
-      'EMPRESA DE PEQUENO PORTE',
-      'MICRO EMPRESA',
-    ];
-    const situationInitialList: SituationType[] = [
-      'ATIVA',
-      'BAIXADA',
-      'INAPTA',
-      'SUSPENSA',
-      'NULA',
-    ];
-
-    setPortTypeList(portInitialList);
-    setSituationTypeList(situationInitialList);
     setPort(companyData.port);
     setSituation(companyData.situation);
     setValue('opening', formatedOpening);

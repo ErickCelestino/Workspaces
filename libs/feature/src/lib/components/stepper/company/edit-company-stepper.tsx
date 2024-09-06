@@ -19,7 +19,7 @@ export const EditCompanyStepper: FC<CompanyStepperProps> = ({
   handlePopUpClose,
   showAlert,
   companyIds,
-  totalPosition = 5,
+  totalPosition = 4,
 }) => {
   const [step, setStep] = useState(1);
 
