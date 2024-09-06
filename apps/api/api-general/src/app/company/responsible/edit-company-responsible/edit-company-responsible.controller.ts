@@ -1,9 +1,11 @@
-import { Body, Controller, Param, Put, Query } from '@nestjs/common';
+import { Body, Controller, Param, Put, Query, UsePipes } from '@nestjs/common';
 import { EditCompanyResponsibleService } from './edit-company-responsible.service';
 import {
   CompanyBodyResponsibleDto,
+  editCompanyResponsibleSchema,
   ErrorMessageResult,
 } from '@workspaces/domain';
+import { ZodValidationPipe } from '../../../pipes/zod-validation-pipe';
 
 @Controller('edit-company-responsible')
 export class EditCompanyResponsibleController {
@@ -12,6 +14,7 @@ export class EditCompanyResponsibleController {
   ) {}
 
   @Put(':companyResponsibleId')
+  @UsePipes(new ZodValidationPipe(editCompanyResponsibleSchema))
   async edit(
     @Query('loggedUserId') loggedUserId: string,
     @Param('companyResponsibleId') companyResponsibleId: string,
