@@ -5,7 +5,7 @@ import {
   createCompanyResponsibleSchema,
   ErrorMessageResult,
 } from '@workspaces/domain';
-import { ZodValidationPipe } from '../../pipes/zod-validation-pipe';
+import { ZodValidationPipe } from '../../../pipes/zod-validation-pipe';
 
 @Controller('create-company-responsible')
 export class CreateCompanyResponsibleController {
