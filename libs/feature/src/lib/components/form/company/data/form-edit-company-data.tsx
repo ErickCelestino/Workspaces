@@ -1,4 +1,4 @@
-import { Box, MenuItem, TextField } from '@mui/material';
+import { FC, useCallback, useEffect, useState } from 'react';
 import {
   CompanyDataBodyDto,
   EditCompanyDataDto,
@@ -6,30 +6,27 @@ import {
   FindCompanyDataByIdDto,
   StepItem,
 } from '@workspaces/domain';
-import axios, { AxiosError } from 'axios';
-import { FC, useCallback, useEffect, useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
-import { FormButton } from '../../form-button.component';
-import {
-  ValidationsError,
-  formatValueMask,
-  EditCompanyFormSchema,
-  SituationTypeList,
-  PortTypeList,
-} from '../../../../shared';
 import { useLoggedUser } from '../../../../contexts';
+import { Controller, useForm } from 'react-hook-form';
 import {
   EditCompanyDataRequest,
   FindCompanyDataByIdRequest,
 } from '../../../../services';
-import { zodResolver } from '@hookform/resolvers/zod';
+import axios, { AxiosError } from 'axios';
+import {
+  formatValueMask,
+  PortTypeList,
+  SituationTypeList,
+  ValidationsError,
+} from '../../../../shared';
+import { Box, MenuItem, TextField } from '@mui/material';
+import { FormButton } from '../../form-button.component';
 
 interface FormEditCompanyDataProps {
   showAlert: (message: string, success: boolean) => void;
   handlePopUpClose: () => void;
   companyDataId: string;
   step: StepItem;
-  totalPosition: number;
   portLabel?: string;
   openingLabel?: string;
   situationLabel?: string;
@@ -44,8 +41,7 @@ export const FormEditCompanyData: FC<FormEditCompanyDataProps> = ({
   showAlert,
   handlePopUpClose,
   companyDataId,
-  totalPosition,
-  step: { stepPosition = 1, stepTitle = 'Etapa' },
+  step: { stepPosition = 1, stepTitle = 'Etapa', totalPositions = 2 },
   portLabel = 'Porte',
   openingLabel = 'Abertura',
   situationLabel = 'Situação',
@@ -73,7 +69,6 @@ export const FormEditCompanyData: FC<FormEditCompanyDataProps> = ({
   } = useForm<CompanyDataBodyDto>({
     mode: 'all',
     criteriaMode: 'all',
-    resolver: zodResolver(EditCompanyFormSchema),
     defaultValues: {
       legalNature: '',
       opening: '',
@@ -161,7 +156,7 @@ export const FormEditCompanyData: FC<FormEditCompanyDataProps> = ({
   const handleCompanyData = async (data: CompanyDataBodyDto) => {
     setLoading(true);
     setSuccess(false);
-    console.log('teste1');
+    console.log(data);
     const result = await editCompany({
       body: data,
       loggedUserId: loggedUser?.id ?? '',
@@ -315,6 +310,7 @@ export const FormEditCompanyData: FC<FormEditCompanyDataProps> = ({
         autoComplete="responsibleEmail"
         {...register('responsibleEmail')}
       />
+
       <Box
         sx={{
           display: 'flex',
@@ -324,7 +320,7 @@ export const FormEditCompanyData: FC<FormEditCompanyDataProps> = ({
       >
         <Box width="80%">
           <FormButton
-            buttonTitle={`${buttonTitle} (${stepTitle} - ${stepPosition}/${totalPosition})`}
+            buttonTitle={`${buttonTitle} (${stepTitle} - ${stepPosition}/${totalPositions})`}
             loading={loading}
             success={success}
           />
