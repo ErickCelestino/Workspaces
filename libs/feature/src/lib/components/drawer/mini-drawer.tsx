@@ -1,7 +1,7 @@
 import { useDrawerContext } from '../../contexts';
 import { DrawerHeader } from './drawer-header';
 import { DrawerListItem } from './drawer-list';
-import { FC, ReactNode } from 'react';
+import { FC, ReactNode, useCallback } from 'react';
 import { styled, Theme, CSSObject, useTheme } from '@mui/material/styles';
 import {
   Box,
@@ -15,6 +15,7 @@ import {
 } from '@mui/material';
 import MuiDrawer from '@mui/material/Drawer';
 import { DrawerConfiguration } from './config';
+import { useSnackbarAlert } from '../../hooks';
 
 const drawerWidth = 200;
 
@@ -71,73 +72,88 @@ export const MiniDrawer: FC<MiniDrawerProps> = ({
 }) => {
   const theme = useTheme();
   const { isDrawerOpen, toggleDrawerOpen, drawerOptions } = useDrawerContext();
+  const { showSnackbarAlert, SnackbarAlert } = useSnackbarAlert();
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
 
+  const showAlert = useCallback(
+    (message: string, success: boolean) => {
+      showSnackbarAlert({
+        message: message,
+        severity: success ? 'success' : 'error',
+      });
+    },
+    [showSnackbarAlert]
+  );
+
   return (
-    <Box sx={{ display: 'flex' }}>
-      <CssBaseline />
-      <Drawer
-        variant={smDown ? 'temporary' : 'permanent'}
-        open={isDrawerOpen}
-        onClose={toggleDrawerOpen}
-      >
-        <DrawerHeader
+    <>
+      <Box sx={{ display: 'flex' }}>
+        <CssBaseline />
+        <Drawer
+          variant={smDown ? 'temporary' : 'permanent'}
           open={isDrawerOpen}
-          handleDrawerClose={toggleDrawerOpen}
-        />
-        {isDrawerOpen && (
-          <Box
-            width="100%"
-            marginTop={-5}
-            height={theme.spacing(15)}
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-          >
-            <Avatar
-              sx={{ height: theme.spacing(12), width: theme.spacing(12) }}
-              src={image}
-            />
-          </Box>
-        )}
-        <Divider />
-        <List component="nav">
-          <DrawerListItem
-            items={drawerOptions}
-            open={isDrawerOpen}
-            onClick={smDown ? toggleDrawerOpen : undefined}
-          />
-        </List>
-        <Box
-          sx={{
-            marginTop: 'auto',
-          }}
+          onClose={toggleDrawerOpen}
         >
-          <Divider />
+          <DrawerHeader
+            open={isDrawerOpen}
+            handleDrawerClose={toggleDrawerOpen}
+          />
           {isDrawerOpen && (
-            <DrawerConfiguration
-              logoutTitle={logoutTitle}
-              themeTitle={themeTitle}
-            />
-          )}
-          {!isDrawerOpen && (
             <Box
-              sx={{
-                display: 'flex',
-                justifyContent: 'center',
-                padding: theme.spacing(1),
-              }}
+              width="100%"
+              marginTop={-5}
+              height={theme.spacing(15)}
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
             >
-              <IconButton onClick={toggleDrawerOpen}>
-                <Icon>settings</Icon>
-              </IconButton>
+              <Avatar
+                sx={{ height: theme.spacing(12), width: theme.spacing(12) }}
+                src={image}
+              />
             </Box>
           )}
+          <Divider />
+          <List component="nav">
+            <DrawerListItem
+              items={drawerOptions}
+              open={isDrawerOpen}
+              onClick={smDown ? toggleDrawerOpen : undefined}
+            />
+          </List>
+          <Box
+            sx={{
+              marginTop: 'auto',
+            }}
+          >
+            <Divider />
+            {isDrawerOpen && (
+              <DrawerConfiguration
+                logoutTitle={logoutTitle}
+                themeTitle={themeTitle}
+                showAlert={showAlert}
+              />
+            )}
+            {!isDrawerOpen && (
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  padding: theme.spacing(1),
+                }}
+              >
+                <IconButton onClick={toggleDrawerOpen}>
+                  <Icon>settings</Icon>
+                </IconButton>
+              </Box>
+            )}
+          </Box>
+        </Drawer>
+        <Box component="main" sx={{ flexGrow: 1, p: theme.spacing(1) }}>
+          {children}
         </Box>
-      </Drawer>
-      <Box component="main" sx={{ flexGrow: 1, p: theme.spacing(1) }}>
-        {children}
       </Box>
-    </Box>
+      {SnackbarAlert}
+    </>
   );
 };
