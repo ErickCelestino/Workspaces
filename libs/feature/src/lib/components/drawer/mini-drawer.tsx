@@ -1,4 +1,4 @@
-import { useAppThemeContext, useDrawerContext } from '../../contexts';
+import { useDrawerContext } from '../../contexts';
 import { DrawerHeader } from './drawer-header';
 import { DrawerListItem } from './drawer-list';
 import { FC, ReactNode } from 'react';
@@ -10,13 +10,11 @@ import {
   Divider,
   useMediaQuery,
   Avatar,
-  Button,
   Icon,
-  Typography,
   IconButton,
 } from '@mui/material';
 import MuiDrawer from '@mui/material/Drawer';
-import { removeItemLocalStorage } from '../../services';
+import { DrawerConfiguration } from './config';
 
 const drawerWidth = 200;
 
@@ -72,14 +70,8 @@ export const MiniDrawer: FC<MiniDrawerProps> = ({
   themeTitle = 'Alterar Tema',
 }) => {
   const theme = useTheme();
-  const { toggleTheme } = useAppThemeContext();
   const { isDrawerOpen, toggleDrawerOpen, drawerOptions } = useDrawerContext();
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
-
-  const logout = () => {
-    removeItemLocalStorage('u');
-    window.location.reload();
-  };
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -123,32 +115,10 @@ export const MiniDrawer: FC<MiniDrawerProps> = ({
         >
           <Divider />
           {isDrawerOpen && (
-            <Box
-              sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                padding: theme.spacing(2),
-              }}
-            >
-              <Button
-                onClick={logout}
-                color="inherit"
-                sx={{
-                  marginBottom: theme.spacing(0.5),
-                }}
-                startIcon={<Icon>logout</Icon>}
-              >
-                <Typography>{logoutTitle}</Typography>
-              </Button>
-
-              <Button
-                onClick={toggleTheme}
-                color="inherit"
-                startIcon={<Icon>dark_mode</Icon>}
-              >
-                <Typography>{themeTitle}</Typography>
-              </Button>
-            </Box>
+            <DrawerConfiguration
+              logoutTitle={logoutTitle}
+              themeTitle={themeTitle}
+            />
           )}
           {!isDrawerOpen && (
             <Box
