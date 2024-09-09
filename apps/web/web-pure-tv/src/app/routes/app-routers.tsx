@@ -73,9 +73,7 @@ export const AppRouters = () => {
             },
           ],
         })
-      : setDrawerOptions(drawerOptions);
-
-    loggedUser?.type === 'ADMIN'
+      : loggedUser?.type === 'ADMIN'
       ? setDrawerOptions({
           ...drawerOptions,
           Empresa: [

@@ -1,2 +1,3 @@
-export * from './create-company';
-export * from './delete-company';
+export * from './create-company-modal';
+export * from './delete-company-modal';
+export * from './edit-company-modal';

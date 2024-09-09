@@ -7,20 +7,7 @@ import {
 import { isValidCNPJ } from '../utils';
 
 export const CreateCompanyFormSchema = z.object({
-  fantasyName: z
-    .string()
-    .min(2, {
-      message: EntityMinLength(
-        { entity: 'Nome Fantasia', minOrMax: 2 },
-        'PT-BR'
-      ),
-    })
-    .max(50, {
-      message: EntityMaxLength(
-        { entity: 'Nome Fantasia', minOrMax: 50 },
-        'PT-BR'
-      ),
-    }),
+  fantasyName: z.string().optional(),
   socialReason: z
     .string()
     .min(2, {

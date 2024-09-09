@@ -23,6 +23,7 @@ import {
 import {
   CreateCompanyModal,
   DeleteCompanyModal,
+  EditCompanyModal,
 } from '../../components/modal/company';
 import { ListCompanyRequest } from '../../services';
 
@@ -45,6 +46,7 @@ export const ListCompanyContainer: FC<ListCompanyContainerProps> = ({
   const [createCompanyPopUp, setCreateCompanyPopUp] = useState(false);
   const [selectedId, setSelectedId] = useState<string>('');
   const [deleteCompanyPopUp, setDeleteCompanyPopUp] = useState(false);
+  const [editCompanyPopUp, setEditCompanyPopUp] = useState(false);
 
   const showAlert = useCallback(
     (message: string, success: boolean) => {
@@ -129,6 +131,10 @@ export const ListCompanyContainer: FC<ListCompanyContainerProps> = ({
         setSelectedId(id ?? '');
         setDeleteCompanyPopUp(true);
         break;
+      case 'edit':
+        setSelectedId(id ?? '');
+        setEditCompanyPopUp(true);
+        break;
     }
   };
 
@@ -155,6 +161,13 @@ export const ListCompanyContainer: FC<ListCompanyContainerProps> = ({
         showAlert={showAlert}
         idToDelete={selectedId}
       />
+      <EditCompanyModal
+        open={editCompanyPopUp}
+        title="Editar Empresa"
+        handlePopUpClose={() => setEditCompanyPopUp(false)}
+        showAlert={showAlert}
+        companyId={selectedId}
+      />
       <LayoutBase
         title="Listagem de Empresas"
         iconMenuItemList={rightClickMenuList}
@@ -179,6 +192,7 @@ export const ListCompanyContainer: FC<ListCompanyContainerProps> = ({
                   deleteCompany={async () =>
                     handlePopUpOpen('delete', company.id)
                   }
+                  editCompany={async () => handlePopUpOpen('edit', company.id)}
                   company={company}
                   key={company.id}
                 />

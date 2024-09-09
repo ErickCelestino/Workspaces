@@ -1,4 +1,4 @@
-import { companySimpleResponseDto } from '../../dto';
+import { CompanySimpleResponseDto } from '../../dto';
 
 export interface LoggedUser {
   id: string;
@@ -6,6 +6,6 @@ export interface LoggedUser {
   email: string;
   type: string;
   status: string;
-  selectedCompany: companySimpleResponseDto;
-  companies: companySimpleResponseDto[];
+  selectedCompany: CompanySimpleResponseDto;
+  companies: CompanySimpleResponseDto[];
 }

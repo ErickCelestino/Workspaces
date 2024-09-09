@@ -1,6 +1,6 @@
 import { Inject } from '@nestjs/common';
 import {
-  companySimpleResponseDto,
+  CompanySimpleResponseDto,
   FindUserByEmailDto,
   FindUserByEmailRepository,
   LoggedUser,
@@ -50,7 +50,7 @@ export class FindUserByEmailRepositoryImpl
       },
     });
 
-    const userCompanies: companySimpleResponseDto[] =
+    const userCompanies: CompanySimpleResponseDto[] =
       filteredUser?.user_x_company.map((company) => {
         return {
           id: company?.company?.company_id ?? '',

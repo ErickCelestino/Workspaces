@@ -1,1 +1,1 @@
-export * from './company-stepper';
+export * from './create-company-stepper';
