@@ -4,8 +4,6 @@ import {
   CreateCompanyDataDto,
   ErrorResponse,
   StepItem,
-  PortType,
-  SituationType,
 } from '@workspaces/domain';
 import { FC, useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -14,7 +12,12 @@ import { CreateCompanyDataFormSchema } from '../../../../shared/validations/comp
 import { CreateCompanyDataRequest } from '../../../../services';
 import axios, { AxiosError } from 'axios';
 import { useLoggedUser } from '../../../../contexts';
-import { formatValueMask, ValidationsError } from '../../../../shared';
+import {
+  formatValueMask,
+  PortTypeList,
+  SituationTypeList,
+  ValidationsError,
+} from '../../../../shared';
 import { Box, MenuItem, TextField } from '@mui/material';
 import { FormButton } from '../../form-button.component';
 
@@ -55,18 +58,6 @@ export const FormCreateCompanyData: FC<FormCreateCompanyDataProps> = ({
 
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [portTypeList, setPortTypeList] = useState<string[]>([
-    'DEMAIS',
-    'EMPRESA DE PEQUENO PORTE',
-    'MICRO EMPRESA',
-  ]);
-  const [situationTypeList, setSituationTypeList] = useState<string[]>([
-    'ATIVA',
-    'BAIXADA',
-    'INAPTA',
-    'SUSPENSA',
-    'NULA',
-  ]);
   const [port, setPort] = useState('');
   const [situation, setSituation] = useState('');
 
@@ -196,7 +187,7 @@ export const FormCreateCompanyData: FC<FormCreateCompanyDataProps> = ({
             label={situationLabel}
             {...register('situation', { onChange: handleChange(setSituation) })}
           >
-            {situationTypeList.map((item) => (
+            {SituationTypeList.map((item) => (
               <MenuItem key={item} value={item}>
                 {item}
               </MenuItem>
@@ -259,7 +250,7 @@ export const FormCreateCompanyData: FC<FormCreateCompanyDataProps> = ({
             label={portLabel}
             {...register('port', { onChange: handleChange(setPort) })}
           >
-            {portTypeList.map((item) => (
+            {PortTypeList.map((item) => (
               <MenuItem key={item} value={item}>
                 {item}
               </MenuItem>

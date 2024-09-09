@@ -14,6 +14,8 @@ import {
   ValidationsError,
   formatValueMask,
   EditCompanyFormSchema,
+  SituationTypeList,
+  PortTypeList,
 } from '../../../../shared';
 import { useLoggedUser } from '../../../../contexts';
 import {
@@ -57,18 +59,6 @@ export const FormEditCompanyData: FC<FormEditCompanyDataProps> = ({
 
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [portTypeList, setPortTypeList] = useState<string[]>([
-    'DEMAIS',
-    'EMPRESA DE PEQUENO PORTE',
-    'MICRO EMPRESA',
-  ]);
-  const [situationTypeList, setSituationTypeList] = useState<string[]>([
-    'ATIVA',
-    'BAIXADA',
-    'INAPTA',
-    'SUSPENSA',
-    'NULA',
-  ]);
   const [port, setPort] = useState('');
   const [situation, setSituation] = useState('');
   const [dataLoaded, setDataLoaded] = useState(false);
@@ -239,7 +229,7 @@ export const FormEditCompanyData: FC<FormEditCompanyDataProps> = ({
             label={situationLabel}
             {...register('situation', { onChange: handleChange(setSituation) })}
           >
-            {situationTypeList.map((item) => (
+            {SituationTypeList.map((item) => (
               <MenuItem key={item} value={item}>
                 {item}
               </MenuItem>
@@ -302,7 +292,7 @@ export const FormEditCompanyData: FC<FormEditCompanyDataProps> = ({
             label={portLabel}
             {...register('port', { onChange: handleChange(setPort) })}
           >
-            {portTypeList.map((item) => (
+            {PortTypeList.map((item) => (
               <MenuItem key={item} value={item}>
                 {item}
               </MenuItem>
