@@ -1,5 +1,5 @@
 import { EditCompanyDataDto, EditCompanyDataRepository } from '../../../../src';
-import { CompanyDataMock } from '../../../entity/company/company-data.mock';
+import { CompanyDataMock } from '../../../entity';
 
 export class EditCompanyDataRepositoryMock
   implements EditCompanyDataRepository

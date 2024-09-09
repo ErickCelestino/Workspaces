@@ -2,7 +2,7 @@ import {
   CompanyDataResponseDto,
   FindCompanyDataByIdRepository,
 } from '../../../../src';
-import { CompanyDataMock } from '../../../entity/company/company-data.mock';
+import { CompanyDataMock } from '../../../entity';
 
 export class FindCompanyDataByIdRepositoryMock
   implements FindCompanyDataByIdRepository
