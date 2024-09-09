@@ -21,6 +21,8 @@ import { FormButton } from '../../form-button.component';
 interface FormCreateCompanyResponsibleProps {
   showAlert: (message: string, success: boolean) => void;
   handlePopUpClose: () => void;
+  buttonRight: () => void;
+  buttonLeft: () => void;
   step: StepItem;
   companyResponsibleId: string;
   buttonTitle?: string;
@@ -38,6 +40,8 @@ export const FormEditCompanyResponsible: FC<
 > = ({
   showAlert,
   handlePopUpClose,
+  buttonRight,
+  buttonLeft,
   companyResponsibleId,
   step: { stepPosition = 4, stepTitle = 'Etapa', totalPositions },
   successMessage = 'Responsável da Empresa criado com sucesso',
@@ -278,6 +282,8 @@ export const FormEditCompanyResponsible: FC<
       >
         <Box width="80%">
           <FormButton
+            buttonRight={buttonRight}
+            buttonLeft={buttonLeft}
             buttonTitle={`${buttonTitle} (${stepTitle} - ${stepPosition}/${totalPositions})`}
             loading={loading}
             success={success}

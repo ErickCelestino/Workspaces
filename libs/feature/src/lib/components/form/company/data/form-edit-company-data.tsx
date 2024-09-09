@@ -27,6 +27,8 @@ interface FormEditCompanyDataProps {
   handlePopUpClose: () => void;
   companyDataId: string;
   step: StepItem;
+  buttonRight: () => void;
+  buttonLeft: () => void;
   portLabel?: string;
   openingLabel?: string;
   situationLabel?: string;
@@ -40,6 +42,8 @@ interface FormEditCompanyDataProps {
 export const FormEditCompanyData: FC<FormEditCompanyDataProps> = ({
   showAlert,
   handlePopUpClose,
+  buttonLeft,
+  buttonRight,
   companyDataId,
   step: { stepPosition = 1, stepTitle = 'Etapa', totalPositions = 2 },
   portLabel = 'Porte',
@@ -320,6 +324,8 @@ export const FormEditCompanyData: FC<FormEditCompanyDataProps> = ({
       >
         <Box width="80%">
           <FormButton
+            buttonRight={buttonRight}
+            buttonLeft={buttonLeft}
             buttonTitle={`${buttonTitle} (${stepTitle} - ${stepPosition}/${totalPositions})`}
             loading={loading}
             success={success}

@@ -25,6 +25,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 interface FormEditCompanyProps {
   showAlert: (message: string, success: boolean) => void;
   handlePopUpClose: () => void;
+  buttonRight: () => void;
   companyId: string;
   step: StepItem;
   totalPosition: number;
@@ -38,6 +39,7 @@ interface FormEditCompanyProps {
 export const FormEditCompany: FC<FormEditCompanyProps> = ({
   showAlert,
   handlePopUpClose,
+  buttonRight,
   companyId,
   totalPosition,
   step: { stepPosition = 1, stepTitle = 'Etapa' },
@@ -216,6 +218,7 @@ export const FormEditCompany: FC<FormEditCompanyProps> = ({
       >
         <Box width="80%">
           <FormButton
+            buttonRight={buttonRight}
             buttonTitle={`${buttonTitle} (${stepTitle} - ${stepPosition}/${totalPosition})`}
             loading={loading}
             success={success}

@@ -12,7 +12,6 @@ import {
 import {
   AjustListsDto,
   CityResponseDto,
-  CompanyAddressResponseDto,
   CompanyBodyAddressDto,
   ConsultZipcodeDto,
   EditCompanyAddressDto,
@@ -34,12 +33,14 @@ import {
   ListSimpleCountryRequest,
   ListSimpleStateRequest,
 } from '../../../../services';
-import { formatValueMask, ValidationsError } from '../../../../shared';
+import { ValidationsError } from '../../../../shared';
 import { FormButton } from '../../form-button.component';
 
 interface FormEditCompanyAddressProps {
   showAlert: (message: string, success: boolean) => void;
   handlePopUpClose: () => void;
+  buttonRight: () => void;
+  buttonLeft: () => void;
   step: StepItem;
   companyAddressId: string;
   totalPosition: number;
@@ -58,6 +59,8 @@ interface FormEditCompanyAddressProps {
 export const FormEditCompanyAddress: FC<FormEditCompanyAddressProps> = ({
   showAlert,
   handlePopUpClose,
+  buttonRight,
+  buttonLeft,
   companyAddressId,
   step: { stepPosition = 3, stepTitle = 'Etapa' },
   totalPosition,
@@ -558,6 +561,8 @@ export const FormEditCompanyAddress: FC<FormEditCompanyAddressProps> = ({
       >
         <Box width="80%">
           <FormButton
+            buttonRight={buttonRight}
+            buttonLeft={buttonLeft}
             buttonTitle={`${buttonTitle} (${stepTitle} - ${stepPosition}/${totalPosition})`}
             loading={loading}
             success={success}

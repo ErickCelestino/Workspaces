@@ -31,6 +31,7 @@ export const EditCompanyStepper: FC<CompanyStepperProps> = ({
     <Box>
       {step === 1 && (
         <FormEditCompany
+          buttonRight={() => changeStage(2)}
           showAlert={showAlert}
           handlePopUpClose={() => changeStage(2)}
           step={{
@@ -47,6 +48,8 @@ export const EditCompanyStepper: FC<CompanyStepperProps> = ({
           companyDataId={companyIds.companyDataId}
           showAlert={showAlert}
           handlePopUpClose={() => changeStage(3)}
+          buttonRight={() => changeStage(3)}
+          buttonLeft={() => changeStage(1)}
           step={{
             stepPosition: step,
             totalPositions: totalPosition,
@@ -59,6 +62,8 @@ export const EditCompanyStepper: FC<CompanyStepperProps> = ({
           companyAddressId={companyIds.companyAddressId}
           handlePopUpClose={() => changeStage(4)}
           showAlert={showAlert}
+          buttonRight={() => changeStage(4)}
+          buttonLeft={() => changeStage(2)}
           step={{
             stepPosition: step,
             totalPositions: totalPosition,
@@ -71,6 +76,8 @@ export const EditCompanyStepper: FC<CompanyStepperProps> = ({
         <FormEditCompanyResponsible
           companyResponsibleId={companyIds.companyResponsibleId}
           showAlert={showAlert}
+          buttonRight={() => changeStage(1)}
+          buttonLeft={() => changeStage(3)}
           handlePopUpClose={handlePopUpClose}
           step={{
             stepPosition: step,
