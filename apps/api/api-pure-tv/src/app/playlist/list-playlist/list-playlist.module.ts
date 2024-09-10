@@ -3,6 +3,7 @@ import { ListPlaylistService } from './list-playlist.service';
 import { ListPlaylistController } from './list-playlist.controller';
 import { ListPlaylist } from '@workspaces/domain';
 import {
+  FindCompanyByIdRepositoryImpl,
   FindUserByIdRepositoryImpl,
   ListPlaylistRepositoryImpl,
   PrismaService,
@@ -20,6 +21,10 @@ import {
     {
       provide: 'FindUserByIdRepository',
       useClass: FindUserByIdRepositoryImpl,
+    },
+    {
+      provide: 'FindCompanyByIdRepository',
+      useClass: FindCompanyByIdRepositoryImpl,
     },
     {
       provide: 'ListPlaylistRepository',

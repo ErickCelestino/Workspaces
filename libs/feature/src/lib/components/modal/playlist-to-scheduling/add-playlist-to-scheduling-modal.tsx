@@ -113,6 +113,7 @@ export const AddPlaylistToSchedulingModal: FC<
   const getFilteredPlaylist = useCallback(async () => {
     const allPlaylist = await getPlaylists({
       loggedUserId: loggedUser?.id ?? '',
+      companyId: loggedUser?.selectedCompany.id ?? '',
       userInput: '',
       take: 5,
     });
@@ -192,6 +193,7 @@ export const AddPlaylistToSchedulingModal: FC<
   ) => {
     const result = await ListPlaylistRequest({
       loggedUserId: loggedUser?.id ?? '',
+      companyId: loggedUser?.selectedCompany.id ?? '',
       userInput: '',
       skip: (value - 1) * 5,
       take: 5,

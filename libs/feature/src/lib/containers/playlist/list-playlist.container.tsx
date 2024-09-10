@@ -1,4 +1,4 @@
-import { Box, Grid, Icon, useMediaQuery, useTheme } from '@mui/material';
+import { Box, Grid, Icon, useTheme } from '@mui/material';
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
 import {
   CreatePlaylistModal,
@@ -6,8 +6,6 @@ import {
   PlaylistCard,
   DeletePlaylistModal,
   AddFileToPlaylistModal,
-  RightClickMenu,
-  MobileButtonMenu,
   DetailsPlaylistModal,
   EditPlaylistModal,
   EmptyListResponse,
@@ -32,7 +30,6 @@ export const ListPlaylistContainer = () => {
   const { showSnackbarAlert, SnackbarAlert } = useSnackbarAlert();
   const { loggedUser } = useLoggedUser();
   const theme = useTheme();
-  const smDown = useMediaQuery(theme.breakpoints.down('sm'));
 
   const [createPlaylistPopUp, setCreatePlaylistPopUp] = useState(false);
   const [editPlaylistPopUp, setEditPlaylistPopUp] = useState(false);
@@ -101,6 +98,7 @@ export const ListPlaylistContainer = () => {
       try {
         const result = await ListPlaylistRequest({
           loggedUserId: data.loggedUserId,
+          companyId: data.companyId,
           userInput: data.userInput,
           skip: data.skip,
           take: data.take,
@@ -124,6 +122,7 @@ export const ListPlaylistContainer = () => {
     setSearch(true);
     const result = await handleData({
       loggedUserId: loggedUser?.id ?? '',
+      companyId: loggedUser?.selectedCompany.id ?? '',
       userInput: input,
     });
 
@@ -138,6 +137,7 @@ export const ListPlaylistContainer = () => {
     setSearch(true);
     const result = await ListPlaylistRequest({
       userInput: '',
+      companyId: loggedUser?.selectedCompany.id ?? '',
       loggedUserId: loggedUser?.id ?? '',
       skip: (value - 1) * 8,
     });
@@ -148,6 +148,7 @@ export const ListPlaylistContainer = () => {
   const getData = useCallback(async () => {
     const result = await handleData({
       loggedUserId: loggedUser?.id ?? '',
+      companyId: loggedUser?.selectedCompany.id ?? '',
       userInput: '',
     });
     setTotalPage(result?.totalPages ?? 0);

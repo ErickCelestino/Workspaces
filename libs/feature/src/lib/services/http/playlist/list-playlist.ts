@@ -10,6 +10,7 @@ export async function ListPlaylistRequest(input: ListPlaylistDto) {
       skip: skip,
       take: take,
       loggedUserId: input.loggedUserId,
+      companyId: input.companyId,
     },
   });
   return result.data;

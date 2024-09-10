@@ -47,6 +47,7 @@ export const MoveFileToAnotherPlaylistModal: FC<
       try {
         const result = await ListPlaylistRequest({
           loggedUserId: data.loggedUserId,
+          companyId: data.companyId,
           userInput: data.userInput,
           skip: data.skip,
           take: data.take,
@@ -69,6 +70,7 @@ export const MoveFileToAnotherPlaylistModal: FC<
   const searchData = async (input: string) => {
     await handleData({
       loggedUserId: loggedUser?.id ?? '',
+      companyId: loggedUser?.selectedCompany.id ?? '',
       userInput: input,
       skip: 0,
       take: 6,
@@ -83,6 +85,7 @@ export const MoveFileToAnotherPlaylistModal: FC<
     const result = await handleData({
       userInput: searchTerm,
       loggedUserId: loggedUser?.id ?? '',
+      companyId: loggedUser?.selectedCompany.id ?? '',
       skip: (page - 1) * pageSize,
       take: pageSize,
     });

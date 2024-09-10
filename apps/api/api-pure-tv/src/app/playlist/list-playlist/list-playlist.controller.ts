@@ -13,10 +13,12 @@ export class ListPlaylistController {
     @Query('filter') filter: string,
     @Query('skip') skip: number,
     @Query('take') take: number,
-    @Query('loggedUserId') loggedUserId: string
+    @Query('loggedUserId') loggedUserId: string,
+    @Query('companyId') companyId: string
   ) {
     const result = await this.listPlaylistService.list({
       loggedUserId,
+      companyId,
       userInput: filter,
       skip,
       take,
