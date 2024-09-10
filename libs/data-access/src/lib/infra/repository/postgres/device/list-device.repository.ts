@@ -51,6 +51,7 @@ export class ListDeviceRepositoryImpl implements ListDeviceRepository {
         this.prismaService.device.count({
           where: {
             user_id: loggedUserId,
+            company_id: companyId,
           },
         }),
       ]);

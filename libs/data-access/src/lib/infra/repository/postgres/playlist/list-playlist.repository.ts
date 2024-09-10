@@ -56,6 +56,7 @@ export class ListPlaylistRepositoryImpl implements ListPlaylistRepository {
         this.prismaService.playlist.count({
           where: {
             user_id: loggedUserId,
+            company_id: companyId,
           },
         }),
       ]);
