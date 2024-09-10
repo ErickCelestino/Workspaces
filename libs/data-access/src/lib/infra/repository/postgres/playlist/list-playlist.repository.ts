@@ -10,18 +10,19 @@ import { PrismaService } from 'nestjs-prisma';
 export class ListPlaylistRepositoryImpl implements ListPlaylistRepository {
   constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
   async list(input: ListPlaylistDto): Promise<ListPlaylistResponseDto> {
-    const { loggedUserId, userInput } = input;
+    const { loggedUserId, companyId, userInput } = input;
 
     const skip = input?.skip || 0;
     const take = input?.take || 6;
 
     const whereClause = {
       user_id: loggedUserId,
+      company_id: companyId,
       ...(userInput !== ''
         ? {
             name: {
               contains: userInput,
-              mode: 'insensitive' as 'insensitive',
+              mode: 'insensitive' as const,
             },
           }
         : {}),
