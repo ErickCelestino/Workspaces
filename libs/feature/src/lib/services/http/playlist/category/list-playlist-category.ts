@@ -16,6 +16,7 @@ export async function ListPlaylistCategoryRequest(
         filter: input.userInput,
         skip: skip,
         take: take,
+        companyId: input.companyId,
         loggedUserId: input.loggedUserId,
       },
     }
