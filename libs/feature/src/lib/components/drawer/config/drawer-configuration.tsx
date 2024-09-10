@@ -100,7 +100,7 @@ export const DrawerConfiguration: FC<DrawerConfigurationProps> = ({
         }
       }
     },
-    [showAlert]
+    [loggedUser, setLoggedUser, showAlert]
   );
 
   return (
