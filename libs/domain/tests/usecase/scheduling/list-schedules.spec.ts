@@ -1,4 +1,5 @@
 import {
+  FindCompanyByIdRepositoryMock,
   FindUserByIdRepositoryMock,
   ListSchedulesRepositoryMock,
 } from '../../repository';
@@ -10,32 +11,38 @@ import {
   ListSchedules,
   UserList,
   EntityNotExists,
+  FindCompanyByIdRepository,
 } from '../../../src';
-import { ListSchedulesReponseMock, userMock } from '../../entity';
+import { CompanyMock, ListSchedulesReponseMock, userMock } from '../../entity';
 
 interface SutTypes {
   sut: ListSchedules;
   listSchedulingDto: ListSchedulesDto;
   findUserByIdRepository: FindUserByIdRepository;
+  findCompanyByIdRepository: FindCompanyByIdRepository;
   listSchedulingRepository: ListSchedulesRepository;
 }
 
 const makeSut = (): SutTypes => {
   const findUserByIdRepository = new FindUserByIdRepositoryMock();
   const listSchedulingRepository = new ListSchedulesRepositoryMock();
+  const findCompanyByIdRepository = new FindCompanyByIdRepositoryMock();
 
   const listSchedulingDto: ListSchedulesDto = {
     loggedUserId: userMock.userId,
+    companyId: CompanyMock.simple.id,
     filter: '',
   };
 
   const sut = new ListSchedules(
     findUserByIdRepository,
+    findCompanyByIdRepository,
     listSchedulingRepository
   );
 
   return {
     findUserByIdRepository,
+    findCompanyByIdRepository,
     listSchedulingRepository,
     listSchedulingDto,
     sut,
