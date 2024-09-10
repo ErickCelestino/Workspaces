@@ -1,14 +1,20 @@
 import {
   EntityNotEmpty,
   EntityNotExists,
+  FindCompanyByIdRepository,
   FindUserByIdRepository,
   ListPlaylistCategory,
   ListPlaylistCategoryDto,
   ListPlaylistCategoryRepository,
   UserList,
 } from '../../../../src';
-import { ListPlaylistCategoryReponseMock, userMock } from '../../../entity';
 import {
+  CompanyMock,
+  ListPlaylistCategoryReponseMock,
+  userMock,
+} from '../../../entity';
+import {
+  FindCompanyByIdRepositoryMock,
   FindUserByIdRepositoryMock,
   ListPlaylistCategoryRepositoryMock,
 } from '../../../repository';
@@ -17,26 +23,31 @@ interface SutTypes {
   sut: ListPlaylistCategory;
   listPlaylistCategoryDto: ListPlaylistCategoryDto;
   findUserByIdRepository: FindUserByIdRepository;
+  findCompanyByIdRepository: FindCompanyByIdRepository;
   listPlaylistCategoryRepository: ListPlaylistCategoryRepository;
 }
 
 const makeSut = (): SutTypes => {
   const findUserByIdRepository = new FindUserByIdRepositoryMock();
+  const findCompanyByIdRepository = new FindCompanyByIdRepositoryMock();
   const listPlaylistCategoryRepository =
     new ListPlaylistCategoryRepositoryMock();
 
   const listPlaylistCategoryDto: ListPlaylistCategoryDto = {
     loggedUserId: userMock.userId,
+    companyId: CompanyMock.simple.id,
     userInput: '',
   };
 
   const sut = new ListPlaylistCategory(
     findUserByIdRepository,
+    findCompanyByIdRepository,
     listPlaylistCategoryRepository
   );
 
   return {
     findUserByIdRepository,
+    findCompanyByIdRepository,
     listPlaylistCategoryRepository,
     listPlaylistCategoryDto,
     sut,
