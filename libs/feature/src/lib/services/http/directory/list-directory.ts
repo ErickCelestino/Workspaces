@@ -12,6 +12,7 @@ export async function ListDirectoryRequest(input: ListDirectoryDto) {
         skip: skip,
         take: take,
         loggedUserId: input.loggedUserId,
+        companyId: input.companyId,
       },
     }
   );

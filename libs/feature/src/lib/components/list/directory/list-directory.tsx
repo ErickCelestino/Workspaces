@@ -51,6 +51,7 @@ export const ListDirectory: FC<ListDirectoryProps> = ({ getDataInput }) => {
   const searchData = async (input: string) => {
     setSearchTest(true);
     const result = await handleData({
+      companyId: loggedUser?.selectedCompany.id ?? '',
       userInput: input,
       loggedUserId: loggedUser?.id ?? '',
     });
@@ -66,6 +67,7 @@ export const ListDirectory: FC<ListDirectoryProps> = ({ getDataInput }) => {
     setSearchTest(true);
     const result = await ListDirectoryRequest({
       userInput: '',
+      companyId: loggedUser?.selectedCompany.id ?? '',
       loggedUserId: loggedUser?.id ?? '',
       skip: (value - 1) * 6,
     });
@@ -92,6 +94,7 @@ export const ListDirectory: FC<ListDirectoryProps> = ({ getDataInput }) => {
     async (data: ListDirectoryDto) => {
       try {
         const result = await ListDirectoryRequest({
+          companyId: data.companyId,
           loggedUserId: data.loggedUserId,
           userInput: data.userInput ?? '',
           skip: data.skip,
@@ -113,6 +116,7 @@ export const ListDirectory: FC<ListDirectoryProps> = ({ getDataInput }) => {
 
   const getData = useCallback(async () => {
     const result = await handleData({
+      companyId: loggedUser?.selectedCompany.id ?? '',
       loggedUserId: loggedUser?.id ?? '',
       userInput: '',
     });

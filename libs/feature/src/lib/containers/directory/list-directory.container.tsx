@@ -10,8 +10,6 @@ import {
   CreateDirectoryModal,
   DirectoryCard,
   EmptyListResponse,
-  MobileButtonMenu,
-  RightClickMenu,
   ToolbarPureTV,
 } from '../../components';
 import React, { useCallback, useEffect, useState } from 'react';
@@ -75,6 +73,7 @@ export const ListDirectoryContainer = () => {
       try {
         const result = await ListDirectoryRequest({
           loggedUserId: data.loggedUserId,
+          companyId: data.companyId,
           userInput: data.userInput ?? '',
           skip: data.skip,
           take: data.take,
@@ -96,6 +95,7 @@ export const ListDirectoryContainer = () => {
   const searchData = async (input: string) => {
     setSearch(true);
     const result = await handleData({
+      companyId: loggedUser?.selectedCompany.id ?? '',
       loggedUserId: loggedUser?.id ?? '',
       userInput: input,
     });
@@ -111,6 +111,7 @@ export const ListDirectoryContainer = () => {
     setSearch(true);
     const result = await ListDirectoryRequest({
       userInput: '',
+      companyId: loggedUser?.selectedCompany.id ?? '',
       loggedUserId: loggedUser?.id ?? '',
       skip: (value - 1) * 6,
     });
@@ -120,6 +121,7 @@ export const ListDirectoryContainer = () => {
 
   const getData = useCallback(async () => {
     const result = await handleData({
+      companyId: loggedUser?.selectedCompany.id ?? '',
       loggedUserId: loggedUser?.id ?? '',
       userInput: '',
     });
