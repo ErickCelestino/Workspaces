@@ -1,10 +1,13 @@
 import {
+  CompanyResponseDto,
   EntityNotEmpty,
+  EntityNotExists,
   FindCompanyByIdRepository,
   FindUserByIdRepository,
   ListSimpleDirectory,
   ListSimpleDirectoryDto,
   ListSimpleDirectoryRepository,
+  UserList,
 } from '../../../src';
 import {
   CompanyMock,
@@ -71,5 +74,38 @@ describe('ListSimpleDirectory', () => {
     expect(result.isLeft()).toBe(true);
     expect(result.isRight()).toBe(false);
     expect(result.value).toBeInstanceOf(EntityNotEmpty);
+  });
+
+  it('should return EntityNotEmpty when a pass incorrect Company id', async () => {
+    const { listSimpleDirectoryDto, sut } = makeSut();
+    listSimpleDirectoryDto.companyId = '';
+    const result = await sut.execute(listSimpleDirectoryDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
+    expect(result.value).toBeInstanceOf(EntityNotEmpty);
+  });
+  it('should return EntityNotExists when a not exist User in system', async () => {
+    const { listSimpleDirectoryDto, sut } = makeSut();
+    jest
+      .spyOn(sut['findUserByIdRepository'], 'find')
+      .mockResolvedValueOnce({} as UserList);
+    const result = await sut.execute(listSimpleDirectoryDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
+    expect(result.value).toBeInstanceOf(EntityNotExists);
+  });
+
+  it('should return EntityNotExists when a not exist Comapany in system', async () => {
+    const { listSimpleDirectoryDto, sut } = makeSut();
+    jest
+      .spyOn(sut['findCompanyByIdRepository'], 'find')
+      .mockResolvedValueOnce({} as CompanyResponseDto);
+    const result = await sut.execute(listSimpleDirectoryDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
+    expect(result.value).toBeInstanceOf(EntityNotExists);
   });
 });
