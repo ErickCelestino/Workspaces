@@ -31,6 +31,7 @@ interface EditPlaylistModalProps {
   idToEdit: string;
   open: boolean;
   title: string;
+  companyId: string;
   handlePopUpClose: () => void;
   showAlert: (message: string, success: boolean) => void;
   nameLabel?: string;
@@ -41,6 +42,7 @@ export const EditPlaylistModal: FC<EditPlaylistModalProps> = ({
   idToEdit,
   open,
   title,
+  companyId,
   handlePopUpClose,
   showAlert,
   nameLabel = 'Nome',
@@ -125,6 +127,7 @@ export const EditPlaylistModal: FC<EditPlaylistModalProps> = ({
       getCategories({
         loggedUserId: loggedUserId,
         userInput: '',
+        companyId,
       });
 
       getPlaylist({

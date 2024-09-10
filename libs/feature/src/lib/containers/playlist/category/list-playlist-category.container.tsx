@@ -54,6 +54,7 @@ export const ListPlaylistCategoryContainer = () => {
       try {
         const result = await ListPlaylistCategoryRequest({
           loggedUserId: data.loggedUserId,
+          companyId: data.companyId,
           userInput: data.userInput,
           skip: data.skip,
           take: data.take,
@@ -75,6 +76,7 @@ export const ListPlaylistCategoryContainer = () => {
 
   const getData = useCallback(async () => {
     const result = await handleData({
+      companyId: loggedUser?.selectedCompany.id ?? '',
       loggedUserId: loggedUser?.id ?? '',
       userInput: '',
     });
@@ -91,6 +93,7 @@ export const ListPlaylistCategoryContainer = () => {
   const searchData = async (input: string) => {
     setSearch(true);
     const result = await handleData({
+      companyId: loggedUser?.selectedCompany.id ?? '',
       loggedUserId: loggedUser?.id ?? '',
       userInput: input,
     });
@@ -134,6 +137,7 @@ export const ListPlaylistCategoryContainer = () => {
     setSearch(true);
     const result = await ListPlaylistCategoryRequest({
       userInput: '',
+      companyId: loggedUser?.selectedCompany.id ?? '',
       loggedUserId: loggedUser?.id ?? '',
       skip: (value - 1) * 6,
     });

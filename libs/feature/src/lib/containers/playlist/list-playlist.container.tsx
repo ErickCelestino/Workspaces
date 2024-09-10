@@ -178,6 +178,7 @@ export const ListPlaylistContainer = () => {
         title="Criar Playlist"
       />
       <EditPlaylistModal
+        companyId={loggedUser?.selectedCompany.id ?? ''}
         idToEdit={playlistId}
         handlePopUpClose={() => handlePopUpClose('edit')}
         showAlert={showAlert}
