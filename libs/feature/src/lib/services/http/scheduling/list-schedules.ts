@@ -12,6 +12,7 @@ export async function ListSchedulesRequest(input: ListSchedulesDto) {
         skip: skip,
         take: take,
         loggedUserId: input.loggedUserId,
+        companyId: input.companyId,
       },
     }
   );

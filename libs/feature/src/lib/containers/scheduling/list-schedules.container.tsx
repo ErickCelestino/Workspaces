@@ -58,6 +58,7 @@ export const ListSchedulesContainer = () => {
       try {
         const result = await ListSchedulesRequest({
           loggedUserId: data.loggedUserId,
+          companyId: data.companyId,
           filter: data.filter,
           skip: data.skip,
           take: data.take,
@@ -86,6 +87,7 @@ export const ListSchedulesContainer = () => {
       handleData({
         filter: '',
         loggedUserId: loggedUser?.id ?? '',
+        companyId: loggedUser?.selectedCompany.id ?? '',
       });
     }
   }, [handleData, loggedUser, search]);
@@ -137,6 +139,7 @@ export const ListSchedulesContainer = () => {
     setSearch(true);
     const result = await handleData({
       loggedUserId: loggedUser?.id ?? '',
+      companyId: loggedUser?.selectedCompany.id ?? '',
       filter: input,
     });
 
@@ -153,6 +156,7 @@ export const ListSchedulesContainer = () => {
     setSearch(true);
     const result = await ListSchedulesRequest({
       loggedUserId: loggedUser?.id ?? '',
+      companyId: loggedUser?.selectedCompany.id ?? '',
       filter: '',
       skip: (value - 1) * 6,
     });
