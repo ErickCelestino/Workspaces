@@ -20,11 +20,13 @@ export class ListContentFileController {
     @Query('skip') skip: number,
     @Query('take') take: number,
     @Query('loggedUserId') loggedUserId: string,
-    @Query('directoryId') directoryId: string
+    @Query('directoryId') directoryId: string,
+    @Query('companyId') companyId: string
   ) {
     const dto: ListContentFileDto = {
       directoryId,
       loggedUserId,
+      companyId,
       userInput: filter,
       skip: skip,
       take: take,

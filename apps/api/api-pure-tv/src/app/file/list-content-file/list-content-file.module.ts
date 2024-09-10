@@ -3,6 +3,7 @@ import { ListContentFileService } from './list-content-file.service';
 import { ListContentFileController } from './list-content-file.controller';
 import { ListContentFile } from '@workspaces/domain';
 import {
+  FindCompanyByIdRepositoryImpl,
   FindDirectoryByIdRepositoryImpl,
   FindUserByIdRepositoryImpl,
   ListContentFileRepositoryImpl,
@@ -25,6 +26,10 @@ import {
     {
       provide: 'FindUserByIdRepository',
       useClass: FindUserByIdRepositoryImpl,
+    },
+    {
+      provide: 'FindCompanyByIdRepository',
+      useClass: FindCompanyByIdRepositoryImpl,
     },
     {
       provide: 'FindDirectoryByIdRepository',

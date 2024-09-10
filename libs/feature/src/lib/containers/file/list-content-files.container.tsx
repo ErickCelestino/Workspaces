@@ -97,6 +97,7 @@ export const ListContanteFilesContainer = () => {
           userInput: data.userInput ?? '',
           loggedUserId: data.loggedUserId,
           directoryId: data.directoryId,
+          companyId: data.companyId,
           take: data.take,
           skip: data.skip,
         });
@@ -120,6 +121,7 @@ export const ListContanteFilesContainer = () => {
     const directoryId = getItemLocalStorage('di');
     const result = await handleData({
       directoryId: directoryId ?? '',
+      companyId: loggedUser?.selectedCompany.id ?? '',
       loggedUserId: loggedUser?.id ?? '',
       userInput: '',
     });
@@ -233,6 +235,7 @@ export const ListContanteFilesContainer = () => {
     const result = await ListContentFilesRequest({
       userInput: '',
       directoryId: directoryId,
+      companyId: loggedUser?.selectedCompany.id ?? '',
       loggedUserId: loggedUser?.id ?? '',
       skip: (value - 1) * 8,
     });
@@ -245,6 +248,7 @@ export const ListContanteFilesContainer = () => {
     setSearch(true);
     const result = await handleData({
       directoryId,
+      companyId: loggedUser?.selectedCompany.id ?? '',
       loggedUserId: loggedUser?.id ?? '',
       userInput: input,
     });
