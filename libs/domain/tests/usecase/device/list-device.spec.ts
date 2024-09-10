@@ -6,9 +6,11 @@ import {
   EntityNotEmpty,
   EntityNotExists,
   UserList,
+  FindCompanyByIdRepository,
 } from '../../../src';
-import { ListDeviceResponseMock, userMock } from '../../entity';
+import { CompanyMock, ListDeviceResponseMock, userMock } from '../../entity';
 import {
+  FindCompanyByIdRepositoryMock,
   FindUserByIdRepositoryMock,
   ListDeviceRepositoryMock,
 } from '../../repository';
@@ -17,24 +19,32 @@ interface SutTypes {
   sut: ListDevice;
   listDeviceDto: ListDeviceDto;
   finUserByIdRepository: FindUserByIdRepository;
+  findCompanyByIdRepository: FindCompanyByIdRepository;
   listDeviceRepository: ListDeviceRepository;
 }
 
 export const makeSut = (): SutTypes => {
   const finUserByIdRepository = new FindUserByIdRepositoryMock();
   const listDeviceRepository = new ListDeviceRepositoryMock();
+  const findCompanyByIdRepository = new FindCompanyByIdRepositoryMock();
 
   const listDeviceDto: ListDeviceDto = {
     loggedUserId: userMock.userId,
+    companyId: CompanyMock.simple.id,
     filter: '',
   };
 
-  const sut = new ListDevice(finUserByIdRepository, listDeviceRepository);
+  const sut = new ListDevice(
+    finUserByIdRepository,
+    findCompanyByIdRepository,
+    listDeviceRepository
+  );
 
   return {
     sut,
     listDeviceDto,
     finUserByIdRepository,
+    findCompanyByIdRepository,
     listDeviceRepository,
   };
 };

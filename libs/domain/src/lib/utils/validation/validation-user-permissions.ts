@@ -3,10 +3,10 @@ import {
   EntityNotEmpty,
   EntityNotExists,
   EntityNotPermissions,
-} from '../error';
-import { VerifyUserPermissionsByIdRepository } from '../repository';
-import { Either, left, right } from '../shared/either';
-import { userTypes } from '../type';
+} from '../../error';
+import { VerifyUserPermissionsByIdRepository } from '../../repository';
+import { Either, left, right } from '../../shared/either';
+import { userTypes } from '../../type';
 
 export async function ValidationUserPermisssions(
   id: string,

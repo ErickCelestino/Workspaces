@@ -1,5 +1,8 @@
-import { EntityNotConverted, StartTimeCannotBeGreaterEndTime } from '../error';
-import { Either, left, right } from '../shared/either';
+import {
+  EntityNotConverted,
+  StartTimeCannotBeGreaterEndTime,
+} from '../../error';
+import { Either, left, right } from '../../shared/either';
 
 function isValidDate(date: unknown) {
   return date instanceof Date && !isNaN(date.getTime());

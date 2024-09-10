@@ -1,6 +1,10 @@
-import { EntityAlreadyExists, EntityNotEmpty, EntityNotExists } from '../error';
-import { FindCompanyByCnpjRepository } from '../repository';
-import { Either, left, right } from '../shared/either';
+import {
+  EntityAlreadyExists,
+  EntityNotEmpty,
+  EntityNotExists,
+} from '../../error';
+import { FindCompanyByCnpjRepository } from '../../repository';
+import { Either, left, right } from '../../shared/either';
 
 export async function ValidationCompanyByCnpj(
   cnpj: string,

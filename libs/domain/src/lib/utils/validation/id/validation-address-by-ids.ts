@@ -1,9 +1,9 @@
 import {
   AddressValidationDto,
   AdressRepositoriesValidationDto,
-} from '../../dto';
-import { EntityNotEmpty, EntityNotExists } from '../../error';
-import { Either, left, right } from '../../shared/either';
+} from '../../../dto';
+import { EntityNotEmpty, EntityNotExists } from '../../../error';
+import { Either, left, right } from '../../../shared/either';
 
 export async function ValidationAddressByIds(
   input: AddressValidationDto,
