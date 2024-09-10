@@ -20,6 +20,7 @@ export class ListContentFileRepositoryImpl
         where: {
           user_id: input.loggedUserId,
           directory_id: input.directoryId,
+          company_id: input.companyId,
           ...(input.userInput !== ''
             ? {
                 original_name: {
@@ -56,6 +57,7 @@ export class ListContentFileRepositoryImpl
         where: {
           user_id: input.loggedUserId,
           directory_id: input.directoryId,
+          company_id: input.companyId,
           ...(input.userInput !== ''
             ? {
                 original_name: {
