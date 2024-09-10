@@ -9,13 +9,17 @@ import {
   UserList,
   EntityNotExists,
   Directory,
+  FindCompanyByIdRepository,
 } from '../../../src';
 import {
+  CompanyAddressMock,
+  CompanyMock,
   DirectoryMock,
   ListContentFileReponseMock,
   userMock,
 } from '../../entity';
 import {
+  FindCompanyByIdRepositoryMock,
   FindDirectoryByIdRespositoryMock,
   FindUserByIdRepositoryMock,
   ListContentFileRepositoryMock,
@@ -25,6 +29,7 @@ interface SutTypes {
   sut: ListContentFile;
   listContentFileDto: ListContentFileDto;
   findUserByIdRepository: FindUserByIdRepository;
+  findCompanyByIdRepository: FindCompanyByIdRepository;
   findDirectoryByIdRepository: FindDirectoryByIdRepository;
   listContentFileRepository: ListContentFileRepository;
 }
@@ -33,21 +38,25 @@ const makeSut = (): SutTypes => {
   const listContentFileRepository = new ListContentFileRepositoryMock();
   const findUserByIdRepository = new FindUserByIdRepositoryMock();
   const findDirectoryByIdRepository = new FindDirectoryByIdRespositoryMock();
+  const findCompanyByIdRepository = new FindCompanyByIdRepositoryMock();
   const listContentFileDto: ListContentFileDto = {
     directoryId: DirectoryMock.id,
     loggedUserId: userMock.userId,
+    companyId: CompanyMock.simple.id,
     userInput: faker.string.alpha(3),
   };
 
   const sut = new ListContentFile(
     listContentFileRepository,
     findUserByIdRepository,
+    findCompanyByIdRepository,
     findDirectoryByIdRepository
   );
 
   return {
     listContentFileRepository,
     findUserByIdRepository,
+    findCompanyByIdRepository,
     findDirectoryByIdRepository,
     listContentFileDto,
     sut,
