@@ -17,6 +17,7 @@ export async function ListSimpleDirectoryRequest(
         skip: skip,
         take: take,
         loggedUserId: input.loggedUserId,
+        companyId: input.companyId,
       },
     }
   );

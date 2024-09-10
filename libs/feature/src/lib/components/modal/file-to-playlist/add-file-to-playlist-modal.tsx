@@ -92,6 +92,7 @@ export const AddFileToPlaylistModal: FC<AddFileToPlaylistModalProps> = ({
   useEffect(() => {
     if (open && idPlaylist && !dataLoaded) {
       getDirectory({
+        companyId: loggedUser?.selectedCompany.id ?? '',
         loggedUserId: loggedUser?.id ?? '',
         userInput: '',
       });
