@@ -12,13 +12,14 @@ export class ListSchedulesRepositoryImpl implements ListSchedulesRepository {
   constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
 
   async list(input: ListSchedulesDto): Promise<ListSchedulesReponseDto> {
-    const { loggedUserId, filter } = input;
+    const { loggedUserId, companyId, filter } = input;
 
     const skip = input?.skip || 0;
     const take = input?.take || 6;
 
     const whereClause = {
       user_id: loggedUserId,
+      company_id: companyId,
       ...(filter !== ''
         ? {
             name: {
@@ -56,6 +57,7 @@ export class ListSchedulesRepositoryImpl implements ListSchedulesRepository {
         this.prismaService.scheduling.count({
           where: {
             user_id: loggedUserId,
+            company_id: companyId,
           },
         }),
       ]);
