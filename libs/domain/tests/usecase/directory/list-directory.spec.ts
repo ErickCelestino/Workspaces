@@ -1,13 +1,15 @@
 import {
   EntityNotExists,
+  FindCompanyByIdRepository,
   FindUserByIdRepository,
   ListDirectory,
   ListDirectoryDto,
   ListDirectoryRepository,
   UserList,
 } from '../../../src';
-import { userMock } from '../../entity';
+import { CompanyMock, userMock } from '../../entity';
 import {
+  FindCompanyByIdRepositoryMock,
   FindUserByIdRepositoryMock,
   ListDirectoryRepositoryMock,
 } from '../../repository';
@@ -16,25 +18,30 @@ interface SutTypes {
   sut: ListDirectory;
   listDirectoryDto: ListDirectoryDto;
   findUserByIdRepository: FindUserByIdRepository;
+  findCompanyByIdRepository: FindCompanyByIdRepository;
   listDirectoryRepository: ListDirectoryRepository;
 }
 
 const makeSut = (): SutTypes => {
   const findUserByIdRepository = new FindUserByIdRepositoryMock();
   const listDirectoryRepository = new ListDirectoryRepositoryMock();
+  const findCompanyByIdRepository = new FindCompanyByIdRepositoryMock();
 
   const listDirectoryDto: ListDirectoryDto = {
     loggedUserId: userMock.userId,
+    companyId: CompanyMock.simple.id,
     userInput: '',
   };
 
   const sut = new ListDirectory(
     findUserByIdRepository,
+    findCompanyByIdRepository,
     listDirectoryRepository
   );
 
   return {
     findUserByIdRepository,
+    findCompanyByIdRepository,
     listDirectoryRepository,
     listDirectoryDto,
     sut,
