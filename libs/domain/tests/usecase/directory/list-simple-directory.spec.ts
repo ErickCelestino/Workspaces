@@ -1,12 +1,18 @@
 import {
   EntityNotEmpty,
+  FindCompanyByIdRepository,
   FindUserByIdRepository,
   ListSimpleDirectory,
   ListSimpleDirectoryDto,
   ListSimpleDirectoryRepository,
 } from '../../../src';
-import { ListSimpleDirectoryResponseDtoMock, userMock } from '../../entity';
 import {
+  CompanyMock,
+  ListSimpleDirectoryResponseDtoMock,
+  userMock,
+} from '../../entity';
+import {
+  FindCompanyByIdRepositoryMock,
   FindUserByIdRepositoryMock,
   ListSimpleDirectoryRespositoryMock,
 } from '../../repository';
@@ -15,6 +21,7 @@ interface SutTypes {
   sut: ListSimpleDirectory;
   listSimpleDirectoryDto: ListSimpleDirectoryDto;
   findUserByIdRepository: FindUserByIdRepository;
+  findCompanyByIdRepository: FindCompanyByIdRepository;
   listSimpleDirectoryRepository: ListSimpleDirectoryRepository;
 }
 
@@ -22,19 +29,23 @@ const makeSut = (): SutTypes => {
   const findUserByIdRepository = new FindUserByIdRepositoryMock();
   const listSimpleDirectoryRepository =
     new ListSimpleDirectoryRespositoryMock();
+  const findCompanyByIdRepository = new FindCompanyByIdRepositoryMock();
 
   const listSimpleDirectoryDto: ListSimpleDirectoryDto = {
     loggedUserId: userMock.userId,
+    companyId: CompanyMock.simple.id,
     userInput: '',
   };
 
   const sut = new ListSimpleDirectory(
     findUserByIdRepository,
+    findCompanyByIdRepository,
     listSimpleDirectoryRepository
   );
 
   return {
     findUserByIdRepository,
+    findCompanyByIdRepository,
     listSimpleDirectoryRepository,
     listSimpleDirectoryDto,
     sut,
