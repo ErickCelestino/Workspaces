@@ -1,4 +1,5 @@
 import {
+  CompanyResponseDto,
   EntityNotEmpty,
   EntityNotExists,
   FindCompanyByIdRepository,
@@ -70,11 +71,33 @@ describe('ListPlaylist', () => {
     expect(result.value).toBeInstanceOf(EntityNotEmpty);
   });
 
-  it('should return EntityNotExists when a pass incorrect Logged User ID', async () => {
+  it('should return EntityNotEmpty when a pass incorrect Company ID', async () => {
+    const { listPlaylistDto, sut } = makeSut();
+    listPlaylistDto.companyId = '';
+    const result = await sut.execute(listPlaylistDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
+    expect(result.value).toBeInstanceOf(EntityNotEmpty);
+  });
+
+  it('should return EntityNotExists when a not exist User in system', async () => {
     const { listPlaylistDto, sut } = makeSut();
     jest
       .spyOn(sut['findUserByIdRepository'], 'find')
       .mockResolvedValueOnce({} as UserList);
+    const result = await sut.execute(listPlaylistDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
+    expect(result.value).toBeInstanceOf(EntityNotExists);
+  });
+
+  it('should return EntityNotExists when a not exist Company in system', async () => {
+    const { listPlaylistDto, sut } = makeSut();
+    jest
+      .spyOn(sut['findCompanyByIdRepository'], 'find')
+      .mockResolvedValueOnce({} as CompanyResponseDto);
     const result = await sut.execute(listPlaylistDto);
 
     expect(result.isLeft()).toBe(true);
