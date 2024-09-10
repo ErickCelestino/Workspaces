@@ -4,11 +4,9 @@ import {
   ComboBoxListResult,
   ErrorResponse,
   ListDeviceDto,
-  ListSchedulesDto,
 } from '@workspaces/domain';
 import {
   ListDeviceRequest,
-  ListSchedulesRequest,
   MoveSchedulesToAnotherDeviceRequest,
 } from '../../../services';
 import axios, { AxiosError } from 'axios';
@@ -25,6 +23,7 @@ interface MoveSchedulesToAnotherDeviceModalProps {
   showAlert: (message: string, success: boolean) => void;
   buttonTitle?: string;
   loggedUserId: string;
+  companyId: string;
 }
 
 export const MoveSchedulesToAnotherDeviceModal: FC<
@@ -32,6 +31,7 @@ export const MoveSchedulesToAnotherDeviceModal: FC<
 > = ({
   selectedSchedules,
   oldDeviceId,
+  companyId,
   onClose,
   open,
   title,
@@ -48,6 +48,7 @@ export const MoveSchedulesToAnotherDeviceModal: FC<
     async (data: ListDeviceDto) => {
       try {
         const result = await ListDeviceRequest({
+          companyId: data.companyId,
           loggedUserId: data.loggedUserId,
           filter: data.filter,
           skip: data.skip,
@@ -70,6 +71,7 @@ export const MoveSchedulesToAnotherDeviceModal: FC<
 
   const searchData = async (input: string) => {
     await handleData({
+      companyId: companyId,
       loggedUserId: loggedUserId,
       filter: input,
       skip: 0,
@@ -83,6 +85,7 @@ export const MoveSchedulesToAnotherDeviceModal: FC<
     pageSize: number
   ) => {
     const result = await handleData({
+      companyId: companyId,
       filter: searchTerm,
       loggedUserId: loggedUserId,
       skip: (page - 1) * pageSize,

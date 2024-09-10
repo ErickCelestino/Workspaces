@@ -1,4 +1,4 @@
-import { Box, Grid, Icon, useMediaQuery, useTheme } from '@mui/material';
+import { Box, Grid, Icon, useTheme } from '@mui/material';
 import DesktopAccessDisabledIcon from '@mui/icons-material/DesktopAccessDisabled';
 import {
   AddSchedulesToDeviceModal,
@@ -8,8 +8,6 @@ import {
   DeviceCard,
   EditDeviceModal,
   EmptyListResponse,
-  MobileButtonMenu,
-  RightClickMenu,
   ToolbarPureTV,
 } from '../../components';
 import { LayoutBase } from '../../layout';
@@ -31,7 +29,6 @@ import { useLoggedUser } from '../../contexts';
 export const ListDeviceContainer = () => {
   const theme = useTheme();
   const { loggedUser } = useLoggedUser();
-  const smDown = useMediaQuery(theme.breakpoints.down('sm'));
   const { showSnackbarAlert, SnackbarAlert } = useSnackbarAlert();
 
   const [createDevicePopUp, setCreateDevicePopUp] = useState(false);
@@ -93,6 +90,7 @@ export const ListDeviceContainer = () => {
   ) => {
     setSearch(true);
     const result = await ListDeviceRequest({
+      companyId: loggedUser?.selectedCompany.id ?? '',
       filter: '',
       loggedUserId: loggedUser?.id ?? '',
       skip: (value - 1) * 8,
@@ -105,6 +103,7 @@ export const ListDeviceContainer = () => {
     async (data: ListDeviceDto) => {
       try {
         const result = await ListDeviceRequest({
+          companyId: loggedUser?.selectedCompany.id ?? '',
           loggedUserId: data.loggedUserId,
           filter: data.filter,
           skip: data.skip,
@@ -122,11 +121,12 @@ export const ListDeviceContainer = () => {
         }
       }
     },
-    [showAlert]
+    [loggedUser?.selectedCompany.id, showAlert]
   );
 
   const getData = useCallback(async () => {
     const result = await handleData({
+      companyId: loggedUser?.selectedCompany.id ?? '',
       loggedUserId: loggedUser?.id ?? '',
       filter: '',
     });
@@ -137,6 +137,7 @@ export const ListDeviceContainer = () => {
   const searchData = async (input: string) => {
     setSearch(true);
     const result = await handleData({
+      companyId: loggedUser?.selectedCompany.id ?? '',
       loggedUserId: loggedUser?.id ?? '',
       filter: input,
     });

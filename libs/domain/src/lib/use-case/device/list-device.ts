@@ -21,7 +21,7 @@ export class ListDevice
   constructor(
     @Inject('FindUserByIdRepository')
     private findUserByIdRepository: FindUserByIdRepository,
-    @Inject('FindSimpleCompanyByIdRepository')
+    @Inject('FindCompanyByIdRepository')
     private findCompanyByIdRepository: FindCompanyByIdRepository,
     @Inject('ListDeviceRepository')
     private listDeviceRepository: ListDeviceRepository

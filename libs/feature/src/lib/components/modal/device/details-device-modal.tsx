@@ -192,6 +192,7 @@ export const DetailsDeviceModal: FC<DetailsDeviceModalProps> = ({
         showAlert={showAlert}
         onClose={() => setMoveSchedulesPopUp(false)}
         title="Mover Agendamentos"
+        companyId={loggedUser?.selectedCompany.id ?? ''}
       />
       <SimpleFormModal
         height={smDown ? theme.spacing(55) : theme.spacing(80)}
