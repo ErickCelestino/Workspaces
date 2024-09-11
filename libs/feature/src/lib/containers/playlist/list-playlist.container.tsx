@@ -36,10 +36,10 @@ export const ListPlaylistContainer = () => {
   const [deletePlaylistPopUp, setDeletePlaylistPopUp] = useState(false);
   const [detailsPlaylistPopUp, setDetailsPlaylistPopUp] = useState(false);
   const [addFilePopUp, setAddFilePopUp] = useState(false);
-  const [search, setSearch] = useState(false);
   const [listPlaylist, setListPlaylist] = useState<Playlist[]>([]);
   const [totalPage, setTotalPage] = useState<number>(1);
   const [playlistId, setPlaylistId] = useState('');
+  const [isMounted, setIsMounted] = useState(false);
 
   const handlePopUpClose = (types: CrudType | 'add-file') => {
     switch (types) {
@@ -119,7 +119,6 @@ export const ListPlaylistContainer = () => {
   );
 
   const searchData = async (input: string) => {
-    setSearch(true);
     const result = await handleData({
       loggedUserId: loggedUser?.id ?? '',
       companyId: loggedUser?.selectedCompany.id ?? '',
@@ -134,7 +133,6 @@ export const ListPlaylistContainer = () => {
     event: React.ChangeEvent<unknown>,
     value: number
   ) => {
-    setSearch(true);
     const result = await ListPlaylistRequest({
       userInput: '',
       companyId: loggedUser?.selectedCompany.id ?? '',
@@ -156,10 +154,15 @@ export const ListPlaylistContainer = () => {
   }, [loggedUser, handleData]);
 
   useEffect(() => {
-    if (!search) {
+    setIsMounted(false);
+  }, [loggedUser?.selectedCompany.id]);
+
+  useEffect(() => {
+    if (!isMounted) {
       getData();
+      setIsMounted(true);
     }
-  }, [getData, search]);
+  }, [isMounted, getData]);
 
   const rightClickMenuList: IconMenuItem[] = [
     {
