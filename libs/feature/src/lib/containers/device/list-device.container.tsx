@@ -39,8 +39,8 @@ export const ListDeviceContainer = () => {
     useState(false);
   const [listDevice, setListDevice] = useState<Device[]>([]);
   const [totalPage, setTotalPage] = useState<number>(1);
-  const [search, setSearch] = useState(false);
   const [selectedId, setSelectedId] = useState<string>('');
+  const [isMounted, setIsMounted] = useState(false);
 
   const showAlert = useCallback(
     (message: string, success: boolean) => {
@@ -88,7 +88,6 @@ export const ListDeviceContainer = () => {
     event: React.ChangeEvent<unknown>,
     value: number
   ) => {
-    setSearch(true);
     const result = await ListDeviceRequest({
       companyId: loggedUser?.selectedCompany.id ?? '',
       filter: '',
@@ -135,7 +134,6 @@ export const ListDeviceContainer = () => {
   }, [loggedUser, handleData]);
 
   const searchData = async (input: string) => {
-    setSearch(true);
     const result = await handleData({
       companyId: loggedUser?.selectedCompany.id ?? '',
       loggedUserId: loggedUser?.id ?? '',
@@ -147,10 +145,11 @@ export const ListDeviceContainer = () => {
   };
 
   useEffect(() => {
-    if (!search) {
+    if (!isMounted && !loggedUser?.selectedCompany.id) {
       getData();
+      setIsMounted(true);
     }
-  }, [getData, search]);
+  }, [isMounted, getData, loggedUser?.selectedCompany.id]);
 
   return (
     <>

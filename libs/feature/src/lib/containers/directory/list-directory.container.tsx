@@ -13,14 +13,7 @@ import {
   ToolbarPureTV,
 } from '../../components';
 import React, { useCallback, useEffect, useState } from 'react';
-import {
-  Box,
-  Grid,
-  Icon,
-  Typography,
-  useMediaQuery,
-  useTheme,
-} from '@mui/material';
+import { Grid, Icon, useTheme } from '@mui/material';
 import { useSnackbarAlert } from '../../hooks';
 import { LayoutBase } from '../../layout';
 import { useLoggedUser } from '../../contexts';
@@ -32,7 +25,6 @@ import { ContainerCardList } from '../utils';
 
 export const ListDirectoryContainer = () => {
   const theme = useTheme();
-  const smDown = useMediaQuery(theme.breakpoints.down('sm'));
   const { loggedUser } = useLoggedUser();
   const navigate = useNavigate();
 
