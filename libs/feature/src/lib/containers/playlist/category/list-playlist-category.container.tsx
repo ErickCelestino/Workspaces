@@ -32,12 +32,12 @@ export const ListPlaylistCategoryContainer = () => {
     PlaylistCategory[]
   >([]);
   const [playlistCategoryId, setPlaylistCategoryId] = useState('');
-  const [search, setSearch] = useState(false);
   const [totalPage, setTotalPage] = useState<number>(1);
   const [createCategoryPopUp, setCreateCategoryPopUp] = useState(false);
   const [editCategoryPopUp, setEditCategoryPopUp] = useState(false);
   const [deleteCategoryPopUp, setDeleteCategoryPopUp] = useState(false);
   const { showSnackbarAlert, SnackbarAlert } = useSnackbarAlert();
+  const [isMounted, setIsMounted] = useState(false);
 
   const showAlert = useCallback(
     (message: string, success: boolean) => {
@@ -85,13 +85,17 @@ export const ListPlaylistCategoryContainer = () => {
   }, [loggedUser, handleData]);
 
   useEffect(() => {
-    if (!search) {
+    setIsMounted(false);
+  }, [loggedUser?.selectedCompany.id]);
+
+  useEffect(() => {
+    if (!isMounted) {
       getData();
+      setIsMounted(true);
     }
-  }, [getData, search]);
+  }, [isMounted, getData]);
 
   const searchData = async (input: string) => {
-    setSearch(true);
     const result = await handleData({
       companyId: loggedUser?.selectedCompany.id ?? '',
       loggedUserId: loggedUser?.id ?? '',
@@ -134,7 +138,6 @@ export const ListPlaylistCategoryContainer = () => {
     event: React.ChangeEvent<unknown>,
     value: number
   ) => {
-    setSearch(true);
     const result = await ListPlaylistCategoryRequest({
       userInput: '',
       companyId: loggedUser?.selectedCompany.id ?? '',
