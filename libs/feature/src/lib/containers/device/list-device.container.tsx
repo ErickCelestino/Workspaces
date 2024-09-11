@@ -103,14 +103,7 @@ export const ListDeviceContainer = () => {
     event: React.ChangeEvent<unknown>,
     value: number
   ) => {
-    const result = await ListDeviceRequest({
-      companyId: loggedUser?.selectedCompany.id ?? '',
-      filter: '',
-      loggedUserId: loggedUser?.id ?? '',
-      skip: (value - 1) * 8,
-    });
-    setTotalPage(result.totalPages);
-    setListDevice(result.devices);
+    getData('', value);
   };
 
   const handleData = useCallback(
@@ -138,27 +131,24 @@ export const ListDeviceContainer = () => {
     [loggedUser?.selectedCompany.id, showAlert]
   );
 
-  const getData = useCallback(async () => {
-    const result = await handleData({
-      companyId: loggedUser?.selectedCompany.id ?? '',
-      loggedUserId: loggedUser?.id ?? '',
-      filter: '',
-    });
-    setTotalPage(result?.totalPages ?? 0);
-    setListDevice(result?.devices ?? []);
-  }, [loggedUser, handleData]);
+  const getData = useCallback(
+    async (input?: string, skip?: number) => {
+      const result = await handleData({
+        companyId: loggedUser?.selectedCompany.id ?? '',
+        loggedUserId: loggedUser?.id ?? '',
+        filter: input ? input : '',
+        skip: skip ? (skip - 1) * 8 : 0,
+      });
+      if (result) {
+        setTotalPage(result?.totalPages ?? 0);
+        setListDevice(result?.devices ?? []);
+      }
+    },
+    [loggedUser, handleData]
+  );
 
   const searchData = async (input: string) => {
-    const result = await handleData({
-      companyId: loggedUser?.selectedCompany.id ?? '',
-      loggedUserId: loggedUser?.id ?? '',
-      filter: input,
-    });
-
-    if (result) {
-      setTotalPage(result?.totalPages ?? 0);
-      setListDevice(result?.devices ?? []);
-    }
+    getData(input);
   };
 
   useEffect(() => {
