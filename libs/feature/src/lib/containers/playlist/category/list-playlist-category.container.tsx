@@ -107,6 +107,7 @@ export const ListPlaylistCategoryContainer = () => {
   };
 
   const handlePopUpClose = (types: CrudType) => {
+    getData();
     switch (types) {
       case 'create':
         setCreateCategoryPopUp(false);
