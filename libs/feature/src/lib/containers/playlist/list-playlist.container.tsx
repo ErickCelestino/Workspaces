@@ -120,39 +120,31 @@ export const ListPlaylistContainer = () => {
   );
 
   const searchData = async (input: string) => {
-    const result = await handleData({
-      loggedUserId: loggedUser?.id ?? '',
-      companyId: loggedUser?.selectedCompany.id ?? '',
-      userInput: input,
-    });
-
-    setTotalPage(result?.totalPages ?? 0);
-    setListPlaylist(result?.playlists ?? []);
+    getData(input);
   };
 
   const handleChange = async (
     event: React.ChangeEvent<unknown>,
     value: number
   ) => {
-    const result = await ListPlaylistRequest({
-      userInput: '',
-      companyId: loggedUser?.selectedCompany.id ?? '',
-      loggedUserId: loggedUser?.id ?? '',
-      skip: (value - 1) * 8,
-    });
-    setTotalPage(result.totalPages);
-    setListPlaylist(result.playlists);
+    getData('', value);
   };
 
-  const getData = useCallback(async () => {
-    const result = await handleData({
-      loggedUserId: loggedUser?.id ?? '',
-      companyId: loggedUser?.selectedCompany.id ?? '',
-      userInput: '',
-    });
-    setTotalPage(result?.totalPages ?? 0);
-    setListPlaylist(result?.playlists ?? []);
-  }, [loggedUser, handleData]);
+  const getData = useCallback(
+    async (input?: string, skip?: number) => {
+      const result = await handleData({
+        loggedUserId: loggedUser?.id ?? '',
+        companyId: loggedUser?.selectedCompany.id ?? '',
+        userInput: input ? input : '',
+        skip: skip ? (skip - 1) * 8 : 0,
+      });
+      if (result) {
+        setTotalPage(result?.totalPages ?? 0);
+        setListPlaylist(result?.playlists ?? []);
+      }
+    },
+    [loggedUser, handleData]
+  );
 
   useEffect(() => {
     setIsMounted(false);
