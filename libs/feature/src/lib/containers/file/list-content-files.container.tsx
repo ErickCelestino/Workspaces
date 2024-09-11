@@ -133,6 +133,7 @@ export const ListContanteFilesContainer = () => {
   }, [loggedUser, handleData]);
 
   const handlePopUpClose = (types: FileContentType) => {
+    getData();
     switch (types) {
       case 'delete':
         setDeletePopUp(false);
