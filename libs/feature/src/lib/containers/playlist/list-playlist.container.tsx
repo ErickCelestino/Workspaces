@@ -42,6 +42,7 @@ export const ListPlaylistContainer = () => {
   const [isMounted, setIsMounted] = useState(false);
 
   const handlePopUpClose = (types: CrudType | 'add-file') => {
+    getData();
     switch (types) {
       case 'create':
         setCreatePlaylistPopUp(false);
