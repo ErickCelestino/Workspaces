@@ -64,7 +64,6 @@ const onDownloadFile = async (input: DownloadContentFileResponseDto) => {
 };
 
 export const ListContanteFilesContainer = () => {
-  const [search, setSearch] = useState(false);
   const [fileList, setFileList] = useState<ContentFile[]>([]);
   const [totalPage, setTotalPage] = useState<number>(1);
   const [directoryId, setLocalDirectoryId] = useState('');
@@ -74,6 +73,7 @@ export const ListContanteFilesContainer = () => {
   const [movePopUp, setMovePopUp] = useState(false);
   const [fileId, setFileId] = useState('');
   const [directoyPopUp, setDirectoryPopUp] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
 
   const theme = useTheme();
   const { loggedUser } = useLoggedUser();
@@ -231,7 +231,6 @@ export const ListContanteFilesContainer = () => {
     event: React.ChangeEvent<unknown>,
     value: number
   ) => {
-    setSearch(true);
     const result = await ListContentFilesRequest({
       userInput: '',
       directoryId: directoryId,
@@ -245,7 +244,6 @@ export const ListContanteFilesContainer = () => {
   };
 
   const searchData = async (input: string) => {
-    setSearch(true);
     const result = await handleData({
       directoryId,
       companyId: loggedUser?.selectedCompany.id ?? '',
@@ -257,10 +255,15 @@ export const ListContanteFilesContainer = () => {
   };
 
   useEffect(() => {
-    if (!search) {
+    setIsMounted(false);
+  }, [loggedUser?.selectedCompany.id]);
+
+  useEffect(() => {
+    if (!isMounted) {
       getData();
+      setIsMounted(true);
     }
-  }, [directoryId, getData, search]);
+  }, [isMounted, getData]);
 
   const rightClickMenuList: IconMenuItem[] = [
     {
