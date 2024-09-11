@@ -23,12 +23,12 @@ import { useLoggedUser } from '../../contexts';
 import { ContainerSimpleList } from '../utils';
 
 export const ListUserContainer = () => {
-  const [search, setSearch] = useState(false);
   const [deleteUserPopUp, setDeleteUserPopUp] = useState<boolean>(false);
   const [editUserPopUp, setEditUserPopUp] = useState<boolean>(false);
   const [userList, setUserList] = useState<UserList[]>([]);
   const [totalPage, setTotalPage] = useState<number>(1);
   const [selectedId, setSelectedId] = useState<string>('');
+  const [isMounted, setIsMounted] = useState(false);
   const theme = useTheme();
   const { loggedUser } = useLoggedUser();
   const { showSnackbarAlert, SnackbarAlert } = useSnackbarAlert();
@@ -47,16 +47,7 @@ export const ListUserContainer = () => {
     event: React.ChangeEvent<unknown>,
     value: number
   ) => {
-    setSearch(true);
-    const result = await ListUserRequest({
-      filter: '',
-      loggedUserId: loggedUser?.id ?? '',
-      skip: (value - 1) * 4,
-    });
-    if (result) {
-      setUserList(result.users);
-      setTotalPage(result.totalPages);
-    }
+    getData('', value);
   };
 
   const handleData = useCallback(
@@ -66,11 +57,7 @@ export const ListUserContainer = () => {
           filter: data.filter,
           loggedUserId: data.loggedUserId,
         });
-
-        if (result) {
-          setUserList(result.users);
-          setTotalPage(result.totalPages);
-        }
+        return result;
       } catch (error) {
         console.error(error);
         if (axios.isAxiosError(error)) {
@@ -98,35 +85,60 @@ export const ListUserContainer = () => {
     }
   };
 
-  const searchData = async (input: string) => {
-    setSearch(true);
-    await handleData({
-      loggedUserId: loggedUser?.id ?? '',
-      filter: input,
-    });
+  const handleClose = (data: CrudType) => {
+    getData();
+    switch (data) {
+      case 'delete':
+        setDeleteUserPopUp(false);
+        break;
+      case 'edit':
+        setEditUserPopUp(false);
+        break;
+    }
   };
 
-  useEffect(() => {
-    if (!search) {
-      handleData({
-        filter: '',
+  const searchData = async (input: string) => {
+    getData(input);
+  };
+
+  const getData = useCallback(
+    async (input?: string, skip?: number) => {
+      const result = await handleData({
         loggedUserId: loggedUser?.id ?? '',
+        filter: input ? input : '',
+        skip: skip ? (skip - 1) * 4 : 0,
       });
+      if (result) {
+        setTotalPage(result?.totalPages ?? 0);
+        setUserList(result?.users ?? []);
+      }
+    },
+    [loggedUser, handleData]
+  );
+
+  useEffect(() => {
+    setIsMounted(false);
+  }, [loggedUser?.selectedCompany.id]);
+
+  useEffect(() => {
+    if (!isMounted) {
+      getData();
+      setIsMounted(true);
     }
-  }, [handleData, loggedUser, search]);
+  }, [isMounted, getData]);
 
   return (
     <>
       <DeleteUserModal
         open={deleteUserPopUp}
-        handlePopUpClose={() => setDeleteUserPopUp(false)}
+        handlePopUpClose={() => handleClose('delete')}
         showAlert={showAlert}
         title="Deletar Usuário"
         idToDelete={selectedId}
       />
       <EditUserModal
         open={editUserPopUp}
-        handlePopUpClose={() => setEditUserPopUp(false)}
+        handlePopUpClose={() => handleClose('edit')}
         showAlert={showAlert}
         title="Editar Usuário"
         idToEdit={selectedId}

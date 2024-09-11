@@ -155,8 +155,10 @@ export const ListDeviceContainer = () => {
       filter: input,
     });
 
-    setTotalPage(result?.totalPages ?? 0);
-    setListDevice(result?.devices ?? []);
+    if (result) {
+      setTotalPage(result?.totalPages ?? 0);
+      setListDevice(result?.devices ?? []);
+    }
   };
 
   useEffect(() => {
