@@ -145,11 +145,15 @@ export const ListDeviceContainer = () => {
   };
 
   useEffect(() => {
-    if (!isMounted && !loggedUser?.selectedCompany.id) {
+    setIsMounted(false);
+  }, [loggedUser?.selectedCompany.id]);
+
+  useEffect(() => {
+    if (!isMounted) {
       getData();
       setIsMounted(true);
     }
-  }, [isMounted, getData, loggedUser?.selectedCompany.id]);
+  }, [isMounted, getData]);
 
   return (
     <>
