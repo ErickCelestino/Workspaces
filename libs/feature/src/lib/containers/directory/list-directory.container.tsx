@@ -30,9 +30,9 @@ export const ListDirectoryContainer = () => {
 
   const { SnackbarAlert, showSnackbarAlert } = useSnackbarAlert();
   const [createDirectoryPopUp, setCreateDirectoryPopUp] = useState(false);
-  const [search, setSearch] = useState(false);
   const [totalPage, setTotalPage] = useState<number>(1);
   const [listDirectory, setListDirectory] = useState<Directory[]>([]);
+  const [isMounted, setIsMounted] = useState(false);
 
   const handlePopUpClose = (types: CrudType) => {
     switch (types) {
@@ -85,7 +85,6 @@ export const ListDirectoryContainer = () => {
   );
 
   const searchData = async (input: string) => {
-    setSearch(true);
     const result = await handleData({
       companyId: loggedUser?.selectedCompany.id ?? '',
       loggedUserId: loggedUser?.id ?? '',
@@ -100,7 +99,6 @@ export const ListDirectoryContainer = () => {
     event: React.ChangeEvent<unknown>,
     value: number
   ) => {
-    setSearch(true);
     const result = await ListDirectoryRequest({
       userInput: '',
       companyId: loggedUser?.selectedCompany.id ?? '',
@@ -122,10 +120,15 @@ export const ListDirectoryContainer = () => {
   }, [handleData, loggedUser]);
 
   useEffect(() => {
-    if (!search) {
+    setIsMounted(false);
+  }, [loggedUser?.selectedCompany.id]);
+
+  useEffect(() => {
+    if (!isMounted) {
       getData();
+      setIsMounted(true);
     }
-  }, [getData, search]);
+  }, [isMounted, getData]);
 
   const rightClickMenuList: IconMenuItem[] = [
     {
