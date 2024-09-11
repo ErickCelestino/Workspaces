@@ -41,12 +41,12 @@ export const ListCompanyContainer: FC<ListCompanyContainerProps> = ({
   const [listCompany, setListCompany] = useState<
     ListSimpleCompanyResponseDto[]
   >([]);
-  const [search, setSearch] = useState(false);
   const [totalPage, setTotalPage] = useState<number>(1);
   const [createCompanyPopUp, setCreateCompanyPopUp] = useState(false);
   const [selectedId, setSelectedId] = useState<string>('');
   const [deleteCompanyPopUp, setDeleteCompanyPopUp] = useState(false);
   const [editCompanyPopUp, setEditCompanyPopUp] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
 
   const showAlert = useCallback(
     (message: string, success: boolean) => {
@@ -86,16 +86,20 @@ export const ListCompanyContainer: FC<ListCompanyContainerProps> = ({
   );
 
   useEffect(() => {
-    if (!search) {
+    setIsMounted(false);
+  }, [loggedUser?.selectedCompany.id]);
+
+  useEffect(() => {
+    if (!isMounted) {
       handleData({
         filter: '',
         loggedUserId: loggedUser?.id ?? '',
       });
+      setIsMounted(true);
     }
-  }, [handleData, loggedUser, search]);
+  }, [isMounted, handleData]);
 
   const searchData = async (input: string) => {
-    setSearch(true);
     const result = await handleData({
       filter: input,
       loggedUserId: loggedUser?.id ?? '',
@@ -110,7 +114,6 @@ export const ListCompanyContainer: FC<ListCompanyContainerProps> = ({
     event: React.ChangeEvent<unknown>,
     value: number
   ) => {
-    setSearch(true);
     const result = await handleData({
       loggedUserId: loggedUser?.id ?? '',
       filter: '',
