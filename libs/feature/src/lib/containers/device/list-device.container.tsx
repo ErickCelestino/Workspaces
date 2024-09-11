@@ -76,6 +76,21 @@ export const ListDeviceContainer = () => {
     }
   };
 
+  const handleClose = (data: CrudType) => {
+    getData();
+    switch (data) {
+      case 'create':
+        setCreateDevicePopUp(false);
+        break;
+      case 'delete':
+        setDeleteDevicePopUp(false);
+        break;
+      case 'edit':
+        setEditDevicePopUp(false);
+        break;
+    }
+  };
+
   const rightClickMenuList: IconMenuItem[] = [
     {
       icon: <Icon>playlist_add</Icon>,
@@ -160,21 +175,21 @@ export const ListDeviceContainer = () => {
       <CreateDeviceModal
         open={createDevicePopUp}
         title="Novo Dispositivo"
-        handlePopUpClose={() => setCreateDevicePopUp(false)}
+        handlePopUpClose={() => handleClose('create')}
         showAlert={showAlert}
       />
       <DeleteDeviceModal
         open={deleteDevicePopUp}
         title="Deletar Dispositivo"
         subTitle="Por favor, selecione alguma das alternativas"
-        handlePopUpClose={() => setDeleteDevicePopUp(false)}
+        handlePopUpClose={() => handleClose('delete')}
         showAlert={showAlert}
         idToDelete={selectedId}
       />
       <EditDeviceModal
         open={editDevicePopUp}
         title="Editar Dispositivo"
-        handlePopUpClose={() => setEditDevicePopUp(false)}
+        handlePopUpClose={() => handleClose('edit')}
         showAlert={showAlert}
         idToEdit={selectedId}
       />
