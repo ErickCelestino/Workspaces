@@ -340,7 +340,7 @@ export const ListContanteFilesContainer = () => {
           totalPage={totalPage}
           handleChange={handleChange}
           mobileBackButtom
-          changeDirectory
+          // changeDirectory
           handleDirectoryPopUpOpen={() =>
             handleDirectoryPopUpOpen('changeDirectory')
           }

@@ -56,14 +56,14 @@ export const DeleteDirectoryModal: FC<DeleteDirectoryModalProps> = ({
       if (filesInDirectory.files.length > 0) {
         setDecisionModalOpen(true);
         setFilesInDirectory(filesInDirectory.files);
+      } else {
+        await DeleteDirectoryRequest({
+          id: idToDelete,
+          loggedUserId: loggedUser?.id ?? '',
+        });
+        showAlert(successMessage, true);
+        handlePopUpClose();
       }
-
-      await DeleteDirectoryRequest({
-        id: idToDelete,
-        loggedUserId: loggedUser?.id ?? '',
-      });
-      showAlert(successMessage, true);
-      handlePopUpClose();
     } catch (error) {
       console.error(error);
       if (axios.isAxiosError(error)) {
