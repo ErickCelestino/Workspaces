@@ -86,13 +86,21 @@ export const ListSchedulesContainer = () => {
     setIsMounted(false);
   }, [loggedUser?.selectedCompany.id]);
 
+  const getData = useCallback(async () => {
+    const result = await handleData({
+      companyId: loggedUser?.selectedCompany.id ?? '',
+      loggedUserId: loggedUser?.id ?? '',
+      filter: '',
+    });
+    if (result) {
+      setTotalPage(result?.totalPages ?? 0);
+      setListSchedules(result?.schedules ?? []);
+    }
+  }, [loggedUser, handleData]);
+
   useEffect(() => {
     if (!isMounted) {
-      handleData({
-        filter: '',
-        loggedUserId: loggedUser?.id ?? '',
-        companyId: loggedUser?.selectedCompany.id ?? '',
-      });
+      getData();
       setIsMounted(true);
     }
   }, [isMounted, handleData]);
@@ -121,6 +129,7 @@ export const ListSchedulesContainer = () => {
   };
 
   const handlePopUpClose = (types: CrudType | 'add-playlist') => {
+    getData();
     switch (types) {
       case 'create':
         setCreateSchedulingPopUp(false);
