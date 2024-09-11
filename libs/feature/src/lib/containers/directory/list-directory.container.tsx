@@ -35,6 +35,7 @@ export const ListDirectoryContainer = () => {
   const [isMounted, setIsMounted] = useState(false);
 
   const handlePopUpClose = (types: CrudType) => {
+    getData();
     switch (types) {
       case 'create':
         setCreateDirectoryPopUp(false);
