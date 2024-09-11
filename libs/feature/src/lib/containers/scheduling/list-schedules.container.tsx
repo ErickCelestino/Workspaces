@@ -32,7 +32,6 @@ export const ListSchedulesContainer = () => {
   const theme = useTheme();
 
   const [listSchedules, setListSchedules] = useState<Scheduling[]>([]);
-  const [search, setSearch] = useState(false);
   const { showSnackbarAlert, SnackbarAlert } = useSnackbarAlert();
   const [totalPage, setTotalPage] = useState<number>(1);
   const [createSchedulingPopUp, setCreateSchedulingPopUp] = useState(false);
@@ -42,6 +41,7 @@ export const ListSchedulesContainer = () => {
   const [addPlaylistToSchedulingPopUp, setAddPlaylistToSchedulingPopUp] =
     useState(false);
   const [selectedId, setSelectedId] = useState('');
+  const [isMounted, setIsMounted] = useState(false);
 
   const showAlert = useCallback(
     (message: string, success: boolean) => {
@@ -83,14 +83,19 @@ export const ListSchedulesContainer = () => {
   );
 
   useEffect(() => {
-    if (!search) {
+    setIsMounted(false);
+  }, [loggedUser?.selectedCompany.id]);
+
+  useEffect(() => {
+    if (!isMounted) {
       handleData({
         filter: '',
         loggedUserId: loggedUser?.id ?? '',
         companyId: loggedUser?.selectedCompany.id ?? '',
       });
+      setIsMounted(true);
     }
-  }, [handleData, loggedUser, search]);
+  }, [isMounted, handleData]);
 
   const handlePopUpOpen = (types: CrudType | 'add-playlist', id?: string) => {
     switch (types) {
@@ -136,7 +141,6 @@ export const ListSchedulesContainer = () => {
   };
 
   const searchData = async (input: string) => {
-    setSearch(true);
     const result = await handleData({
       loggedUserId: loggedUser?.id ?? '',
       companyId: loggedUser?.selectedCompany.id ?? '',
@@ -153,7 +157,6 @@ export const ListSchedulesContainer = () => {
     event: React.ChangeEvent<unknown>,
     value: number
   ) => {
-    setSearch(true);
     const result = await ListSchedulesRequest({
       loggedUserId: loggedUser?.id ?? '',
       companyId: loggedUser?.selectedCompany.id ?? '',
