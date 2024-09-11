@@ -85,16 +85,24 @@ export const ListCompanyContainer: FC<ListCompanyContainerProps> = ({
     [showAlert]
   );
 
+  const getData = useCallback(async () => {
+    const result = await handleData({
+      filter: '',
+      loggedUserId: loggedUser?.id ?? '',
+    });
+    if (result) {
+      setListCompany(result.companies);
+      setTotalPage(result.totalPages);
+    }
+  }, [loggedUser, handleData]);
+
   useEffect(() => {
     setIsMounted(false);
   }, [loggedUser?.selectedCompany.id]);
 
   useEffect(() => {
     if (!isMounted) {
-      handleData({
-        filter: '',
-        loggedUserId: loggedUser?.id ?? '',
-      });
+      getData();
       setIsMounted(true);
     }
   }, [isMounted, handleData]);
@@ -141,6 +149,21 @@ export const ListCompanyContainer: FC<ListCompanyContainerProps> = ({
     }
   };
 
+  const handleClose = (data: CrudType) => {
+    getData();
+    switch (data) {
+      case 'create':
+        setCreateCompanyPopUp(false);
+        break;
+      case 'delete':
+        setDeleteCompanyPopUp(false);
+        break;
+      case 'edit':
+        setEditCompanyPopUp(false);
+        break;
+    }
+  };
+
   const rightClickMenuList: IconMenuItem[] = [
     {
       icon: <AddBusinessIcon />,
@@ -154,20 +177,20 @@ export const ListCompanyContainer: FC<ListCompanyContainerProps> = ({
       <CreateCompanyModal
         open={createCompanyPopUp}
         title="Cadastrar Empresa"
-        handlePopUpClose={() => setCreateCompanyPopUp(false)}
+        handlePopUpClose={() => handleClose('create')}
         showAlert={showAlert}
       />
       <DeleteCompanyModal
         open={deleteCompanyPopUp}
         title="Deletar Empresa"
-        handlePopUpClose={() => setDeleteCompanyPopUp(false)}
+        handlePopUpClose={() => handleClose('delete')}
         showAlert={showAlert}
         idToDelete={selectedId}
       />
       <EditCompanyModal
         open={editCompanyPopUp}
         title="Editar Empresa"
-        handlePopUpClose={() => setEditCompanyPopUp(false)}
+        handlePopUpClose={() => handleClose('edit')}
         showAlert={showAlert}
         companyId={selectedId}
       />
