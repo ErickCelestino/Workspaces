@@ -4,6 +4,7 @@ import { CreatePlaylistController } from './create-playlist.controller';
 import { CreatePlaylist } from '@workspaces/domain';
 import {
   CreatePlaylistRepositoryImpl,
+  FindCompanyByIdRepositoryImpl,
   FindPlaylistByNameRepositoryImpl,
   FindPlaylistCategoryByIdRepositoryImpl,
   FindUserByIdRepositoryImpl,
@@ -22,6 +23,10 @@ import {
     {
       provide: 'FindUserByIdRepository',
       useClass: FindUserByIdRepositoryImpl,
+    },
+    {
+      provide: 'FindCompanyByIdRepository',
+      useClass: FindCompanyByIdRepositoryImpl,
     },
     {
       provide: 'FindPlaylistByNameRepository',

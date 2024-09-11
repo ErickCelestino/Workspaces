@@ -1,15 +1,20 @@
 import {
+  CompanyResponseDto,
   CreateDirectoryDto,
   CreateDirectoryRepository,
   EntityNotEmpty,
   EntityNotExists,
+  FindCompanyByIdRepository,
   FindDirectoryByNameRepository,
   FindUserByIdRepository,
   UserList,
 } from '../../../src';
 import { CreateDirectory } from '../../../src/lib/use-case';
-import { DirectoryMock, userMock } from '../../entity';
-import { FindUserByIdRepositoryMock } from '../../repository';
+import { CompanySimpleMock, DirectoryMock, userMock } from '../../entity';
+import {
+  FindCompanyByIdRepositoryMock,
+  FindUserByIdRepositoryMock,
+} from '../../repository';
 import { CreateDirectoryRepositoryMock } from '../../repository/directory/create-directory.mock';
 import { FindDirectoryByNameRepositoryMock } from '../../repository/directory/find-directory-by-name.mock';
 
@@ -17,6 +22,7 @@ interface SutTypes {
   sut: CreateDirectory;
   createDirectoryDto: CreateDirectoryDto;
   findUserByIdRepository: FindUserByIdRepository;
+  findCompanyByIdRepository: FindCompanyByIdRepository;
   findDirectoryByNameRepository: FindDirectoryByNameRepository;
   createDirectoryRepository: CreateDirectoryRepository;
 }
@@ -24,15 +30,18 @@ interface SutTypes {
 const makeSut = (): SutTypes => {
   const createDirectoryRepository = new CreateDirectoryRepositoryMock();
   const findUserByIdRepository = new FindUserByIdRepositoryMock();
+  const findCompanyByIdRepository = new FindCompanyByIdRepositoryMock();
   const findDirectoryByNameRepository = new FindDirectoryByNameRepositoryMock();
 
   const createDirectoryDto: CreateDirectoryDto = {
     body: { name: DirectoryMock.name },
     loggedUserId: userMock.userId,
+    companyId: CompanySimpleMock.id,
   };
 
   const sut = new CreateDirectory(
     findUserByIdRepository,
+    findCompanyByIdRepository,
     findDirectoryByNameRepository,
     createDirectoryRepository
   );
@@ -42,6 +51,7 @@ const makeSut = (): SutTypes => {
     findDirectoryByNameRepository: findDirectoryByNameRepository,
     findUserByIdRepository: findUserByIdRepository,
     createDirectoryDto: createDirectoryDto,
+    findCompanyByIdRepository,
     sut,
   };
 };
@@ -66,6 +76,16 @@ describe('CreateDirectory', () => {
     CreateDirectoryDto.loggedUserId = '';
     const result = await sut.execute(CreateDirectoryDto);
     expect(result.isLeft()).toBe(true);
+    expect(result.value).toBeInstanceOf(EntityNotEmpty);
+  });
+
+  it('should return EntityNotEmpty when a pass incorrect Company ID', async () => {
+    const { createDirectoryDto, sut } = makeSut();
+    createDirectoryDto.companyId = '';
+    const result = await sut.execute(createDirectoryDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
     expect(result.value).toBeInstanceOf(EntityNotEmpty);
   });
 
@@ -98,6 +118,18 @@ describe('CreateDirectory', () => {
     jest
       .spyOn(sut['findUserByIdRepository'], 'find')
       .mockResolvedValueOnce({} as UserList);
+    const result = await sut.execute(createDirectoryDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
+    expect(result.value).toBeInstanceOf(EntityNotExists);
+  });
+
+  it('should return EntityNotExists when a no exist company in system', async () => {
+    const { createDirectoryDto, sut } = makeSut();
+    jest
+      .spyOn(sut['findCompanyByIdRepository'], 'find')
+      .mockResolvedValueOnce({} as CompanyResponseDto);
     const result = await sut.execute(createDirectoryDto);
 
     expect(result.isLeft()).toBe(true);

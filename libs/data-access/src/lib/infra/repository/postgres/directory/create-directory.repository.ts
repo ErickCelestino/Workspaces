@@ -11,12 +11,13 @@ export class CreateDirectoryRepositoryImpl
   constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
 
   async create(input: CreateDirectoryDto): Promise<string> {
-    const { body, loggedUserId } = input;
+    const { body, loggedUserId, companyId } = input;
 
     const createdDirectory = await this.prismaService.directory.create({
       data: {
         name: body.name,
         user_id: loggedUserId,
+        company_id: companyId,
       },
     });
 

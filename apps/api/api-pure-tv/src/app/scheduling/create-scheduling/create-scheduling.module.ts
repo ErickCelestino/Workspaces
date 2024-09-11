@@ -5,6 +5,7 @@ import { CreateScheduling } from '@workspaces/domain';
 import {
   ConvertStringInTimeRepositoryImpl,
   CreateSchedulingRepositoryImpl,
+  FindCompanyByIdRepositoryImpl,
   FindSchedulingByNameRepositoryImpl,
   FindUserByIdRepositoryImpl,
   PrismaService,
@@ -22,6 +23,10 @@ import {
     {
       provide: 'FindUserByIdRepository',
       useClass: FindUserByIdRepositoryImpl,
+    },
+    {
+      provide: 'FindCompanyByIdRepository',
+      useClass: FindCompanyByIdRepositoryImpl,
     },
     {
       provide: 'FindSchedulingByNameRepository',

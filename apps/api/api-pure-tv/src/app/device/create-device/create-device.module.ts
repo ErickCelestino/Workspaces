@@ -4,6 +4,7 @@ import { CreateDeviceController } from './create-device.controller';
 import { CreateDevice } from '@workspaces/domain';
 import {
   CreateDeviceRepositoryImpl,
+  FindCompanyByIdRepositoryImpl,
   FindDeviceByNameRepositoryImpl,
   FindUserByIdRepositoryImpl,
   PrismaService,
@@ -25,6 +26,10 @@ import {
     {
       provide: 'FindDeviceByNameRepository',
       useClass: FindDeviceByNameRepositoryImpl,
+    },
+    {
+      provide: 'FindCompanyByIdRepository',
+      useClass: FindCompanyByIdRepositoryImpl,
     },
     {
       provide: 'CreateDeviceRepository',

@@ -12,11 +12,16 @@ import {
 import {
   ConvertStringInTimeRepository,
   CreateSchedulingRepository,
+  FindCompanyByIdRepository,
   FindSchedulingByNameRepository,
   FindUserByIdRepository,
 } from '../../repository';
 import { Either, left, right } from '../../shared/either';
-import { ValidationStartEndTime, ValidationUserId } from '../../utils';
+import {
+  ValidationCompanyId,
+  ValidationStartEndTime,
+  ValidationUserId,
+} from '../../utils';
 
 export class CreateScheduling
   implements
@@ -36,6 +41,8 @@ export class CreateScheduling
   constructor(
     @Inject('FindUserByIdRepository')
     private findUserByIdRepository: FindUserByIdRepository,
+    @Inject('FindCompanyByIdRepository')
+    private findCompanyByIdRepository: FindCompanyByIdRepository,
     @Inject('FindSchedulingByNameRepository')
     private findSchedulingByNameRepository: FindSchedulingByNameRepository,
     @Inject('ConvertStringInTimeRepository')
@@ -59,6 +66,7 @@ export class CreateScheduling
   > {
     const {
       loggedUserId,
+      companyId,
       body: { name, priority, startTime, endTime, lopping },
     } = input;
 
@@ -107,6 +115,15 @@ export class CreateScheduling
       return left(userValidation.value);
     }
 
+    const companyValidation = await ValidationCompanyId(
+      companyId,
+      this.findCompanyByIdRepository
+    );
+
+    if (companyValidation.isLeft()) {
+      return left(companyValidation.value);
+    }
+
     const filteredScheduling = await this.findSchedulingByNameRepository.find({
       name,
       loggedUserId,
@@ -118,6 +135,7 @@ export class CreateScheduling
 
     const createdSchedulingId = await this.createSchedulingRepository.create({
       loggedUserId,
+      companyId,
       body: {
         name,
         priority,

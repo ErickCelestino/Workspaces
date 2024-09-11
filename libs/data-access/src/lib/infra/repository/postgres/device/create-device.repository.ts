@@ -8,12 +8,14 @@ export class CreateDeviceRepositoryImpl implements CreateDeviceRepository {
     const {
       body: { name },
       loggedUserId,
+      companyId,
     } = input;
 
     const createdDevice = await this.prismaService.device.create({
       data: {
         name: name,
         user_id: loggedUserId,
+        company_id: companyId,
       },
     });
 

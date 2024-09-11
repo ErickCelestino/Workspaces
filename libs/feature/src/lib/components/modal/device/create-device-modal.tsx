@@ -58,7 +58,7 @@ export const CreateDeviceModal: FC<CreateDeviceModalProps> = ({
     } catch (error) {
       setLoading(false);
       setSuccess(false);
-      console.log(error);
+      console.error(error);
       if (axios.isAxiosError(error)) {
         const axiosError = error as AxiosError<ErrorResponse>;
         const errors = ValidationsError(axiosError, 'Dispositivo');
@@ -75,6 +75,7 @@ export const CreateDeviceModal: FC<CreateDeviceModalProps> = ({
     const result = await createDevice({
       body: data,
       loggedUserId: loggedUser?.id ?? '',
+      companyId: loggedUser?.selectedCompany?.id ?? '',
     });
     if (result) {
       setLoading(false);

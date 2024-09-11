@@ -10,6 +10,7 @@ export class CreateDeviceController {
   @UsePipes(new ZodValidationPipe(createDeviceSchema))
   @Post()
   async create(
+    @Query('companyId') companyId: string,
     @Query('loggedUserId') loggedUserId: string,
     @Body() body: { name: string }
   ) {
@@ -18,6 +19,7 @@ export class CreateDeviceController {
       body: {
         name: body?.name ?? '',
       },
+      companyId,
     });
 
     if (result.isRight()) return { deviceId: result.value };

@@ -9,10 +9,11 @@ import {
 import { Either, left, right } from '../../shared/either';
 import {
   CreateDeviceRepository,
+  FindCompanyByIdRepository,
   FindDeviceByNameRepository,
   FindUserByIdRepository,
 } from '../../repository';
-import { ValidationUserId } from '../../utils';
+import { ValidationCompanyId, ValidationUserId } from '../../utils';
 
 export class CreateDevice
   implements
@@ -26,6 +27,8 @@ export class CreateDevice
     private findUserByIdRepository: FindUserByIdRepository,
     @Inject('FindDeviceByNameRepository')
     private findDeviceByNameRepository: FindDeviceByNameRepository,
+    @Inject('FindCompanyByIdRepository')
+    private findCompanyByIdRepository: FindCompanyByIdRepository,
     @Inject('CreateDeviceRepository')
     private createDeviceRepository: CreateDeviceRepository
   ) {}
@@ -36,6 +39,7 @@ export class CreateDevice
   > {
     const {
       loggedUserId,
+      companyId,
       body: { name },
     } = input;
 
@@ -47,6 +51,10 @@ export class CreateDevice
       return left(new EntityNotEmpty('Name'));
     }
 
+    if (Object.keys(companyId).length < 1) {
+      return left(new EntityNotEmpty('Company'));
+    }
+
     const userValidation = await ValidationUserId(
       loggedUserId,
       this.findUserByIdRepository
@@ -54,6 +62,15 @@ export class CreateDevice
 
     if (userValidation.isLeft()) {
       return left(userValidation.value);
+    }
+
+    const companyValidation = await ValidationCompanyId(
+      companyId,
+      this.findCompanyByIdRepository
+    );
+
+    if (companyValidation.isLeft()) {
+      return left(companyValidation.value);
     }
 
     const filteredDevice = await this.findDeviceByNameRepository.find({

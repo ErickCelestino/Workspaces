@@ -11,11 +11,13 @@ export class CreatePlaylistController {
   @Post()
   async create(
     @Body() input: { name: string },
+    @Query('companyId') companyId: string,
     @Query('loggedUserId') loggedUserId: string,
     @Query('playlistCategoryId') playlistCategoryId: string
   ) {
     const result = await this.createPlaylistService.create({
       loggedUserId,
+      companyId,
       name: input?.name ?? '',
       playlistCategoryId,
     });

@@ -69,9 +69,8 @@ export const LoginContainer: React.FC<LoginContainerProps> = ({
   });
 
   const setLocalUserId = async (email: string) => {
-    console.log(email);
     const user = await FindUserByEmailRequest({ email });
-    console.log(user);
+
     if (Object.keys(user).length > 0) {
       const loggedUser: LoggedUser = {
         id: user.id,
@@ -79,6 +78,8 @@ export const LoginContainer: React.FC<LoginContainerProps> = ({
         name: user.name,
         type: user.type,
         status: user.status,
+        selectedCompany: user.companies[0],
+        companies: user.companies,
       };
       setItemLocalStorage(JSON.stringify(loggedUser), 'lu');
       setLoggedUser(loggedUser);

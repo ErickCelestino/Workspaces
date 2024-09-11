@@ -32,7 +32,8 @@ export class CreateContentFileController {
   async create(
     @UploadedFiles() files: Express.Multer.File[],
     @Query('loggedUserId') loggedUserId: string,
-    @Query('directoryId') directoryId: string
+    @Query('directoryId') directoryId: string,
+    @Query('companyId') companyId: string
   ) {
     const uploadedFileNames = FileS3Storage.getUploadedFileNames();
     const updatedFiles =
@@ -46,6 +47,7 @@ export class CreateContentFileController {
       directoryId: directoryId,
       file: updatedFiles,
       loggedUserId,
+      companyId,
     });
 
     if (result.isRight()) return result.value;

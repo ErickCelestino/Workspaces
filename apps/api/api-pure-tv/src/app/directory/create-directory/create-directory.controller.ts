@@ -17,12 +17,14 @@ export class CreateDirectoryController {
   @Post()
   @UsePipes(new ZodValidationPipe(createDirectorySchema))
   async create(
+    @Query('companyId') companyId: string,
     @Query('loggedUserId') loggedUserId: string,
     @Body() body: CreateDirectoryBodyDto
   ) {
     const result = await this.createDirectoryService.create({
       body,
       loggedUserId,
+      companyId,
     });
     const response: CreateDirectoryResponseDto = {
       directory_id: `${result.value}`,

@@ -2,6 +2,7 @@ export * from './alert';
 export * from './app';
 export * from './auth';
 export * from './combo-box';
+export * from './company';
 export * from './config';
 export * from './device';
 export * from './directory';

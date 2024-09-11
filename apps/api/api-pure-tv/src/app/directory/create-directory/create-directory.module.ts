@@ -4,6 +4,7 @@ import { CreateDirectoryService } from './create-directory.service';
 import { CreateDirectory } from '@workspaces/domain';
 import {
   CreateDirectoryRepositoryImpl,
+  FindCompanyByIdRepositoryImpl,
   FindDirectoryByNameRepositoryImpl,
   FindUserByIdRepositoryImpl,
   PrismaService,
@@ -21,6 +22,10 @@ import {
     {
       provide: 'FindUserByIdRepository',
       useClass: FindUserByIdRepositoryImpl,
+    },
+    {
+      provide: 'FindCompanyByIdRepository',
+      useClass: FindCompanyByIdRepositoryImpl,
     },
     {
       provide: 'FindDirectoryByNameRepository',
