@@ -172,6 +172,7 @@ export const FormCreateCompanyAddress: FC<FormCreateCompanyAddressProps> = ({
 
   const ajustLists = useCallback(
     async (input: AjustListsDto) => {
+      console.log(input);
       getCountry({
         loggedUserId: loggedUser?.id ?? '',
       }).then((country) => {
@@ -223,7 +224,8 @@ export const FormCreateCompanyAddress: FC<FormCreateCompanyAddressProps> = ({
   );
 
   useEffect(() => {
-    if (stepPosition === 4 && !dataLoaded) {
+    if (!dataLoaded) {
+      console.log(dataLoaded);
       ajustLists({
         city: companyAddress.city,
         country: companyAddress.country,
@@ -298,28 +300,29 @@ export const FormCreateCompanyAddress: FC<FormCreateCompanyAddressProps> = ({
     (event: React.ChangeEvent<{ value: string }>) => {
       let filteredCountry;
       let filteredState;
+      console.log(field);
       switch (field) {
         case 'country':
           filteredCountry = listCoutry?.filter(
             (item) => item.name === event.target.value
           )[0];
+          setState('');
           getState({
             loggedUserId: loggedUser?.id ?? '',
             countryId: filteredCountry?.id ?? '',
           });
-          setState('');
+
           setter(event.target.value);
           break;
         case 'state':
           filteredState = listState?.filter(
             (item) => item.uf === event.target.value
           )[0];
+          setCity('');
           getCity({
             loggedUserId: loggedUser?.id ?? '',
             stateId: filteredState?.id ?? '',
           });
-          setCity('');
-          setter(event.target.value);
           break;
         case 'city':
           setter(event.target.value);
