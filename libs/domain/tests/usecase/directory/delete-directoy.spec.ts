@@ -3,6 +3,7 @@ import {
   DeleteDirectoryDto,
   DeleteDirectoryRepository,
   Directory,
+  EntityIsNotEmpty,
   EntityNotEmpty,
   EntityNotExists,
   FindContentFilesByDirectoryIdRepository,
@@ -10,7 +11,7 @@ import {
   FindUserByIdRepository,
   UserList,
 } from '../../../src';
-import { DirectoryMock, userMock } from '../../entity';
+import { ContentFileMock, DirectoryMock, userMock } from '../../entity';
 import {
   DeleteDirectoryRepositoryMock,
   FindContentFilesByDirectoryIdRepositoryMock,
@@ -109,5 +110,17 @@ describe('DeleteDirectory', () => {
     expect(result.isLeft()).toBe(true);
     expect(result.isRight()).toBe(false);
     expect(result.value).toBeInstanceOf(EntityNotExists);
+  });
+
+  it('should return EntityIsNotEmpty when a exist content files in directory', async () => {
+    const { deleteDirectoryDto, sut } = makeSut();
+    jest
+      .spyOn(sut['findContentFilesByDirectoryIdRepository'], 'find')
+      .mockResolvedValueOnce([ContentFileMock]);
+    const result = await sut.execute(deleteDirectoryDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
+    expect(result.value).toBeInstanceOf(EntityIsNotEmpty);
   });
 });

@@ -44,8 +44,8 @@ export class ListContentFile
     const directoryString = 'directory';
 
     const directoryIdValidation = await ValidationTextField(
-      directoryString,
-      loggedUserString
+      directoryId,
+      directoryString
     );
     if (directoryIdValidation.isLeft())
       return left(directoryIdValidation.value);

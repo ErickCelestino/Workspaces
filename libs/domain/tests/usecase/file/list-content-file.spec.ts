@@ -10,9 +10,9 @@ import {
   EntityNotExists,
   Directory,
   FindCompanyByIdRepository,
+  CompanyResponseDto,
 } from '../../../src';
 import {
-  CompanyAddressMock,
   CompanyMock,
   DirectoryMock,
   ListContentFileReponseMock,
@@ -93,9 +93,9 @@ describe('ListContentFile', () => {
     expect(result.value).toBeInstanceOf(EntityNotEmpty);
   });
 
-  it('should return EntityNotEmpty when a pass incorrect user id', async () => {
+  it('should return EntityNotEmpty when a pass incorrect Company id', async () => {
     const { listContentFileDto, sut } = makeSut();
-    listContentFileDto.loggedUserId = '';
+    listContentFileDto.companyId = '';
     const result = await sut.execute(listContentFileDto);
 
     expect(result.isLeft()).toBe(true);
@@ -103,7 +103,7 @@ describe('ListContentFile', () => {
     expect(result.value).toBeInstanceOf(EntityNotEmpty);
   });
 
-  it('should return EntityNotExists when a pass incorrect Logged User ID', async () => {
+  it('should return EntityNotExists when not exist user in system', async () => {
     const { listContentFileDto, sut } = makeSut();
     jest
       .spyOn(sut['findUserByIdRepository'], 'find')
@@ -115,11 +115,23 @@ describe('ListContentFile', () => {
     expect(result.value).toBeInstanceOf(EntityNotExists);
   });
 
-  it('should return EntityNotExists when a pass incorrect Directory ID', async () => {
+  it('should return EntityNotExists when not exist directory in system', async () => {
     const { listContentFileDto, sut } = makeSut();
     jest
       .spyOn(sut['findDirectoryByIdRepository'], 'find')
       .mockResolvedValueOnce({} as Directory);
+    const result = await sut.execute(listContentFileDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
+    expect(result.value).toBeInstanceOf(EntityNotExists);
+  });
+
+  it('should return EntityNotExists when not exist company in system', async () => {
+    const { listContentFileDto, sut } = makeSut();
+    jest
+      .spyOn(sut['findCompanyByIdRepository'], 'find')
+      .mockResolvedValueOnce({} as CompanyResponseDto);
     const result = await sut.execute(listContentFileDto);
 
     expect(result.isLeft()).toBe(true);
