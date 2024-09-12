@@ -101,15 +101,17 @@ export const ListCompanyContainer: FC<ListCompanyContainerProps> = ({
   );
 
   useEffect(() => {
-    setIsMounted(false);
+    if (loggedUser?.selectedCompany.id) {
+      setIsMounted(false);
+    }
   }, [loggedUser?.selectedCompany.id]);
 
   useEffect(() => {
-    if (!isMounted) {
+    if (!isMounted && loggedUser?.id) {
       getData();
       setIsMounted(true);
     }
-  }, [isMounted, handleData]);
+  }, [isMounted, loggedUser?.id, getData]);
 
   const searchData = async (input: string) => {
     getData(input);
