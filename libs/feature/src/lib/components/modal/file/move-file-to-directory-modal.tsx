@@ -30,6 +30,7 @@ interface MoveFileToDirectoryModalProps {
   showAlert: (message: string, success: boolean) => void;
   idToMove: string;
   loggedUserId: string;
+  companyId: string;
   title: string;
   buttonTitle: string;
   fieldLabel?: string;
@@ -43,6 +44,7 @@ export const MoveFileToDirectoryModal: FC<MoveFileToDirectoryModalProps> = ({
   showAlert,
   idToMove,
   loggedUserId,
+  companyId,
   title,
   buttonTitle,
   fieldLabel = 'Diretório',
@@ -59,6 +61,7 @@ export const MoveFileToDirectoryModal: FC<MoveFileToDirectoryModalProps> = ({
         const result = await ListDirectoryRequest({
           userInput: '',
           loggedUserId,
+          companyId,
         });
         if (moveAllFiles) {
           result.directories = result.directories.filter(
@@ -110,6 +113,7 @@ export const MoveFileToDirectoryModal: FC<MoveFileToDirectoryModalProps> = ({
       let filesInDirectory = await ListContentFilesRequest({
         userInput: '',
         loggedUserId,
+        companyId,
         directoryId: idToMove,
       });
 
@@ -127,6 +131,7 @@ export const MoveFileToDirectoryModal: FC<MoveFileToDirectoryModalProps> = ({
         filesInDirectory = await ListContentFilesRequest({
           userInput: '',
           loggedUserId,
+          companyId,
           directoryId: idToMove,
         });
       }

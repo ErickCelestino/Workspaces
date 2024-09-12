@@ -299,6 +299,7 @@ export const ListContanteFilesContainer = () => {
       <MoveFileToDirectoryModal
         open={movePopUp}
         loggedUserId={loggedUser?.id ?? ''}
+        companyId={loggedUser?.selectedCompany.id ?? ''}
         showAlert={showAlert}
         onClose={() => handlePopUpClose('moveFile')}
         idToMove={fileId}

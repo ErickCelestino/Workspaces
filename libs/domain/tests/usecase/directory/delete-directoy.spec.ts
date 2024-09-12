@@ -5,6 +5,7 @@ import {
   Directory,
   EntityNotEmpty,
   EntityNotExists,
+  FindContentFilesByDirectoryIdRepository,
   FindDirectoryByIdRepository,
   FindUserByIdRepository,
   UserList,
@@ -12,6 +13,7 @@ import {
 import { DirectoryMock, userMock } from '../../entity';
 import {
   DeleteDirectoryRepositoryMock,
+  FindContentFilesByDirectoryIdRepositoryMock,
   FindDirectoryByIdRespositoryMock,
   FindUserByIdRepositoryMock,
 } from '../../repository';
@@ -21,12 +23,15 @@ interface sutTypes {
   deleteDirectoryDto: DeleteDirectoryDto;
   findUserByIdRepository: FindUserByIdRepository;
   findDirectoryByIdRepository: FindDirectoryByIdRepository;
+  findContentFilesByDirectoryIdRepository: FindContentFilesByDirectoryIdRepository;
   deleteDirectoryRepository: DeleteDirectoryRepository;
 }
 
 const makeSut = (): sutTypes => {
   const findUserByIdRepository = new FindUserByIdRepositoryMock();
   const findDirectoryByIdRepository = new FindDirectoryByIdRespositoryMock();
+  const findContentFilesByDirectoryIdRepository =
+    new FindContentFilesByDirectoryIdRepositoryMock();
   const deleteDirectoryRepository = new DeleteDirectoryRepositoryMock();
 
   const deleteDirectoryDto: DeleteDirectoryDto = {
@@ -37,6 +42,7 @@ const makeSut = (): sutTypes => {
   const sut = new DeleteDirectory(
     findUserByIdRepository,
     findDirectoryByIdRepository,
+    findContentFilesByDirectoryIdRepository,
     deleteDirectoryRepository
   );
 
@@ -45,6 +51,7 @@ const makeSut = (): sutTypes => {
     deleteDirectoryDto,
     findUserByIdRepository,
     findDirectoryByIdRepository,
+    findContentFilesByDirectoryIdRepository,
     deleteDirectoryRepository,
   };
 };
