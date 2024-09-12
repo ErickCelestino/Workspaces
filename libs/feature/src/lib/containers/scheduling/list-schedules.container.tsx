@@ -86,17 +86,21 @@ export const ListSchedulesContainer = () => {
     setIsMounted(false);
   }, [loggedUser?.selectedCompany.id]);
 
-  const getData = useCallback(async () => {
-    const result = await handleData({
-      companyId: loggedUser?.selectedCompany.id ?? '',
-      loggedUserId: loggedUser?.id ?? '',
-      filter: '',
-    });
-    if (result) {
-      setTotalPage(result?.totalPages ?? 0);
-      setListSchedules(result?.schedules ?? []);
-    }
-  }, [loggedUser, handleData]);
+  const getData = useCallback(
+    async (input?: string, skip?: number) => {
+      const result = await handleData({
+        companyId: loggedUser?.selectedCompany.id ?? '',
+        loggedUserId: loggedUser?.id ?? '',
+        filter: input ? input : '',
+        skip: skip ? (skip - 1) * 8 : 0,
+      });
+      if (result) {
+        setTotalPage(result?.totalPages ?? 0);
+        setListSchedules(result?.schedules ?? []);
+      }
+    },
+    [loggedUser, handleData]
+  );
 
   useEffect(() => {
     if (!isMounted) {
@@ -150,33 +154,14 @@ export const ListSchedulesContainer = () => {
   };
 
   const searchData = async (input: string) => {
-    const result = await handleData({
-      loggedUserId: loggedUser?.id ?? '',
-      companyId: loggedUser?.selectedCompany.id ?? '',
-      filter: input,
-    });
-
-    if (result) {
-      setListSchedules(result.schedules);
-      setTotalPage(result.totalPages);
-    }
+    getData(input);
   };
 
   const handleChange = async (
     event: React.ChangeEvent<unknown>,
     value: number
   ) => {
-    const result = await ListSchedulesRequest({
-      loggedUserId: loggedUser?.id ?? '',
-      companyId: loggedUser?.selectedCompany.id ?? '',
-      filter: '',
-      skip: (value - 1) * 6,
-    });
-
-    if (result) {
-      setListSchedules(result.schedules);
-      setTotalPage(result.totalPages);
-    }
+    getData('', value);
   };
 
   const rightClickMenuList: IconMenuItem[] = [
