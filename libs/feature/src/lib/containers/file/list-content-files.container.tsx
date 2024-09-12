@@ -78,7 +78,7 @@ export const ListContanteFilesContainer = () => {
   const theme = useTheme();
   const { loggedUser } = useLoggedUser();
   const { showSnackbarAlert, SnackbarAlert } = useSnackbarAlert();
-  const { handleOpen, setDirectoryId } = useFileModal();
+  const { handleOpen, setDirectoryId, closed } = useFileModal();
 
   const showAlert = useCallback(
     (message: string, success: boolean) => {
@@ -117,20 +117,30 @@ export const ListContanteFilesContainer = () => {
     [showAlert]
   );
 
-  const getData = useCallback(async () => {
-    const directoryId = getItemLocalStorage('di');
-    const result = await handleData({
-      directoryId: directoryId ?? '',
-      companyId: loggedUser?.selectedCompany.id ?? '',
-      loggedUserId: loggedUser?.id ?? '',
-      userInput: '',
-    });
-    if (result) {
-      setFileList(result?.files ?? []);
-      setLocalDirectoryId(directoryId);
-      setTotalPage(result?.totalPages ?? 0);
+  useEffect(() => {
+    if (closed) {
+      getData();
     }
-  }, [loggedUser, handleData]);
+  }, [closed]);
+
+  const getData = useCallback(
+    async (input?: string, skip?: number) => {
+      const directoryId = getItemLocalStorage('di');
+      const result = await handleData({
+        directoryId: directoryId ?? '',
+        companyId: loggedUser?.selectedCompany.id ?? '',
+        loggedUserId: loggedUser?.id ?? '',
+        userInput: input ? input : '',
+        skip: skip ? (skip - 1) * 8 : 0,
+      });
+      if (result) {
+        setFileList(result?.files ?? []);
+        setLocalDirectoryId(directoryId);
+        setTotalPage(result?.totalPages ?? 0);
+      }
+    },
+    [loggedUser, handleData]
+  );
 
   const handlePopUpClose = (types: FileContentType) => {
     getData();
@@ -184,6 +194,7 @@ export const ListContanteFilesContainer = () => {
   };
 
   const handleDirectoryPopUpClose = (types: CrudType | 'changeDirectory') => {
+    getData();
     switch (types) {
       case 'create':
         setCreateDirectoryPopUp(false);
@@ -232,27 +243,11 @@ export const ListContanteFilesContainer = () => {
     event: React.ChangeEvent<unknown>,
     value: number
   ) => {
-    const result = await ListContentFilesRequest({
-      userInput: '',
-      directoryId: directoryId,
-      companyId: loggedUser?.selectedCompany.id ?? '',
-      loggedUserId: loggedUser?.id ?? '',
-      skip: (value - 1) * 8,
-    });
-    setTotalPage(result.totalPages);
-    setFileList(result.files);
-    setTotalPage(result.totalPages);
+    getData('', value);
   };
 
   const searchData = async (input: string) => {
-    const result = await handleData({
-      directoryId,
-      companyId: loggedUser?.selectedCompany.id ?? '',
-      loggedUserId: loggedUser?.id ?? '',
-      userInput: input,
-    });
-    setFileList(result?.files ?? []);
-    setTotalPage(result?.totalPages ?? 0);
+    getData(input);
   };
 
   useEffect(() => {
