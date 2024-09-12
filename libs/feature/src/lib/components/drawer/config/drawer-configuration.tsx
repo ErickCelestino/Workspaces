@@ -122,7 +122,7 @@ export const DrawerConfiguration: FC<DrawerConfigurationProps> = ({
       >
         {loggedUser?.companies.map((item) => (
           <MenuItem key={item.id} value={item.id}>
-            {item.socialReason}
+            {item.socialReason.split(' ')[0]}
           </MenuItem>
         ))}
       </TextField>
