@@ -43,6 +43,8 @@ export const ListDirectoryContainer = () => {
       case 'create':
         setCreateDirectoryPopUp(false);
         break;
+      case 'delete':
+        setDeleteDirectoryPopUp(false);
     }
   };
 
@@ -144,13 +146,13 @@ export const ListDirectoryContainer = () => {
   return (
     <>
       <CreateDirectoryModal
-        handlePopUpClose={() => setCreateDirectoryPopUp(false)}
+        handlePopUpClose={() => handlePopUpClose('create')}
         open={createDirectoryPopUp}
         showAlert={showAlert}
         title="Novo Diretório"
       />
       <DeleteDirectoryModal
-        handlePopUpClose={() => setDeleteDirectoryPopUp(false)}
+        handlePopUpClose={() => handlePopUpClose('delete')}
         idToDelete={selectedId}
         open={deleteDirectoryPopUp}
         showAlert={showAlert}
