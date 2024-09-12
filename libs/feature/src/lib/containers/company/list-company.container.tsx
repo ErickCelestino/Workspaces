@@ -85,16 +85,20 @@ export const ListCompanyContainer: FC<ListCompanyContainerProps> = ({
     [showAlert]
   );
 
-  const getData = useCallback(async () => {
-    const result = await handleData({
-      filter: '',
-      loggedUserId: loggedUser?.id ?? '',
-    });
-    if (result) {
-      setListCompany(result.companies);
-      setTotalPage(result.totalPages);
-    }
-  }, [loggedUser, handleData]);
+  const getData = useCallback(
+    async (input?: string, skip?: number) => {
+      const result = await handleData({
+        filter: input ? input : '',
+        skip: skip ? (skip - 1) * 6 : 0,
+        loggedUserId: loggedUser?.id ?? '',
+      });
+      if (result) {
+        setListCompany(result.companies);
+        setTotalPage(result.totalPages);
+      }
+    },
+    [loggedUser, handleData]
+  );
 
   useEffect(() => {
     setIsMounted(false);
@@ -108,29 +112,14 @@ export const ListCompanyContainer: FC<ListCompanyContainerProps> = ({
   }, [isMounted, handleData]);
 
   const searchData = async (input: string) => {
-    const result = await handleData({
-      filter: input,
-      loggedUserId: loggedUser?.id ?? '',
-    });
-    if (result) {
-      setListCompany(result.companies);
-      setTotalPage(result.totalPages);
-    }
+    getData(input);
   };
 
   const handleChange = async (
     event: React.ChangeEvent<unknown>,
     value: number
   ) => {
-    const result = await handleData({
-      loggedUserId: loggedUser?.id ?? '',
-      filter: '',
-      skip: (value - 1) * 6,
-    });
-    if (result) {
-      setListCompany(result.companies);
-      setTotalPage(result.totalPages);
-    }
+    getData('', value);
   };
 
   const handlePopUpOpen = (types: CrudType, id?: string) => {
