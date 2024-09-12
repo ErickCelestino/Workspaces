@@ -59,7 +59,7 @@ export class MoveFileToDirectory
     }
 
     const directoryValidation = await ValidationDirectoryId(
-      idToMove,
+      idToMoveDirectory,
       this.findDirectoryByIdRepository
     );
 

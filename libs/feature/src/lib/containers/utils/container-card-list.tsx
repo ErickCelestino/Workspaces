@@ -81,7 +81,7 @@ export const ContainerCardList: FC<ContainerCardListProps> = ({
               </Icon>
             </IconButton>
           )}
-          {smDown && mobileBackButtom && <MobileBackButtom />}
+          {mobileBackButtom && <MobileBackButtom />}
           <Box
             sx={{
               justifyContent: 'center',
