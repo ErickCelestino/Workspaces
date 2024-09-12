@@ -3,6 +3,7 @@ import { AxiosError } from 'axios';
 import {
   ConnectionError,
   EntityAlreadyExists,
+  EntityIsNotEmpty,
   EntityNotAllowed,
   EntityNotConverted,
   EntityNotCreated,
@@ -10,6 +11,11 @@ import {
   EntityNotNegativeNumber,
   NotPermission,
   StartTimeCannotBeGreaterEndTime,
+  EntityNotEdited,
+  EntityNotDeleted,
+  EntityNotMoved,
+  EntityNotFound,
+  EntityNotValid,
 } from '../../messages';
 
 export function ValidationsError(
@@ -40,6 +46,24 @@ export function ValidationsError(
 
     case 'NotPermissionError':
       return NotPermission('PT-BR');
+
+    case 'EntityIsNotEmpty':
+      return EntityIsNotEmpty(entitie, 'PT-BR');
+
+    case 'EntityNotEdit':
+      return EntityNotEdited(entitie, 'PT-BR');
+
+    case 'EntityNotDeleted':
+      return EntityNotDeleted(entitie, 'PT-BR');
+
+    case 'EntityNotMoved':
+      return EntityNotMoved(entitie, 'PT-BR');
+
+    case 'EntityNotFound':
+      return EntityNotFound(entitie, 'PT-BR');
+
+    case 'EntityNotValid':
+      return EntityNotValid(entitie, 'PT-BR');
 
     default:
       return ConnectionError('PT-BR');
