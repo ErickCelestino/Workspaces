@@ -7,13 +7,13 @@ export async function ValidationDirectoryId(
   findDirectoryByIdRepository: FindDirectoryByIdRepository
 ): Promise<Either<EntityNotEmpty | EntityNotExists, void>> {
   if (Object.keys(id).length < 1) {
-    return left(new EntityNotEmpty('Directory ID'));
+    return left(new EntityNotEmpty(`Directory ID id: ${id}`));
   }
 
   const result = await findDirectoryByIdRepository.find(id);
 
   if (Object.keys(result?.id ?? result).length < 1) {
-    return left(new EntityNotExists('Directory'));
+    return left(new EntityNotExists(`Directory ID: ${id}`));
   }
 
   return right(undefined);

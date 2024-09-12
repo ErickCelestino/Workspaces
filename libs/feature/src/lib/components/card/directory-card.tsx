@@ -19,6 +19,7 @@ interface ListDirectoryProps {
   editTitle?: string;
   deleteTitle?: string;
   onClick: () => void;
+  deleteDirectory: () => Promise<void>;
 }
 
 export const DirectoryCard: FC<ListDirectoryProps> = ({
@@ -27,10 +28,16 @@ export const DirectoryCard: FC<ListDirectoryProps> = ({
   editTitle = 'Editar',
   deleteTitle = 'Deletar',
   onClick,
+  deleteDirectory,
 }) => {
   const theme = useTheme();
   // const { loggedUser } = useLoggedUser();
   const iconMenuList: IconMenuItem[] = [
+    {
+      icon: <Icon>delete</Icon>,
+      title: deleteTitle,
+      handleClick: deleteDirectory,
+    },
     {
       icon: <Icon>folder_open</Icon>,
       title: 'Abrir',
