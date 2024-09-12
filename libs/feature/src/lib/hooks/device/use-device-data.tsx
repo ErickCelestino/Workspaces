@@ -1,42 +1,40 @@
 import { useState, useCallback } from 'react';
-import { ListCompanyRequest } from '../../services';
-import {
-  ListSimpleCompanyResponseDto,
-  ErrorResponse,
-} from '@workspaces/domain';
+import { ListDeviceRequest } from '../../services';
+import { ErrorResponse, Device } from '@workspaces/domain';
 import axios, { AxiosError } from 'axios';
 import { ValidationsError } from '../../shared';
 
-interface CompanyDataProps {
+interface DeviceDataProps {
+  companyId?: string;
   loggedUserId?: string;
   showAlert: (message: string, success: boolean) => void;
 }
 
-export const useCompanyData = (companyData: CompanyDataProps) => {
-  const { showAlert, loggedUserId } = companyData;
-  const [listCompany, setListCompany] = useState<
-    ListSimpleCompanyResponseDto[]
-  >([]);
+export const useDeviceData = (data: DeviceDataProps) => {
+  const { showAlert, loggedUserId, companyId } = data;
+  const [listDevice, setListDevice] = useState<Device[]>([]);
   const [totalPage, setTotalPage] = useState<number>(1);
 
   const getData = useCallback(
     async (input?: string, skip?: number) => {
       if (!loggedUserId) return;
+      if (!companyId) return;
       try {
-        const result = await ListCompanyRequest({
+        const result = await ListDeviceRequest({
           loggedUserId,
-          filter: input || '',
+          companyId,
           skip: skip ? (skip - 1) * 6 : 0,
+          filter: input || '',
         });
         if (result) {
-          setListCompany(result.companies);
+          setListDevice(result.devices);
           setTotalPage(result.totalPages);
         }
       } catch (error) {
         console.error(error);
         if (axios.isAxiosError(error)) {
           const axiosError = error as AxiosError<ErrorResponse>;
-          const errors = ValidationsError(axiosError, 'Empresa');
+          const errors = ValidationsError(axiosError, 'Dispositivo');
           if (errors) {
             showAlert(errors, false);
           }
@@ -46,5 +44,5 @@ export const useCompanyData = (companyData: CompanyDataProps) => {
     [showAlert, loggedUserId]
   );
 
-  return { listCompany, totalPage, getData };
+  return { listDevice, totalPage, getData };
 };
