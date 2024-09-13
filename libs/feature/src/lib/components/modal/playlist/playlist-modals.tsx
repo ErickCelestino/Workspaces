@@ -8,7 +8,7 @@ import {
 } from '.';
 import { AddFileToPlaylistModal } from '..';
 
-interface playlistModalsProps {
+interface PlaylistModalsProps {
   selectedId: string;
   companyId: string;
   openModal: {
@@ -29,7 +29,7 @@ interface playlistModalsProps {
   detailsTitle?: string;
 }
 
-export const PlaylistModals: FC<playlistModalsProps> = ({
+export const PlaylistModals: FC<PlaylistModalsProps> = ({
   selectedId,
   companyId,
   openModal,
