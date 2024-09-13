@@ -10,7 +10,6 @@ import { AddPlaylistToSchedulingModal } from '../playlist-to-scheduling';
 
 interface SchedulingModalsProps {
   selectedId: string;
-  companyId: string;
   openModal: {
     create: boolean;
     delete: boolean;
@@ -30,7 +29,6 @@ interface SchedulingModalsProps {
 
 export const SchedulingModals: FC<SchedulingModalsProps> = ({
   selectedId,
-  companyId,
   openModal,
   handlePopUpClose,
   showAlert,

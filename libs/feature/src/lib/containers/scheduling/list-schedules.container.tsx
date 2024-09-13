@@ -3,44 +3,29 @@ import AlarmAddIcon from '@mui/icons-material/AlarmAdd';
 import EventBusyIcon from '@mui/icons-material/EventBusy';
 import { LayoutBase } from '../../layout';
 import {
-  AddPlaylistToSchedulingModal,
-  CreateSchedulingModal,
-  DeleteSchedulingModal,
-  DetailsSchedulingModal,
-  EditSchedulingModal,
   EmptyListResponse,
   SchedulingItem,
+  SchedulingModals,
   ToolbarPureTV,
 } from '../../components';
 import { ContainerSimpleList } from '../utils';
 import { useCallback, useEffect, useState } from 'react';
-import {
-  CrudType,
-  ErrorResponse,
-  IconMenuItem,
-  ListSchedulesDto,
-  Scheduling,
-} from '@workspaces/domain';
-import { useSnackbarAlert } from '../../hooks';
-import { ListSchedulesRequest } from '../../services';
-import axios, { AxiosError } from 'axios';
-import { ValidationsError } from '../../shared';
+import { CrudType, IconMenuItem } from '@workspaces/domain';
+import { useSchedulingData, useSnackbarAlert } from '../../hooks';
 import { useLoggedUser } from '../../contexts';
 
 export const ListSchedulesContainer = () => {
   const { loggedUser } = useLoggedUser();
   const theme = useTheme();
-
-  const [listSchedules, setListSchedules] = useState<Scheduling[]>([]);
   const { showSnackbarAlert, SnackbarAlert } = useSnackbarAlert();
-  const [totalPage, setTotalPage] = useState<number>(1);
-  const [createSchedulingPopUp, setCreateSchedulingPopUp] = useState(false);
-  const [deleteSchedulingPopUp, setDeleteSchedulingPopUp] = useState(false);
-  const [editSchedulingPopUp, setEditSchedulingPopUp] = useState(false);
-  const [detailsSchedulingPopUp, setDetailsSchedulingPopUp] = useState(false);
-  const [addPlaylistToSchedulingPopUp, setAddPlaylistToSchedulingPopUp] =
-    useState(false);
-  const [selectedId, setSelectedId] = useState('');
+  const [selectedId, setSelectedId] = useState<string>('');
+  const [openModal, setOpenModal] = useState({
+    create: false,
+    delete: false,
+    edit: false,
+    details: false,
+    add: false,
+  });
   const [isMounted, setIsMounted] = useState(false);
 
   const showAlert = useCallback(
@@ -53,105 +38,38 @@ export const ListSchedulesContainer = () => {
     [showSnackbarAlert]
   );
 
-  const handleData = useCallback(
-    async (data: ListSchedulesDto) => {
-      try {
-        const result = await ListSchedulesRequest({
-          loggedUserId: data.loggedUserId,
-          companyId: data.companyId,
-          filter: data.filter,
-          skip: data.skip,
-          take: data.take,
-        });
-        if (result) {
-          setListSchedules(result.schedules);
-          setTotalPage(result.totalPages);
-        }
-        return result;
-      } catch (error) {
-        console.error(error);
-        if (axios.isAxiosError(error)) {
-          const axiosError = error as AxiosError<ErrorResponse>;
-          const errors = ValidationsError(axiosError, 'Agendamento');
-          if (errors) {
-            showAlert(errors, false);
-          }
-        }
-      }
-    },
-    [showAlert]
-  );
+  const { listSchedules, totalPage, getData } = useSchedulingData({
+    showAlert,
+    loggedUserId: loggedUser?.id ?? '',
+    companyId: loggedUser?.selectedCompany.id ?? '',
+  });
+
+  const handlePopUpOpen = async (type: CrudType | 'add', id?: string) => {
+    setSelectedId(id ?? '');
+    setOpenModal((prev) => ({
+      ...prev,
+      [type]: true,
+    }));
+  };
+
+  const handlePopUpClose = async (type: CrudType | 'add') => {
+    setOpenModal((prev) => ({
+      ...prev,
+      [type]: false,
+    }));
+    getData();
+  };
 
   useEffect(() => {
     setIsMounted(false);
   }, [loggedUser?.selectedCompany.id]);
-
-  const getData = useCallback(
-    async (input?: string, skip?: number) => {
-      const result = await handleData({
-        companyId: loggedUser?.selectedCompany.id ?? '',
-        loggedUserId: loggedUser?.id ?? '',
-        filter: input ? input : '',
-        skip: skip ? (skip - 1) * 8 : 0,
-      });
-      if (result) {
-        setTotalPage(result?.totalPages ?? 0);
-        setListSchedules(result?.schedules ?? []);
-      }
-    },
-    [loggedUser, handleData]
-  );
 
   useEffect(() => {
     if (!isMounted) {
       getData();
       setIsMounted(true);
     }
-  }, [isMounted, handleData]);
-
-  const handlePopUpOpen = (types: CrudType | 'add-playlist', id?: string) => {
-    switch (types) {
-      case 'create':
-        setCreateSchedulingPopUp(true);
-        break;
-      case 'edit':
-        setSelectedId(id ?? '');
-        setEditSchedulingPopUp(true);
-        break;
-      case 'delete':
-        setSelectedId(id ?? '');
-        setDeleteSchedulingPopUp(true);
-        break;
-      case 'add-playlist':
-        setSelectedId(id ?? '');
-        setAddPlaylistToSchedulingPopUp(true);
-        break;
-      case 'details':
-        setSelectedId(id ?? '');
-        setDetailsSchedulingPopUp(true);
-    }
-  };
-
-  const handlePopUpClose = (types: CrudType | 'add-playlist') => {
-    getData();
-    switch (types) {
-      case 'create':
-        setCreateSchedulingPopUp(false);
-        break;
-      case 'delete':
-        setDeleteSchedulingPopUp(false);
-        break;
-      case 'edit':
-        setEditSchedulingPopUp(false);
-        break;
-      case 'add-playlist':
-        setAddPlaylistToSchedulingPopUp(false);
-        break;
-      case 'details':
-        setDetailsSchedulingPopUp(false);
-        break;
-    }
-  };
+  }, [isMounted]);
 
   const searchData = async (input: string) => {
     getData(input);
@@ -164,6 +82,31 @@ export const ListSchedulesContainer = () => {
     getData('', value);
   };
 
+  const renderSchedules = () =>
+    listSchedules.length > 0 ? (
+      listSchedules.map((scheduling) => (
+        <SchedulingItem
+          editScheduling={() => handlePopUpOpen('edit', scheduling.id)}
+          deleteScheduling={() => handlePopUpOpen('delete', scheduling.id)}
+          addPlaylistToScheduling={() => handlePopUpOpen('add', scheduling.id)}
+          detailsScheduling={() => handlePopUpOpen('details', scheduling.id)}
+          key={scheduling.id}
+          scheduling={scheduling}
+        />
+      ))
+    ) : (
+      <EmptyListResponse
+        message="Sem Agendamentos"
+        icon={
+          <EventBusyIcon
+            sx={{
+              fontSize: theme.spacing(10),
+            }}
+          />
+        }
+      />
+    );
+
   const rightClickMenuList: IconMenuItem[] = [
     {
       icon: <AlarmAddIcon />,
@@ -174,39 +117,10 @@ export const ListSchedulesContainer = () => {
 
   return (
     <>
-      <CreateSchedulingModal
-        open={createSchedulingPopUp}
-        title="Cadastrar Agendamento"
-        handlePopUpClose={() => handlePopUpClose('create')}
-        showAlert={showAlert}
-      />
-      <DeleteSchedulingModal
-        open={deleteSchedulingPopUp}
-        title="Deletar Agendamento"
-        handlePopUpClose={() => handlePopUpClose('delete')}
-        showAlert={showAlert}
-        idToDelete={selectedId}
-        subTitle="Deseja realmente deletar esse agendamento?"
-      />
-      <EditSchedulingModal
-        open={editSchedulingPopUp}
-        title="Editar Agendamento"
-        handlePopUpClose={() => handlePopUpClose('edit')}
-        showAlert={showAlert}
-        idToEdit={selectedId}
-      />
-      <AddPlaylistToSchedulingModal
-        open={addPlaylistToSchedulingPopUp}
-        title="Adicionar Playlist ao Agendamento"
-        handlePopUpClose={() => handlePopUpClose('add-playlist')}
-        showAlert={showAlert}
-        idScheduling={selectedId}
-      />
-      <DetailsSchedulingModal
-        open={detailsSchedulingPopUp}
-        title="Detalhes Agendamento"
-        handlePopUpClose={() => handlePopUpClose('details')}
-        idToDetails={selectedId}
+      <SchedulingModals
+        selectedId={selectedId}
+        openModal={openModal}
+        handlePopUpClose={handlePopUpClose}
         showAlert={showAlert}
       />
       <LayoutBase
@@ -223,39 +137,7 @@ export const ListSchedulesContainer = () => {
           totalPage={totalPage}
           handleChange={handleChange}
         >
-          <List>
-            {listSchedules.length > 0 ? (
-              listSchedules.map((scheduling) => (
-                <SchedulingItem
-                  editScheduling={async () =>
-                    handlePopUpOpen('edit', scheduling.id)
-                  }
-                  deleteScheduling={async () =>
-                    handlePopUpOpen('delete', scheduling.id)
-                  }
-                  addPlaylistToScheduling={async () =>
-                    handlePopUpOpen('add-playlist', scheduling.id)
-                  }
-                  detailsScheduling={async () =>
-                    handlePopUpOpen('details', scheduling.id)
-                  }
-                  key={scheduling.id}
-                  scheduling={scheduling}
-                />
-              ))
-            ) : (
-              <EmptyListResponse
-                message="Sem Agendamentos"
-                icon={
-                  <EventBusyIcon
-                    sx={{
-                      fontSize: theme.spacing(10),
-                    }}
-                  />
-                }
-              />
-            )}
-          </List>
+          <List> {renderSchedules()} </List>
         </ContainerSimpleList>
       </LayoutBase>
       {SnackbarAlert}
