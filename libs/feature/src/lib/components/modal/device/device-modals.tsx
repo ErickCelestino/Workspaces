@@ -6,6 +6,7 @@ import {
   DetailsDeviceModal,
   CreateDeviceModal,
 } from '.';
+import { AddSchedulesToDeviceModal } from '../schedules-to-device';
 
 interface DeviceModalsProps {
   selectedId: string;
@@ -14,12 +15,13 @@ interface DeviceModalsProps {
     delete: boolean;
     edit: boolean;
     details: boolean;
+    add: boolean;
   };
-  handlePopUpClose: (type: CrudType) => void;
+  handlePopUpClose: (type: CrudType | 'add') => void;
   showAlert: (message: string, success: boolean) => void;
 }
 
-export const CompanyModals: FC<DeviceModalsProps> = ({
+export const DeviceModals: FC<DeviceModalsProps> = ({
   selectedId,
   openModal,
   handlePopUpClose,
@@ -51,6 +53,13 @@ export const CompanyModals: FC<DeviceModalsProps> = ({
         open={openModal.details}
         title="Detalhes da Empresa"
         handlePopUpClose={() => handlePopUpClose('details')}
+        showAlert={showAlert}
+        idDevice={selectedId}
+      />
+      <AddSchedulesToDeviceModal
+        open={openModal.add}
+        title="Adicionar Agendamento"
+        handlePopUpClose={() => handlePopUpClose('add')}
         showAlert={showAlert}
         idDevice={selectedId}
       />

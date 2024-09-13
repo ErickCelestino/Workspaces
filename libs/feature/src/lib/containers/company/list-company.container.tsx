@@ -30,6 +30,7 @@ export const ListCompanyContainer: FC<ListCompanyContainerProps> = ({
     delete: false,
     edit: false,
   });
+  const [isMounted, setIsMounted] = useState(false);
 
   const showAlert = useCallback(
     (message: string, success: boolean) => {
@@ -66,7 +67,7 @@ export const ListCompanyContainer: FC<ListCompanyContainerProps> = ({
     if (loggedUser?.id) {
       getData();
     }
-  }, [loggedUser?.id, getData]);
+  }, [loggedUser?.id]);
 
   const searchData = async (input: string) => {
     getData(input);
@@ -104,6 +105,17 @@ export const ListCompanyContainer: FC<ListCompanyContainerProps> = ({
       handleClick: () => handlePopUpOpen('create'),
     },
   ];
+
+  useEffect(() => {
+    setIsMounted(false);
+  }, [loggedUser?.selectedCompany.id]);
+
+  useEffect(() => {
+    if (!isMounted) {
+      getData();
+      setIsMounted(true);
+    }
+  }, [isMounted, getData]);
 
   return (
     <>
