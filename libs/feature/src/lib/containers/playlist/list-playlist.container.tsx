@@ -9,15 +9,7 @@ import {
 import { LayoutBase } from '../../layout';
 import { usePlaylistData, useSnackbarAlert } from '../../hooks';
 import { useCallback, useEffect, useState } from 'react';
-import {
-  CrudType,
-  ErrorResponse,
-  IconMenuItem,
-  ListPlaylistDto,
-} from '@workspaces/domain';
-import { ListPlaylistRequest } from '../../services';
-import axios, { AxiosError } from 'axios';
-import { ValidationsError } from '../../shared';
+import { CrudType, IconMenuItem } from '@workspaces/domain';
 import { useLoggedUser } from '../../contexts';
 import { ContainerCardList } from '../utils';
 
@@ -86,31 +78,6 @@ export const ListPlaylistContainer = () => {
     },
   ];
 
-  const handleData = useCallback(
-    async (data: ListPlaylistDto) => {
-      try {
-        const result = await ListPlaylistRequest({
-          loggedUserId: data.loggedUserId,
-          companyId: data.companyId,
-          userInput: data.userInput,
-          skip: data.skip,
-          take: data.take,
-        });
-        return result;
-      } catch (error) {
-        console.error(error);
-        if (axios.isAxiosError(error)) {
-          const axiosError = error as AxiosError<ErrorResponse>;
-          const errors = ValidationsError(axiosError, 'Playlist');
-          if (errors) {
-            showAlert(errors, false);
-          }
-        }
-      }
-    },
-    [showAlert]
-  );
-
   const searchData = async (input: string) => {
     getData(input);
   };
@@ -122,45 +89,23 @@ export const ListPlaylistContainer = () => {
     getData('', value);
   };
 
-  useEffect(() => {
-    setIsMounted(false);
-  }, [loggedUser?.selectedCompany.id]);
-
-  useEffect(() => {
-    if (!isMounted) {
-      getData();
-      setIsMounted(true);
-    }
-  }, [isMounted, getData]);
-
   const renderPlaylist = () =>
     listPlaylist.length > 0 ? (
-      listPlaylist.map((playlist, index) => (
-        <Box
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-          width="100%"
-        >
-          <Grid container display="flex" justifyContent="center" spacing={2}>
-            {listPlaylist.map((playlist, index) => (
-              <Grid item key={index}>
-                <PlaylistCard
-                  editPlaylist={() => handlePopUpOpen('edit', playlist.id)}
-                  deletePlaylist={() => handlePopUpOpen('delete', playlist.id)}
-                  addFile={() => handlePopUpOpen('add', playlist.id)}
-                  detailsPlaylist={() =>
-                    handlePopUpOpen('details', playlist.id)
-                  }
-                  idPlaylist={playlist.id}
-                  name={playlist.name}
-                  showAlert={showAlert}
-                />
-              </Grid>
-            ))}
+      listPlaylist.map((playlist, index) =>
+        listPlaylist.map((playlist) => (
+          <Grid item key={playlist.id}>
+            <PlaylistCard
+              editPlaylist={() => handlePopUpOpen('edit', playlist.id)}
+              deletePlaylist={() => handlePopUpOpen('delete', playlist.id)}
+              addFile={() => handlePopUpOpen('add', playlist.id)}
+              detailsPlaylist={() => handlePopUpOpen('details', playlist.id)}
+              idPlaylist={playlist.id}
+              name={playlist.name}
+              showAlert={showAlert}
+            />
           </Grid>
-        </Box>
-      ))
+        ))
+      )
     ) : (
       <EmptyListResponse
         message="Sem Playlists"
@@ -197,7 +142,16 @@ export const ListPlaylistContainer = () => {
           }}
           totalPage={totalPage}
         >
-          {renderPlaylist()}
+          <Box
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            width="100%"
+          >
+            <Grid container display="flex" justifyContent="center" spacing={2}>
+              {renderPlaylist()}
+            </Grid>
+          </Box>
         </ContainerCardList>
       </LayoutBase>
       {SnackbarAlert}

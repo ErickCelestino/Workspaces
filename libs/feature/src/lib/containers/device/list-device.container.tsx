@@ -81,20 +81,16 @@ export const ListDeviceContainer = () => {
   const renderDevices = () =>
     listDevice.length > 0 ? (
       listDevice.map((device) => (
-        <Box display="flex" justifyContent="center" width="100%">
-          <Grid display="flex" justifyContent="center" container spacing={2}>
-            <Grid item key={device.id}>
-              <DeviceCard
-                key={device.id}
-                name={device.name}
-                addSchedulesToDevice={() => handlePopUpOpen('add', device.id)}
-                deleteDevice={() => handlePopUpOpen('delete', device.id)}
-                detailsDevice={() => handlePopUpOpen('details', device.id)}
-                editDevice={() => handlePopUpOpen('edit', device.id)}
-              />
-            </Grid>
-          </Grid>
-        </Box>
+        <Grid item key={device.id}>
+          <DeviceCard
+            key={device.id}
+            name={device.name}
+            addSchedulesToDevice={() => handlePopUpOpen('add', device.id)}
+            deleteDevice={() => handlePopUpOpen('delete', device.id)}
+            detailsDevice={() => handlePopUpOpen('details', device.id)}
+            editDevice={() => handlePopUpOpen('edit', device.id)}
+          />
+        </Grid>
       ))
     ) : (
       <EmptyListResponse
@@ -142,7 +138,11 @@ export const ListDeviceContainer = () => {
           }}
           totalPage={totalPage}
         >
-          {renderDevices()}
+          <Box display="flex" justifyContent="center" width="100%">
+            <Grid display="flex" justifyContent="center" container spacing={2}>
+              {renderDevices()}
+            </Grid>
+          </Box>
         </ContainerCardList>
       </LayoutBase>
       {SnackbarAlert}
