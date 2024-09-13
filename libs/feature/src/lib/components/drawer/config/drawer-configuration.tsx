@@ -119,10 +119,18 @@ export const DrawerConfiguration: FC<DrawerConfigurationProps> = ({
         id="companyId"
         label={companyLabel}
         onChange={handleChange}
+        SelectProps={{
+          renderValue: (value) => {
+            const selectedItem = loggedUser?.companies.find(
+              (item) => item.id === value
+            );
+            return selectedItem ? selectedItem.socialReason.split(' ')[0] : '';
+          },
+        }}
       >
         {loggedUser?.companies.map((item) => (
           <MenuItem key={item.id} value={item.id}>
-            {item.socialReason.split(' ')[0]}
+            {item.socialReason}
           </MenuItem>
         ))}
       </TextField>
