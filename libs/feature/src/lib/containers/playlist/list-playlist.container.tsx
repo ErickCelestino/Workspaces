@@ -9,9 +9,10 @@ import {
   DetailsPlaylistModal,
   EditPlaylistModal,
   EmptyListResponse,
+  PlaylistModals,
 } from '../../components';
 import { LayoutBase } from '../../layout';
-import { useSnackbarAlert } from '../../hooks';
+import { usePlaylistData, useSnackbarAlert } from '../../hooks';
 import { useCallback, useEffect, useState } from 'react';
 import {
   CrudType,
@@ -27,62 +28,18 @@ import { useLoggedUser } from '../../contexts';
 import { ContainerCardList } from '../utils';
 
 export const ListPlaylistContainer = () => {
-  const { showSnackbarAlert, SnackbarAlert } = useSnackbarAlert();
   const { loggedUser } = useLoggedUser();
   const theme = useTheme();
-
-  const [createPlaylistPopUp, setCreatePlaylistPopUp] = useState(false);
-  const [editPlaylistPopUp, setEditPlaylistPopUp] = useState(false);
-  const [deletePlaylistPopUp, setDeletePlaylistPopUp] = useState(false);
-  const [detailsPlaylistPopUp, setDetailsPlaylistPopUp] = useState(false);
-  const [addFilePopUp, setAddFilePopUp] = useState(false);
-  const [listPlaylist, setListPlaylist] = useState<Playlist[]>([]);
-  const [totalPage, setTotalPage] = useState<number>(1);
-  const [playlistId, setPlaylistId] = useState('');
+  const { showSnackbarAlert, SnackbarAlert } = useSnackbarAlert();
+  const [selectedId, setSelectedId] = useState<string>('');
+  const [openModal, setOpenModal] = useState({
+    create: false,
+    delete: false,
+    edit: false,
+    details: false,
+    add: false,
+  });
   const [isMounted, setIsMounted] = useState(false);
-
-  const handlePopUpClose = (types: CrudType | 'add-file') => {
-    getData();
-    switch (types) {
-      case 'create':
-        setCreatePlaylistPopUp(false);
-        break;
-      case 'edit':
-        setEditPlaylistPopUp(false);
-        break;
-      case 'delete':
-        setDeletePlaylistPopUp(false);
-        break;
-      case 'add-file':
-        setAddFilePopUp(false);
-        break;
-      case 'details':
-        setDetailsPlaylistPopUp(false);
-    }
-  };
-
-  const handlePopUpOpen = (types: CrudType | 'add-file', id?: string) => {
-    switch (types) {
-      case 'create':
-        setCreatePlaylistPopUp(true);
-        break;
-      case 'edit':
-        setPlaylistId(id ?? '');
-        setEditPlaylistPopUp(true);
-        break;
-      case 'delete':
-        setPlaylistId(id ?? '');
-        setDeletePlaylistPopUp(true);
-        break;
-      case 'add-file':
-        setPlaylistId(id ?? '');
-        setAddFilePopUp(true);
-        break;
-      case 'details':
-        setPlaylistId(id ?? '');
-        setDetailsPlaylistPopUp(true);
-    }
-  };
 
   const showAlert = useCallback(
     (message: string, success: boolean) => {
@@ -93,6 +50,47 @@ export const ListPlaylistContainer = () => {
     },
     [showSnackbarAlert]
   );
+
+  const { listPlaylist, totalPage, getData } = usePlaylistData({
+    showAlert,
+    loggedUserId: loggedUser?.id ?? '',
+    companyId: loggedUser?.selectedCompany.id ?? '',
+  });
+
+  const handlePopUpOpen = async (type: CrudType | 'add', id?: string) => {
+    setSelectedId(id ?? '');
+    setOpenModal((prev) => ({
+      ...prev,
+      [type]: true,
+    }));
+  };
+
+  const handlePopUpClose = async (type: CrudType | 'add') => {
+    setOpenModal((prev) => ({
+      ...prev,
+      [type]: false,
+    }));
+    getData();
+  };
+
+  useEffect(() => {
+    setIsMounted(false);
+  }, [loggedUser?.selectedCompany.id]);
+
+  useEffect(() => {
+    if (!isMounted) {
+      getData();
+      setIsMounted(true);
+    }
+  }, [isMounted]);
+
+  const rightClickMenuList: IconMenuItem[] = [
+    {
+      icon: <Icon>playlist_add</Icon>,
+      title: 'Nova Playlist',
+      handleClick: async () => handlePopUpOpen('create'),
+    },
+  ];
 
   const handleData = useCallback(
     async (data: ListPlaylistDto) => {
@@ -130,22 +128,6 @@ export const ListPlaylistContainer = () => {
     getData('', value);
   };
 
-  const getData = useCallback(
-    async (input?: string, skip?: number) => {
-      const result = await handleData({
-        loggedUserId: loggedUser?.id ?? '',
-        companyId: loggedUser?.selectedCompany.id ?? '',
-        userInput: input ? input : '',
-        skip: skip ? (skip - 1) * 8 : 0,
-      });
-      if (result) {
-        setTotalPage(result?.totalPages ?? 0);
-        setListPlaylist(result?.playlists ?? []);
-      }
-    },
-    [loggedUser, handleData]
-  );
-
   useEffect(() => {
     setIsMounted(false);
   }, [loggedUser?.selectedCompany.id]);
@@ -157,51 +139,55 @@ export const ListPlaylistContainer = () => {
     }
   }, [isMounted, getData]);
 
-  const rightClickMenuList: IconMenuItem[] = [
-    {
-      icon: <Icon>playlist_add</Icon>,
-      title: 'Nova Playlist',
-      handleClick: async () => handlePopUpOpen('create'),
-    },
-  ];
+  const renderPlaylist = () =>
+    listPlaylist.length > 0 ? (
+      listPlaylist.map((playlist, index) => (
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          width="100%"
+        >
+          <Grid container display="flex" justifyContent="center" spacing={2}>
+            {listPlaylist.map((playlist, index) => (
+              <Grid item key={index}>
+                <PlaylistCard
+                  editPlaylist={() => handlePopUpOpen('edit', playlist.id)}
+                  deletePlaylist={() => handlePopUpOpen('delete', playlist.id)}
+                  addFile={() => handlePopUpOpen('add', playlist.id)}
+                  detailsPlaylist={() =>
+                    handlePopUpOpen('details', playlist.id)
+                  }
+                  idPlaylist={playlist.id}
+                  name={playlist.name}
+                  showAlert={showAlert}
+                />
+              </Grid>
+            ))}
+          </Grid>
+        </Box>
+      ))
+    ) : (
+      <EmptyListResponse
+        message="Sem Playlists"
+        icon={
+          <PlaylistRemoveIcon
+            sx={{
+              fontSize: theme.spacing(10),
+            }}
+          />
+        }
+      />
+    );
 
   return (
     <>
-      <CreatePlaylistModal
-        handlePopUpClose={() => handlePopUpClose('create')}
-        showAlert={showAlert}
-        open={createPlaylistPopUp}
-        title="Criar Playlist"
-      />
-      <EditPlaylistModal
+      <PlaylistModals
         companyId={loggedUser?.selectedCompany.id ?? ''}
-        idToEdit={playlistId}
-        handlePopUpClose={() => handlePopUpClose('edit')}
+        selectedId={selectedId}
+        openModal={openModal}
+        handlePopUpClose={handlePopUpClose}
         showAlert={showAlert}
-        open={editPlaylistPopUp}
-        title="Editar Playlist"
-      />
-      <DeletePlaylistModal
-        idToDelete={playlistId}
-        handlePopUpClose={() => handlePopUpClose('delete')}
-        showAlert={showAlert}
-        open={deletePlaylistPopUp}
-        title="Deletar Playlist?"
-        subTitle="Por favor, selecione alguma das alternativas"
-      />
-      <AddFileToPlaylistModal
-        idPlaylist={playlistId}
-        open={addFilePopUp}
-        showAlert={showAlert}
-        handlePopUpClose={() => handlePopUpClose('add-file')}
-        title="Adicionar Arquivos a Playlist?"
-      />
-      <DetailsPlaylistModal
-        idPlaylist={playlistId}
-        handlePopUpClose={() => handlePopUpClose('details')}
-        showAlert={showAlert}
-        open={detailsPlaylistPopUp}
-        title="Detalhes da Playlist"
       />
       <LayoutBase
         title="Listagem Playlist"
@@ -217,54 +203,7 @@ export const ListPlaylistContainer = () => {
           }}
           totalPage={totalPage}
         >
-          {listPlaylist.length > 0 ? (
-            <Box
-              display="flex"
-              justifyContent="center"
-              alignItems="center"
-              width="100%"
-            >
-              <Grid
-                container
-                display="flex"
-                justifyContent="center"
-                spacing={2}
-              >
-                {listPlaylist.map((playlist, index) => (
-                  <Grid item key={index}>
-                    <PlaylistCard
-                      editPlaylist={async () =>
-                        handlePopUpOpen('edit', playlist.id)
-                      }
-                      deletePlaylist={async () =>
-                        handlePopUpOpen('delete', playlist.id)
-                      }
-                      addFile={async () =>
-                        handlePopUpOpen('add-file', playlist.id)
-                      }
-                      detailsPlaylist={async () =>
-                        handlePopUpOpen('details', playlist.id)
-                      }
-                      idPlaylist={playlist.id}
-                      name={playlist.name}
-                      showAlert={showAlert}
-                    />
-                  </Grid>
-                ))}
-              </Grid>
-            </Box>
-          ) : (
-            <EmptyListResponse
-              message="Sem Playlists"
-              icon={
-                <PlaylistRemoveIcon
-                  sx={{
-                    fontSize: theme.spacing(10),
-                  }}
-                />
-              }
-            />
-          )}
+          {renderPlaylist()}
         </ContainerCardList>
       </LayoutBase>
       {SnackbarAlert}
