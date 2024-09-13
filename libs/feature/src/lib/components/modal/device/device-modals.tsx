@@ -19,6 +19,11 @@ interface DeviceModalsProps {
   };
   handlePopUpClose: (type: CrudType | 'add') => void;
   showAlert: (message: string, success: boolean) => void;
+  createDeviceTitle?: string;
+  editDeviceTitle?: string;
+  detailsDeviceTitle?: string;
+  deleteDeviceTitle?: string;
+  addSchedulesTitle?: string;
 }
 
 export const DeviceModals: FC<DeviceModalsProps> = ({
@@ -26,39 +31,44 @@ export const DeviceModals: FC<DeviceModalsProps> = ({
   openModal,
   handlePopUpClose,
   showAlert,
+  createDeviceTitle = 'Cadastrar Dispositivo',
+  deleteDeviceTitle = 'Deletar Empresa',
+  editDeviceTitle = 'Editar Empresa',
+  detailsDeviceTitle = 'Detalhes da Empresa',
+  addSchedulesTitle = 'Adicionar Agendamento',
 }) => {
   return (
     <>
       <CreateDeviceModal
         open={openModal.create}
-        title="Cadastrar Dispositivo"
+        title={createDeviceTitle}
         handlePopUpClose={() => handlePopUpClose('create')}
         showAlert={showAlert}
       />
       <DeleteDeviceModal
         open={openModal.delete}
-        title="Deletar Empresa"
+        title={deleteDeviceTitle}
         handlePopUpClose={() => handlePopUpClose('delete')}
         showAlert={showAlert}
         idToDelete={selectedId}
       />
       <EditDeviceModal
         open={openModal.edit}
-        title="Editar Empresa"
+        title={editDeviceTitle}
         handlePopUpClose={() => handlePopUpClose('edit')}
         showAlert={showAlert}
         idToEdit={selectedId}
       />
       <DetailsDeviceModal
         open={openModal.details}
-        title="Detalhes da Empresa"
+        title={detailsDeviceTitle}
         handlePopUpClose={() => handlePopUpClose('details')}
         showAlert={showAlert}
         idDevice={selectedId}
       />
       <AddSchedulesToDeviceModal
         open={openModal.add}
-        title="Adicionar Agendamento"
+        title={addSchedulesTitle}
         handlePopUpClose={() => handlePopUpClose('add')}
         showAlert={showAlert}
         idDevice={selectedId}

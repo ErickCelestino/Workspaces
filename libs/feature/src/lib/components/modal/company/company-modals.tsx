@@ -7,6 +7,9 @@ interface CompanyModalsProps {
   openModal: { create: boolean; delete: boolean; edit: boolean };
   handlePopUpClose: (type: CrudType) => void;
   showAlert: (message: string, success: boolean) => void;
+  createCompanyTitle?: string;
+  deleteCompanyTitle?: string;
+  editCompanyTitle?: string;
 }
 
 export const CompanyModals: FC<CompanyModalsProps> = ({
@@ -14,25 +17,28 @@ export const CompanyModals: FC<CompanyModalsProps> = ({
   openModal,
   handlePopUpClose,
   showAlert,
+  createCompanyTitle = 'Cadastrar Empresa',
+  deleteCompanyTitle = 'Deletar Empresa',
+  editCompanyTitle = 'Editar Empresa',
 }) => {
   return (
     <>
       <CreateCompanyModal
         open={openModal.create}
-        title="Cadastrar Empresa"
+        title={createCompanyTitle}
         handlePopUpClose={() => handlePopUpClose('create')}
         showAlert={showAlert}
       />
       <DeleteCompanyModal
         open={openModal.delete}
-        title="Deletar Empresa"
+        title={deleteCompanyTitle}
         handlePopUpClose={() => handlePopUpClose('delete')}
         showAlert={showAlert}
         idToDelete={selectedId}
       />
       <EditCompanyModal
         open={openModal.edit}
-        title="Editar Empresa"
+        title={editCompanyTitle}
         handlePopUpClose={() => handlePopUpClose('edit')}
         showAlert={showAlert}
         companyId={selectedId}
