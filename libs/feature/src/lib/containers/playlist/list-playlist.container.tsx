@@ -1,13 +1,8 @@
 import { Box, Grid, Icon, useTheme } from '@mui/material';
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
 import {
-  CreatePlaylistModal,
   ToolbarPureTV,
   PlaylistCard,
-  DeletePlaylistModal,
-  AddFileToPlaylistModal,
-  DetailsPlaylistModal,
-  EditPlaylistModal,
   EmptyListResponse,
   PlaylistModals,
 } from '../../components';
@@ -19,7 +14,6 @@ import {
   ErrorResponse,
   IconMenuItem,
   ListPlaylistDto,
-  Playlist,
 } from '@workspaces/domain';
 import { ListPlaylistRequest } from '../../services';
 import axios, { AxiosError } from 'axios';
