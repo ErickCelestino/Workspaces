@@ -15,7 +15,7 @@ export const usePlaylistBySchedulingData = (data: PlaylistDataProps) => {
   const [listPlaylist, setListPlaylist] = useState<Playlist[]>([]);
   const [totalPage, setTotalPage] = useState<number>(1);
 
-  const getData = useCallback(
+  const getPlayListBySchedulingData = useCallback(
     async (input?: string, skip?: number) => {
       if (!loggedUserId) return;
       if (!schedulingId) return;
@@ -41,8 +41,8 @@ export const usePlaylistBySchedulingData = (data: PlaylistDataProps) => {
         }
       }
     },
-    [showAlert, loggedUserId]
+    [showAlert, loggedUserId, schedulingId]
   );
 
-  return { listPlaylist, totalPage, getData };
+  return { listPlaylist, totalPage, getPlayListBySchedulingData };
 };

@@ -51,7 +51,7 @@ export const SchedulesToDeviceModals: FC<SchedulesToDeviceModalsProps> = ({
         selectedSchedules={getSelectedSchedulingIds()}
         showAlert={showAlert}
         onClose={() => handlePopUpClose('move')}
-        title="Mover Agendamentos"
+        title={moveSchedulesToDeviceTitle}
         companyId={companyId}
       />
     </>

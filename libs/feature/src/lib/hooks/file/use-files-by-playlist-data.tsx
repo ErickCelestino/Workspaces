@@ -40,7 +40,7 @@ export const useFilesByPlaylistData = (data: FilesByPlaylistDataProps) => {
         }
       }
     },
-    [showAlert, loggedUserId]
+    [showAlert, loggedUserId, playlistId]
   );
 
   return { listFiles, totalPage, getData };

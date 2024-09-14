@@ -1,23 +1,14 @@
-import { FC, useCallback, useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
 import { useLoggedUser } from '../../../contexts';
-import {
-  ErrorResponse,
-  FindSchedulingByIdDto,
-  ListPlaylistBySchedulingIdDto,
-  Playlist,
-  Scheduling,
-} from '@workspaces/domain';
-import {
-  FindSchedulingByIdRequest,
-  ListPlaylistBySchedulingIdRequest,
-} from '../../../services';
-import axios, { AxiosError } from 'axios';
-import { ValidationsError } from '../../../shared';
 import { SimpleFormModal } from '../simple';
 import { Box, Typography, useMediaQuery, useTheme } from '@mui/material';
 import { DetailsSchedulingCard } from '../../card';
 import { EmptyListResponse, ListSimplePlaylist } from '../../list';
+import {
+  usePlaylistBySchedulingData,
+  useSchedulingByIdData,
+} from '../../../hooks';
 
 interface DetailsSchedulingModalProps {
   open: boolean;
@@ -49,14 +40,22 @@ export const DetailsSchedulingModal: FC<DetailsSchedulingModalProps> = ({
   listEmpty = 'Sem Playlist',
 }) => {
   const { loggedUser } = useLoggedUser();
+  const { listPlaylist, totalPage, getPlayListBySchedulingData } =
+    usePlaylistBySchedulingData({
+      showAlert,
+      loggedUserId: loggedUser?.id ?? '',
+      schedulingId: idToDetails,
+    });
+  const { SchedulingById, getSchedulesByIdData } = useSchedulingByIdData({
+    showAlert,
+    findSchedulingByIdDto: {
+      id: idToDetails,
+      loggedUserId: loggedUser?.id ?? '',
+    },
+  });
   const theme = useTheme();
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
   const [dataLoaded, setDataLoaded] = useState(false);
-  const [schedulingDetails, setSchedulingDetails] = useState<Scheduling>(
-    {} as Scheduling
-  );
-  const [playlistList, setPlaylistList] = useState<Playlist[]>([]);
-  const [totalPages, setTotalPages] = useState(0);
 
   useEffect(() => {
     if (!open) {
@@ -64,84 +63,22 @@ export const DetailsSchedulingModal: FC<DetailsSchedulingModalProps> = ({
     }
   }, [open]);
 
-  const getScheduling = useCallback(
-    async (input: FindSchedulingByIdDto) => {
-      try {
-        const result = await FindSchedulingByIdRequest(input);
-        setSchedulingDetails(result);
-        setDataLoaded(true);
-      } catch (error) {
-        console.error(error);
-        if (axios.isAxiosError(error)) {
-          const axiosError = error as AxiosError<ErrorResponse>;
-          const errors = ValidationsError(axiosError, 'Agendamento');
-          if (errors) {
-            showAlert(errors, false);
-          }
-        }
-      }
-    },
-    [showAlert]
-  );
-
-  const getPlaylist = useCallback(
-    async (input: ListPlaylistBySchedulingIdDto) => {
-      try {
-        const result = await ListPlaylistBySchedulingIdRequest(input);
-        setPlaylistList(result.playlists);
-        setTotalPages(result.totalPages);
-        setDataLoaded(true);
-      } catch (error) {
-        console.error(error);
-        if (axios.isAxiosError(error)) {
-          const axiosError = error as AxiosError<ErrorResponse>;
-          const errors = ValidationsError(axiosError, 'Playlist');
-          if (errors) {
-            showAlert(errors, false);
-          }
-        }
-      }
-    },
-    [showAlert]
-  );
-
   useEffect(() => {
     if (open && idToDetails && !dataLoaded) {
-      const loggedUserId = loggedUser?.id ?? '';
-
-      getScheduling({
-        id: idToDetails,
-        loggedUserId: loggedUserId,
-      });
-
-      getPlaylist({
-        id: idToDetails,
-        filter: '',
-        loggedUserId: loggedUserId,
-      });
+      getSchedulesByIdData();
+      getPlayListBySchedulingData();
     }
-  }, [loggedUser, idToDetails, dataLoaded, open, getScheduling, getPlaylist]);
+  }, [loggedUser, idToDetails, dataLoaded, open]);
 
   const handleChange = async (
     event: React.ChangeEvent<unknown>,
     value: number
   ) => {
-    const result = await ListPlaylistBySchedulingIdRequest({
-      filter: '',
-      id: idToDetails,
-      loggedUserId: loggedUser?.id ?? '',
-      skip: (value - 1) * 6,
-    });
-    setTotalPages(result.totalPages);
-    setPlaylistList(result.playlists);
+    getPlayListBySchedulingData('', value);
   };
 
   const updatePlaylistList = async () => {
-    await getPlaylist({
-      id: idToDetails,
-      filter: '',
-      loggedUserId: loggedUser?.id ?? '',
-    });
+    getPlayListBySchedulingData();
   };
 
   return (
@@ -159,18 +96,18 @@ export const DetailsSchedulingModal: FC<DetailsSchedulingModalProps> = ({
         loopingTitle={loopingTitle}
         priorityTitle={priorityTitle}
         startTimeTitle={startTimeTitle}
-        schedulingDetails={schedulingDetails}
+        schedulingDetails={SchedulingById}
       />
       <Box>
-        {playlistList.length > 0 ? (
-          playlistList.length > 0 ? (
+        {listPlaylist.length > 0 ? (
+          listPlaylist.length > 0 ? (
             <Box>
               <ListSimplePlaylist
                 updatePlaylist={updatePlaylistList}
                 schedulingId={idToDetails}
                 showAlert={showAlert}
-                playlists={playlistList}
-                totalPages={totalPages}
+                playlists={listPlaylist}
+                totalPages={totalPage}
                 handleChange={handleChange}
               />
             </Box>

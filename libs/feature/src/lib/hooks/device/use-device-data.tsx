@@ -41,7 +41,7 @@ export const useDeviceData = (data: DeviceDataProps) => {
         }
       }
     },
-    [showAlert, loggedUserId]
+    [showAlert, loggedUserId, companyId]
   );
 
   return { listDevice, totalPage, getData };

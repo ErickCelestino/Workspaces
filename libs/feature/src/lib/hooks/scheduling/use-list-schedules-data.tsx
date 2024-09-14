@@ -4,13 +4,13 @@ import { ErrorResponse, Scheduling } from '@workspaces/domain';
 import axios, { AxiosError } from 'axios';
 import { ValidationsError } from '../../shared';
 
-interface SchedulingDataProps {
+interface ListSchedulesDataProps {
   companyId?: string;
   loggedUserId?: string;
   showAlert: (message: string, success: boolean) => void;
 }
 
-export const useSchedulingData = (data: SchedulingDataProps) => {
+export const useListSchedulesData = (data: ListSchedulesDataProps) => {
   const { showAlert, loggedUserId, companyId } = data;
   const [listSchedules, setListSchedules] = useState<Scheduling[]>([]);
   const [totalPage, setTotalPage] = useState<number>(1);
@@ -41,7 +41,7 @@ export const useSchedulingData = (data: SchedulingDataProps) => {
         }
       }
     },
-    [showAlert, loggedUserId]
+    [showAlert, loggedUserId, companyId]
   );
 
   return { listSchedules, totalPage, getData };

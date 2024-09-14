@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import { ListDirectoryRequest } from '../../services';
-import { ErrorResponse, Device, Directory } from '@workspaces/domain';
+import { ErrorResponse, Directory } from '@workspaces/domain';
 import axios, { AxiosError } from 'axios';
 import { ValidationsError } from '../../shared';
 
@@ -41,7 +41,7 @@ export const useDirectoryData = (data: DirectoryDataProps) => {
         }
       }
     },
-    [showAlert, loggedUserId]
+    [showAlert, loggedUserId, companyId]
   );
 
   return { listDirectory, totalPage, getData };

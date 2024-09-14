@@ -127,7 +127,7 @@ export const DetailsPlaylistModal: FC<DetailsPlaylistModalProps> = ({
       });
       getData();
     }
-  }, [open, idPlaylist, dataLoaded, getPlaylist, loggedUser]);
+  }, [open, idPlaylist, dataLoaded, getPlaylist, loggedUser, getData]);
 
   const handleFileToggle = (fileId: string) => {
     setSelectedFiles((prevSelectedFiles) => {

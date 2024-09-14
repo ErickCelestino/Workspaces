@@ -11,7 +11,7 @@ import {
 import { ContainerSimpleList } from '../utils';
 import { useCallback, useEffect, useState } from 'react';
 import { CrudType, IconMenuItem } from '@workspaces/domain';
-import { useSchedulingData, useSnackbarAlert } from '../../hooks';
+import { useListSchedulesData, useSnackbarAlert } from '../../hooks';
 import { useLoggedUser } from '../../contexts';
 
 export const ListSchedulesContainer = () => {
@@ -38,7 +38,7 @@ export const ListSchedulesContainer = () => {
     [showSnackbarAlert]
   );
 
-  const { listSchedules, totalPage, getData } = useSchedulingData({
+  const { listSchedules, totalPage, getData } = useListSchedulesData({
     showAlert,
     loggedUserId: loggedUser?.id ?? '',
     companyId: loggedUser?.selectedCompany.id ?? '',
@@ -69,7 +69,7 @@ export const ListSchedulesContainer = () => {
       getData();
       setIsMounted(true);
     }
-  }, [isMounted]);
+  }, [isMounted, getData]);
 
   const searchData = async (input: string) => {
     getData(input);
