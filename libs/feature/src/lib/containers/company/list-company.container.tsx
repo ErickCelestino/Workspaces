@@ -4,7 +4,7 @@ import StoreIcon from '@mui/icons-material/Store';
 import { useLoggedUser } from '../../contexts';
 import { FC, useCallback, useEffect, useState } from 'react';
 import { CrudType, IconMenuItem } from '@workspaces/domain';
-import { useSnackbarAlert, useCompanyData } from '../../hooks';
+import { useSnackbarAlert, useListCompanyData } from '../../hooks';
 import { ContainerSimpleList } from '../utils';
 import { LayoutBase } from '../../layout';
 import {
@@ -42,7 +42,7 @@ export const ListCompanyContainer: FC<ListCompanyContainerProps> = ({
     [showSnackbarAlert]
   );
 
-  const { listCompany, totalPage, getData } = useCompanyData({
+  const { listCompany, totalPage, getListCompanyData } = useListCompanyData({
     showAlert,
     loggedUserId: loggedUser?.id ?? '',
   });
@@ -60,24 +60,30 @@ export const ListCompanyContainer: FC<ListCompanyContainerProps> = ({
       ...prev,
       [type]: false,
     }));
-    getData();
+    getListCompanyData();
   };
 
   useEffect(() => {
-    if (loggedUser?.id) {
-      getData();
+    setIsMounted(false);
+  }, [loggedUser?.selectedCompany.id]);
+
+  useEffect(() => {
+    if (!isMounted) {
+      console.log('aa');
+      getListCompanyData();
+      setIsMounted(true);
     }
-  }, [loggedUser?.id]);
+  }, [isMounted, getListCompanyData]);
 
   const searchData = async (input: string) => {
-    getData(input);
+    getListCompanyData(input);
   };
 
   const handleChange = async (
     event: React.ChangeEvent<unknown>,
     value: number
   ) => {
-    getData('', value);
+    getListCompanyData('', value);
   };
 
   const renderCompanies = () =>
@@ -105,17 +111,6 @@ export const ListCompanyContainer: FC<ListCompanyContainerProps> = ({
       handleClick: () => handlePopUpOpen('create'),
     },
   ];
-
-  useEffect(() => {
-    setIsMounted(false);
-  }, [loggedUser?.selectedCompany.id]);
-
-  useEffect(() => {
-    if (!isMounted) {
-      getData();
-      setIsMounted(true);
-    }
-  }, [isMounted, getData]);
 
   return (
     <>

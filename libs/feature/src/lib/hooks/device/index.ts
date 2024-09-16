@@ -1,1 +1,1 @@
-export * from './use-device-data';
+export * from './use-list-device-data';

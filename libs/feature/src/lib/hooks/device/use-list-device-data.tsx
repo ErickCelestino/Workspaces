@@ -4,18 +4,18 @@ import { ErrorResponse, Device } from '@workspaces/domain';
 import axios, { AxiosError } from 'axios';
 import { ValidationsError } from '../../shared';
 
-interface DeviceDataProps {
+interface ListDeviceDataProps {
   companyId?: string;
   loggedUserId?: string;
   showAlert: (message: string, success: boolean) => void;
 }
 
-export const useDeviceData = (data: DeviceDataProps) => {
+export const useListDeviceData = (data: ListDeviceDataProps) => {
   const { showAlert, loggedUserId, companyId } = data;
   const [listDevice, setListDevice] = useState<Device[]>([]);
   const [totalPage, setTotalPage] = useState<number>(1);
 
-  const getData = useCallback(
+  const getListDeviceData = useCallback(
     async (input?: string, skip?: number) => {
       if (!loggedUserId) return;
       if (!companyId) return;
@@ -44,5 +44,5 @@ export const useDeviceData = (data: DeviceDataProps) => {
     [showAlert, loggedUserId, companyId]
   );
 
-  return { listDevice, totalPage, getData };
+  return { listDevice, totalPage, getListDeviceData };
 };

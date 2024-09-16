@@ -9,7 +9,7 @@ import {
 import { LayoutBase } from '../../layout';
 import { CrudType, IconMenuItem } from '@workspaces/domain';
 import { useCallback, useEffect, useState } from 'react';
-import { useDeviceData, useSnackbarAlert } from '../../hooks';
+import { useListDeviceData, useSnackbarAlert } from '../../hooks';
 import { ContainerCardList } from '../utils';
 import { useLoggedUser } from '../../contexts';
 
@@ -37,7 +37,7 @@ export const ListDeviceContainer = () => {
     [showSnackbarAlert]
   );
 
-  const { listDevice, totalPage, getData } = useDeviceData({
+  const { listDevice, totalPage, getListDeviceData } = useListDeviceData({
     showAlert,
     loggedUserId: loggedUser?.id ?? '',
     companyId: loggedUser?.selectedCompany.id ?? '',
@@ -56,7 +56,7 @@ export const ListDeviceContainer = () => {
       ...prev,
       [type]: false,
     }));
-    getData();
+    getListDeviceData();
   };
 
   useEffect(() => {
@@ -65,10 +65,10 @@ export const ListDeviceContainer = () => {
 
   useEffect(() => {
     if (!isMounted) {
-      getData();
+      getListDeviceData();
       setIsMounted(true);
     }
-  }, [isMounted]);
+  }, [isMounted, getListDeviceData]);
 
   const rightClickMenuList: IconMenuItem[] = [
     {
@@ -106,14 +106,14 @@ export const ListDeviceContainer = () => {
     );
 
   const searchData = async (input: string) => {
-    getData(input);
+    getListDeviceData(input);
   };
 
   const handleChange = async (
     event: React.ChangeEvent<unknown>,
     value: number
   ) => {
-    getData('', value);
+    getListDeviceData('', value);
   };
 
   return (

@@ -7,19 +7,19 @@ import {
 import axios, { AxiosError } from 'axios';
 import { ValidationsError } from '../../shared';
 
-interface CompanyDataProps {
+interface ListCompanyDataProps {
   loggedUserId?: string;
   showAlert: (message: string, success: boolean) => void;
 }
 
-export const useCompanyData = (companyData: CompanyDataProps) => {
+export const useListCompanyData = (companyData: ListCompanyDataProps) => {
   const { showAlert, loggedUserId } = companyData;
   const [listCompany, setListCompany] = useState<
     ListSimpleCompanyResponseDto[]
   >([]);
   const [totalPage, setTotalPage] = useState<number>(1);
 
-  const getData = useCallback(
+  const getListCompanyData = useCallback(
     async (input?: string, skip?: number) => {
       if (!loggedUserId) return;
       try {
@@ -46,5 +46,5 @@ export const useCompanyData = (companyData: CompanyDataProps) => {
     [showAlert, loggedUserId]
   );
 
-  return { listCompany, totalPage, getData };
+  return { listCompany, totalPage, getListCompanyData };
 };

@@ -1,1 +1,1 @@
-export * from './use-company-data';
+export * from './use-list-company-data';
