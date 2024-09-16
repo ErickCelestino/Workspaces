@@ -11,18 +11,15 @@ import AttachFileIcon from '@mui/icons-material/AttachFile';
 import { LayoutBase } from '../../layout';
 import { useCallback, useEffect, useState } from 'react';
 import {
-  ContentFile,
   CrudType,
   DownloadContentFileDto,
   DownloadContentFileResponseDto,
   ErrorResponse,
   FileContentType,
   IconMenuItem,
-  ListContentFileDto,
 } from '@workspaces/domain';
 import {
   DownloadContentFileRequest,
-  ListContentFilesRequest,
   getItemLocalStorage,
 } from '../../services';
 import { useFileModal, useLoggedUser } from '../../contexts';
@@ -37,7 +34,7 @@ import {
   ToolbarPureTV,
 } from '../../components';
 import axios, { AxiosError } from 'axios';
-import { useSnackbarAlert } from '../../hooks';
+import { useListContentFilesData, useSnackbarAlert } from '../../hooks';
 import { DownloadError } from '../../shared';
 import { ValidationsError } from '../../shared/validations/utils';
 import { ContainerCardList } from '../utils';
@@ -64,8 +61,6 @@ const onDownloadFile = async (input: DownloadContentFileResponseDto) => {
 };
 
 export const ListContanteFilesContainer = () => {
-  const [fileList, setFileList] = useState<ContentFile[]>([]);
-  const [totalPage, setTotalPage] = useState<number>(1);
   const [directoryId, setLocalDirectoryId] = useState('');
   const [deletePopUp, setDeletePopUp] = useState(false);
   const [detailsPopUp, setDetailsPopUp] = useState(false);
@@ -90,60 +85,25 @@ export const ListContanteFilesContainer = () => {
     [showSnackbarAlert]
   );
 
-  const handleData = useCallback(
-    async (data: ListContentFileDto) => {
-      try {
-        const result = await ListContentFilesRequest({
-          userInput: data.userInput ?? '',
-          loggedUserId: data.loggedUserId,
-          directoryId: data.directoryId,
-          companyId: data.companyId,
-          take: data.take,
-          skip: data.skip,
-        });
-
-        return result;
-      } catch (error) {
-        console.error(error);
-        if (axios.isAxiosError(error)) {
-          const axiosError = error as AxiosError<ErrorResponse>;
-          const errors = ValidationsError(axiosError, 'Arquivos');
-          if (errors) {
-            showAlert(errors, false);
-          }
-        }
-      }
-    },
-    [showAlert]
-  );
+  const { getListContentFilesData, listFiles, totalPage } =
+    useListContentFilesData({
+      showAlert,
+      companyId: loggedUser?.selectedCompany.id ?? '',
+      loggedUserId: loggedUser?.id ?? '',
+    });
 
   useEffect(() => {
     if (closed) {
-      getData();
-    }
-  }, [closed]);
-
-  const getData = useCallback(
-    async (input?: string, skip?: number) => {
       const directoryId = getItemLocalStorage('di');
-      const result = await handleData({
-        directoryId: directoryId ?? '',
-        companyId: loggedUser?.selectedCompany.id ?? '',
-        loggedUserId: loggedUser?.id ?? '',
-        userInput: input ? input : '',
-        skip: skip ? (skip - 1) * 8 : 0,
-      });
-      if (result) {
-        setFileList(result?.files ?? []);
+      if (directoryId) {
+        getListContentFilesData('', directoryId);
         setLocalDirectoryId(directoryId);
-        setTotalPage(result?.totalPages ?? 0);
       }
-    },
-    [loggedUser, handleData]
-  );
+    }
+  }, [closed, getListContentFilesData, setLocalDirectoryId]);
 
   const handlePopUpClose = (types: FileContentType) => {
-    getData();
+    getListContentFilesData('', directoryId);
     switch (types) {
       case 'delete':
         setDeletePopUp(false);
@@ -194,7 +154,7 @@ export const ListContanteFilesContainer = () => {
   };
 
   const handleDirectoryPopUpClose = (types: CrudType | 'changeDirectory') => {
-    getData();
+    getListContentFilesData('', directoryId);
     switch (types) {
       case 'create':
         setCreateDirectoryPopUp(false);
@@ -243,11 +203,11 @@ export const ListContanteFilesContainer = () => {
     event: React.ChangeEvent<unknown>,
     value: number
   ) => {
-    getData('', value);
+    getListContentFilesData('', directoryId, value);
   };
 
   const searchData = async (input: string) => {
-    getData(input);
+    getListContentFilesData(input, directoryId);
   };
 
   useEffect(() => {
@@ -256,10 +216,20 @@ export const ListContanteFilesContainer = () => {
 
   useEffect(() => {
     if (!isMounted) {
-      getData();
+      const directoryId = getItemLocalStorage('di');
+      if (directoryId) {
+        getListContentFilesData('', directoryId);
+        setLocalDirectoryId(directoryId);
+      }
       setIsMounted(true);
     }
-  }, [isMounted, getData]);
+  }, [
+    isMounted,
+    getListContentFilesData,
+    directoryId,
+    setLocalDirectoryId,
+    listFiles,
+  ]);
 
   const rightClickMenuList: IconMenuItem[] = [
     {
@@ -327,7 +297,7 @@ export const ListContanteFilesContainer = () => {
           </IconButton>
         </DialogTitle>
         <DialogContent>
-          <ListDirectory getDataInput={getData} />
+          <ListDirectory getDataInput={getListContentFilesData} />
         </DialogContent>
       </Dialog>
       <LayoutBase
@@ -349,9 +319,9 @@ export const ListContanteFilesContainer = () => {
             handleDirectoryPopUpOpen('changeDirectory')
           }
         >
-          {fileList.length > 0 ? (
+          {listFiles.length > 0 ? (
             <Grid justifyContent="center" container spacing={2}>
-              {fileList.map((file, index) => (
+              {listFiles.map((file, index) => (
                 <Grid item md={6} lg={4} xl={3} key={index}>
                   <ContentFileCard
                     deleteFile={() => handleFile('delete', file.id)}

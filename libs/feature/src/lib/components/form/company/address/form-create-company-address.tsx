@@ -172,7 +172,6 @@ export const FormCreateCompanyAddress: FC<FormCreateCompanyAddressProps> = ({
 
   const ajustLists = useCallback(
     async (input: AjustListsDto) => {
-      console.log(input);
       getCountry({
         loggedUserId: loggedUser?.id ?? '',
       }).then((country) => {
@@ -224,7 +223,6 @@ export const FormCreateCompanyAddress: FC<FormCreateCompanyAddressProps> = ({
   );
 
   useEffect(() => {
-    console.log(dataLoaded);
     if (!dataLoaded) {
       ajustLists({
         city: companyAddress.city,

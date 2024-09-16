@@ -69,7 +69,6 @@ export const ListCompanyContainer: FC<ListCompanyContainerProps> = ({
 
   useEffect(() => {
     if (!isMounted) {
-      console.log('aa');
       getListCompanyData();
       setIsMounted(true);
     }
