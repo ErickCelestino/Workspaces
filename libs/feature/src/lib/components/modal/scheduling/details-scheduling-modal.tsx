@@ -7,7 +7,7 @@ import { DetailsSchedulingCard } from '../../card';
 import { EmptyListResponse, ListSimplePlaylist } from '../../list';
 import {
   usePlaylistBySchedulingData,
-  useSchedulingByIdData,
+  useFindSchedulingByIdData,
 } from '../../../hooks';
 
 interface DetailsSchedulingModalProps {
@@ -46,7 +46,7 @@ export const DetailsSchedulingModal: FC<DetailsSchedulingModalProps> = ({
       loggedUserId: loggedUser?.id ?? '',
       schedulingId: idToDetails,
     });
-  const { SchedulingById, getSchedulesByIdData } = useSchedulingByIdData({
+  const { SchedulingById, getSchedulingByIdData } = useFindSchedulingByIdData({
     showAlert,
     findSchedulingByIdDto: {
       id: idToDetails,
@@ -65,10 +65,17 @@ export const DetailsSchedulingModal: FC<DetailsSchedulingModalProps> = ({
 
   useEffect(() => {
     if (open && idToDetails && !dataLoaded) {
-      getSchedulesByIdData();
+      getSchedulingByIdData();
       getPlayListBySchedulingData();
     }
-  }, [loggedUser, idToDetails, dataLoaded, open]);
+  }, [
+    loggedUser,
+    idToDetails,
+    dataLoaded,
+    open,
+    getSchedulingByIdData,
+    getPlayListBySchedulingData,
+  ]);
 
   const handleChange = async (
     event: React.ChangeEvent<unknown>,

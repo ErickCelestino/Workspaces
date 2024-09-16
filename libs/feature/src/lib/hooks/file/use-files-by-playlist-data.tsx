@@ -15,7 +15,7 @@ export const useFilesByPlaylistData = (data: FilesByPlaylistDataProps) => {
   const [listFiles, setListFiles] = useState<ContentFile[]>([]);
   const [totalPage, setTotalPage] = useState<number>(1);
 
-  const getData = useCallback(
+  const getFilesByPlaylistData = useCallback(
     async (input?: string, skip?: number) => {
       if (!loggedUserId) return;
       if (!playlistId) return;
@@ -43,5 +43,5 @@ export const useFilesByPlaylistData = (data: FilesByPlaylistDataProps) => {
     [showAlert, loggedUserId, playlistId]
   );
 
-  return { listFiles, totalPage, getData };
+  return { listFiles, totalPage, getFilesByPlaylistData };
 };

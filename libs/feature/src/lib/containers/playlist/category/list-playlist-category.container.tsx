@@ -8,7 +8,7 @@ import {
 } from '../../../components';
 import { LayoutBase } from '../../../layout';
 import { useCallback, useEffect, useState } from 'react';
-import { usePlaylistCategoryData, useSnackbarAlert } from '../../../hooks';
+import { useListPlaylistCategoryData, useSnackbarAlert } from '../../../hooks';
 import { CrudType, IconMenuItem } from '@workspaces/domain';
 import { useLoggedUser } from '../../../contexts';
 import { ContainerSimpleList } from '../../utils';
@@ -35,11 +35,12 @@ export const ListPlaylistCategoryContainer = () => {
     [showSnackbarAlert]
   );
 
-  const { listPlaylistCategory, totalPage, getData } = usePlaylistCategoryData({
-    showAlert,
-    loggedUserId: loggedUser?.id ?? '',
-    companyId: loggedUser?.selectedCompany.id ?? '',
-  });
+  const { listPlaylistCategory, totalPage, getPlaylistCategoryData } =
+    useListPlaylistCategoryData({
+      showAlert,
+      loggedUserId: loggedUser?.id ?? '',
+      companyId: loggedUser?.selectedCompany.id ?? '',
+    });
 
   const handlePopUpOpen = async (type: CrudType, id?: string) => {
     setSelectedId(id ?? '');
@@ -54,7 +55,7 @@ export const ListPlaylistCategoryContainer = () => {
       ...prev,
       [type]: false,
     }));
-    getData();
+    getPlaylistCategoryData();
   };
 
   const renderPlaylistCategory = () =>
@@ -86,20 +87,20 @@ export const ListPlaylistCategoryContainer = () => {
 
   useEffect(() => {
     if (!isMounted) {
-      getData();
+      getPlaylistCategoryData();
       setIsMounted(true);
     }
-  }, [isMounted]);
+  }, [isMounted, getPlaylistCategoryData]);
 
   const searchData = async (input: string) => {
-    getData(input);
+    getPlaylistCategoryData(input);
   };
 
   const handleChange = async (
     event: React.ChangeEvent<unknown>,
     value: number
   ) => {
-    getData('', value);
+    getPlaylistCategoryData('', value);
   };
 
   const rightClickMenuList: IconMenuItem[] = [

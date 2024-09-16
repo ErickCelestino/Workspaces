@@ -13,13 +13,13 @@ interface SchedulingByIdProps {
   showAlert: (message: string, success: boolean) => void;
 }
 
-export const useSchedulingByIdData = (data: SchedulingByIdProps) => {
+export const useFindSchedulingByIdData = (data: SchedulingByIdProps) => {
   const { showAlert, findSchedulingByIdDto } = data;
   const [SchedulingById, setSchedulingById] = useState<Scheduling>(
     {} as Scheduling
   );
 
-  const getSchedulesByIdData = useCallback(async () => {
+  const getSchedulingByIdData = useCallback(async () => {
     try {
       const result = await FindSchedulingByIdRequest(findSchedulingByIdDto);
       if (result) {
@@ -37,5 +37,5 @@ export const useSchedulingByIdData = (data: SchedulingByIdProps) => {
     }
   }, [showAlert, findSchedulingByIdDto]);
 
-  return { SchedulingById, getSchedulesByIdData };
+  return { SchedulingById, getSchedulingByIdData };
 };

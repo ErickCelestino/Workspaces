@@ -7,7 +7,7 @@ import {
   PlaylistModals,
 } from '../../components';
 import { LayoutBase } from '../../layout';
-import { usePlaylistData, useSnackbarAlert } from '../../hooks';
+import { useListPlaylistData, useSnackbarAlert } from '../../hooks';
 import { useCallback, useEffect, useState } from 'react';
 import { CrudType, IconMenuItem } from '@workspaces/domain';
 import { useLoggedUser } from '../../contexts';
@@ -37,7 +37,7 @@ export const ListPlaylistContainer = () => {
     [showSnackbarAlert]
   );
 
-  const { listPlaylist, totalPage, getData } = usePlaylistData({
+  const { listPlaylist, totalPage, getListPlaylistData } = useListPlaylistData({
     showAlert,
     loggedUserId: loggedUser?.id ?? '',
     companyId: loggedUser?.selectedCompany.id ?? '',
@@ -56,7 +56,7 @@ export const ListPlaylistContainer = () => {
       ...prev,
       [type]: false,
     }));
-    getData();
+    getListPlaylistData();
   };
 
   useEffect(() => {
@@ -65,10 +65,10 @@ export const ListPlaylistContainer = () => {
 
   useEffect(() => {
     if (!isMounted) {
-      getData();
+      getListPlaylistData();
       setIsMounted(true);
     }
-  }, [isMounted]);
+  }, [isMounted, getListPlaylistData]);
 
   const rightClickMenuList: IconMenuItem[] = [
     {
@@ -79,14 +79,14 @@ export const ListPlaylistContainer = () => {
   ];
 
   const searchData = async (input: string) => {
-    getData(input);
+    getListPlaylistData(input);
   };
 
   const handleChange = async (
     event: React.ChangeEvent<unknown>,
     value: number
   ) => {
-    getData('', value);
+    getListPlaylistData('', value);
   };
 
   const renderPlaylist = () =>

@@ -15,7 +15,7 @@ export const useListSchedulesData = (data: ListSchedulesDataProps) => {
   const [listSchedules, setListSchedules] = useState<Scheduling[]>([]);
   const [totalPage, setTotalPage] = useState<number>(1);
 
-  const getData = useCallback(
+  const getListSchedulesData = useCallback(
     async (input?: string, skip?: number) => {
       if (!loggedUserId) return;
       if (!companyId) return;
@@ -44,5 +44,5 @@ export const useListSchedulesData = (data: ListSchedulesDataProps) => {
     [showAlert, loggedUserId, companyId]
   );
 
-  return { listSchedules, totalPage, getData };
+  return { listSchedules, totalPage, getListSchedulesData };
 };

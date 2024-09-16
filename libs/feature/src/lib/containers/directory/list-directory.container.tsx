@@ -8,7 +8,7 @@ import {
 } from '../../components';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Grid, Icon, useTheme } from '@mui/material';
-import { useSnackbarAlert, useDirectoryData } from '../../hooks';
+import { useSnackbarAlert, useListDirectoryData } from '../../hooks';
 import { LayoutBase } from '../../layout';
 import { useLoggedUser } from '../../contexts';
 import { setItemLocalStorage } from '../../services';
@@ -40,7 +40,7 @@ export const ListDirectoryContainer = () => {
     [showSnackbarAlert]
   );
 
-  const { listDirectory, totalPage, getData } = useDirectoryData({
+  const { listDirectory, totalPage, getListDeviceData } = useListDirectoryData({
     showAlert,
     loggedUserId: loggedUser?.id ?? '',
     companyId: loggedUser?.selectedCompany.id ?? '',
@@ -59,7 +59,7 @@ export const ListDirectoryContainer = () => {
       ...prev,
       [type]: false,
     }));
-    getData();
+    getListDeviceData();
   };
 
   useEffect(() => {
@@ -68,20 +68,20 @@ export const ListDirectoryContainer = () => {
 
   useEffect(() => {
     if (!isMounted) {
-      getData();
+      getListDeviceData();
       setIsMounted(true);
     }
-  }, [isMounted]);
+  }, [isMounted, getListDeviceData]);
 
   const searchData = async (input: string) => {
-    getData(input);
+    getListDeviceData(input);
   };
 
   const handleChange = async (
     event: React.ChangeEvent<unknown>,
     value: number
   ) => {
-    getData('', value);
+    getListDeviceData('', value);
   };
 
   const rightClickMenuList: IconMenuItem[] = [

@@ -38,11 +38,12 @@ export const ListSchedulesContainer = () => {
     [showSnackbarAlert]
   );
 
-  const { listSchedules, totalPage, getData } = useListSchedulesData({
-    showAlert,
-    loggedUserId: loggedUser?.id ?? '',
-    companyId: loggedUser?.selectedCompany.id ?? '',
-  });
+  const { listSchedules, totalPage, getListSchedulesData } =
+    useListSchedulesData({
+      showAlert,
+      loggedUserId: loggedUser?.id ?? '',
+      companyId: loggedUser?.selectedCompany.id ?? '',
+    });
 
   const handlePopUpOpen = async (type: CrudType | 'add', id?: string) => {
     setSelectedId(id ?? '');
@@ -57,7 +58,7 @@ export const ListSchedulesContainer = () => {
       ...prev,
       [type]: false,
     }));
-    getData();
+    getListSchedulesData();
   };
 
   useEffect(() => {
@@ -66,20 +67,20 @@ export const ListSchedulesContainer = () => {
 
   useEffect(() => {
     if (!isMounted) {
-      getData();
+      getListSchedulesData();
       setIsMounted(true);
     }
-  }, [isMounted, getData]);
+  }, [isMounted, getListSchedulesData]);
 
   const searchData = async (input: string) => {
-    getData(input);
+    getListSchedulesData(input);
   };
 
   const handleChange = async (
     event: React.ChangeEvent<unknown>,
     value: number
   ) => {
-    getData('', value);
+    getListSchedulesData('', value);
   };
 
   const renderSchedules = () =>

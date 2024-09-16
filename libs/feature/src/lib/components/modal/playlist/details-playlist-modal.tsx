@@ -61,11 +61,12 @@ export const DetailsPlaylistModal: FC<DetailsPlaylistModalProps> = ({
   const theme = useTheme();
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const { listFiles, totalPage, getData } = useFilesByPlaylistData({
-    showAlert,
-    loggedUserId: loggedUser?.id ?? '',
-    playlistId: idPlaylist,
-  });
+  const { listFiles, totalPage, getFilesByPlaylistData } =
+    useFilesByPlaylistData({
+      showAlert,
+      loggedUserId: loggedUser?.id ?? '',
+      playlistId: idPlaylist,
+    });
 
   const getPlaylist = useCallback(
     async (input: DetailsPlaylistDto) => {
@@ -125,9 +126,16 @@ export const DetailsPlaylistModal: FC<DetailsPlaylistModalProps> = ({
         loggedUserId: loggedUser?.id ?? '',
         playlistId: idPlaylist,
       });
-      getData();
+      getFilesByPlaylistData();
     }
-  }, [open, idPlaylist, dataLoaded, getPlaylist, loggedUser, getData]);
+  }, [
+    open,
+    idPlaylist,
+    dataLoaded,
+    getPlaylist,
+    loggedUser,
+    getFilesByPlaylistData,
+  ]);
 
   const handleFileToggle = (fileId: string) => {
     setSelectedFiles((prevSelectedFiles) => {
@@ -143,7 +151,7 @@ export const DetailsPlaylistModal: FC<DetailsPlaylistModalProps> = ({
     event: React.ChangeEvent<unknown>,
     value: number
   ) => {
-    getData('', value);
+    getFilesByPlaylistData('', value);
   };
 
   const handlePopUpFilesClose = async (type: 'move' | 'delete') => {
@@ -151,7 +159,7 @@ export const DetailsPlaylistModal: FC<DetailsPlaylistModalProps> = ({
       ...prev,
       [type]: false,
     }));
-    getData();
+    getFilesByPlaylistData();
   };
 
   const handlePopUpOpen = async (type: 'move' | 'delete', id?: string) => {

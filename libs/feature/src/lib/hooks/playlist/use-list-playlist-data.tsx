@@ -1,50 +1,48 @@
 import { useState, useCallback } from 'react';
-import { ListPlaylistCategoryRequest } from '../../services';
-import { ErrorResponse, PlaylistCategory } from '@workspaces/domain';
+import { ListPlaylistRequest } from '../../services';
+import { ErrorResponse, Playlist } from '@workspaces/domain';
 import axios, { AxiosError } from 'axios';
 import { ValidationsError } from '../../shared';
 
-interface PlaylistCategoryDataProps {
+interface ListPlaylistDataProps {
   companyId?: string;
   loggedUserId?: string;
   showAlert: (message: string, success: boolean) => void;
 }
 
-export const usePlaylistCategoryData = (data: PlaylistCategoryDataProps) => {
+export const useListPlaylistData = (data: ListPlaylistDataProps) => {
   const { showAlert, loggedUserId, companyId } = data;
-  const [listPlaylistCategory, setListPlaylistCategory] = useState<
-    PlaylistCategory[]
-  >([]);
+  const [listPlaylist, setListPlaylist] = useState<Playlist[]>([]);
   const [totalPage, setTotalPage] = useState<number>(1);
 
-  const getData = useCallback(
+  const getListPlaylistData = useCallback(
     async (input?: string, skip?: number) => {
       if (!loggedUserId) return;
       if (!companyId) return;
       try {
-        const result = await ListPlaylistCategoryRequest({
+        const result = await ListPlaylistRequest({
           loggedUserId,
           companyId,
           skip: skip ? (skip - 1) * 8 : 0,
           userInput: input || '',
         });
         if (result) {
-          setListPlaylistCategory(result.categories);
+          setListPlaylist(result.playlists);
           setTotalPage(result.totalPages);
         }
       } catch (error) {
         console.error(error);
         if (axios.isAxiosError(error)) {
           const axiosError = error as AxiosError<ErrorResponse>;
-          const errors = ValidationsError(axiosError, 'Playlist Category');
+          const errors = ValidationsError(axiosError, 'Playlist');
           if (errors) {
             showAlert(errors, false);
           }
         }
       }
     },
-    [showAlert, loggedUserId]
+    [showAlert, loggedUserId, companyId]
   );
 
-  return { listPlaylistCategory, totalPage, getData };
+  return { listPlaylist, totalPage, getListPlaylistData };
 };
