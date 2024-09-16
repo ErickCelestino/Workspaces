@@ -1,4 +1,4 @@
-import { FC, useCallback, useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { SimpleFormModal } from '../simple';
 import {
   Box,
@@ -13,20 +13,13 @@ import {
 import DeleteSweepIcon from '@mui/icons-material/DeleteSweep';
 import OpenWithIcon from '@mui/icons-material/OpenWith';
 import FolderOffIcon from '@mui/icons-material/FolderOff';
-import {
-  DetailsPlaylistDto,
-  ErrorResponse,
-  IconMenuItem,
-  PlaylistResponseDto,
-} from '@workspaces/domain';
-import { DetailsPlaylistRequest } from '../../../services';
-import axios, { AxiosError } from 'axios';
-import { formatBrDate, ValidationsError } from '../../../shared';
+import { IconMenuItem } from '@workspaces/domain';
+import { formatBrDate } from '../../../shared';
 import { useLoggedUser } from '../../../contexts';
 import { ContentFileItem, EmptyListResponse } from '../../list';
 import { ButtonFileMenu } from '../../menu';
 import { FileToPlaylistModals } from '../file-to-playlist';
-import { useFilesByPlaylistData } from '../../../hooks';
+import { useDetailsPlaylistData, useFilesByPlaylistData } from '../../../hooks';
 
 interface DetailsPlaylistModalProps {
   open: boolean;
@@ -45,9 +38,6 @@ export const DetailsPlaylistModal: FC<DetailsPlaylistModalProps> = ({
   title,
   open,
 }) => {
-  const [playlistDetails, setPlaylistDetails] = useState<PlaylistResponseDto>(
-    {} as PlaylistResponseDto
-  );
   const [dataLoaded, setDataLoaded] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState<Record<string, boolean>>(
     {}
@@ -68,24 +58,13 @@ export const DetailsPlaylistModal: FC<DetailsPlaylistModalProps> = ({
       playlistId: idPlaylist,
     });
 
-  const getPlaylist = useCallback(
-    async (input: DetailsPlaylistDto) => {
-      try {
-        const result = await DetailsPlaylistRequest(input);
-        setPlaylistDetails(result);
-      } catch (error) {
-        console.error(error);
-        if (axios.isAxiosError(error)) {
-          const axiosError = error as AxiosError<ErrorResponse>;
-          const errors = ValidationsError(axiosError, 'Playlist');
-          if (errors) {
-            showAlert(errors, false);
-          }
-        }
-      }
+  const { detailsPlaylist, getDetailsPlaylistData } = useDetailsPlaylistData({
+    input: {
+      loggedUserId: loggedUser?.id ?? '',
+      playlistId: idPlaylist,
     },
-    [showAlert]
-  );
+    showAlert,
+  });
 
   const renderFilesByPlaylist = () =>
     listFiles.length > 0 ? (
@@ -122,17 +101,14 @@ export const DetailsPlaylistModal: FC<DetailsPlaylistModalProps> = ({
 
   useEffect(() => {
     if (open && idPlaylist && !dataLoaded) {
-      getPlaylist({
-        loggedUserId: loggedUser?.id ?? '',
-        playlistId: idPlaylist,
-      });
+      getDetailsPlaylistData();
       getFilesByPlaylistData();
     }
   }, [
     open,
     idPlaylist,
     dataLoaded,
-    getPlaylist,
+    getDetailsPlaylistData,
     loggedUser,
     getFilesByPlaylistData,
   ]);
@@ -221,10 +197,10 @@ export const DetailsPlaylistModal: FC<DetailsPlaylistModalProps> = ({
               }}
             >
               <strong>Nome: </strong>
-              {playlistDetails?.name ?? ''}
+              {detailsPlaylist?.name ?? ''}
             </Typography>
             <Chip
-              label={playlistDetails.category?.name ?? ''}
+              label={detailsPlaylist.category?.name ?? ''}
               color="success"
               variant="filled"
               size="medium"
@@ -243,12 +219,12 @@ export const DetailsPlaylistModal: FC<DetailsPlaylistModalProps> = ({
               }}
             >
               <strong>Criado por: </strong>
-              {playlistDetails?.created_by ?? ''}
+              {detailsPlaylist?.created_by ?? ''}
             </Typography>
             <Typography>
               <strong>Criado em: </strong>
               {formatBrDate(
-                new Date(playlistDetails?.created_at ?? new Date())
+                new Date(detailsPlaylist?.created_at ?? new Date())
               )}
             </Typography>
           </Box>
