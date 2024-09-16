@@ -9,12 +9,12 @@ interface UserDataProps {
   showAlert: (message: string, success: boolean) => void;
 }
 
-export const useUserData = (data: UserDataProps) => {
+export const useListUserData = (data: UserDataProps) => {
   const { showAlert, loggedUserId } = data;
   const [listUsers, setListUsers] = useState<UserList[]>([]);
   const [totalPage, setTotalPage] = useState<number>(1);
 
-  const getData = useCallback(
+  const getListUserData = useCallback(
     async (input?: string, skip?: number) => {
       if (!loggedUserId) return;
       try {
@@ -41,5 +41,5 @@ export const useUserData = (data: UserDataProps) => {
     [showAlert, loggedUserId]
   );
 
-  return { listUsers, totalPage, getData };
+  return { listUsers, totalPage, getListUserData };
 };
