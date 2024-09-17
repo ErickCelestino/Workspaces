@@ -1,11 +1,4 @@
-import {
-  Box,
-  Typography,
-  Grid,
-  Card,
-  CardContent,
-  Divider,
-} from '@mui/material';
+import { Box, Typography, Grid, Card, CardContent } from '@mui/material';
 import { StepItem } from '@workspaces/domain';
 import { FC, useEffect, useState } from 'react';
 import { useLoggedUser } from '../../../contexts';
@@ -14,10 +7,12 @@ import {
   useFindSimpleCompanyByIdData,
 } from '../../../hooks';
 import { NavigationButton } from '../../buttom';
+import { formatBrDate, formatValueMask } from '../../../shared';
 
 interface FormDetailsCompanyInitialProps {
   showAlert: (message: string, success: boolean) => void;
   buttonRight: () => void;
+  buttonLeft: () => void;
   companySimpleId: string;
   companyDataId: string;
   step: StepItem;
@@ -36,6 +31,7 @@ interface FormDetailsCompanyInitialProps {
 export const FormDetailsCompanyInitial: FC<FormDetailsCompanyInitialProps> = ({
   showAlert,
   buttonRight,
+  buttonLeft,
   companySimpleId,
   companyDataId,
   companyIdTitle = 'ID',
@@ -46,15 +42,15 @@ export const FormDetailsCompanyInitial: FC<FormDetailsCompanyInitialProps> = ({
   companyOpeningTitle = 'Abertura',
   companyPhoneTitle = 'Telefone',
   companyPortTitle = 'Porte',
-  companyResponsibleEmailTitle = 'Email Responsável',
+  companyResponsibleEmailTitle = 'Email',
   companySituationTitle = 'Situação',
-  step: { stepPosition = 1, stepTitle = 'Etapa', totalPositions },
+  step: { stepPosition = 1, totalPositions },
 }) => {
   const { loggedUser } = useLoggedUser();
   const [dataLoaded, setDataLoaded] = useState(false);
 
   useEffect(() => {
-    if (Object.keys(companySimpleId ?? '').length < 1) {
+    if (companySimpleId && companyDataId) {
       setDataLoaded(false);
     }
   }, [companySimpleId]);
@@ -66,17 +62,17 @@ export const FormDetailsCompanyInitial: FC<FormDetailsCompanyInitialProps> = ({
   });
 
   const { companyDataById, getCompanyData } = useFindCompanyDataByIdData({
-    companyDataId,
+    companyDataId: companyDataId,
     loggedUserId: loggedUser?.id ?? '',
     showAlert,
   });
 
   useEffect(() => {
-    if (companySimpleId && !dataLoaded) {
+    if (companySimpleId && companyDataId && !dataLoaded) {
       getSimpleCompanyData();
       getCompanyData();
     }
-  }, [loggedUser, companySimpleId, dataLoaded, getSimpleCompanyData]);
+  }, [loggedUser, companySimpleId, companyDataId, dataLoaded]);
 
   return (
     <Box sx={{ mt: 2 }}>
@@ -118,14 +114,15 @@ export const FormDetailsCompanyInitial: FC<FormDetailsCompanyInitialProps> = ({
             <Grid item xs={12} sm={6}>
               <Typography variant="body1">
                 <strong>{companyOpeningTitle}: </strong>
-                {companyDataById.opening ?? ''}
+                {companyDataById.opening &&
+                  formatBrDate(new Date(companyDataById.opening), false)}
               </Typography>
             </Grid>
 
             <Grid item xs={12} sm={6}>
               <Typography variant="body1">
                 <strong>{companyPhoneTitle}: </strong>
-                {companyDataById.phone ?? ''}
+                {formatValueMask(companyDataById.phone ?? '', 'phone')}
               </Typography>
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -155,6 +152,7 @@ export const FormDetailsCompanyInitial: FC<FormDetailsCompanyInitialProps> = ({
           step={stepPosition}
           totalSteps={totalPositions}
           buttonRight={buttonRight}
+          buttonLeft={buttonLeft}
         />
       </Box>
     </Box>

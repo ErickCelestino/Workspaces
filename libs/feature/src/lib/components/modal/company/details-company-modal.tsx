@@ -51,11 +51,9 @@ export const DetailsCompanyModal: FC<DetailsCompanyModalProps> = ({
       width={smDown ? '90%' : theme.spacing(90)}
       title={title}
     >
-      <DetailsCompanyStepper
-        companyIds={companyIds}
-        handlePopUpClose={handlePopUpClose}
-        showAlert={showAlert}
-      />
+      {companyIds && (
+        <DetailsCompanyStepper companyIds={companyIds} showAlert={showAlert} />
+      )}
     </SimpleFormModal>
   );
 };

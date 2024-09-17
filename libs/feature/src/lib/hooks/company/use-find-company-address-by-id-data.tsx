@@ -26,6 +26,7 @@ export const useFindCompanyAdressByIdData = (
 
   const getCompanyAddress = useCallback(async () => {
     if (!loggedUserId) return;
+    if (!companyAddressId) return;
     try {
       const result = await FindCompanyAddressByIdRequest({
         loggedUserId,

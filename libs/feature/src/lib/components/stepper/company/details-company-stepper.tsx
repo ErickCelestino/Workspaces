@@ -5,14 +5,12 @@ import { FormDetailsCompanyFinal, FormDetailsCompanyInitial } from '../../form';
 
 interface DetailsCompanyStepperProps {
   showAlert: (message: string, success: boolean) => void;
-  handlePopUpClose: () => void;
   totalPosition?: number;
   companyIds: CompanyAllIdsResponseDto;
 }
 
 export const DetailsCompanyStepper: FC<DetailsCompanyStepperProps> = ({
   showAlert,
-  handlePopUpClose,
   totalPosition = 2,
   companyIds,
 }) => {
@@ -24,7 +22,7 @@ export const DetailsCompanyStepper: FC<DetailsCompanyStepperProps> = ({
 
   return (
     <Box>
-      {step === 1 && (
+      {step === 1 && companyIds.companySimpleId && companyIds.companyDataId && (
         <FormDetailsCompanyInitial
           companySimpleId={companyIds.companySimpleId}
           companyDataId={companyIds.companyDataId}
@@ -34,21 +32,25 @@ export const DetailsCompanyStepper: FC<DetailsCompanyStepperProps> = ({
             totalPositions: totalPosition,
           }}
           buttonRight={() => changeStage(2)}
+          buttonLeft={() => changeStage(2)}
         />
       )}
 
-      {step === 2 && (
-        <FormDetailsCompanyFinal
-          companyAddressId={companyIds.companyAddressId}
-          companyResponsibleId={companyIds.companyResponsibleId}
-          buttonLeft={() => changeStage(1)}
-          showAlert={showAlert}
-          step={{
-            stepPosition: step,
-            totalPositions: totalPosition,
-          }}
-        />
-      )}
+      {step === 2 &&
+        companyIds.companyAddressId &&
+        companyIds.companyResponsibleId && (
+          <FormDetailsCompanyFinal
+            companyAddressId={companyIds.companyAddressId}
+            companyResponsibleId={companyIds.companyResponsibleId}
+            buttonLeft={() => changeStage(1)}
+            buttonRight={() => changeStage(1)}
+            showAlert={showAlert}
+            step={{
+              stepPosition: step,
+              totalPositions: totalPosition,
+            }}
+          />
+        )}
     </Box>
   );
 };
