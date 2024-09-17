@@ -26,7 +26,6 @@ import {
   removeItemLocalStorage,
 } from '../../services';
 import { ProgressFilePopUp } from '../../components/popup';
-import { log } from 'console';
 
 interface FileModalContainerProps {
   modalTitle?: string;

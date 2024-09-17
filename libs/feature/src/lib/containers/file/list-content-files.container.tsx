@@ -25,12 +25,10 @@ import {
 import { useFileModal, useLoggedUser } from '../../contexts';
 import {
   ContentFileCard,
+  ContentFileModals,
   CreateDirectoryModal,
-  DeleteFileModal,
-  DetailsFileModal,
   EmptyListResponse,
   ListDirectory,
-  MoveFileToDirectoryModal,
   ToolbarPureTV,
 } from '../../components';
 import axios, { AxiosError } from 'axios';
@@ -62,13 +60,18 @@ const onDownloadFile = async (input: DownloadContentFileResponseDto) => {
 
 export const ListContanteFilesContainer = () => {
   const [directoryId, setLocalDirectoryId] = useState('');
-  const [deletePopUp, setDeletePopUp] = useState(false);
-  const [detailsPopUp, setDetailsPopUp] = useState(false);
   const [createDirectoryPopUp, setCreateDirectoryPopUp] = useState(false);
-  const [movePopUp, setMovePopUp] = useState(false);
   const [fileId, setFileId] = useState('');
   const [directoyPopUp, setDirectoryPopUp] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
+  const [popUpClosed, setPopUpClosed] = useState(false);
+  const [openModal, setOpenModal] = useState({
+    create: false,
+    delete: false,
+    edit: false,
+    details: false,
+    moveFile: false,
+  });
 
   const theme = useTheme();
   const { loggedUser } = useLoggedUser();
@@ -88,58 +91,49 @@ export const ListContanteFilesContainer = () => {
   const { getListContentFilesData, listFiles, totalPage } =
     useListContentFilesData({
       showAlert,
+      directoryId: directoryId,
       companyId: loggedUser?.selectedCompany.id ?? '',
       loggedUserId: loggedUser?.id ?? '',
     });
 
   useEffect(() => {
-    if (closed) {
+    if (closed && !popUpClosed) {
       const directoryId = getItemLocalStorage('di');
       if (directoryId) {
         getListContentFilesData('', directoryId);
         setLocalDirectoryId(directoryId);
+        setPopUpClosed(true);
       }
     }
-  }, [closed, getListContentFilesData, setLocalDirectoryId]);
+  }, [closed, getListContentFilesData, setLocalDirectoryId, popUpClosed]);
 
-  const handlePopUpClose = (types: FileContentType) => {
-    getListContentFilesData('', directoryId);
-    switch (types) {
-      case 'delete':
-        setDeletePopUp(false);
-        break;
-      case 'details':
-        setDetailsPopUp(false);
-        break;
-      case 'moveFile':
-        setMovePopUp(false);
-        break;
-    }
+  const handlePopUpClose = async (type: FileContentType | 'add') => {
+    setOpenModal((prev) => ({
+      ...prev,
+      [type]: false,
+    }));
+    getListContentFilesData();
   };
 
-  const handleFile = async (types: FileContentType, id?: string) => {
-    const selectedId = id ?? '';
-    switch (types) {
-      case 'delete':
-        setFileId(selectedId);
-        setDeletePopUp(true);
-        break;
-      case 'details':
-        setFileId(selectedId);
-        setDetailsPopUp(true);
-        break;
-      case 'download':
-        downloadFile(selectedId);
-        break;
-      case 'moveFile':
-        setFileId(selectedId);
-        setMovePopUp(true);
-        break;
+  const handlePopUpOpen = async (type: FileContentType, id?: string) => {
+    setFileId(id ?? '');
+    switch (type) {
       case 'create':
         setDirectoryId(directoryId);
+        setPopUpClosed(false);
         handleOpen();
         break;
+      case 'download':
+        downloadFile(id ?? '');
+        break;
+      default:
+        setOpenModal((prev) => ({
+          ...prev,
+          [type]: true,
+        }));
+        break;
     }
+    getListContentFilesData();
   };
 
   const handleDirectoryPopUpOpen = (types: CrudType | 'changeDirectory') => {
@@ -240,36 +234,19 @@ export const ListContanteFilesContainer = () => {
     {
       icon: <Icon>note_add</Icon>,
       title: 'Novo Arquivo',
-      handleClick: async () => handleFile('create'),
+      handleClick: async () => handlePopUpOpen('create'),
     },
   ];
   return (
     <>
-      <DeleteFileModal
-        open={deletePopUp}
-        directoryId={directoryId}
-        onClose={() => handlePopUpClose('delete')}
-        idToDelete={fileId}
-        loggedUserId={loggedUser?.id ?? ''}
-        showAlert={showAlert}
-      />
-      <DetailsFileModal
-        directoryId={directoryId}
-        open={detailsPopUp}
-        idDetails={fileId}
-        loggedUserId={loggedUser?.id ?? ''}
-        showAlert={showAlert}
-        handlePopUpClose={() => handlePopUpClose('details')}
-      />
-      <MoveFileToDirectoryModal
-        open={movePopUp}
-        loggedUserId={loggedUser?.id ?? ''}
+      <ContentFileModals
         companyId={loggedUser?.selectedCompany.id ?? ''}
+        directoryId={directoryId}
+        handlePopUpClose={handlePopUpClose}
+        loggedUserId={loggedUser?.id ?? ''}
+        openModal={openModal}
+        selectedId={fileId}
         showAlert={showAlert}
-        onClose={() => handlePopUpClose('moveFile')}
-        idToMove={fileId}
-        title="Mover Arquivo para"
-        buttonTitle="Mover Arquivo"
       />
       <CreateDirectoryModal
         open={createDirectoryPopUp}
@@ -309,7 +286,7 @@ export const ListContanteFilesContainer = () => {
           search={{
             searchData: searchData,
             placeholder: 'Pesquisar Arquivo',
-            createPopUp: () => handleFile('create'),
+            createPopUp: () => handlePopUpOpen('create'),
           }}
           totalPage={totalPage}
           handleChange={handleChange}
@@ -324,10 +301,10 @@ export const ListContanteFilesContainer = () => {
               {listFiles.map((file, index) => (
                 <Grid item md={6} lg={4} xl={3} key={index}>
                   <ContentFileCard
-                    deleteFile={() => handleFile('delete', file.id)}
-                    detailsFile={() => handleFile('details', file.id)}
-                    downloadFile={() => handleFile('download', file.id)}
-                    moveFile={() => handleFile('moveFile', file.id)}
+                    deleteFile={() => handlePopUpOpen('delete', file.id)}
+                    detailsFile={() => handlePopUpOpen('details', file.id)}
+                    downloadFile={() => handlePopUpOpen('download', file.id)}
+                    moveFile={() => handlePopUpOpen('moveFile', file.id)}
                     fileImage={
                       !file.format.startsWith('video/')
                         ? file.path ?? ''
