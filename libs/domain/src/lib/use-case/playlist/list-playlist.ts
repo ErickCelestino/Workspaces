@@ -4,10 +4,15 @@ import { ListPlaylistDto, ListPlaylistResponseDto } from '../../dto';
 import { EntityNotEmpty, EntityNotExists } from '../../error';
 import { Either, left, right } from '../../shared/either';
 import {
+  FindCompanyByIdRepository,
   FindUserByIdRepository,
   ListPlaylistRepository,
 } from '../../repository';
-import { ValidationUserId } from '../../utils';
+import {
+  ValidationCompanyId,
+  ValidationTextField,
+  ValidationUserId,
+} from '../../utils';
 
 export class ListPlaylist
   implements
@@ -19,6 +24,8 @@ export class ListPlaylist
   constructor(
     @Inject('FindUserByIdRepository')
     private findUserByIdRepository: FindUserByIdRepository,
+    @Inject('FindCompanyByIdRepository')
+    private findCompanyByIdRepository: FindCompanyByIdRepository,
     @Inject('ListPlaylistRepository')
     private listPlaylistRepository: ListPlaylistRepository
   ) {}
@@ -27,11 +34,20 @@ export class ListPlaylist
   ): Promise<
     Either<EntityNotEmpty | EntityNotExists, ListPlaylistResponseDto>
   > {
-    const { loggedUserId } = input;
+    const { loggedUserId, companyId } = input;
 
-    if (Object.keys(loggedUserId).length < 1) {
-      return left(new EntityNotEmpty('logged User ID'));
-    }
+    const loggedUserIdValidation = await ValidationTextField(
+      loggedUserId,
+      'Logged User ID'
+    );
+    if (loggedUserIdValidation.isLeft())
+      return left(loggedUserIdValidation.value);
+
+    const companyIdValidation = await ValidationTextField(
+      companyId,
+      'Company ID'
+    );
+    if (companyIdValidation.isLeft()) return left(companyIdValidation.value);
 
     const userValidation = await ValidationUserId(
       loggedUserId,
@@ -39,6 +55,15 @@ export class ListPlaylist
     );
     if (userValidation.isLeft()) {
       return left(userValidation.value);
+    }
+
+    const companyValidation = await ValidationCompanyId(
+      companyId,
+      this.findCompanyByIdRepository
+    );
+
+    if (companyValidation.isLeft()) {
+      return left(companyValidation.value);
     }
 
     const filteredPlaylist = await this.listPlaylistRepository.list(input);

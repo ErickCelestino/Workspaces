@@ -3,6 +3,7 @@ import { ListSimpleDirectoryService } from './list-simple-directory.service';
 import { ListSimpleDirectoryController } from './list-simple-directory.controller';
 import { ListSimpleDirectory } from '@workspaces/domain';
 import {
+  FindCompanyByIdRepositoryImpl,
   FindUserByIdRepositoryImpl,
   ListSimpleDirectoryRepositoryImpl,
   PrismaService,
@@ -20,6 +21,10 @@ import {
     {
       provide: 'FindUserByIdRepository',
       useClass: FindUserByIdRepositoryImpl,
+    },
+    {
+      provide: 'FindCompanyByIdRepository',
+      useClass: FindCompanyByIdRepositoryImpl,
     },
     {
       provide: 'ListSimpleDirectoryRepository',

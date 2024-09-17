@@ -14,11 +14,12 @@ export class ListSimpleDirectoryRepositoryImpl
   async list(
     input: ListSimpleDirectoryDto
   ): Promise<ListSimpleDirectoryResponseDto> {
-    const { loggedUserId, userInput } = input;
+    const { loggedUserId, companyId, userInput } = input;
     const skip = input?.skip || 0;
     const take = input?.take || 6;
     const whereClause = {
       user_id: loggedUserId,
+      company_id: companyId,
       ...(userInput !== ''
         ? {
             name: {
@@ -46,6 +47,7 @@ export class ListSimpleDirectoryRepositoryImpl
         this.prismaService.directory.count({
           where: {
             user_id: loggedUserId,
+            company_id: companyId,
           },
         }),
       ]);

@@ -44,7 +44,6 @@ export const DeleteDirectoryModal: FC<DeleteDirectoryModalProps> = ({
 
   const [action, setAction] = useState<string | null>(null);
   const [decisionModalOpen, setDecisionModalOpen] = useState<boolean>(false);
-  const [filesInDirectory, setFilesInDirectory] = useState<ContentFile[]>([]);
 
   const deleteDirectoryRequest = async () => {
     try {
@@ -52,10 +51,10 @@ export const DeleteDirectoryModal: FC<DeleteDirectoryModalProps> = ({
         userInput: '',
         loggedUserId: loggedUser?.id ?? '',
         directoryId: idToDelete,
+        companyId: loggedUser?.selectedCompany.id ?? '',
       });
       if (filesInDirectory.files.length > 0) {
         setDecisionModalOpen(true);
-        setFilesInDirectory(filesInDirectory.files);
       } else {
         await DeleteDirectoryRequest({
           id: idToDelete,
@@ -81,6 +80,7 @@ export const DeleteDirectoryModal: FC<DeleteDirectoryModalProps> = ({
       userInput: '',
       loggedUserId: loggedUser?.id ?? '',
       directoryId: idToDelete,
+      companyId: loggedUser?.selectedCompany.id ?? '',
     });
 
     while (filesInDirectory.files.length > 0) {
@@ -98,6 +98,7 @@ export const DeleteDirectoryModal: FC<DeleteDirectoryModalProps> = ({
         userInput: '',
         loggedUserId: loggedUser?.id ?? '',
         directoryId: idToDelete,
+        companyId: loggedUser?.selectedCompany.id ?? '',
       });
     }
   };
@@ -129,6 +130,7 @@ export const DeleteDirectoryModal: FC<DeleteDirectoryModalProps> = ({
       <MoveFileToDirectoryModal
         buttonTitle="Mover Arquivos"
         idToMove={idToDelete}
+        companyId={loggedUser?.selectedCompany.id ?? ''}
         loggedUserId={loggedUser?.id ?? ''}
         onClose={() => {
           setAction('move2');

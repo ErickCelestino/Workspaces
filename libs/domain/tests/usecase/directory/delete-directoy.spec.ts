@@ -3,15 +3,18 @@ import {
   DeleteDirectoryDto,
   DeleteDirectoryRepository,
   Directory,
+  EntityIsNotEmpty,
   EntityNotEmpty,
   EntityNotExists,
+  FindContentFilesByDirectoryIdRepository,
   FindDirectoryByIdRepository,
   FindUserByIdRepository,
   UserList,
 } from '../../../src';
-import { DirectoryMock, userMock } from '../../entity';
+import { ContentFileMock, DirectoryMock, userMock } from '../../entity';
 import {
   DeleteDirectoryRepositoryMock,
+  FindContentFilesByDirectoryIdRepositoryMock,
   FindDirectoryByIdRespositoryMock,
   FindUserByIdRepositoryMock,
 } from '../../repository';
@@ -21,12 +24,15 @@ interface sutTypes {
   deleteDirectoryDto: DeleteDirectoryDto;
   findUserByIdRepository: FindUserByIdRepository;
   findDirectoryByIdRepository: FindDirectoryByIdRepository;
+  findContentFilesByDirectoryIdRepository: FindContentFilesByDirectoryIdRepository;
   deleteDirectoryRepository: DeleteDirectoryRepository;
 }
 
 const makeSut = (): sutTypes => {
   const findUserByIdRepository = new FindUserByIdRepositoryMock();
   const findDirectoryByIdRepository = new FindDirectoryByIdRespositoryMock();
+  const findContentFilesByDirectoryIdRepository =
+    new FindContentFilesByDirectoryIdRepositoryMock();
   const deleteDirectoryRepository = new DeleteDirectoryRepositoryMock();
 
   const deleteDirectoryDto: DeleteDirectoryDto = {
@@ -37,6 +43,7 @@ const makeSut = (): sutTypes => {
   const sut = new DeleteDirectory(
     findUserByIdRepository,
     findDirectoryByIdRepository,
+    findContentFilesByDirectoryIdRepository,
     deleteDirectoryRepository
   );
 
@@ -45,6 +52,7 @@ const makeSut = (): sutTypes => {
     deleteDirectoryDto,
     findUserByIdRepository,
     findDirectoryByIdRepository,
+    findContentFilesByDirectoryIdRepository,
     deleteDirectoryRepository,
   };
 };
@@ -102,5 +110,17 @@ describe('DeleteDirectory', () => {
     expect(result.isLeft()).toBe(true);
     expect(result.isRight()).toBe(false);
     expect(result.value).toBeInstanceOf(EntityNotExists);
+  });
+
+  it('should return EntityIsNotEmpty when a exist content files in directory', async () => {
+    const { deleteDirectoryDto, sut } = makeSut();
+    jest
+      .spyOn(sut['findContentFilesByDirectoryIdRepository'], 'find')
+      .mockResolvedValueOnce([ContentFileMock]);
+    const result = await sut.execute(deleteDirectoryDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
+    expect(result.value).toBeInstanceOf(EntityIsNotEmpty);
   });
 });

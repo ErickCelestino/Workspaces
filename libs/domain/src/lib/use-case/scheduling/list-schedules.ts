@@ -4,10 +4,15 @@ import { ListSchedulesDto, ListSchedulesReponseDto } from '../../dto';
 import { EntityNotEmpty } from '../../error';
 import { Either, left, right } from '../../shared/either';
 import {
+  FindCompanyByIdRepository,
   FindUserByIdRepository,
   ListSchedulesRepository,
 } from '../../repository';
-import { ValidationUserId } from '../../utils';
+import {
+  ValidationCompanyId,
+  ValidationTextField,
+  ValidationUserId,
+} from '../../utils';
 
 export class ListSchedules
   implements
@@ -16,17 +21,28 @@ export class ListSchedules
   constructor(
     @Inject('FindUserByIdRepository')
     private findUserByIdRepository: FindUserByIdRepository,
+    @Inject('FindCompanyByIdRepository')
+    private findCompanyByIdRepository: FindCompanyByIdRepository,
     @Inject('ListSchedulesRepository')
     private listSchedulingRepository: ListSchedulesRepository
   ) {}
   async execute(
     input: ListSchedulesDto
   ): Promise<Either<EntityNotEmpty, ListSchedulesReponseDto>> {
-    const { loggedUserId } = input;
+    const { loggedUserId, companyId } = input;
 
-    if (Object.keys(loggedUserId).length < 1) {
-      return left(new EntityNotEmpty('User ID'));
-    }
+    const loggedUserIdValidation = await ValidationTextField(
+      loggedUserId,
+      'Logged User ID'
+    );
+    if (loggedUserIdValidation.isLeft())
+      return left(loggedUserIdValidation.value);
+
+    const companyIdValidation = await ValidationTextField(
+      companyId,
+      'Company ID'
+    );
+    if (companyIdValidation.isLeft()) return left(companyIdValidation.value);
 
     const userValidation = await ValidationUserId(
       loggedUserId,
@@ -35,6 +51,15 @@ export class ListSchedules
 
     if (userValidation.isLeft()) {
       return left(userValidation.value);
+    }
+
+    const companyValidation = await ValidationCompanyId(
+      companyId,
+      this.findCompanyByIdRepository
+    );
+
+    if (companyValidation.isLeft()) {
+      return left(companyValidation.value);
     }
 
     const resultScheduling = await this.listSchedulingRepository.list(input);

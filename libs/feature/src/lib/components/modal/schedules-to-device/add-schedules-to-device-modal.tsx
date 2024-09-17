@@ -149,6 +149,7 @@ export const AddSchedulesToDeviceModal: FC<AddSchedulesToDeviceModalProps> = ({
     value: number
   ) => {
     const result = await ListSchedulesRequest({
+      companyId: loggedUser?.selectedCompany.id ?? '',
       loggedUserId: loggedUser?.id ?? '',
       filter: '',
       skip: (value - 1) * 5,
@@ -182,6 +183,7 @@ export const AddSchedulesToDeviceModal: FC<AddSchedulesToDeviceModalProps> = ({
 
   const getFilteredScheduling = useCallback(async () => {
     const allSchedules = await getSchedules({
+      companyId: loggedUser?.selectedCompany.id ?? '',
       loggedUserId: loggedUser?.id ?? '',
       filter: '',
       take: 5,

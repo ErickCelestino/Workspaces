@@ -223,7 +223,7 @@ export const FormCreateCompanyAddress: FC<FormCreateCompanyAddressProps> = ({
   );
 
   useEffect(() => {
-    if (stepPosition === 4 && !dataLoaded) {
+    if (!dataLoaded) {
       ajustLists({
         city: companyAddress.city,
         country: companyAddress.country,
@@ -231,12 +231,6 @@ export const FormCreateCompanyAddress: FC<FormCreateCompanyAddressProps> = ({
       });
     }
   }, [stepPosition, loggedUser, dataLoaded, ajustLists, companyAddress]);
-
-  useEffect(() => {
-    if (stepPosition !== 4) {
-      setDataLoaded(false);
-    }
-  }, [stepPosition]);
 
   const createCompanyAddress = async (input: CreateCompanyAddressDto) => {
     try {
@@ -303,23 +297,24 @@ export const FormCreateCompanyAddress: FC<FormCreateCompanyAddressProps> = ({
           filteredCountry = listCoutry?.filter(
             (item) => item.name === event.target.value
           )[0];
+          setState('');
           getState({
             loggedUserId: loggedUser?.id ?? '',
             countryId: filteredCountry?.id ?? '',
           });
-          setState('');
+
           setter(event.target.value);
           break;
         case 'state':
           filteredState = listState?.filter(
             (item) => item.uf === event.target.value
           )[0];
+          setter(event.target.value);
+          setCity('');
           getCity({
             loggedUserId: loggedUser?.id ?? '',
             stateId: filteredState?.id ?? '',
           });
-          setCity('');
-          setter(event.target.value);
           break;
         case 'city':
           setter(event.target.value);
@@ -500,7 +495,7 @@ export const FormCreateCompanyAddress: FC<FormCreateCompanyAddressProps> = ({
         disabled={listCity.length > 0 ? false : true}
         label={cityLabel}
         {...register('cityId', {
-          onChange: handleChange(setState, 'city'),
+          onChange: handleChange(setCity, 'city'),
         })}
       >
         {listCity.map((item) => (

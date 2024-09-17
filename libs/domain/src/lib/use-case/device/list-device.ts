@@ -3,8 +3,16 @@ import { UseCase } from '../../base/use-case';
 import { ListDeviceDto, ListDeviceResponseDto } from '../../dto';
 import { EntityNotEmpty } from '../../error';
 import { Either, left, right } from '../../shared/either';
-import { FindUserByIdRepository, ListDeviceRepository } from '../../repository';
-import { ValidationUserId } from '../../utils';
+import {
+  FindCompanyByIdRepository,
+  FindUserByIdRepository,
+  ListDeviceRepository,
+} from '../../repository';
+import {
+  ValidationCompanyId,
+  ValidationTextField,
+  ValidationUserId,
+} from '../../utils';
 
 export class ListDevice
   implements
@@ -13,17 +21,28 @@ export class ListDevice
   constructor(
     @Inject('FindUserByIdRepository')
     private findUserByIdRepository: FindUserByIdRepository,
+    @Inject('FindCompanyByIdRepository')
+    private findCompanyByIdRepository: FindCompanyByIdRepository,
     @Inject('ListDeviceRepository')
     private listDeviceRepository: ListDeviceRepository
   ) {}
   async execute(
     input: ListDeviceDto
   ): Promise<Either<EntityNotEmpty, ListDeviceResponseDto>> {
-    const { loggedUserId } = input;
+    const { loggedUserId, companyId } = input;
 
-    if (Object.keys(loggedUserId).length < 1) {
-      return left(new EntityNotEmpty('Logged User ID'));
-    }
+    const loggedUserIdValidation = await ValidationTextField(
+      loggedUserId,
+      'Logged User ID'
+    );
+    if (loggedUserIdValidation.isLeft())
+      return left(loggedUserIdValidation.value);
+
+    const companyIdValidation = await ValidationTextField(
+      companyId,
+      'Company ID'
+    );
+    if (companyIdValidation.isLeft()) return left(companyIdValidation.value);
 
     const userValidation = await ValidationUserId(
       loggedUserId,
@@ -32,6 +51,15 @@ export class ListDevice
 
     if (userValidation.isLeft()) {
       return left(userValidation.value);
+    }
+
+    const companyValidation = await ValidationCompanyId(
+      companyId,
+      this.findCompanyByIdRepository
+    );
+
+    if (companyValidation.isLeft()) {
+      return left(companyValidation.value);
     }
 
     const filteredDevices = await this.listDeviceRepository.list(input);

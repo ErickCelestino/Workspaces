@@ -10,13 +10,14 @@ import { PrismaService } from 'nestjs-prisma';
 export class ListDeviceRepositoryImpl implements ListDeviceRepository {
   constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
   async list(input: ListDeviceDto): Promise<ListDeviceResponseDto> {
-    const { loggedUserId, filter } = input;
+    const { loggedUserId, companyId, filter } = input;
 
     const skip = input?.skip || 0;
     const take = input?.take || 6;
 
     const whereClause = {
       user_id: loggedUserId,
+      company_id: companyId,
       ...(filter !== ''
         ? {
             name: {
@@ -50,6 +51,7 @@ export class ListDeviceRepositoryImpl implements ListDeviceRepository {
         this.prismaService.device.count({
           where: {
             user_id: loggedUserId,
+            company_id: companyId,
           },
         }),
       ]);

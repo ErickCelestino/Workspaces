@@ -3,29 +3,16 @@ import AddBusinessIcon from '@mui/icons-material/AddBusiness';
 import StoreIcon from '@mui/icons-material/Store';
 import { useLoggedUser } from '../../contexts';
 import { FC, useCallback, useEffect, useState } from 'react';
-import {
-  CrudType,
-  ErrorResponse,
-  IconMenuItem,
-  ListCompanyDto,
-  ListSimpleCompanyResponseDto,
-} from '@workspaces/domain';
-import { useSnackbarAlert } from '../../hooks';
-import axios, { AxiosError } from 'axios';
-import { ValidationsError } from '../../shared';
+import { CrudType, IconMenuItem } from '@workspaces/domain';
+import { useSnackbarAlert, useListCompanyData } from '../../hooks';
 import { ContainerSimpleList } from '../utils';
 import { LayoutBase } from '../../layout';
 import {
   CompanyItem,
   EmptyListResponse,
   ToolbarPureTV,
+  CompanyModals,
 } from '../../components';
-import {
-  CreateCompanyModal,
-  DeleteCompanyModal,
-  EditCompanyModal,
-} from '../../components/modal/company';
-import { ListCompanyRequest } from '../../services';
 
 interface ListCompanyContainerProps {
   createCompanyButtonTitle?: string;
@@ -37,16 +24,13 @@ export const ListCompanyContainer: FC<ListCompanyContainerProps> = ({
   const { loggedUser } = useLoggedUser();
   const theme = useTheme();
   const { showSnackbarAlert, SnackbarAlert } = useSnackbarAlert();
-
-  const [listCompany, setListCompany] = useState<
-    ListSimpleCompanyResponseDto[]
-  >([]);
-  const [search, setSearch] = useState(false);
-  const [totalPage, setTotalPage] = useState<number>(1);
-  const [createCompanyPopUp, setCreateCompanyPopUp] = useState(false);
   const [selectedId, setSelectedId] = useState<string>('');
-  const [deleteCompanyPopUp, setDeleteCompanyPopUp] = useState(false);
-  const [editCompanyPopUp, setEditCompanyPopUp] = useState(false);
+  const [openModal, setOpenModal] = useState({
+    create: false,
+    delete: false,
+    edit: false,
+  });
+  const [isMounted, setIsMounted] = useState(false);
 
   const showAlert = useCallback(
     (message: string, success: boolean) => {
@@ -57,116 +41,83 @@ export const ListCompanyContainer: FC<ListCompanyContainerProps> = ({
     },
     [showSnackbarAlert]
   );
-  const handleData = useCallback(
-    async (data: ListCompanyDto) => {
-      try {
-        const result = await ListCompanyRequest({
-          loggedUserId: data.loggedUserId,
-          filter: data.filter,
-          skip: data.skip,
-          take: data.take,
-        });
-        if (result) {
-          setListCompany(result.companies);
-          setTotalPage(result.totalPages);
-        }
-        return result;
-      } catch (error) {
-        console.error(error);
-        if (axios.isAxiosError(error)) {
-          const axiosError = error as AxiosError<ErrorResponse>;
-          const errors = ValidationsError(axiosError, 'Empresa');
-          if (errors) {
-            showAlert(errors, false);
-          }
-        }
-      }
-    },
-    [showAlert]
-  );
+
+  const { listCompany, totalPage, getListCompanyData } = useListCompanyData({
+    showAlert,
+    loggedUserId: loggedUser?.id ?? '',
+  });
+
+  const handlePopUpOpen = async (type: CrudType, id?: string) => {
+    setSelectedId(id ?? '');
+    setOpenModal((prev) => ({
+      ...prev,
+      [type]: true,
+    }));
+  };
+
+  const handlePopUpClose = async (type: CrudType) => {
+    setOpenModal((prev) => ({
+      ...prev,
+      [type]: false,
+    }));
+    getListCompanyData();
+  };
 
   useEffect(() => {
-    if (!search) {
-      handleData({
-        filter: '',
-        loggedUserId: loggedUser?.id ?? '',
-      });
+    setIsMounted(false);
+  }, [loggedUser?.selectedCompany.id]);
+
+  useEffect(() => {
+    if (!isMounted) {
+      getListCompanyData();
+      setIsMounted(true);
     }
-  }, [handleData, loggedUser, search]);
+  }, [isMounted, getListCompanyData]);
 
   const searchData = async (input: string) => {
-    setSearch(true);
-    const result = await handleData({
-      filter: input,
-      loggedUserId: loggedUser?.id ?? '',
-    });
-    if (result) {
-      setListCompany(result.companies);
-      setTotalPage(result.totalPages);
-    }
+    getListCompanyData(input);
   };
 
   const handleChange = async (
     event: React.ChangeEvent<unknown>,
     value: number
   ) => {
-    setSearch(true);
-    const result = await handleData({
-      loggedUserId: loggedUser?.id ?? '',
-      filter: '',
-      skip: (value - 1) * 6,
-    });
-    if (result) {
-      setListCompany(result.companies);
-      setTotalPage(result.totalPages);
-    }
+    getListCompanyData('', value);
   };
 
-  const handlePopUpOpen = (types: CrudType, id?: string) => {
-    switch (types) {
-      case 'create':
-        setCreateCompanyPopUp(true);
-        break;
-      case 'delete':
-        setSelectedId(id ?? '');
-        setDeleteCompanyPopUp(true);
-        break;
-      case 'edit':
-        setSelectedId(id ?? '');
-        setEditCompanyPopUp(true);
-        break;
-    }
-  };
+  const renderCompanies = () =>
+    listCompany.length > 0 ? (
+      listCompany.map((company) => (
+        <CompanyItem
+          key={company.id}
+          statusColor={company.status === 'ACTIVE' ? 'success' : 'error'}
+          deleteCompany={() => handlePopUpOpen('delete', company.id)}
+          editCompany={() => handlePopUpOpen('edit', company.id)}
+          company={company}
+        />
+      ))
+    ) : (
+      <EmptyListResponse
+        message="Sem Empresas"
+        icon={<StoreIcon sx={{ fontSize: theme.spacing(10) }} />}
+      />
+    );
 
   const rightClickMenuList: IconMenuItem[] = [
     {
       icon: <AddBusinessIcon />,
       title: createCompanyButtonTitle,
-      handleClick: async () => handlePopUpOpen('create'),
+      handleClick: () => handlePopUpOpen('create'),
     },
   ];
 
   return (
     <>
-      <CreateCompanyModal
-        open={createCompanyPopUp}
-        title="Cadastrar Empresa"
-        handlePopUpClose={() => setCreateCompanyPopUp(false)}
+      <CompanyModals
+        selectedId={selectedId}
+        openModal={openModal}
+        handlePopUpClose={handlePopUpClose}
         showAlert={showAlert}
-      />
-      <DeleteCompanyModal
-        open={deleteCompanyPopUp}
-        title="Deletar Empresa"
-        handlePopUpClose={() => setDeleteCompanyPopUp(false)}
-        showAlert={showAlert}
-        idToDelete={selectedId}
-      />
-      <EditCompanyModal
-        open={editCompanyPopUp}
-        title="Editar Empresa"
-        handlePopUpClose={() => setEditCompanyPopUp(false)}
-        showAlert={showAlert}
-        companyId={selectedId}
       />
       <LayoutBase
         title="Listagem de Empresas"
@@ -182,34 +133,7 @@ export const ListCompanyContainer: FC<ListCompanyContainerProps> = ({
           totalPage={totalPage}
           handleChange={handleChange}
         >
-          <List>
-            {listCompany.length > 0 ? (
-              listCompany.map((company) => (
-                <CompanyItem
-                  statusColor={
-                    company.status === 'ACTIVE' ? 'success' : 'error'
-                  }
-                  deleteCompany={async () =>
-                    handlePopUpOpen('delete', company.id)
-                  }
-                  editCompany={async () => handlePopUpOpen('edit', company.id)}
-                  company={company}
-                  key={company.id}
-                />
-              ))
-            ) : (
-              <EmptyListResponse
-                message="Sem Empresas"
-                icon={
-                  <StoreIcon
-                    sx={{
-                      fontSize: theme.spacing(10),
-                    }}
-                  />
-                }
-              />
-            )}
-          </List>
+          <List>{renderCompanies()}</List>
         </ContainerSimpleList>
       </LayoutBase>
       {SnackbarAlert}
