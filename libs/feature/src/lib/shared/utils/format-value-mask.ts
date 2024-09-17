@@ -5,13 +5,29 @@ export const formatValueMask = (value: string, maskType: MaskType) => {
 
   switch (maskType) {
     case 'phone':
-      if (cleanedValue.length <= 2) return cleanedValue;
-      if (cleanedValue.length <= 7)
-        return `(${cleanedValue.slice(0, 2)}) ${cleanedValue.slice(2)}`;
-      return `(${cleanedValue.slice(0, 2)}) ${cleanedValue.slice(
-        2,
-        7
-      )}-${cleanedValue.slice(7, 11)}`;
+      let phoneValue = cleanedValue;
+
+      if (phoneValue.length === 8) {
+        phoneValue = `${phoneValue.slice(0, 2)}9${phoneValue.slice(2)}`;
+      }
+
+      if (phoneValue.length <= 2) return phoneValue;
+
+      if (phoneValue.length <= 7) {
+        return `${phoneValue.slice(0, 2)} ${phoneValue.slice(2)}`;
+      }
+
+      if (phoneValue.length === 10) {
+        phoneValue = `${phoneValue.slice(0, 2)}9${phoneValue.slice(2)}`;
+      }
+
+      if (phoneValue.length === 11) {
+        return `(${phoneValue.slice(0, 2)}) ${phoneValue.slice(
+          2,
+          7
+        )}-${phoneValue.slice(7, 11)}`;
+      }
+      return `${phoneValue.slice(0, 4)}-${phoneValue.slice(4, 8)}`;
 
     case 'cpf':
       if (cleanedValue.length <= 3) return cleanedValue;
