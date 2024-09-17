@@ -15,7 +15,7 @@ import {
 } from '../../../hooks';
 import { NavigationButton } from '../../buttom';
 
-interface FormDetailsCompanyProps {
+interface FormDetailsCompanyInitialProps {
   showAlert: (message: string, success: boolean) => void;
   buttonRight: () => void;
   companySimpleId: string;
@@ -33,7 +33,7 @@ interface FormDetailsCompanyProps {
   companySituationTitle?: string;
 }
 
-export const FormDetailsCompany: FC<FormDetailsCompanyProps> = ({
+export const FormDetailsCompanyInitial: FC<FormDetailsCompanyInitialProps> = ({
   showAlert,
   buttonRight,
   companySimpleId,

@@ -1,7 +1,7 @@
 import { Box } from '@mui/material';
 import { CompanyAllIdsResponseDto } from '@workspaces/domain';
 import { FC, useState } from 'react';
-import { FormDetailsCompany } from '../../form';
+import { FormDetailsCompanyFinal, FormDetailsCompanyInitial } from '../../form';
 
 interface DetailsCompanyStepperProps {
   showAlert: (message: string, success: boolean) => void;
@@ -25,7 +25,7 @@ export const DetailsCompanyStepper: FC<DetailsCompanyStepperProps> = ({
   return (
     <Box>
       {step === 1 && (
-        <FormDetailsCompany
+        <FormDetailsCompanyInitial
           companySimpleId={companyIds.companySimpleId}
           companyDataId={companyIds.companyDataId}
           showAlert={showAlert}
@@ -34,6 +34,19 @@ export const DetailsCompanyStepper: FC<DetailsCompanyStepperProps> = ({
             totalPositions: totalPosition,
           }}
           buttonRight={() => changeStage(2)}
+        />
+      )}
+
+      {step === 2 && (
+        <FormDetailsCompanyFinal
+          companyAddressId={companyIds.companyAddressId}
+          companyResponsibleId={companyIds.companyResponsibleId}
+          buttonLeft={() => changeStage(1)}
+          showAlert={showAlert}
+          step={{
+            stepPosition: step,
+            totalPositions: totalPosition,
+          }}
         />
       )}
     </Box>
