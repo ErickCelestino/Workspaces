@@ -18,7 +18,7 @@ export const useFindSimpleCompanyByIdData = (
     {} as CompanySimpleResponseDto
   );
 
-  const getListCompanyData = useCallback(async () => {
+  const getSimpleCompanyData = useCallback(async () => {
     if (!loggedUserId) return;
     try {
       const result = await FindSimpleCompanyByIdRequest({
@@ -40,5 +40,5 @@ export const useFindSimpleCompanyByIdData = (
     }
   }, [showAlert, companyId, loggedUserId]);
 
-  return { companyById, getListCompanyData };
+  return { companyById, getSimpleCompanyData };
 };

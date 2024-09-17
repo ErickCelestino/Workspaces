@@ -13,7 +13,7 @@ interface DetailsCompanyStepperProps {
 export const DetailsCompanyStepper: FC<DetailsCompanyStepperProps> = ({
   showAlert,
   handlePopUpClose,
-  totalPosition = 5,
+  totalPosition = 2,
   companyIds,
 }) => {
   const [step, setStep] = useState(1);
@@ -26,8 +26,8 @@ export const DetailsCompanyStepper: FC<DetailsCompanyStepperProps> = ({
     <Box>
       {step === 1 && (
         <FormDetailsCompany
-          companyId={companyIds.companySimpleId}
-          handlePopUpClose={() => changeStage(2)}
+          companySimpleId={companyIds.companySimpleId}
+          companyDataId={companyIds.companyDataId}
           showAlert={showAlert}
           step={{
             stepPosition: step,
