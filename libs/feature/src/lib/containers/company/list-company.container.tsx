@@ -29,6 +29,7 @@ export const ListCompanyContainer: FC<ListCompanyContainerProps> = ({
     create: false,
     delete: false,
     edit: false,
+    details: false,
   });
   const [isMounted, setIsMounted] = useState(false);
 
@@ -93,6 +94,7 @@ export const ListCompanyContainer: FC<ListCompanyContainerProps> = ({
           statusColor={company.status === 'ACTIVE' ? 'success' : 'error'}
           deleteCompany={() => handlePopUpOpen('delete', company.id)}
           editCompany={() => handlePopUpOpen('edit', company.id)}
+          detailsCompany={() => handlePopUpOpen('details', company.id)}
           company={company}
         />
       ))
