@@ -14,12 +14,12 @@ export class EditDirectory
   implements UseCase<EditDirectoryDto, Either<EntityNotEmpty, string>>
 {
   constructor(
-    @Inject('EditDirectoryRepository')
-    private editDirectoryRepository: EditDirectoryRepository,
     @Inject('FindUserByIdRepository')
     private findUserByIdRepository: FindUserByIdRepository,
     @Inject('FindDirectoryByIdRepository')
-    private findDirectoryByIdRepository: FindDirectoryByIdRepository
+    private findDirectoryByIdRepository: FindDirectoryByIdRepository,
+    @Inject('EditDirectoryRepository')
+    private editDirectoryRepository: EditDirectoryRepository
   ) {}
 
   async execute(
