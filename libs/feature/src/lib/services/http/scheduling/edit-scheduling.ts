@@ -2,7 +2,7 @@ import { EditSchedulingDto } from '@workspaces/domain';
 import { pureTvApi } from '../axios-config';
 
 export async function EditSchedulingRequest(input: EditSchedulingDto) {
-  const result = await pureTvApi.put(
+  const result = await pureTvApi.put<{ editSchedulingId: string }>(
     `edit-scheduling/${input.id}`,
     {
       name: input.body.name,

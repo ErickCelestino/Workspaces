@@ -16,7 +16,7 @@ import {
 } from '../../utils';
 
 export class EditScheduling
-  implements UseCase<EditSchedulingDto, Either<EntityNotEmpty, void>>
+  implements UseCase<EditSchedulingDto, Either<EntityNotEmpty, string>>
 {
   constructor(
     @Inject('FindUserByIdRepository')
@@ -31,7 +31,7 @@ export class EditScheduling
 
   async execute(
     input: EditSchedulingDto
-  ): Promise<Either<EntityNotEmpty, void>> {
+  ): Promise<Either<EntityNotEmpty, string>> {
     const {
       id,
       body: { endTime, name, priority, startTime, lopping },
@@ -95,7 +95,7 @@ export class EditScheduling
       return left(schedulingValidation.value);
     }
 
-    await this.editSchedulingRepository.edit({
+    const editedScheduling = await this.editSchedulingRepository.edit({
       body: {
         name,
         priority,
@@ -107,6 +107,6 @@ export class EditScheduling
       loggedUserId,
     });
 
-    return right(undefined);
+    return right(editedScheduling);
   }
 }
