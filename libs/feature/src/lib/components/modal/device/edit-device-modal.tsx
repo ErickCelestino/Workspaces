@@ -63,12 +63,6 @@ export const EditDeviceModal: FC<EditDeviceModalProps> = ({
     },
   });
 
-  useEffect(() => {
-    if (!open) {
-      setDataLoaded(false);
-    }
-  }, [open]);
-
   const editDevice = async (input: EditDeviceDto) => {
     try {
       const editedDevice = await EditDeviceRequest(input);
@@ -95,11 +89,27 @@ export const EditDeviceModal: FC<EditDeviceModalProps> = ({
 
   useEffect(() => {
     if (open && idToEdit && !dataLoaded) {
-      const loggedUserId = loggedUser?.id ?? '';
-
+      reset({
+        name: '',
+      });
       getDeviceByIdData();
     }
-  }, [loggedUser, idToEdit, dataLoaded, open, getDeviceByIdData]);
+  }, [idToEdit, dataLoaded, reset, open, getDeviceByIdData]);
+
+  useEffect(() => {
+    if (open && deviceById?.id) {
+      reset({
+        name: deviceById.name,
+      });
+      setDataLoaded(true);
+    }
+  }, [open, deviceById, reset]);
+
+  useEffect(() => {
+    if (!open) {
+      setDataLoaded(false);
+    }
+  }, [open]);
 
   const handlePlaylistData = async (data: DeviceBodyDto) => {
     setLoading(true);
