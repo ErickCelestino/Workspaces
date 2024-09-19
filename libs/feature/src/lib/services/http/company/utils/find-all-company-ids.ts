@@ -2,7 +2,7 @@ import {
   CompanyAllIdsResponseDto,
   FindAllCompanyIdsDto,
 } from '@workspaces/domain';
-import { generalApi } from '../axios-config';
+import { generalApi } from '../../axios-config';
 
 export async function FindAllCompanyIdsRequest(input: FindAllCompanyIdsDto) {
   const result = await generalApi.get<CompanyAllIdsResponseDto>(

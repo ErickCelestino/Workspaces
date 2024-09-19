@@ -40,6 +40,7 @@ export const DetailsCompanyModal: FC<DetailsCompanyModalProps> = ({
   useEffect(() => {
     if (open && companyId && !dataLoaded) {
       getCompanyIdsData();
+      setDataLoaded(true);
     }
   }, [loggedUser, companyId, dataLoaded, open, getCompanyIdsData]);
 

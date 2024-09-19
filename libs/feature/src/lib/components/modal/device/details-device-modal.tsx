@@ -84,13 +84,13 @@ export const DetailsDeviceModal: FC<DetailsDeviceModalProps> = ({
     if (open && idDevice && !dataLoaded) {
       getDeviceByIdData();
       getListSchedulesByDeviceIdData();
+      setDataLoaded(true);
     }
   }, [
     open,
     idDevice,
     dataLoaded,
     getDeviceByIdData,
-    loggedUser,
     getListSchedulesByDeviceIdData,
   ]);
 

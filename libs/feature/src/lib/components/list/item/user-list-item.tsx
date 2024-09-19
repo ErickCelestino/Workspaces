@@ -18,9 +18,10 @@ import { ButtonFileMenu } from '../../menu';
 
 interface UserListItemProps {
   user: UserList;
+  inModal: boolean;
   statusColor: StatusColor;
-  editUser: () => Promise<void>;
-  deleteUser: () => Promise<void>;
+  editUser?: () => Promise<void>;
+  deleteUser?: () => Promise<void>;
   deleteUserTitle?: string;
   editUserTitle?: string;
   nicknameTitle?: string;
@@ -32,6 +33,7 @@ interface UserListItemProps {
 export const UserListItem: FC<UserListItemProps> = ({
   user,
   statusColor,
+  inModal,
   editUser,
   deleteUser,
   deleteUserTitle = 'Deletar',
@@ -43,35 +45,41 @@ export const UserListItem: FC<UserListItemProps> = ({
 }) => {
   const theme = useTheme();
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const iconMenuList: IconMenuItem[] = [];
 
-  const iconMenuList: IconMenuItem[] = [
-    {
+  if (deleteUser) {
+    iconMenuList.push({
       icon: <DeleteIcon />,
       title: deleteUserTitle,
       handleClick: deleteUser,
-    },
-    {
+    });
+  }
+
+  if (editUser) {
+    iconMenuList.push({
       icon: <EditIcon />,
       title: editUserTitle,
       handleClick: editUser,
-    },
-  ];
+    });
+  }
 
   return (
-    <Box key={user.userId}>
+    <Box width="100%" key={user.userId}>
       <ListItem key={user.userId}>
-        <ListItemAvatar>
-          <Avatar
-            component="span"
-            sx={{
-              width: theme.spacing(7),
-              height: theme.spacing(7),
-              marginRight: theme.spacing(2),
-            }}
-            alt={user.name}
-            src={''}
-          />
-        </ListItemAvatar>
+        {!smDown && (
+          <ListItemAvatar>
+            <Avatar
+              component="span"
+              sx={{
+                width: theme.spacing(7),
+                height: theme.spacing(7),
+                marginRight: theme.spacing(2),
+              }}
+              alt={user.name}
+              src={''}
+            />
+          </ListItemAvatar>
+        )}
         <ListItemText
           primary={user.name}
           secondary={
@@ -109,24 +117,26 @@ export const UserListItem: FC<UserListItemProps> = ({
                     {user.userId}
                   </Typography>
                 </Box>
-                <Box component="span">
-                  <Typography
-                    sx={{ display: 'inline' }}
-                    component="span"
-                    variant="body2"
-                    color="text.primary"
-                  >
-                    {statusTitle}:
-                  </Typography>
-                  <Chip
-                    component="span"
-                    sx={{
-                      marginLeft: theme.spacing(1),
-                    }}
-                    color={statusColor}
-                    label={user.status}
-                  />
-                </Box>
+                {!inModal && (
+                  <Box component="span">
+                    <Typography
+                      sx={{ display: 'inline' }}
+                      component="span"
+                      variant="body2"
+                      color="text.primary"
+                    >
+                      {statusTitle}:
+                    </Typography>
+                    <Chip
+                      component="span"
+                      sx={{
+                        marginLeft: theme.spacing(1),
+                      }}
+                      color={statusColor}
+                      label={user.status}
+                    />
+                  </Box>
+                )}
               </Box>
               <Box
                 component="span"
@@ -156,24 +166,26 @@ export const UserListItem: FC<UserListItemProps> = ({
                     {user.nickname}
                   </Typography>
                 </Box>
-                <Box component="span">
-                  <Typography
-                    sx={{ display: 'inline' }}
-                    component="span"
-                    variant="body2"
-                    color="text.primary"
-                  >
-                    {emailTitle}:
-                  </Typography>
-                  <Typography
-                    sx={{ display: 'inline', marginLeft: theme.spacing(1) }}
-                    component="span"
-                    variant="body2"
-                    color="text.secondary"
-                  >
-                    {user.email}
-                  </Typography>
-                </Box>
+                {!inModal && (
+                  <Box component="span">
+                    <Typography
+                      sx={{ display: 'inline' }}
+                      component="span"
+                      variant="body2"
+                      color="text.primary"
+                    >
+                      {emailTitle}:
+                    </Typography>
+                    <Typography
+                      sx={{ display: 'inline', marginLeft: theme.spacing(1) }}
+                      component="span"
+                      variant="body2"
+                      color="text.secondary"
+                    >
+                      {user.email}
+                    </Typography>
+                  </Box>
+                )}
               </Box>
             </Box>
           }
@@ -186,7 +198,13 @@ export const UserListItem: FC<UserListItemProps> = ({
           <ButtonFileMenu iconMenuItemList={iconMenuList} />
         </Box>
       </ListItem>
-      <Divider variant="inset" component="li" />
+      <Divider
+        variant="inset"
+        component="li"
+        sx={{
+          marginLeft: inModal ? 0 : 'auto',
+        }}
+      />
     </Box>
   );
 };

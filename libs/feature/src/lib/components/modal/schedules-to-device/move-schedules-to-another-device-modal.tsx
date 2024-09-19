@@ -13,6 +13,7 @@ import axios, { AxiosError } from 'axios';
 import { ValidationsError } from '../../../shared';
 import { SimpleFormModal } from '../simple';
 import { SearchComboBox } from '../../combo-box';
+import { useListDeviceData } from '../../../hooks';
 
 interface MoveSchedulesToAnotherDeviceModalProps {
   selectedSchedules: string[];
@@ -44,55 +45,21 @@ export const MoveSchedulesToAnotherDeviceModal: FC<
   const [comboBoxListResult, setComboBoxListResult] =
     useState<ComboBoxListResult | null>(null);
 
-  const handleData = useCallback(
-    async (data: ListDeviceDto) => {
-      try {
-        const result = await ListDeviceRequest({
-          companyId: data.companyId,
-          loggedUserId: data.loggedUserId,
-          filter: data.filter,
-          skip: data.skip,
-          take: data.take,
-        });
-        return result;
-      } catch (error) {
-        console.error(error);
-        if (axios.isAxiosError(error)) {
-          const axiosError = error as AxiosError<ErrorResponse>;
-          const errors = ValidationsError(axiosError, 'Agendamentos');
-          if (errors) {
-            showAlert(errors, false);
-          }
-        }
-      }
-    },
-    [showAlert]
-  );
-
-  const searchData = async (input: string) => {
-    await handleData({
-      companyId: companyId,
-      loggedUserId: loggedUserId,
-      filter: input,
-      skip: 0,
-      take: 6,
-    });
-  };
+  const { listDevice, getListDeviceData } = useListDeviceData({
+    showAlert,
+    loggedUserId,
+    companyId,
+  });
 
   const handleList = async (
     searchTerm: string,
     page: number,
     pageSize: number
   ) => {
-    const result = await handleData({
-      companyId: companyId,
-      filter: searchTerm,
-      loggedUserId: loggedUserId,
-      skip: (page - 1) * pageSize,
-      take: pageSize,
-    });
+    await getListDeviceData(searchTerm ?? '', page);
+
     return (
-      result?.devices.map((device) => {
+      listDevice.map((device) => {
         return {
           id: device.id,
           key: device.name,
@@ -138,7 +105,6 @@ export const MoveSchedulesToAnotherDeviceModal: FC<
     >
       <Box>
         <SearchComboBox
-          onSearch={searchData}
           onList={handleList}
           onItemSelected={getResult}
           pageSize={6}

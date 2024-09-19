@@ -68,7 +68,7 @@ export const ListPlaylistContainer = () => {
       getListPlaylistData();
       setIsMounted(true);
     }
-  }, [isMounted, getListPlaylistData]);
+  }, [isMounted, getListPlaylistData, listPlaylist]);
 
   const rightClickMenuList: IconMenuItem[] = [
     {
@@ -91,21 +91,19 @@ export const ListPlaylistContainer = () => {
 
   const renderPlaylist = () =>
     listPlaylist.length > 0 ? (
-      listPlaylist.map((playlist, index) =>
-        listPlaylist.map((playlist) => (
-          <Grid item key={playlist.id}>
-            <PlaylistCard
-              editPlaylist={() => handlePopUpOpen('edit', playlist.id)}
-              deletePlaylist={() => handlePopUpOpen('delete', playlist.id)}
-              addFile={() => handlePopUpOpen('add', playlist.id)}
-              detailsPlaylist={() => handlePopUpOpen('details', playlist.id)}
-              idPlaylist={playlist.id}
-              name={playlist.name}
-              showAlert={showAlert}
-            />
-          </Grid>
-        ))
-      )
+      listPlaylist.map((playlist) => (
+        <Grid item key={playlist.id}>
+          <PlaylistCard
+            editPlaylist={() => handlePopUpOpen('edit', playlist.id)}
+            deletePlaylist={() => handlePopUpOpen('delete', playlist.id)}
+            addFile={() => handlePopUpOpen('add', playlist.id)}
+            detailsPlaylist={() => handlePopUpOpen('details', playlist.id)}
+            idPlaylist={playlist.id}
+            name={playlist.name}
+            showAlert={showAlert}
+          />
+        </Grid>
+      ))
     ) : (
       <EmptyListResponse
         message="Sem Playlists"

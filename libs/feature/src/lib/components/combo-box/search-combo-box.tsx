@@ -1,10 +1,9 @@
 import { Box, TextField, Typography } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import { ComboBoxListResult } from '@workspaces/domain';
-import { FC, useState, useEffect, useCallback } from 'react';
+import { FC, useState, useEffect, useCallback, useMemo } from 'react';
 
 interface SearchComboBoxProps {
-  onSearch: (searchTerm: string) => Promise<void>;
   onList: (
     searchTerm: string,
     page: number,
@@ -15,8 +14,23 @@ interface SearchComboBoxProps {
   onItemSelected?: (item: ComboBoxListResult | null) => void;
 }
 
+const useDebounce = (value: string, delay: number) => {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [value, delay]);
+
+  return debouncedValue;
+};
+
 export const SearchComboBox: FC<SearchComboBoxProps> = ({
-  onSearch,
   onList,
   onItemSelected,
   pageSize = 20,
@@ -25,18 +39,21 @@ export const SearchComboBox: FC<SearchComboBoxProps> = ({
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [options, setOptions] = useState<ComboBoxListResult[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const [opened, setOpened] = useState<boolean>(false);
   const [noResults, setNoResults] = useState<boolean>(false);
+  const [isOpened, setIsOpened] = useState<boolean>(false);
+  const [hasSearched, setHasSearched] = useState<boolean>(false);
 
   const debouncedSearchTerm = useDebounce(searchTerm, 300);
 
   const loadItems = useCallback(
-    async (term: string) => {
+    async (term?: string) => {
       setLoading(true);
       try {
-        const newItems = await onList(term, 1, pageSize);
+        const newItems = await onList(term ?? '', 1, pageSize);
         setOptions(newItems);
         setNoResults(newItems.length === 0);
+      } catch (error) {
+        console.error('Erro ao carregar itens:', error);
       } finally {
         setLoading(false);
       }
@@ -45,78 +62,39 @@ export const SearchComboBox: FC<SearchComboBoxProps> = ({
   );
 
   useEffect(() => {
-    let isMounted = true;
-
-    if (opened) {
-      setLoading(true);
-      loadItems('').finally(() => {
-        if (isMounted) {
-          setLoading(false);
-        }
-      });
+    if (isOpened && !hasSearched) {
+      loadItems(debouncedSearchTerm);
+      if (options.length > 0) {
+        setHasSearched(true);
+      }
     }
+  }, [isOpened, debouncedSearchTerm, loadItems, hasSearched]);
 
-    return () => {
-      isMounted = false;
-    };
-  }, [opened, loadItems]);
+  const handleSearchChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setSearchTerm(event.target.value);
+      setHasSearched(false);
+    },
+    []
+  );
 
-  useEffect(() => {
-    let isMounted = true;
+  const handleItemSelected = useCallback(
+    (value: ComboBoxListResult | null) => {
+      onItemSelected?.(value);
+    },
+    [onItemSelected]
+  );
 
-    if (debouncedSearchTerm && opened) {
-      setLoading(true);
-      loadItems(debouncedSearchTerm).finally(() => {
-        if (isMounted) {
-          setLoading(false);
-        }
-      });
-    }
-
-    return () => {
-      isMounted = false;
-    };
-  }, [debouncedSearchTerm, opened, loadItems]);
-
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newSearchTerm = event.target.value;
-    setSearchTerm(newSearchTerm);
-  };
-
-  const handleOpen = () => {
-    if (!opened) {
-      setOpened(true);
-    }
-  };
-
-  const handleItemSelected = (value: ComboBoxListResult | null) => {
-    onItemSelected?.(value);
-  };
-
-  useEffect(() => {
-    let isMounted = true;
-
-    if (debouncedSearchTerm && opened) {
-      setLoading(true);
-      onSearch(debouncedSearchTerm).finally(() => {
-        if (isMounted) {
-          setLoading(false);
-        }
-      });
-    }
-
-    return () => {
-      isMounted = false;
-    };
-  }, [debouncedSearchTerm, opened, onSearch]);
+  const optionKeys = useMemo(() => options.map((item) => item.key), [options]);
 
   return (
     <Box>
       <Autocomplete
-        options={options.map((item) => item.key)}
+        options={optionKeys}
         getOptionLabel={(option) => option}
         loading={loading}
-        onOpen={handleOpen}
+        onOpen={() => setIsOpened(true)}
+        onClose={() => setIsOpened(false)}
         onChange={(event, value) => {
           const selectedOption = options.find((item) => item.key === value);
           handleItemSelected(selectedOption || null);
@@ -131,7 +109,7 @@ export const SearchComboBox: FC<SearchComboBoxProps> = ({
           />
         )}
       />
-      {!loading && noResults && (
+      {!loading && noResults && searchTerm && (
         <Typography variant="body2" color="textSecondary">
           {emptyListMessage}
         </Typography>
@@ -139,19 +117,3 @@ export const SearchComboBox: FC<SearchComboBoxProps> = ({
     </Box>
   );
 };
-
-function useDebounce(value: string, delay: number) {
-  const [debouncedValue, setDebouncedValue] = useState(value);
-
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedValue(value);
-    }, delay);
-
-    return () => {
-      clearTimeout(handler);
-    };
-  }, [value, delay]);
-
-  return debouncedValue;
-}
