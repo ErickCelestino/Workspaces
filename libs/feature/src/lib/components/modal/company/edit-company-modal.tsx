@@ -1,16 +1,9 @@
-import { FC, useCallback, useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { useMediaQuery, useTheme } from '@mui/material';
 import { SimpleFormModal } from '../simple';
 import { EditCompanyStepper } from '../../stepper/company/edit-company-stepper';
-import {
-  CompanyAllIdsResponseDto,
-  ErrorResponse,
-  FindAllCompanyIdsDto,
-} from '@workspaces/domain';
-import { FindAllCompanyIdsRequest } from '../../../services';
-import axios, { AxiosError } from 'axios';
-import { ValidationsError } from '../../../shared';
 import { useLoggedUser } from '../../../contexts';
+import { useFindAllCompanyIdsData } from '../../../hooks';
 
 interface EditCompanyModalProps {
   open: boolean;
@@ -31,9 +24,12 @@ export const EditCompanyModal: FC<EditCompanyModalProps> = ({
   const { loggedUser } = useLoggedUser();
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
   const [dataLoaded, setDataLoaded] = useState(false);
-  const [allCompanyIds, setAllCompanyIds] = useState<CompanyAllIdsResponseDto>(
-    {} as CompanyAllIdsResponseDto
-  );
+
+  const { companyIds, getCompanyIdsData } = useFindAllCompanyIdsData({
+    companyId,
+    loggedUserId: loggedUser?.id ?? '',
+    showAlert,
+  });
 
   useEffect(() => {
     if (!open) {
@@ -41,36 +37,11 @@ export const EditCompanyModal: FC<EditCompanyModalProps> = ({
     }
   }, [open]);
 
-  const getAllCopanyIds = useCallback(
-    async (input: FindAllCompanyIdsDto) => {
-      try {
-        const result = await FindAllCompanyIdsRequest(input);
-        setDataLoaded(true);
-        setAllCompanyIds(result);
-      } catch (error) {
-        console.error(error);
-        if (axios.isAxiosError(error)) {
-          const axiosError = error as AxiosError<ErrorResponse>;
-          const errors = ValidationsError(axiosError, 'Company IDS');
-          if (errors) {
-            showAlert(errors, false);
-          }
-        }
-      }
-    },
-    [showAlert]
-  );
-
   useEffect(() => {
     if (open && companyId && !dataLoaded) {
-      const loggedUserId = loggedUser?.id ?? '';
-
-      getAllCopanyIds({
-        companyId,
-        loggedUserId: loggedUserId,
-      });
+      getCompanyIdsData();
     }
-  }, [loggedUser, companyId, dataLoaded, open, getAllCopanyIds]);
+  }, [loggedUser, companyId, dataLoaded, open, getCompanyIdsData]);
 
   return (
     <SimpleFormModal
@@ -81,7 +52,7 @@ export const EditCompanyModal: FC<EditCompanyModalProps> = ({
       title={title}
     >
       <EditCompanyStepper
-        companyIds={allCompanyIds}
+        companyIds={companyIds}
         handlePopUpClose={handlePopUpClose}
         showAlert={showAlert}
       />
