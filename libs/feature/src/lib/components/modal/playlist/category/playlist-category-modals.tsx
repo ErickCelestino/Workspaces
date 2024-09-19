@@ -28,10 +28,10 @@ export const PlaylistCategoryModals: FC<playlistCategoryModalsProps> = ({
   openModal,
   handlePopUpClose,
   showAlert,
-  createPlaylistCategoryTitle = 'Criar Playlist',
-  deletePlaylistCategoryTitle = 'Deletar Playlist?',
+  createPlaylistCategoryTitle = 'Criar Categoria da Playlist',
+  deletePlaylistCategoryTitle = 'Deletar Categoria da Playlist?',
   deletePlaylistCategorySubTitle = 'Por favor, selecione alguma das alternativas',
-  editPlaylistCategoryTitle = 'Editar Playlist',
+  editPlaylistCategoryTitle = 'Editar Categoria da Playlist',
 }) => {
   return (
     <>

@@ -32,9 +32,9 @@ export const DeviceModals: FC<DeviceModalsProps> = ({
   handlePopUpClose,
   showAlert,
   createDeviceTitle = 'Cadastrar Dispositivo',
-  deleteDeviceTitle = 'Deletar Empresa',
-  editDeviceTitle = 'Editar Empresa',
-  detailsDeviceTitle = 'Detalhes da Empresa',
+  deleteDeviceTitle = 'Deletar Dispositivo',
+  editDeviceTitle = 'Editar Dispositivo',
+  detailsDeviceTitle = 'Detalhes da Dispositivo',
   addSchedulesTitle = 'Adicionar Agendamento',
 }) => {
   return (
