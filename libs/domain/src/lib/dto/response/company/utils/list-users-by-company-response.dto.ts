@@ -1,6 +1,6 @@
-import { UserList } from '@workspaces/domain';
+import { UserList } from '../../../../entity';
 
-export interface ListUsersByCompanyResponseDto {
+export interface ListUsersByCompanyIdResponseDto {
   total: number;
   filteredTotal: number;
   totalPages: number;

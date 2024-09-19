@@ -30,6 +30,7 @@ export const ListCompanyContainer: FC<ListCompanyContainerProps> = ({
     delete: false,
     edit: false,
     details: false,
+    'list-users': false,
   });
   const [isMounted, setIsMounted] = useState(false);
 
@@ -48,7 +49,10 @@ export const ListCompanyContainer: FC<ListCompanyContainerProps> = ({
     loggedUserId: loggedUser?.id ?? '',
   });
 
-  const handlePopUpOpen = async (type: CrudType, id?: string) => {
+  const handlePopUpOpen = async (
+    type: CrudType | 'list-users',
+    id?: string
+  ) => {
     setSelectedId(id ?? '');
     setOpenModal((prev) => ({
       ...prev,
@@ -56,7 +60,7 @@ export const ListCompanyContainer: FC<ListCompanyContainerProps> = ({
     }));
   };
 
-  const handlePopUpClose = async (type: CrudType) => {
+  const handlePopUpClose = async (type: CrudType | 'list-users') => {
     setOpenModal((prev) => ({
       ...prev,
       [type]: false,
@@ -95,6 +99,7 @@ export const ListCompanyContainer: FC<ListCompanyContainerProps> = ({
           deleteCompany={() => handlePopUpOpen('delete', company.id)}
           editCompany={() => handlePopUpOpen('edit', company.id)}
           detailsCompany={() => handlePopUpOpen('details', company.id)}
+          listUsersByCompany={() => handlePopUpOpen('list-users', company.id)}
           company={company}
         />
       ))

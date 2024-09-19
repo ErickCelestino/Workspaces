@@ -1,7 +1,7 @@
 import {
   ListUsersByCompanyIdDto,
   ListUsersByCompanyIdRepository,
-  ListUsersByCompanyResponseDto,
+  ListUsersByCompanyIdResponseDto,
 } from '../../../../src';
 import { ListUsersByCompanyMock } from '../../../entity';
 
@@ -11,7 +11,7 @@ export class ListUsersByCompanyIdRepositoryMock
   inputMock = {} as ListUsersByCompanyIdDto;
   async list(
     input: ListUsersByCompanyIdDto
-  ): Promise<ListUsersByCompanyResponseDto> {
+  ): Promise<ListUsersByCompanyIdResponseDto> {
     this.inputMock = input;
     return ListUsersByCompanyMock;
   }

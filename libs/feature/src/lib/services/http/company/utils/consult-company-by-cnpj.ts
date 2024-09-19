@@ -2,7 +2,7 @@ import {
   CompanyResponseDto,
   ConsultCompanyByCnpjDto,
 } from '@workspaces/domain';
-import { generalApi } from '../axios-config';
+import { generalApi } from '../../axios-config';
 
 export async function ConsultCompanyByCnpjRequest(
   input: ConsultCompanyByCnpjDto

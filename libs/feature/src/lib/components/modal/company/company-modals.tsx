@@ -5,6 +5,7 @@ import {
   DeleteCompanyModal,
   DetailsCompanyModal,
   EditCompanyModal,
+  ListUsersByCompanyIdModal,
 } from '.';
 
 interface CompanyModalsProps {
@@ -14,13 +15,15 @@ interface CompanyModalsProps {
     delete: boolean;
     edit: boolean;
     details: boolean;
+    'list-users': boolean;
   };
-  handlePopUpClose: (type: CrudType | 'details') => void;
+  handlePopUpClose: (type: CrudType | 'list-users') => void;
   showAlert: (message: string, success: boolean) => void;
   createCompanyTitle?: string;
   deleteCompanyTitle?: string;
   editCompanyTitle?: string;
   detailsCompanyTitle?: string;
+  listUsersByCompanyIdTitle?: string;
 }
 
 export const CompanyModals: FC<CompanyModalsProps> = ({
@@ -32,6 +35,7 @@ export const CompanyModals: FC<CompanyModalsProps> = ({
   deleteCompanyTitle = 'Deletar Empresa',
   editCompanyTitle = 'Editar Empresa',
   detailsCompanyTitle = 'Detalhes da Empresa',
+  listUsersByCompanyIdTitle = 'Listagem de Usuários',
 }) => {
   return (
     <>
@@ -59,6 +63,13 @@ export const CompanyModals: FC<CompanyModalsProps> = ({
         open={openModal.details}
         title={detailsCompanyTitle}
         handlePopUpClose={() => handlePopUpClose('details')}
+        showAlert={showAlert}
+        companyId={selectedId}
+      />
+      <ListUsersByCompanyIdModal
+        open={openModal['list-users']}
+        title={listUsersByCompanyIdTitle}
+        handlePopUpClose={() => handlePopUpClose('list-users')}
         showAlert={showAlert}
         companyId={selectedId}
       />

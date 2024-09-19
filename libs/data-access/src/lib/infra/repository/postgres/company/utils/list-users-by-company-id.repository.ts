@@ -2,7 +2,7 @@ import { Inject } from '@nestjs/common';
 import {
   ListUsersByCompanyIdDto,
   ListUsersByCompanyIdRepository,
-  ListUsersByCompanyResponseDto,
+  ListUsersByCompanyIdResponseDto,
 } from '@workspaces/domain';
 import { PrismaService } from 'nestjs-prisma';
 
@@ -12,7 +12,7 @@ export class ListUsersByCompanyIdRepositoryImpl
   constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
   async list(
     input: ListUsersByCompanyIdDto
-  ): Promise<ListUsersByCompanyResponseDto> {
+  ): Promise<ListUsersByCompanyIdResponseDto> {
     const { filter, companyId } = input;
 
     const skip = input?.skip || 0;

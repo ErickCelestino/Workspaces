@@ -1,8 +1,10 @@
 import {
   ListUsersByCompanyIdDto,
-  ListUsersByCompanyResponseDto,
+  ListUsersByCompanyIdResponseDto,
 } from '../../../dto';
 
 export interface ListUsersByCompanyIdRepository {
-  list(input: ListUsersByCompanyIdDto): Promise<ListUsersByCompanyResponseDto>;
+  list(
+    input: ListUsersByCompanyIdDto
+  ): Promise<ListUsersByCompanyIdResponseDto>;
 }

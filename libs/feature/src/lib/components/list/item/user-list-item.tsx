@@ -19,8 +19,8 @@ import { ButtonFileMenu } from '../../menu';
 interface UserListItemProps {
   user: UserList;
   statusColor: StatusColor;
-  editUser: () => Promise<void>;
-  deleteUser: () => Promise<void>;
+  editUser?: () => Promise<void>;
+  deleteUser?: () => Promise<void>;
   deleteUserTitle?: string;
   editUserTitle?: string;
   nicknameTitle?: string;
@@ -43,19 +43,23 @@ export const UserListItem: FC<UserListItemProps> = ({
 }) => {
   const theme = useTheme();
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const iconMenuList: IconMenuItem[] = [];
 
-  const iconMenuList: IconMenuItem[] = [
-    {
+  if (deleteUser) {
+    iconMenuList.push({
       icon: <DeleteIcon />,
       title: deleteUserTitle,
       handleClick: deleteUser,
-    },
-    {
+    });
+  }
+
+  if (editUser) {
+    iconMenuList.push({
       icon: <EditIcon />,
       title: editUserTitle,
       handleClick: editUser,
-    },
-  ];
+    });
+  }
 
   return (
     <Box key={user.userId}>
