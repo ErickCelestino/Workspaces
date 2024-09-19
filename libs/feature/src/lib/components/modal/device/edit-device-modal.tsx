@@ -2,9 +2,8 @@ import {
   DeviceBodyDto,
   EditDeviceDto,
   ErrorResponse,
-  FindDeviceByIdDto,
 } from '@workspaces/domain';
-import { FC, useCallback, useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { EditDeviceFormSchema, ValidationsError } from '../../../shared';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -14,6 +13,7 @@ import axios, { AxiosError } from 'axios';
 import { SimpleFormModal } from '../simple';
 import { EditDeviceRequest, FindDeviceByIdRequest } from '../../../services';
 import { FormButton } from '../../form';
+import { useFindDeviceByIdData } from '../../../hooks';
 
 interface EditDeviceModalProps {
   idToEdit: string;
@@ -41,6 +41,14 @@ export const EditDeviceModal: FC<EditDeviceModalProps> = ({
   const [success, setSuccess] = useState(false);
   const [dataLoaded, setDataLoaded] = useState(false);
 
+  const { deviceById, getDeviceByIdData } = useFindDeviceByIdData({
+    input: {
+      id: idToEdit,
+      loggedUserId: loggedUser?.id ?? '',
+    },
+    showAlert,
+  });
+
   const {
     handleSubmit,
     register,
@@ -61,27 +69,6 @@ export const EditDeviceModal: FC<EditDeviceModalProps> = ({
     }
   }, [open]);
 
-  const getDevice = useCallback(
-    async (input: FindDeviceByIdDto) => {
-      try {
-        const result = await FindDeviceByIdRequest(input);
-        reset({
-          name: result.name,
-        });
-        setDataLoaded(true);
-      } catch (error) {
-        console.error(error);
-        if (axios.isAxiosError(error)) {
-          const axiosError = error as AxiosError<ErrorResponse>;
-          const errors = ValidationsError(axiosError, 'Device');
-          if (errors) {
-            showAlert(errors, false);
-          }
-        }
-      }
-    },
-    [showAlert, reset]
-  );
   const editDevice = async (input: EditDeviceDto) => {
     try {
       const editedDevice = await EditDeviceRequest(input);
@@ -110,12 +97,9 @@ export const EditDeviceModal: FC<EditDeviceModalProps> = ({
     if (open && idToEdit && !dataLoaded) {
       const loggedUserId = loggedUser?.id ?? '';
 
-      getDevice({
-        id: idToEdit,
-        loggedUserId: loggedUserId,
-      });
+      getDeviceByIdData();
     }
-  }, [loggedUser, idToEdit, dataLoaded, open, getDevice]);
+  }, [loggedUser, idToEdit, dataLoaded, open, getDeviceByIdData]);
 
   const handlePlaylistData = async (data: DeviceBodyDto) => {
     setLoading(true);
