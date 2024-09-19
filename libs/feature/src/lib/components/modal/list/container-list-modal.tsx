@@ -49,7 +49,7 @@ export const ContainerListModal: FC<ContainerSimpleListProps> = ({
             alignItems: 'center',
           }}
         >
-          <Box width={smDown ? '65%' : '100%'}>
+          <Box width={'100%'}>
             <SearchBar
               onSearch={search.searchData}
               placeholder={search.placeholder}

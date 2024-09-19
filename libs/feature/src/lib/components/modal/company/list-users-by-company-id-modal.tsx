@@ -6,6 +6,7 @@ import { EmptyListResponse, UserListItem } from '../../list';
 import { useLoggedUser } from '../../../contexts';
 import { useListUsersByCompanyIdData } from '../../../hooks';
 import { ContainerListModal } from '../list';
+import { ScrollBox } from '../../scroll';
 
 interface EditCompanyModalProps {
   open: boolean;
@@ -68,38 +69,41 @@ export const ListUsersByCompanyIdModal: FC<EditCompanyModalProps> = ({
     >
       <ContainerListModal
         search={{
-          placeholder: 'Pesquisar por agendamento',
+          placeholder: 'Pesquisar por Usuário',
           searchData: searchData,
         }}
         totalPage={totalPage}
         handleChange={handleChange}
       >
-        <List
-          sx={{
-            width: '100%',
-          }}
-        >
-          {listUsersByCompanyId.length > 0 ? (
-            listUsersByCompanyId.map((user) => (
-              <UserListItem
-                key={user.userId}
-                user={user}
-                statusColor={user.status === 'ACTIVE' ? 'success' : 'error'}
-              />
-            ))
-          ) : (
-            <EmptyListResponse
-              message="Sem Usuários"
-              icon={
-                <PersonOffIcon
-                  sx={{
-                    fontSize: theme.spacing(10),
-                  }}
+        <ScrollBox maxHeight="80%">
+          <List
+            sx={{
+              width: '100%',
+            }}
+          >
+            {listUsersByCompanyId.length > 0 ? (
+              listUsersByCompanyId.map((user) => (
+                <UserListItem
+                  key={user.userId}
+                  user={user}
+                  inModal={true}
+                  statusColor={user.status === 'ACTIVE' ? 'success' : 'error'}
                 />
-              }
-            />
-          )}
-        </List>
+              ))
+            ) : (
+              <EmptyListResponse
+                message="Sem Usuários"
+                icon={
+                  <PersonOffIcon
+                    sx={{
+                      fontSize: theme.spacing(10),
+                    }}
+                  />
+                }
+              />
+            )}
+          </List>
+        </ScrollBox>
       </ContainerListModal>
     </SimpleFormModal>
   );

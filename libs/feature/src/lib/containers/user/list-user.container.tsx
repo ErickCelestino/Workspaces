@@ -103,6 +103,7 @@ export const ListUserContainer = () => {
             {listUsers.length > 0 ? (
               listUsers.map((user) => (
                 <UserListItem
+                  inModal={false}
                   deleteUser={async () =>
                     handlePopUpOpen('delete', user.userId)
                   }
