@@ -1,3 +1,4 @@
+export * from './authorize-user-to-company.dto';
 export * from './consult-company-by-cnpj.dto';
 export * from './find-all-company-ids.dto';
 export * from './find-user-and-company-id.dto';
