@@ -23,6 +23,8 @@ export class FindUserIdByCompanyIdRepositoryImpl
       },
     });
 
-    return `${userInCompany?.user_id ?? ''}-${userInCompany?.company_id ?? ''}`;
+    return userInCompany?.company_id
+      ? `${userInCompany?.user_id ?? ''}-${userInCompany?.company_id ?? ''}`
+      : '';
   }
 }

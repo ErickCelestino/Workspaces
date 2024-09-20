@@ -1,8 +1,4 @@
-import {
-  ComboBoxListResult,
-  ErrorResponse,
-  StepItem,
-} from '@workspaces/domain';
+import { ComboBoxListResult, ErrorResponse } from '@workspaces/domain';
 import { useLoggedUser } from '../../../../contexts';
 import { FC, useState } from 'react';
 import { useListCompanyData } from '../../../../hooks';
@@ -57,6 +53,7 @@ export const FormSelectCompany: FC<FormSelectCompanyProps> = ({
 
   const selectCompany = async () => {
     try {
+      console.log(loggedUser?.id ?? '');
       const result = await SelectCompanyRequest({
         companyId: comboBoxListResult?.id ?? '',
         loggedUserId: loggedUser?.id ?? '',

@@ -16,32 +16,26 @@ export class ListCompanyRepositoryImpl implements ListCompanyRepository {
     const take = input?.take || 6;
 
     const whereClause = {
-      user_id: loggedUserId,
       ...(filter !== ''
         ? {
-            user_id: loggedUserId,
-            ...(filter !== ''
-              ? {
-                  OR: [
-                    {
-                      company: {
-                        social_reason: {
-                          contains: filter,
-                          mode: 'insensitive' as const,
-                        },
-                      },
-                    },
-                    {
-                      company: {
-                        fantasy_name: {
-                          contains: filter,
-                          mode: 'insensitive' as const,
-                        },
-                      },
-                    },
-                  ],
-                }
-              : {}),
+            OR: [
+              {
+                company: {
+                  social_reason: {
+                    contains: filter,
+                    mode: 'insensitive' as const,
+                  },
+                },
+              },
+              {
+                company: {
+                  fantasy_name: {
+                    contains: filter,
+                    mode: 'insensitive' as const,
+                  },
+                },
+              },
+            ],
           }
         : {}),
     };
