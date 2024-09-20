@@ -111,6 +111,7 @@ export const CreateCompanyStepper: FC<CompanyStepperProps> = ({
 
       {step === 6 && (
         <FormSelectCompany
+          backButton={() => changeStage(1)}
           showAlert={showAlert}
           handlePopUpClose={handlePopUpClose}
         />

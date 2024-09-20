@@ -1,20 +1,23 @@
 import { ComboBoxListResult, ErrorResponse } from '@workspaces/domain';
+import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
 import { useLoggedUser } from '../../../../contexts';
 import { FC, useState } from 'react';
 import { useListCompanyData } from '../../../../hooks';
-import { Box, Button, useTheme } from '@mui/material';
+import { Box, Button, IconButton, useTheme } from '@mui/material';
 import { SearchComboBox } from '../../../combo-box';
 import { SelectCompanyRequest } from 'libs/feature/src/lib/services';
 import axios, { AxiosError } from 'axios';
 import { ValidationsError } from 'libs/feature/src/lib/shared';
 
 interface FormSelectCompanyProps {
+  backButton: () => void;
   showAlert: (message: string, success: boolean) => void;
   handlePopUpClose: () => void;
   buttonTitle?: string;
 }
 
 export const FormSelectCompany: FC<FormSelectCompanyProps> = ({
+  backButton,
   showAlert,
   handlePopUpClose,
   buttonTitle = 'Selecionar Empresa',
@@ -86,11 +89,38 @@ export const FormSelectCompany: FC<FormSelectCompanyProps> = ({
       </Box>
       <Box
         sx={{
+          marginLeft: '-2rem',
           display: 'flex',
+          flexDirection: 'row',
           justifyContent: 'center',
           marginTop: theme.spacing(2),
         }}
       >
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'start',
+          }}
+        >
+          <IconButton
+            onClick={backButton}
+            sx={{
+              width: '3.1rem',
+              height: '3.1rem',
+              marginRight: '1rem',
+            }}
+          >
+            <ArrowCircleLeftIcon
+              color="primary"
+              onClick={backButton}
+              sx={{
+                width: '3rem',
+                height: '3rem',
+              }}
+            />
+          </IconButton>
+        </Box>
+
         <Button variant="contained" onClick={selectCompany}>
           {buttonTitle}
         </Button>
