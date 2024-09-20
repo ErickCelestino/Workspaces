@@ -1,11 +1,16 @@
 import { Inject } from '@nestjs/common';
 import { UseCase } from '../../../base/use-case';
 import { SelectCompanyDto } from '../../../dto';
-import { EntityNotEmpty, EntityNotSelected } from '../../../error';
+import {
+  EntityAlreadyExists,
+  EntityNotEmpty,
+  EntityNotSelected,
+} from '../../../error';
 import { Either, left, right } from '../../../shared/either';
 import {
   FindCompanyByIdRepository,
   FindUserByIdRepository,
+  FindUserIdByCompanyIdRepository,
   SelectCompanyRepository,
 } from '../../../repository';
 import { ValidationCompanyId, ValidationUserId } from '../../../utils';
@@ -18,6 +23,8 @@ export class SelectCompany
     private findUserByIdRepository: FindUserByIdRepository,
     @Inject('FindCompanyByIdRepository')
     private findCompanyByIdRepository: FindCompanyByIdRepository,
+    @Inject('FindUserIdByCompanyIdRepository')
+    private findUserIdByCompanyIdRepository: FindUserIdByCompanyIdRepository,
     @Inject('SelectCompanyRepository')
     private selectCompanyRepository: SelectCompanyRepository
   ) {}
@@ -51,6 +58,16 @@ export class SelectCompany
 
     if (companyValidation.isLeft()) {
       return left(companyValidation.value);
+    }
+
+    const userAndCompanyFiltered =
+      await this.findUserIdByCompanyIdRepository.find({
+        companyId,
+        userId: loggedUserId,
+      });
+
+    if (Object.keys(userAndCompanyFiltered).length > 0) {
+      return left(new EntityAlreadyExists('User in Company'));
     }
 
     const selectedCompany = await this.selectCompanyRepository.select(input);

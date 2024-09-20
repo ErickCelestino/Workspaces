@@ -9,11 +9,14 @@ import {
   SelectCompanyRepository,
   UserList,
   EntityNotSelected,
+  FindUserIdByCompanyIdRepository,
+  EntityAlreadyExists,
 } from '../../../../src';
 import { CompanyMock, userMock } from '../../../entity';
 import {
   FindCompanyByIdRepositoryMock,
   FindUserByIdRepositoryMock,
+  FindUserIdByCompanyIdRepositoryMock,
   SelectCompanyRepositoryMock,
 } from '../../../repository';
 
@@ -22,12 +25,15 @@ interface SutType {
   selectCompanyDto: SelectCompanyDto;
   findUserByIdRepository: FindUserByIdRepository;
   findCompanyByIdRepository: FindCompanyByIdRepository;
+  findUserIdByCompanyIdRepository: FindUserIdByCompanyIdRepository;
   selectCompanyRepository: SelectCompanyRepository;
 }
 
 const makeSut = (): SutType => {
   const findUserByIdRepository = new FindUserByIdRepositoryMock();
   const findCompanyByIdRepository = new FindCompanyByIdRepositoryMock();
+  const findUserIdByCompanyIdRepository =
+    new FindUserIdByCompanyIdRepositoryMock();
   const selectCompanyRepository = new SelectCompanyRepositoryMock();
 
   const selectCompanyDto: SelectCompanyDto = {
@@ -38,12 +44,14 @@ const makeSut = (): SutType => {
   const sut = new SelectCompany(
     findUserByIdRepository,
     findCompanyByIdRepository,
+    findUserIdByCompanyIdRepository,
     selectCompanyRepository
   );
 
   return {
     findUserByIdRepository,
     findCompanyByIdRepository,
+    findUserIdByCompanyIdRepository,
     selectCompanyRepository,
     selectCompanyDto,
     sut,
@@ -103,6 +111,18 @@ describe('SelectCompany', () => {
     expect(result.isLeft()).toBe(true);
     expect(result.isRight()).toBe(false);
     expect(result.value).toBeInstanceOf(EntityNotExists);
+  });
+
+  it('should return EntityAlreadyExists when a exist User in Company', async () => {
+    const { selectCompanyDto, sut } = makeSut();
+    jest
+      .spyOn(sut['findUserIdByCompanyIdRepository'], 'find')
+      .mockResolvedValueOnce(userMock.userId);
+    const result = await sut.execute(selectCompanyDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
+    expect(result.value).toBeInstanceOf(EntityAlreadyExists);
   });
 
   it('should return EntityNotSelected when a exist Company in system', async () => {
