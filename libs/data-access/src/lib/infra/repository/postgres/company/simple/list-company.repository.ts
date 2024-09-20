@@ -20,19 +20,15 @@ export class ListCompanyRepositoryImpl implements ListCompanyRepository {
         ? {
             OR: [
               {
-                company: {
-                  social_reason: {
-                    contains: filter,
-                    mode: 'insensitive' as const,
-                  },
+                social_reason: {
+                  contains: filter,
+                  mode: 'insensitive' as const,
                 },
               },
               {
-                company: {
-                  fantasy_name: {
-                    contains: filter,
-                    mode: 'insensitive' as const,
-                  },
+                fantasy_name: {
+                  contains: filter,
+                  mode: 'insensitive' as const,
                 },
               },
             ],
@@ -42,31 +38,27 @@ export class ListCompanyRepositoryImpl implements ListCompanyRepository {
 
     const [companies, filteredTotal, total] =
       await this.prismaService.$transaction([
-        this.prismaService.user_X_Company.findMany({
+        this.prismaService.company.findMany({
           where: whereClause,
           select: {
             created_at: true,
-            company: {
+            cnpj: true,
+            company_id: true,
+            fantasy_name: true,
+            social_reason: true,
+            status: true,
+            user: {
               select: {
-                cnpj: true,
-                company_id: true,
-                fantasy_name: true,
-                social_reason: true,
-                status: true,
-                user: {
+                nick_name: true,
+              },
+            },
+            company_x_address: {
+              select: {
+                address: {
                   select: {
-                    nick_name: true,
-                  },
-                },
-                company_x_address: {
-                  select: {
-                    address: {
+                    city: {
                       select: {
-                        city: {
-                          select: {
-                            name: true,
-                          },
-                        },
+                        name: true,
                       },
                     },
                   },
@@ -77,10 +69,10 @@ export class ListCompanyRepositoryImpl implements ListCompanyRepository {
           skip: parseInt(skip.toString()),
           take: parseInt(take.toString()),
         }),
-        this.prismaService.user_X_Company.count({
+        this.prismaService.company.count({
           where: whereClause,
         }),
-        this.prismaService.user_X_Company.count({
+        this.prismaService.company.count({
           where: {
             user_id: loggedUserId,
           },
@@ -92,15 +84,14 @@ export class ListCompanyRepositoryImpl implements ListCompanyRepository {
     const mappedCompany: ListSimpleCompanyResponseDto[] = companies.map(
       (company) => {
         return {
-          id: company?.company.company_id ?? '',
-          cnpj: company?.company?.cnpj ?? '',
-          fantasyName: company?.company?.fantasy_name ?? '',
-          socialReason: company?.company?.social_reason ?? '',
-          city:
-            company.company?.company_x_address[0]?.address?.city?.name ?? '',
-          createdBy: company?.company?.user?.nick_name ?? '',
+          id: company?.company_id ?? '',
+          cnpj: company?.cnpj ?? '',
+          fantasyName: company?.fantasy_name ?? '',
+          socialReason: company?.social_reason ?? '',
+          city: company?.company_x_address[0]?.address?.city?.name ?? '',
+          createdBy: company?.user?.nick_name ?? '',
           createdAt: company?.created_at ?? '',
-          status: company?.company?.status ?? 'INACTIVE',
+          status: company?.status ?? 'INACTIVE',
         };
       }
     );
