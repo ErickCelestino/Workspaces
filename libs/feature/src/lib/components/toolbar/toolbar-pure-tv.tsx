@@ -1,24 +1,47 @@
-import { IconButton } from '@mui/material';
+import { Box, IconButton } from '@mui/material';
 import { useFileModal } from '../../contexts';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import GroupIcon from '@mui/icons-material/Group';
 
 export const ToolbarPureTV = () => {
   const { handleOpen } = useFileModal();
 
   return (
-    <IconButton
+    <Box
       sx={{
         display: 'flex',
-        background: 'white',
-        justifyContent: 'center',
-        ':hover': {
-          background: 'white',
-          opacity: 0.5,
-        },
+        flexDirection: 'row',
       }}
-      onClick={handleOpen}
     >
-      <CloudUploadIcon fontSize="large" color="primary" />
-    </IconButton>
+      <IconButton
+        sx={{
+          display: 'flex',
+          background: 'white',
+          justifyContent: 'center',
+          mr: '0.5rem',
+          ':hover': {
+            background: 'white',
+            opacity: 0.5,
+          },
+        }}
+        onClick={handleOpen}
+      >
+        <CloudUploadIcon fontSize="large" color="primary" />
+      </IconButton>
+
+      <IconButton
+        sx={{
+          display: 'flex',
+          background: 'white',
+          justifyContent: 'center',
+          ':hover': {
+            background: 'white',
+            opacity: 0.5,
+          },
+        }}
+      >
+        <GroupIcon fontSize="large" color="primary" />
+      </IconButton>
+    </Box>
   );
 };
