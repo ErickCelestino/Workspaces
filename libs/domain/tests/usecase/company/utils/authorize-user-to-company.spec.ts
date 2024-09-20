@@ -6,10 +6,13 @@ import {
   EntityIsNotAuthorized,
   EntityNotEmpty,
   EntityNotExists,
+  EntityNotPermissions,
   FindCompanyByIdRepository,
   FindUserByIdRepository,
   FindUserIdByCompanyIdRepository,
+  PermissionsUserResponseDto,
   UserList,
+  VerifyUserPermissionsByIdRepository,
 } from '../../../../src';
 import { CompanyMock, listUserMock, userMock } from '../../../entity';
 import {
@@ -17,6 +20,7 @@ import {
   FindCompanyByIdRepositoryMock,
   FindUserByIdRepositoryMock,
   FindUserIdByCompanyIdRepositoryMock,
+  VerifyUserPermissionsByIdRepositoryMock,
 } from '../../../repository';
 
 interface SutTypes {
@@ -25,6 +29,7 @@ interface SutTypes {
   findUserByIdRepository: FindUserByIdRepository;
   findCompanyByIdRepository: FindCompanyByIdRepository;
   findUserIdByCompanyIdRepository: FindUserIdByCompanyIdRepository;
+  verifyUserPermissionsByIdRepository: VerifyUserPermissionsByIdRepository;
   authorizeUserToCompanyRepository: AuthorizeUserToCompanyRepository;
 }
 
@@ -34,6 +39,8 @@ const makeSut = (): SutTypes => {
   const findUserIdByCompanyIdRepository: FindUserIdByCompanyIdRepository = {
     find: jest.fn(async () => `${userMock.userId}-${CompanyMock.simple.id}`),
   };
+  const verifyUserPermissionsByIdRepository =
+    new VerifyUserPermissionsByIdRepositoryMock();
   const authorizeUserToCompanyRepository =
     new AuthorizeUserToCompanyRepositoryMock();
 
@@ -47,6 +54,7 @@ const makeSut = (): SutTypes => {
     findUserByIdRepository,
     findCompanyByIdRepository,
     findUserIdByCompanyIdRepository,
+    verifyUserPermissionsByIdRepository,
     authorizeUserToCompanyRepository
   );
 
@@ -55,6 +63,7 @@ const makeSut = (): SutTypes => {
     findCompanyByIdRepository,
     findUserIdByCompanyIdRepository,
     authorizeUserToCompanyRepository,
+    verifyUserPermissionsByIdRepository,
     authorizeUserToCompanyDto,
     sut,
   };
@@ -149,6 +158,18 @@ describe('AuthorizeUserToCompany', () => {
     expect(result.isLeft()).toBe(true);
     expect(result.isRight()).toBe(false);
     expect(result.value).toBeInstanceOf(EntityNotExists);
+  });
+
+  it('should return EntityNotPermissions when a exist user in Company in system', async () => {
+    const { authorizeUserToCompanyDto, sut } = makeSut();
+    jest
+      .spyOn(sut['verifyUserPermissionsByIdRepository'], 'verify')
+      .mockResolvedValueOnce({} as PermissionsUserResponseDto);
+    const result = await sut.execute(authorizeUserToCompanyDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
+    expect(result.value).toBeInstanceOf(EntityNotPermissions);
   });
 
   it('should return EntityIsNotAuthorized when a not authorized user in system', async () => {

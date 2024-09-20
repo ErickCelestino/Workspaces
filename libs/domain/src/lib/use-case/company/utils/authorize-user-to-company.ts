@@ -12,8 +12,13 @@ import {
   FindCompanyByIdRepository,
   FindUserByIdRepository,
   FindUserIdByCompanyIdRepository,
+  VerifyUserPermissionsByIdRepository,
 } from '../../../repository';
-import { ValidationCompanyId, ValidationUserId } from '../../../utils';
+import {
+  ValidationCompanyId,
+  ValidationUserId,
+  ValidationUserPermisssions,
+} from '../../../utils';
 
 export class AuthorizeUserToCompany
   implements UseCase<AuthorizeUserToCompanyDto, Either<EntityNotEmpty, string>>
@@ -25,6 +30,8 @@ export class AuthorizeUserToCompany
     private findCompanyByIdRepository: FindCompanyByIdRepository,
     @Inject('FindUserIdByCompanyIdRepository')
     private findUserIdByCompanyIdRepository: FindUserIdByCompanyIdRepository,
+    @Inject('VerifyUserPermissionsByIdRepository')
+    private verifyUserPermissionsByIdRepository: VerifyUserPermissionsByIdRepository,
     @Inject('AuthorizeUserToCompanyRepository')
     private authorizeUserToCompanyRepository: AuthorizeUserToCompanyRepository
   ) {}
@@ -80,6 +87,16 @@ export class AuthorizeUserToCompany
 
     if (Object.keys(userAndCompanyFiltered).length < 1) {
       return left(new EntityNotExists('User in Company'));
+    }
+
+    const permissionValidation = await ValidationUserPermisssions(
+      loggedUserId,
+      ['ADMIN', 'DEFAULT_ADMIN'],
+      this.verifyUserPermissionsByIdRepository
+    );
+
+    if (permissionValidation.isLeft()) {
+      return left(permissionValidation.value);
     }
 
     const userAuthorized = await this.authorizeUserToCompanyRepository.auth(
