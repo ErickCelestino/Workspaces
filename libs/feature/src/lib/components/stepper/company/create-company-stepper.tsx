@@ -43,6 +43,7 @@ export const CreateCompanyStepper: FC<CompanyStepperProps> = ({
       {step === 1 && (
         <FormConsultCompanyByCnpj
           showAlert={showAlert}
+          selectCompanyRedirect={() => changeStage(6)}
           handlePopUpClose={() => changeStage(2)}
           changeCompany={changeCompany}
           step={{

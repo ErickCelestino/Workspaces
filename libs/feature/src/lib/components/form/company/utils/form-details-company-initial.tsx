@@ -1,13 +1,13 @@
 import { Box, Typography, Grid, Card, CardContent } from '@mui/material';
 import { StepItem } from '@workspaces/domain';
 import { FC, useEffect, useState } from 'react';
-import { useLoggedUser } from '../../../contexts';
+import { useLoggedUser } from '../../../../contexts';
 import {
   useFindCompanyDataByIdData,
   useFindSimpleCompanyByIdData,
-} from '../../../hooks';
-import { NavigationButton } from '../../buttom';
-import { formatBrDate, formatValueMask } from '../../../shared';
+} from '../../../../hooks';
+import { NavigationButton } from '../../../buttom';
+import { formatBrDate, formatValueMask } from '../../../../shared';
 
 interface FormDetailsCompanyInitialProps {
   showAlert: (message: string, success: boolean) => void;
