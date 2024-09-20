@@ -5,6 +5,7 @@ import {
   FormConsultCompanyByCnpj,
   FormCreateCompanyAddress,
   FormCreateCompanyResponsible,
+  FormSelectCompany,
 } from '../../form';
 import { Box } from '@mui/material';
 import { CompanyResponseDto } from '@workspaces/domain';
@@ -105,6 +106,13 @@ export const CreateCompanyStepper: FC<CompanyStepperProps> = ({
             stepPosition: step,
             totalPositions: totalPosition,
           }}
+        />
+      )}
+
+      {step === 6 && (
+        <FormSelectCompany
+          showAlert={showAlert}
+          handlePopUpClose={handlePopUpClose}
         />
       )}
     </Box>
