@@ -14,6 +14,18 @@ export class SelectCompanyRepositoryImpl implements SelectCompanyRepository {
       },
     });
 
+    if (selectedCompany.company_id) {
+      await this.prismaService.user.update({
+        where: {
+          user_id: loggedUserId,
+        },
+        data: {
+          status: 'BLOCKED',
+          updated_at: new Date(),
+        },
+      });
+    }
+
     return selectedCompany.company_id;
   }
 }
