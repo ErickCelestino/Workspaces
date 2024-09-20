@@ -1,6 +1,6 @@
-import { Box, TextField } from '@mui/material';
+import { Box, Button, Divider, TextField } from '@mui/material';
 import { FC, useState } from 'react';
-import { FormButton } from '../form-button.component';
+import { FormButton } from '../../form-button.component';
 import { useForm } from 'react-hook-form';
 import {
   CompanyResponseDto,
@@ -9,16 +9,19 @@ import {
   StepItem,
 } from '@workspaces/domain';
 import axios, { AxiosError } from 'axios';
-import { ValidationsError } from '../../../shared';
-import { ConsultCompanyByCnpjRequest } from '../../../services';
-import { useLoggedUser } from '../../../contexts';
-import { ConsultCompanyByCnpjFormSchema } from '../../../shared/validations/company';
+import { ValidationsError } from '../../../../shared';
+import { ConsultCompanyByCnpjRequest } from '../../../../services';
+import { useLoggedUser } from '../../../../contexts';
+import { ConsultCompanyByCnpjFormSchema } from '../../../../shared/validations/company';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 interface FormConsultCompanyByCnpjProps {
   showAlert: (message: string, success: boolean) => void;
   handlePopUpClose: () => void;
   changeCompany: (company: CompanyResponseDto) => void;
+  selectCompanyRedirect: () => void;
+  selectCompanyButtonTitle?: string;
+  orTextTitle?: string;
   totalPosition: number;
   step: StepItem;
   cnpjLabel?: string;
@@ -30,7 +33,10 @@ export const FormConsultCompanyByCnpj: FC<FormConsultCompanyByCnpjProps> = ({
   showAlert,
   handlePopUpClose,
   changeCompany,
+  selectCompanyRedirect,
   totalPosition,
+  selectCompanyButtonTitle = 'Escolher Empresa',
+  orTextTitle = 'OU',
   step: { stepPosition = 1, stepTitle = 'Etapa' },
   cnpjLabel = 'Burscar CNPJ',
   buttonTitle = 'Buscar',
@@ -115,12 +121,27 @@ export const FormConsultCompanyByCnpj: FC<FormConsultCompanyByCnpjProps> = ({
           {...register('cnpj')}
         />
 
-        <Box width="80%">
+        <Box width="80%" display="flex" flexDirection="column">
           <FormButton
             buttonTitle={`${buttonTitle} (${stepTitle} - ${stepPosition}/${totalPosition})`}
             loading={loading}
             success={success}
           />
+          <Divider
+            sx={{
+              mt: '0.5rem',
+              mb: '0.5rem',
+            }}
+          >
+            {orTextTitle}
+          </Divider>
+          <Button
+            variant="text"
+            onClick={selectCompanyRedirect}
+            sx={{ textTransform: 'none' }}
+          >
+            {selectCompanyButtonTitle}
+          </Button>
         </Box>
       </Box>
     </Box>

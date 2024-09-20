@@ -1,13 +1,13 @@
 import { StepItem } from '@workspaces/domain';
 import { FC, useEffect, useState } from 'react';
-import { useLoggedUser } from '../../../contexts';
+import { useLoggedUser } from '../../../../contexts';
 import {
   useFindCompanyAdressByIdData,
   useFindCompanyResponsibleByIdData,
-} from '../../../hooks';
+} from '../../../../hooks';
 import { Box, Card, CardContent, Grid, Typography } from '@mui/material';
-import { NavigationButton } from '../../buttom';
-import { formatBrDate, formatValueMask } from '../../../shared';
+import { NavigationButton } from '../../../buttom';
+import { formatBrDate, formatValueMask } from '../../../../shared';
 
 interface FormDetailsCompanyFinalProps {
   showAlert: (message: string, success: boolean) => void;
