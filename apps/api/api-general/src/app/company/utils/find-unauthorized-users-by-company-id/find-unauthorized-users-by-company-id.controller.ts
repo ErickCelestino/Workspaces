@@ -1,6 +1,10 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import { Controller, Get, Param, Query, UsePipes } from '@nestjs/common';
 import { FindUnauthorizedUsersByCompanyIdService } from './find-unauthorized-users-by-company-id.service';
-import { ErrorMessageResult } from '@workspaces/domain';
+import {
+  ErrorMessageResult,
+  findUnauthorizedUsersByCompanyIdSchema,
+} from '@workspaces/domain';
+import { ZodValidationPipe } from '../../../pipes/zod-validation-pipe';
 
 @Controller('find-unauthorized-users-by-company-id')
 export class FindUnauthorizedUsersByCompanyIdController {
@@ -9,6 +13,7 @@ export class FindUnauthorizedUsersByCompanyIdController {
   ) {}
 
   @Get(':companyId')
+  @UsePipes(new ZodValidationPipe(findUnauthorizedUsersByCompanyIdSchema))
   async find(
     @Query('loggedUserId') loggedUserId: string,
     @Param('companyId') companyId: string
