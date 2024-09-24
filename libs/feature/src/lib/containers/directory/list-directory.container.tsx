@@ -10,6 +10,7 @@ import {
   CreateDirectoryModal,
   DeleteDirectoryModal,
   DirectoryCard,
+  EditDirectoryModal,
   EmptyListResponse,
   MobileButtonMenu,
   RightClickMenu,
@@ -41,16 +42,26 @@ export const ListDirectoryContainer = () => {
 
   const { SnackbarAlert, showSnackbarAlert } = useSnackbarAlert();
   const [createDirectoryPopUp, setCreateDirectoryPopUp] = useState(false);
-  const [search, setSearch] = useState(false);
+  const [search, setSearch] = useState(true);
   const [totalPage, setTotalPage] = useState<number>(1);
   const [listDirectory, setListDirectory] = useState<Directory[]>([]);
   const [selectedId, setSelectedId] = useState<string>('');
   const [deleteDirectoryPopUp, setDeleteDirectoryPopUp] = useState(false);
+  const [editDirectoryPopUp, setEditDirectoryPopUp] = useState(false);
 
   const handlePopUpClose = (types: CrudType) => {
     switch (types) {
       case 'create':
+        setSearch(true);
         setCreateDirectoryPopUp(false);
+        break;
+      case 'delete':
+        setSearch(true);
+        setDeleteDirectoryPopUp(false);
+        break;
+      case 'edit':
+        setSearch(true);
+        setEditDirectoryPopUp(false);
         break;
     }
   };
@@ -63,6 +74,11 @@ export const ListDirectoryContainer = () => {
       case 'delete':
         setSelectedId(id ?? '');
         setDeleteDirectoryPopUp(true);
+        break;
+      case 'edit':
+        setSelectedId(id ?? '');
+        setEditDirectoryPopUp(true);
+        break;
     }
   };
 
@@ -108,6 +124,7 @@ export const ListDirectoryContainer = () => {
 
     setTotalPage(result?.totalPages ?? 0);
     setListDirectory(result?.directories ?? []);
+    setSearch(false);
   };
 
   const handleChange = async (
@@ -122,6 +139,7 @@ export const ListDirectoryContainer = () => {
     });
     setTotalPage(result.totalPages);
     setListDirectory(result.directories);
+    setSearch(false);
   };
 
   const getData = useCallback(async () => {
@@ -131,10 +149,11 @@ export const ListDirectoryContainer = () => {
     });
     setTotalPage(result?.totalPages ?? 0);
     setListDirectory(result?.directories ?? []);
+    setSearch(false);
   }, [handleData, loggedUser]);
 
   useEffect(() => {
-    if (!search) {
+    if (search) {
       getData();
     }
   }, [getData, search]);
@@ -154,17 +173,26 @@ export const ListDirectoryContainer = () => {
   return (
     <>
       <CreateDirectoryModal
-        handlePopUpClose={() => setCreateDirectoryPopUp(false)}
+        handlePopUpClose={() => {
+          handlePopUpClose('create');
+        }}
         open={createDirectoryPopUp}
         showAlert={showAlert}
         title="Novo Diretório"
       />
       <DeleteDirectoryModal
-        handlePopUpClose={() => setDeleteDirectoryPopUp(false)}
+        handlePopUpClose={() => handlePopUpClose('delete')}
         idToDelete={selectedId}
         open={deleteDirectoryPopUp}
         showAlert={showAlert}
         title="Deletar Diretório"
+      />
+      <EditDirectoryModal
+        handlePopUpClose={() => handlePopUpClose('edit')}
+        open={editDirectoryPopUp}
+        showAlert={showAlert}
+        title="Editar Diretório"
+        idToEdit={selectedId}
       />
       <LayoutBase
         title="Listagem de Diretórios"
@@ -190,6 +218,9 @@ export const ListDirectoryContainer = () => {
                     name={directory.name}
                     deleteDirectory={async () =>
                       handlePopUpOpen('delete', directory.id)
+                    }
+                    editDirectory={async () =>
+                      handlePopUpOpen('edit', directory.id)
                     }
                   />
                 </Grid>
