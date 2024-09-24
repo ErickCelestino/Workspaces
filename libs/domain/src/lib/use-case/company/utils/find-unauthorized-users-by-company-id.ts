@@ -66,10 +66,6 @@ export class FindUnauthorizedUsersByCompanyId
       input
     );
 
-    if (userList?.length < 1) {
-      return left(new EntityNotFound('Users'));
-    }
-
     return right(userList);
   }
 }

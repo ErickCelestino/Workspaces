@@ -5,6 +5,7 @@ import { useLoggedUser } from '../../../contexts';
 import { useFindUnauthorizedUsersByCompanyIdData } from '../../../hooks';
 import { ScrollBox } from '../../scroll';
 import { EmptyListResponse, UserListItem } from '../../list';
+import { AuthorizeUserModal } from '../../modal';
 
 interface ListUnauthorizedUsersPopperProps {
   open: boolean;
@@ -18,6 +19,8 @@ export const ListUnauthorizedUsersPopper: FC<
 > = ({ id, open, anchorEl, showAlert }) => {
   const { loggedUser } = useLoggedUser();
   const theme = useTheme();
+  const [authorizeUserPopUp, setAuthorizeUserPopUp] = useState(false);
+  const [selectedId, setSelectedId] = useState('');
   const [dataLoaded, setDataLoaded] = useState(false);
 
   const { getUnauthorizedUsersByCompanyIdData, userList } =
@@ -40,41 +43,65 @@ export const ListUnauthorizedUsersPopper: FC<
     }
   }, [id, dataLoaded, open, getUnauthorizedUsersByCompanyIdData]);
 
+  const handleAuthOpen = (id: string) => {
+    setSelectedId(id);
+    setAuthorizeUserPopUp(true);
+  };
+
+  const handleAuthClose = () => {
+    setSelectedId('');
+    setAuthorizeUserPopUp(false);
+    getUnauthorizedUsersByCompanyIdData();
+  };
+
   return (
-    <Box>
-      <Popper id={id} open={open} anchorEl={anchorEl}>
-        <Box sx={{ border: 1, p: 1, bgcolor: 'background.paper' }}>
-          <ScrollBox maxHeight="80%">
-            <List
-              sx={{
-                width: '100%',
-              }}
-            >
-              {userList.length > 0 ? (
-                userList.map((user) => (
-                  <UserListItem
-                    key={user.userId}
-                    user={user}
-                    inModal={true}
-                    statusColor={user.status === 'ACTIVE' ? 'success' : 'error'}
-                  />
-                ))
-              ) : (
-                <EmptyListResponse
-                  message="Sem Usuários"
-                  icon={
-                    <PersonOffIcon
-                      sx={{
-                        fontSize: theme.spacing(10),
-                      }}
+    <>
+      <AuthorizeUserModal
+        handlePopUpClose={() => handleAuthClose()}
+        idToAuthorized={selectedId}
+        open={authorizeUserPopUp}
+        showAlert={showAlert}
+        title="Autorizar Usuário"
+        subTitle="Você Deseja autorizar este usuário a acessar sua Empresa?"
+      />
+      <Box>
+        <Popper id={id} open={open} anchorEl={anchorEl}>
+          <Box sx={{ border: 1, p: 1, bgcolor: 'background.paper' }}>
+            <ScrollBox maxHeight="80%">
+              <List
+                sx={{
+                  width: '100%',
+                }}
+              >
+                {userList.length > 0 ? (
+                  userList.map((user) => (
+                    <UserListItem
+                      key={user.userId}
+                      user={user}
+                      inModal={true}
+                      statusColor={
+                        user.status === 'ACTIVE' ? 'success' : 'error'
+                      }
+                      authorizeUser={async () => handleAuthOpen(user.userId)}
                     />
-                  }
-                />
-              )}
-            </List>
-          </ScrollBox>
-        </Box>
-      </Popper>
-    </Box>
+                  ))
+                ) : (
+                  <EmptyListResponse
+                    message="Sem Usuários"
+                    icon={
+                      <PersonOffIcon
+                        sx={{
+                          fontSize: theme.spacing(10),
+                        }}
+                      />
+                    }
+                  />
+                )}
+              </List>
+            </ScrollBox>
+          </Box>
+        </Popper>
+      </Box>
+    </>
   );
 };

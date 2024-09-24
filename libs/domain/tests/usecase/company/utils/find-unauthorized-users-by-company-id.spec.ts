@@ -106,16 +106,4 @@ describe('FindUnauthorizedUsersByCompanyId', () => {
     expect(result.isRight()).toBe(false);
     expect(result.value).toBeInstanceOf(EntityNotExists);
   });
-
-  it('should return EntityNotFound when a exist user unauthorized in Company', async () => {
-    const { findUnauthorizedUsersByCompanyIdDto, sut } = makeSut();
-    jest
-      .spyOn(sut['findUnauthorizedUsersByCompanyIdRepository'], 'find')
-      .mockResolvedValueOnce([]);
-    const result = await sut.execute(findUnauthorizedUsersByCompanyIdDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.isRight()).toBe(false);
-    expect(result.value).toBeInstanceOf(EntityNotFound);
-  });
 });

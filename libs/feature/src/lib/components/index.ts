@@ -9,6 +9,7 @@ export * from './list';
 export * from './menu';
 export * from './modal';
 export * from './notification-card';
+export * from './popper';
 export * from './popup';
 export * from './scroll';
 export * from './search';

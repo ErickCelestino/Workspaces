@@ -12,6 +12,7 @@ import {
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
 import { IconMenuItem, StatusColor, UserList } from '@workspaces/domain';
 import { FC } from 'react';
 import { ButtonFileMenu } from '../../menu';
@@ -22,8 +23,10 @@ interface UserListItemProps {
   statusColor: StatusColor;
   editUser?: () => Promise<void>;
   deleteUser?: () => Promise<void>;
+  authorizeUser?: () => Promise<void>;
   deleteUserTitle?: string;
   editUserTitle?: string;
+  authorizeUserTitle?: string;
   nicknameTitle?: string;
   statusTitle?: string;
   idTitle?: string;
@@ -36,6 +39,8 @@ export const UserListItem: FC<UserListItemProps> = ({
   inModal,
   editUser,
   deleteUser,
+  authorizeUser,
+  authorizeUserTitle = 'Autorizar Usuário',
   deleteUserTitle = 'Deletar',
   editUserTitle = 'Editar',
   nicknameTitle = 'Nickname',
@@ -60,6 +65,14 @@ export const UserListItem: FC<UserListItemProps> = ({
       icon: <EditIcon />,
       title: editUserTitle,
       handleClick: editUser,
+    });
+  }
+
+  if (authorizeUser) {
+    iconMenuList.push({
+      icon: <VerifiedUserIcon />,
+      title: authorizeUserTitle,
+      handleClick: authorizeUser,
     });
   }
 

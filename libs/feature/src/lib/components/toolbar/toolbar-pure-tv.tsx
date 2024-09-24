@@ -2,7 +2,7 @@ import { Box, IconButton } from '@mui/material';
 import { useFileModal } from '../../contexts';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import GroupIcon from '@mui/icons-material/Group';
-import { ListUnauthorizedUsersPopper } from '../Popper';
+import { ListUnauthorizedUsersPopper } from '../popper';
 import { useCallback, useState } from 'react';
 import { useSnackbarAlert } from '../../hooks';
 
