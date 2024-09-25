@@ -5,6 +5,7 @@ interface SimpleConfimationModalProps {
   open: boolean;
   onClose: () => void;
   onSuccess: () => void;
+  onUnsuccessfully?: () => void;
   title: string;
   subTitle: string;
   yesButtonTitle?: string;
@@ -17,6 +18,7 @@ export const SimpleConfimationModal: FC<SimpleConfimationModalProps> = ({
   subTitle,
   onClose,
   onSuccess,
+  onUnsuccessfully,
   yesButtonTitle = 'Sim',
   noButtonTitle = 'Não',
 }) => {
@@ -56,7 +58,11 @@ export const SimpleConfimationModal: FC<SimpleConfimationModalProps> = ({
           <Button variant="contained" color="success" onClick={onSuccess}>
             {yesButtonTitle}
           </Button>
-          <Button variant="contained" color="error" onClick={onClose}>
+          <Button
+            variant="contained"
+            color="error"
+            onClick={onUnsuccessfully ? onUnsuccessfully : onClose}
+          >
             {noButtonTitle}
           </Button>
         </Box>

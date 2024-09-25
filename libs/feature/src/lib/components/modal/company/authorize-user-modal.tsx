@@ -2,7 +2,10 @@ import { useLoggedUser } from '../../../contexts';
 import { SimpleConfimationModal } from '../simple';
 import { FC } from 'react';
 import { ErrorResponse } from '@workspaces/domain';
-import { AuthorizeUserToCompanyRequest } from '../../../services';
+import {
+  AuthorizeUserToCompanyRequest,
+  UnauthorizeUserToCompanyRequest,
+} from '../../../services';
 import axios, { AxiosError } from 'axios';
 import { ValidationsError } from '../../../shared';
 
@@ -42,7 +45,35 @@ export const AuthorizeUserModal: FC<AuthorizeUserModalProps> = ({
       console.error(error);
       if (axios.isAxiosError(error)) {
         const axiosError = error as AxiosError<ErrorResponse>;
-        const errors = ValidationsError(axiosError, 'Empresa');
+        const errors = ValidationsError(
+          axiosError,
+          'Possível Usuario da Empresa'
+        );
+        if (errors) {
+          showAlert(errors, false);
+        }
+      }
+    }
+  };
+
+  const unauthorizeUser = async () => {
+    try {
+      const result = await UnauthorizeUserToCompanyRequest({
+        companyId: loggedUser?.selectedCompany.id ?? '',
+        loggedUserId: loggedUser?.id ?? '',
+        userId: idToAuthorized,
+      });
+      if (result) {
+        handlePopUpClose();
+      }
+    } catch (error) {
+      console.error(error);
+      if (axios.isAxiosError(error)) {
+        const axiosError = error as AxiosError<ErrorResponse>;
+        const errors = ValidationsError(
+          axiosError,
+          'Possível Usuário da Empresa'
+        );
         if (errors) {
           showAlert(errors, false);
         }
@@ -57,6 +88,7 @@ export const AuthorizeUserModal: FC<AuthorizeUserModalProps> = ({
       subTitle={subTitle ?? ''}
       title={title}
       onSuccess={authorizeUser}
+      onUnsuccessfully={unauthorizeUser}
     />
   );
 };
