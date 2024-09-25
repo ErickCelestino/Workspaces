@@ -1,6 +1,10 @@
-import { Controller, Delete, Param, Query } from '@nestjs/common';
+import { Controller, Delete, Param, Query, UsePipes } from '@nestjs/common';
 import { UnauthorizeUserToCompanyService } from './unauthorize-user-to-company.service';
-import { ErrorMessageResult } from '@workspaces/domain';
+import {
+  ErrorMessageResult,
+  unauthorizeUserToCompanySchema,
+} from '@workspaces/domain';
+import { ZodValidationPipe } from '../../../pipes/zod-validation-pipe';
 
 @Controller('unauthorize-user-to-company')
 export class UnauthorizeUserToCompanyController {
@@ -9,6 +13,7 @@ export class UnauthorizeUserToCompanyController {
   ) {}
 
   @Delete(':userId')
+  @UsePipes(new ZodValidationPipe(unauthorizeUserToCompanySchema))
   async auth(
     @Param('userId') userId: string,
     @Query('loggedUserId') loggedUserId: string,
