@@ -1,5 +1,5 @@
 import { Box, IconButton } from '@mui/material';
-import { useFileModal } from '../../contexts';
+import { useFileModal, useLoggedUser } from '../../contexts';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import GroupIcon from '@mui/icons-material/Group';
 import { ListUnauthorizedUsersPopper } from '../popper';
@@ -7,6 +7,7 @@ import { useCallback, useState } from 'react';
 import { useSnackbarAlert } from '../../hooks';
 
 export const ToolbarPureTV = () => {
+  const { loggedUser } = useLoggedUser();
   const [listUsersPopper, setListUsersPopper] = useState(false);
   const { handleOpen } = useFileModal();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -57,21 +58,23 @@ export const ToolbarPureTV = () => {
           <CloudUploadIcon fontSize="large" color="primary" />
         </IconButton>
 
-        <IconButton
-          id="list-unauthorized-users"
-          sx={{
-            display: 'flex',
-            background: 'white',
-            justifyContent: 'center',
-            ':hover': {
+        {loggedUser?.type !== 'DEFAULT' && (
+          <IconButton
+            id="list-unauthorized-users"
+            sx={{
+              display: 'flex',
               background: 'white',
-              opacity: 0.5,
-            },
-          }}
-          onClick={handleListUsersOpen}
-        >
-          <GroupIcon fontSize="large" color="primary" />
-        </IconButton>
+              justifyContent: 'center',
+              ':hover': {
+                background: 'white',
+                opacity: 0.5,
+              },
+            }}
+            onClick={handleListUsersOpen}
+          >
+            <GroupIcon fontSize="large" color="primary" />
+          </IconButton>
+        )}
       </Box>
       {SnackbarAlert}
     </>
