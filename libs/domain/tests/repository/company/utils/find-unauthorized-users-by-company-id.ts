@@ -1,16 +1,18 @@
 import {
   FindUnauthorizedUsersByCompanyIdDto,
   FindUnauthorizedUsersByCompanyIdRepository,
-  UserList,
+  UnauthorizedUsersByCompanyIdResponseDto,
 } from '../../../../src';
-import { listUserMock } from '../../../entity';
+import { UnauthorizedUsersByCompanyIdMock } from '../../../entity';
 
 export class FindUnauthorizedUsersByCompanyIdRepositoryMock
   implements FindUnauthorizedUsersByCompanyIdRepository
 {
   inputMock = {} as FindUnauthorizedUsersByCompanyIdDto;
-  async find(input: FindUnauthorizedUsersByCompanyIdDto): Promise<UserList[]> {
+  async find(
+    input: FindUnauthorizedUsersByCompanyIdDto
+  ): Promise<UnauthorizedUsersByCompanyIdResponseDto> {
     this.inputMock = input;
-    return listUserMock;
+    return UnauthorizedUsersByCompanyIdMock;
   }
 }

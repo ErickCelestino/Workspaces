@@ -1,6 +1,10 @@
-import { FindUnauthorizedUsersByCompanyIdDto } from '../../../dto';
-import { UserList } from '../../../entity';
+import {
+  FindUnauthorizedUsersByCompanyIdDto,
+  UnauthorizedUsersByCompanyIdResponseDto,
+} from '../../../dto';
 
 export interface FindUnauthorizedUsersByCompanyIdRepository {
-  find(input: FindUnauthorizedUsersByCompanyIdDto): Promise<UserList[]>;
+  find(
+    input: FindUnauthorizedUsersByCompanyIdDto
+  ): Promise<UnauthorizedUsersByCompanyIdResponseDto>;
 }

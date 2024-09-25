@@ -2,7 +2,6 @@ import {
   CompanyResponseDto,
   EntityNotEmpty,
   EntityNotExists,
-  EntityNotFound,
   FindCompanyByIdRepository,
   FindUnauthorizedUsersByCompanyId,
   FindUnauthorizedUsersByCompanyIdDto,
@@ -10,7 +9,11 @@ import {
   FindUserByIdRepository,
   UserList,
 } from '../../../../src';
-import { CompanyMock, listUserMock, userMock } from '../../../entity';
+import {
+  CompanyMock,
+  UnauthorizedUsersByCompanyIdMock,
+  userMock,
+} from '../../../entity';
 import {
   FindCompanyByIdRepositoryMock,
   FindUnauthorizedUsersByCompanyIdRepositoryMock,
@@ -60,7 +63,7 @@ describe('FindUnauthorizedUsersByCompanyId', () => {
 
     expect(result.isLeft()).toBeFalsy();
     expect(result.isRight()).toBeTruthy();
-    expect(result.value).toStrictEqual(listUserMock);
+    expect(result.value).toStrictEqual(UnauthorizedUsersByCompanyIdMock);
   });
 
   it('should return EntityNotEmpty when pass incorrect Company id', async () => {

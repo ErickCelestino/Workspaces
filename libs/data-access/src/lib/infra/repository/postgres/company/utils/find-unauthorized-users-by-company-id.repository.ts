@@ -2,46 +2,56 @@ import { Inject } from '@nestjs/common';
 import {
   FindUnauthorizedUsersByCompanyIdDto,
   FindUnauthorizedUsersByCompanyIdRepository,
-  UserList,
+  UnauthorizedUsersByCompanyIdResponseDto,
 } from '@workspaces/domain';
 import { PrismaService } from 'nestjs-prisma';
+import { Status } from '@prisma/client';
 
 export class FindUnauthorizedUsersByCompanyIdRepositoryImpl
   implements FindUnauthorizedUsersByCompanyIdRepository
 {
   constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
-  async find(input: FindUnauthorizedUsersByCompanyIdDto): Promise<UserList[]> {
-    const { loggedUserId, companyId } = input;
+  async find(
+    input: FindUnauthorizedUsersByCompanyIdDto
+  ): Promise<UnauthorizedUsersByCompanyIdResponseDto> {
+    const { companyId } = input;
 
-    const filteredUsers = await this.prismaService.user_X_Company.findMany({
-      where: {
-        company_id: companyId,
-        user: {
-          status: 'BLOCKED',
-        },
+    const whereClause = {
+      company_id: companyId,
+      user: {
+        status: Status.BLOCKED,
       },
-      select: {
-        user_id: true,
-        user: {
-          select: {
-            name: true,
-            nick_name: true,
-            birth_date: true,
-            status: true,
-            type: true,
-            auth: {
-              select: {
-                auth_id: false,
-                email: true,
-                user_id: false,
+    };
+
+    const [users, total] = await this.prismaService.$transaction([
+      this.prismaService.user_X_Company.findMany({
+        where: whereClause,
+        select: {
+          user_id: true,
+          user: {
+            select: {
+              name: true,
+              nick_name: true,
+              birth_date: true,
+              status: true,
+              type: true,
+              auth: {
+                select: {
+                  auth_id: false,
+                  email: true,
+                  user_id: false,
+                },
               },
             },
           },
         },
-      },
-    });
+      }),
+      this.prismaService.user_X_Company.count({
+        where: whereClause,
+      }),
+    ]);
 
-    const mappedUsers = filteredUsers.map((user) => {
+    const mappedUsers = users.map((user) => {
       return {
         name: user.user.name ?? '',
         nickname: user.user.nick_name ?? '',
@@ -53,6 +63,9 @@ export class FindUnauthorizedUsersByCompanyIdRepositoryImpl
       };
     });
 
-    return mappedUsers;
+    return {
+      listUsers: mappedUsers,
+      total: total,
+    };
   }
 }

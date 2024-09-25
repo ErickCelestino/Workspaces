@@ -12,11 +12,12 @@ interface ListUnauthorizedUsersPopperProps {
   id: string;
   anchorEl: null | HTMLElement;
   showAlert: (message: string, success: boolean) => void;
+  onMove: (move: boolean) => void;
 }
 
 export const ListUnauthorizedUsersPopper: FC<
   ListUnauthorizedUsersPopperProps
-> = ({ id, open, anchorEl, showAlert }) => {
+> = ({ id, open, anchorEl, showAlert, onMove }) => {
   const { loggedUser } = useLoggedUser();
   const theme = useTheme();
   const [authorizeUserPopUp, setAuthorizeUserPopUp] = useState(false);
@@ -51,6 +52,7 @@ export const ListUnauthorizedUsersPopper: FC<
   const handleAuthClose = () => {
     setSelectedId('');
     setAuthorizeUserPopUp(false);
+    onMove(true);
     getUnauthorizedUsersByCompanyIdData();
   };
 

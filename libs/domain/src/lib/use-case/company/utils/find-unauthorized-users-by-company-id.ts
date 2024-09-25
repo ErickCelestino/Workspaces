@@ -1,12 +1,10 @@
 import { Inject } from '@nestjs/common';
 import { UseCase } from '../../../base/use-case';
-import { FindUnauthorizedUsersByCompanyIdDto } from '../../../dto';
-import { UserList } from '../../../entity';
 import {
-  EntityIsNotEmpty,
-  EntityNotEmpty,
-  EntityNotFound,
-} from '../../../error';
+  FindUnauthorizedUsersByCompanyIdDto,
+  UnauthorizedUsersByCompanyIdResponseDto,
+} from '../../../dto';
+import { EntityIsNotEmpty, EntityNotEmpty } from '../../../error';
 import { Either, left, right } from '../../../shared/either';
 import {
   FindCompanyByIdRepository,
@@ -19,7 +17,7 @@ export class FindUnauthorizedUsersByCompanyId
   implements
     UseCase<
       FindUnauthorizedUsersByCompanyIdDto,
-      Either<EntityIsNotEmpty, UserList[]>
+      Either<EntityIsNotEmpty, UnauthorizedUsersByCompanyIdResponseDto>
     >
 {
   constructor(
@@ -33,7 +31,7 @@ export class FindUnauthorizedUsersByCompanyId
 
   async execute(
     input: FindUnauthorizedUsersByCompanyIdDto
-  ): Promise<Either<EntityNotEmpty, UserList[]>> {
+  ): Promise<Either<EntityNotEmpty, UnauthorizedUsersByCompanyIdResponseDto>> {
     const { companyId, loggedUserId } = input;
 
     if (Object.keys(loggedUserId).length < 1) {

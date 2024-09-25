@@ -3,8 +3,11 @@ import { useFileModal, useLoggedUser } from '../../contexts';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import GroupIcon from '@mui/icons-material/Group';
 import { ListUnauthorizedUsersPopper } from '../popper';
-import { FC, useCallback, useState } from 'react';
-import { useSnackbarAlert } from '../../hooks';
+import { FC, useCallback, useEffect, useState } from 'react';
+import {
+  useFindUnauthorizedUsersByCompanyIdData,
+  useSnackbarAlert,
+} from '../../hooks';
 import { ToolbarButtom } from '../buttom';
 
 interface ToolbarPureTVProps {
@@ -21,11 +24,8 @@ export const ToolbarPureTV: FC<ToolbarPureTVProps> = ({
   const { handleOpen } = useFileModal();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const { SnackbarAlert, showSnackbarAlert } = useSnackbarAlert();
-
-  const handleListUsersOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-    setListUsersPopper(!listUsersPopper);
-  };
+  const [dataLoaded, setDataLoaded] = useState(false);
+  const [moved, setMoved] = useState(false);
 
   const showAlert = useCallback(
     (message: string, success: boolean) => {
@@ -37,6 +37,42 @@ export const ToolbarPureTV: FC<ToolbarPureTVProps> = ({
     [showSnackbarAlert]
   );
 
+  const handleMoveListUsers = (move: boolean) => {
+    setMoved(move);
+  };
+
+  const { getUnauthorizedUsersByCompanyIdData, totalUsers } =
+    useFindUnauthorizedUsersByCompanyIdData({
+      showAlert,
+      companyId: loggedUser?.selectedCompany.id ?? '',
+      loggedUserId: loggedUser?.id ?? '',
+    });
+
+  useEffect(() => {
+    if (!loggedUser?.id) {
+      setDataLoaded(false);
+    }
+  }, [loggedUser?.id]);
+
+  useEffect(() => {
+    if (loggedUser?.id && !dataLoaded) {
+      getUnauthorizedUsersByCompanyIdData();
+      setDataLoaded(true);
+    }
+  }, [loggedUser?.id, dataLoaded, getUnauthorizedUsersByCompanyIdData]);
+
+  useEffect(() => {
+    if (moved) {
+      getUnauthorizedUsersByCompanyIdData();
+      setMoved(false);
+    }
+  }, [moved, getUnauthorizedUsersByCompanyIdData]);
+
+  const handleListUsersOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+    setListUsersPopper(!listUsersPopper);
+  };
+
   return (
     <>
       <ListUnauthorizedUsersPopper
@@ -44,6 +80,7 @@ export const ToolbarPureTV: FC<ToolbarPureTVProps> = ({
         open={listUsersPopper}
         anchorEl={anchorEl}
         showAlert={showAlert}
+        onMove={handleMoveListUsers}
       />
       <Stack spacing={1} direction="row" sx={{ color: 'action.active' }}>
         <ToolbarButtom
@@ -57,6 +94,7 @@ export const ToolbarPureTV: FC<ToolbarPureTVProps> = ({
             handleOpen={handleListUsersOpen}
             icon={<GroupIcon fontSize="large" color="primary" />}
             title={listUserTitle}
+            badgeContent={totalUsers}
           />
         )}
       </Stack>

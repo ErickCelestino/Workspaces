@@ -15,6 +15,7 @@ export const useFindUnauthorizedUsersByCompanyIdData = (
 ) => {
   const { showAlert, loggedUserId, companyId } = companyData;
   const [userList, setUserList] = useState<UserList[]>([]);
+  const [totalUsers, setTotalUsers] = useState(0);
 
   const getUnauthorizedUsersByCompanyIdData = useCallback(async () => {
     if (!loggedUserId) return;
@@ -25,7 +26,8 @@ export const useFindUnauthorizedUsersByCompanyIdData = (
         companyId,
       });
       if (result) {
-        setUserList(result);
+        setUserList(result.listUsers);
+        setTotalUsers(result.total);
       }
     } catch (error) {
       console.error(error);
@@ -39,5 +41,5 @@ export const useFindUnauthorizedUsersByCompanyIdData = (
     }
   }, [showAlert, companyId, loggedUserId]);
 
-  return { userList, getUnauthorizedUsersByCompanyIdData };
+  return { userList, totalUsers, getUnauthorizedUsersByCompanyIdData };
 };

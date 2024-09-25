@@ -1,13 +1,13 @@
 import {
   FindUnauthorizedUsersByCompanyIdDto,
-  UserList,
+  UnauthorizedUsersByCompanyIdResponseDto,
 } from '@workspaces/domain';
 import { generalApi } from '../../axios-config';
 
 export async function FindUnauthorizedUsersByCompanyIdRequest(
   input: FindUnauthorizedUsersByCompanyIdDto
 ) {
-  const result = await generalApi.get<UserList[]>(
+  const result = await generalApi.get<UnauthorizedUsersByCompanyIdResponseDto>(
     `find-unauthorized-users-by-company-id/${input.companyId}`,
     {
       params: {
