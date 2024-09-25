@@ -4,6 +4,7 @@ export * from './entity-is-not-authorized.error';
 export * from './entity-is-not-empty.error';
 export * from './entity-not-active.error';
 export * from './entity-not-associate.error';
+export * from './entity-not-complete.error';
 export * from './entity-not-converted.error';
 export * from './entity-not-empty.error';
 export * from './entity-not-exists.error';

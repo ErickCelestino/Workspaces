@@ -5,3 +5,4 @@ export * from './find-unauthorized-users-by-company-id';
 export * from './find-user-and-company-id.dto';
 export * from './list-users-by-company-id.dto';
 export * from './select-company.dto';
+export * from './unauthorize-user-to-company.dto';
