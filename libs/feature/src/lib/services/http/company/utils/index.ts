@@ -4,3 +4,4 @@ export * from './find-all-company-ids';
 export * from './find-unauthorized-users-by-company-id';
 export * from './list-users-by-company-id';
 export * from './select-company';
+export * from './unauthorize-user-to-company';

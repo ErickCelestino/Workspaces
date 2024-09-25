@@ -25,7 +25,7 @@ export class UnauthorizeUserToCompanyController {
       userId,
     });
 
-    if (result.isRight()) return { companyId: result.value };
+    if (result.isRight()) return { userCompanyId: result.value };
     else await ErrorMessageResult(result.value.name, result.value.message);
   }
 }
