@@ -7,6 +7,7 @@ import {
   EntityNotEmpty,
   EntityNotExists,
   FindDirectoryByIdRepository,
+  FindDirectoryByNameRepository,
   FindUserByIdRepository,
   UserList,
 } from '../../../src';
@@ -14,6 +15,7 @@ import { DirectoryMock, userMock } from '../../entity';
 import {
   EditDirectoryRepositoryMock,
   FindDirectoryByIdRespositoryMock,
+  FindDirectoryByNameRepositoryMock,
   FindUserByIdRepositoryMock,
 } from '../../repository';
 
@@ -23,12 +25,14 @@ interface SutTypes {
   findUserByIdRepository: FindUserByIdRepository;
   findDirectoryByIdRepository: FindDirectoryByIdRepository;
   editDirectoryRepository: EditDirectoryRepository;
+  findDirectoryByNameRepository: FindDirectoryByNameRepository;
 }
 
 const makeSut = (): SutTypes => {
   const findUserByIdRepository = new FindUserByIdRepositoryMock();
   const findDirectoryByIdRepository = new FindDirectoryByIdRespositoryMock();
   const editDirectoryRepository = new EditDirectoryRepositoryMock();
+  const findDirectoryByNameRepository = new FindDirectoryByNameRepositoryMock();
 
   const editDirectoryDto: EditDirectoryDto = {
     id: DirectoryMock.id,
@@ -39,6 +43,7 @@ const makeSut = (): SutTypes => {
   const sut = new EditDirectory(
     findUserByIdRepository,
     findDirectoryByIdRepository,
+    findDirectoryByNameRepository,
     editDirectoryRepository
   );
 
@@ -47,6 +52,7 @@ const makeSut = (): SutTypes => {
     editDirectoryDto,
     findUserByIdRepository,
     findDirectoryByIdRepository,
+    findDirectoryByNameRepository,
     editDirectoryRepository,
   };
 };
@@ -114,6 +120,19 @@ describe('EditDirectory', () => {
     expect(result.isLeft()).toBe(true);
     expect(result.isRight()).toBe(false);
     expect(result.value).toBeInstanceOf(EntityNotExists);
+  });
+
+  it('ensure it will return EntityAlreadyExists error if the directory already exists', async () => {
+    const {
+      sut,
+      editDirectoryDto: EditDirectoryDto,
+      findDirectoryByNameRepository: FindDirectoryByNameRepository,
+    } = makeSut();
+    jest
+      .spyOn(FindDirectoryByNameRepository, 'find')
+      .mockResolvedValueOnce(DirectoryMock);
+    const result = await sut.execute(EditDirectoryDto);
+    expect(result.isLeft()).toBe(true);
   });
 
   it('should return EntityNotEdit when a not edit Directory in system', async () => {

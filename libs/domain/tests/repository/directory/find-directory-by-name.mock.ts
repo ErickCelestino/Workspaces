@@ -8,9 +8,9 @@ export class FindDirectoryByNameRepositoryMock
   implements FindDirectoryByNameRepository
 {
   inputMock = {} as FindDirectoryByNameDto;
-  async find(input: FindDirectoryByNameDto): Promise<Directory | object> {
+  async find(input: FindDirectoryByNameDto): Promise<Directory> {
     this.inputMock = input;
-    const directory = {};
+    const directory = {} as Directory;
     return directory;
   }
 }

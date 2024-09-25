@@ -5,10 +5,15 @@ import { EntityNotEdit, EntityNotEmpty } from '../../error';
 import {
   EditDirectoryRepository,
   FindDirectoryByIdRepository,
+  FindDirectoryByNameRepository,
   FindUserByIdRepository,
 } from '../../repository';
 import { Either, left, right } from '../../shared/either';
-import { ValidationDirectoryId, ValidationUserId } from '../../utils';
+import {
+  ValidationDirectoryByName,
+  ValidationDirectoryId,
+  ValidationUserId,
+} from '../../utils';
 
 export class EditDirectory
   implements UseCase<EditDirectoryDto, Either<EntityNotEmpty, string>>
@@ -18,6 +23,8 @@ export class EditDirectory
     private findUserByIdRepository: FindUserByIdRepository,
     @Inject('FindDirectoryByIdRepository')
     private findDirectoryByIdRepository: FindDirectoryByIdRepository,
+    @Inject('FindDirectoryByNameRepository')
+    private findDirectoryByNameRepository: FindDirectoryByNameRepository,
     @Inject('EditDirectoryRepository')
     private editDirectoryRepository: EditDirectoryRepository
   ) {}
@@ -55,6 +62,16 @@ export class EditDirectory
 
     if (directoryValidation.isLeft()) {
       return left(directoryValidation.value);
+    }
+
+    const directoryValidationByName = await ValidationDirectoryByName(
+      newName,
+      loggedUserId,
+      this.findDirectoryByNameRepository
+    );
+
+    if (directoryValidationByName.isLeft()) {
+      return left(directoryValidationByName.value);
     }
 
     const editDirectoryId = await this.editDirectoryRepository.edit(input);

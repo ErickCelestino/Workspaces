@@ -5,3 +5,4 @@ export * from './format-date-in-time';
 export * from './validation-company-by-cnpj';
 export * from './validation-start-end-time';
 export * from './validation-user-permissions';
+export * from './validation-directory-by-name';

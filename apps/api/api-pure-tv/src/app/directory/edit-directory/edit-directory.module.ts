@@ -6,6 +6,7 @@ import { PrismaService } from 'nestjs-prisma';
 import {
   EditDirectoryRepositoryImpl,
   FindDirectoryByIdRepositoryImpl,
+  FindDirectoryByNameRepositoryImpl,
   FindUserByIdRepositoryImpl,
 } from '@workspaces/data-access';
 
@@ -25,6 +26,10 @@ import {
     {
       provide: 'FindDirectoryByIdRepository',
       useClass: FindDirectoryByIdRepositoryImpl,
+    },
+    {
+      provide: 'FindDirectoryByNameRepository',
+      useClass: FindDirectoryByNameRepositoryImpl,
     },
     {
       provide: 'FindUserByIdRepository',
