@@ -1,4 +1,4 @@
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes, useNavigate } from 'react-router-dom';
 import {
   ListUserContainer,
   TestContainer,
@@ -11,88 +11,105 @@ import {
   ListDeviceContainer,
   useLoggedUser,
   ListCompanyContainer,
+  UnauthorizedUserContainer,
 } from '@workspaces/feature';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 export const AppRouters = () => {
   const { loggedUser } = useLoggedUser();
   const { setDrawerOptions } = useDrawerContext();
+  const navigate = useNavigate();
+  const [dataLoaded, setDataLoaded] = useState(false);
 
   useEffect(() => {
-    const drawerOptions = {
-      'Página Inicial': [
-        {
-          label: 'Página Inicial',
-          icon: 'home',
-          path: '/home',
-        },
-      ],
-      Diretorios: [
-        {
-          label: 'Diretórios',
-          icon: 'folder',
-          path: '/directory',
-        },
-      ],
-      Playlists: [
-        {
-          label: 'Playlists',
-          icon: 'playlist_add',
-          path: '/playlist',
-        },
-        {
-          label: 'Categorias',
-          icon: 'category',
-          path: '/playlist-category',
-        },
-      ],
-      Agendamentos: [
-        {
-          label: 'Agendamentos',
-          icon: 'event_upcoming',
-          path: '/scheduling',
-        },
-      ],
-      Dispositivos: [
-        {
-          label: 'Dispositivos',
-          icon: 'important_devices',
-          path: '/device',
-        },
-      ],
-    };
+    if (!loggedUser?.id) {
+      setDataLoaded(false);
+    }
+  }, [loggedUser?.id, dataLoaded]);
 
-    loggedUser?.type === 'DEFAULT_ADMIN'
-      ? setDrawerOptions({
-          ...drawerOptions,
-          Empresa: [
+  useEffect(() => {
+    if (!dataLoaded) {
+      if (loggedUser?.status !== 'BLOCKED') {
+        navigate('/');
+        const drawerOptions = {
+          'Página Inicial': [
             {
-              label: 'Empresas',
-              icon: 'add_business',
-              path: '/company',
+              label: 'Página Inicial',
+              icon: 'home',
+              path: '/home',
             },
           ],
-        })
-      : loggedUser?.type === 'ADMIN'
-      ? setDrawerOptions({
-          ...drawerOptions,
-          Empresa: [
+          Diretorios: [
             {
-              label: 'Empresas',
-              icon: 'add_business',
-              path: '/company',
+              label: 'Diretórios',
+              icon: 'folder',
+              path: '/directory',
             },
           ],
-          Usuários: [
+          Playlists: [
             {
-              label: 'Usuários',
-              icon: 'manage_accounts',
-              path: '/user',
+              label: 'Playlists',
+              icon: 'playlist_add',
+              path: '/playlist',
+            },
+            {
+              label: 'Categorias',
+              icon: 'category',
+              path: '/playlist-category',
             },
           ],
-        })
-      : setDrawerOptions(drawerOptions);
-  }, [setDrawerOptions, loggedUser]);
+          Agendamentos: [
+            {
+              label: 'Agendamentos',
+              icon: 'event_upcoming',
+              path: '/scheduling',
+            },
+          ],
+          Dispositivos: [
+            {
+              label: 'Dispositivos',
+              icon: 'important_devices',
+              path: '/device',
+            },
+          ],
+        };
+
+        loggedUser?.type === 'DEFAULT_ADMIN'
+          ? setDrawerOptions({
+              ...drawerOptions,
+              Empresa: [
+                {
+                  label: 'Empresas',
+                  icon: 'add_business',
+                  path: '/company',
+                },
+              ],
+            })
+          : loggedUser?.type === 'ADMIN'
+          ? setDrawerOptions({
+              ...drawerOptions,
+              Empresa: [
+                {
+                  label: 'Empresas',
+                  icon: 'add_business',
+                  path: '/company',
+                },
+              ],
+              Usuários: [
+                {
+                  label: 'Usuários',
+                  icon: 'manage_accounts',
+                  path: '/user',
+                },
+              ],
+            })
+          : setDrawerOptions(drawerOptions);
+      } else {
+        navigate('/unauthorized-access');
+      }
+      setDataLoaded(true);
+    }
+  }, [setDrawerOptions, loggedUser, dataLoaded]);
 
   return (
     <Routes>
@@ -108,6 +125,10 @@ export const AppRouters = () => {
       <Route path="scheduling" element={<ListSchedulesContainer />} />
       <Route path="device" element={<ListDeviceContainer />} />
       <Route path="company" element={<ListCompanyContainer />} />
+      <Route
+        path="unauthorized-access"
+        element={<UnauthorizedUserContainer />}
+      />
 
       <Route path="*" element={<Navigate to="/home" />} />
     </Routes>
