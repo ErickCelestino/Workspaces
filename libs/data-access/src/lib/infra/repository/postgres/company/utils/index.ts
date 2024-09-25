@@ -5,3 +5,4 @@ export * from './find-unauthorized-users-by-company-id.repository';
 export * from './find-user-id-by-company-id.repository';
 export * from './list-users-by-company-id.repository';
 export * from './select-company.repository';
+export * from './unauthorize-user-to-company.repository';
