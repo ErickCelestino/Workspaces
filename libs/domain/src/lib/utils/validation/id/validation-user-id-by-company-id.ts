@@ -2,7 +2,7 @@ import { EntityNotEmpty, EntityNotExists } from '../../../error';
 import { FindUserIdByCompanyIdRepository } from '../../../repository';
 import { Either, left, right } from '../../../shared/either';
 
-export async function ValidationUserByCompanyId(
+export async function ValidationUserIdByCompanyId(
   userId: string,
   companyId: string,
   findUserIdByCompanyIdRepository: FindUserIdByCompanyIdRepository

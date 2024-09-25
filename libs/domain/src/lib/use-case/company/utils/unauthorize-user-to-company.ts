@@ -16,7 +16,7 @@ import {
 } from '../../../repository';
 import {
   ValidationCompanyId,
-  ValidationUserByCompanyId,
+  ValidationUserIdByCompanyId,
   ValidationUserId,
   ValidationUserPermisssions,
 } from '../../../utils';
@@ -84,7 +84,7 @@ export class UnauthorizeUserToCompany
       return left(companyValidation.value);
     }
 
-    const userAndcompanyValidation = await ValidationUserByCompanyId(
+    const userAndcompanyValidation = await ValidationUserIdByCompanyId(
       userId,
       companyId,
       this.findUserIdByCompanyIdRepository
