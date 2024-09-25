@@ -1,12 +1,21 @@
-import { Box, IconButton } from '@mui/material';
+import { Stack } from '@mui/material';
 import { useFileModal, useLoggedUser } from '../../contexts';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import GroupIcon from '@mui/icons-material/Group';
 import { ListUnauthorizedUsersPopper } from '../popper';
-import { useCallback, useState } from 'react';
+import { FC, useCallback, useState } from 'react';
 import { useSnackbarAlert } from '../../hooks';
+import { ToolbarButtom } from '../buttom';
 
-export const ToolbarPureTV = () => {
+interface ToolbarPureTVProps {
+  uploadFileTitle?: string;
+  listUserTitle?: string;
+}
+
+export const ToolbarPureTV: FC<ToolbarPureTVProps> = ({
+  uploadFileTitle = 'Fazer Upload',
+  listUserTitle = 'Autorizar Usuários',
+}) => {
   const { loggedUser } = useLoggedUser();
   const [listUsersPopper, setListUsersPopper] = useState(false);
   const { handleOpen } = useFileModal();
@@ -36,46 +45,21 @@ export const ToolbarPureTV = () => {
         anchorEl={anchorEl}
         showAlert={showAlert}
       />
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'row',
-        }}
-      >
-        <IconButton
-          sx={{
-            display: 'flex',
-            background: 'white',
-            justifyContent: 'center',
-            mr: '0.5rem',
-            ':hover': {
-              background: 'white',
-              opacity: 0.5,
-            },
-          }}
-          onClick={handleOpen}
-        >
-          <CloudUploadIcon fontSize="large" color="primary" />
-        </IconButton>
+      <Stack spacing={1} direction="row" sx={{ color: 'action.active' }}>
+        <ToolbarButtom
+          handleOpen={handleOpen}
+          icon={<CloudUploadIcon fontSize="large" color="primary" />}
+          title={uploadFileTitle}
+        />
 
         {loggedUser?.type !== 'DEFAULT' && (
-          <IconButton
-            id="list-unauthorized-users"
-            sx={{
-              display: 'flex',
-              background: 'white',
-              justifyContent: 'center',
-              ':hover': {
-                background: 'white',
-                opacity: 0.5,
-              },
-            }}
-            onClick={handleListUsersOpen}
-          >
-            <GroupIcon fontSize="large" color="primary" />
-          </IconButton>
+          <ToolbarButtom
+            handleOpen={handleListUsersOpen}
+            icon={<GroupIcon fontSize="large" color="primary" />}
+            title={listUserTitle}
+          />
         )}
-      </Box>
+      </Stack>
       {SnackbarAlert}
     </>
   );
