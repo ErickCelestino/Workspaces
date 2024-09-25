@@ -30,11 +30,20 @@ export class UnauthorizeUserToCompanyRepositoryImpl
       });
 
       if (unauthorizedUserAuth.count > 0) {
-        await this.prismaService.user.delete({
-          where: {
-            user_id: userId,
-          },
-        });
+        const userToApp =
+          await this.prismaService.user_X_Application.deleteMany({
+            where: {
+              user_id: userId,
+            },
+          });
+
+        if (userToApp.count > 0) {
+          await this.prismaService.user.delete({
+            where: {
+              user_id: userId,
+            },
+          });
+        }
       }
     }
 
