@@ -21,7 +21,7 @@ interface EditDirectoryModalProps {
   handlePopUpClose: () => void;
   showAlert: (message: string, success: boolean) => void;
   nameLabel?: string;
-  nameDirectory?: string;
+  nameDirectory: string;
   successMessage?: string;
 }
 
@@ -56,7 +56,6 @@ export const EditDirectoryModal: FC<EditDirectoryModalProps> = ({
   });
 
   useEffect(() => {
-    console.log('nameDirectory', nameDirectory);
     if (open) {
       reset({ newName: nameDirectory });
     }
