@@ -10,6 +10,9 @@ import {
   MiniDrawer,
   getItemLocalStorage,
   useAuth,
+  LoadingProvider,
+  useLoading,
+  useLoadUserData,
 } from '@workspaces/feature';
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -17,7 +20,9 @@ const App = () => {
   return (
     <AppThemeProvider>
       <LoggedUserProvider>
-        <Content />
+        <LoadingProvider>
+          <Content />
+        </LoadingProvider>
       </LoggedUserProvider>
     </AppThemeProvider>
   );
@@ -27,6 +32,8 @@ const Content = () => {
   const auth = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const { isLoading } = useLoading();
+  useLoadUserData();
 
   useEffect(() => {
     const token = getItemLocalStorage('u');
@@ -42,6 +49,7 @@ const Content = () => {
 
   return (
     <>
+      {isLoading && <div>Carregando aplicação...</div>}
       {!auth.isAuthenticated && <AuthRouters />}
       {auth.isAuthenticated && (
         <DrawerProvider>
