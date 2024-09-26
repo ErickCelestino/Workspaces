@@ -55,7 +55,6 @@ export const EditDirectoryModal: FC<EditDirectoryModalProps> = ({
   });
 
   const editDirectory = async (input: EditDirectoryDto) => {
-    console.log('input', input);
     try {
       const editDirectory = await EditDirectoryRequest(input);
       if (Object.keys(editDirectory).length > 0) {
@@ -80,7 +79,6 @@ export const EditDirectoryModal: FC<EditDirectoryModalProps> = ({
   };
 
   const handleEditDirectory = async (data: EditDirectoryBodyDto) => {
-    console.log('data', data);
     setLoading(true);
     setSuccess(false);
     editDirectory({
