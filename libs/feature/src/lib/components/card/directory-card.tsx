@@ -36,16 +36,16 @@ export const DirectoryCard: FC<ListDirectoryProps> = ({
   // const { loggedUser } = useLoggedUser();
   const iconMenuList: IconMenuItem[] = [
     {
+      icon: <Icon>delete</Icon>,
+      title: deleteTitle,
+      handleClick: deleteDirectory,
+    },
+    {
       icon: <Icon>folder_open</Icon>,
       title: 'Abrir',
       handleClick: async () => {
         onClick();
       },
-    },
-    {
-      icon: <Icon>delete</Icon>,
-      title: deleteTitle,
-      handleClick: deleteDirectory,
     },
     {
       icon: <EditIcon />,

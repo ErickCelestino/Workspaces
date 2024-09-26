@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useState } from 'react';
 import { useLoggedUser } from '../../../contexts';
 import { Box, TextField, useMediaQuery, useTheme } from '@mui/material';
 import {
@@ -15,7 +15,6 @@ import axios, { AxiosError } from 'axios';
 import { FormButton } from '../../form';
 
 interface EditDirectoryModalProps {
-  currentName: string;
   idToEdit: string;
   open: boolean;
   title: string;
@@ -26,7 +25,6 @@ interface EditDirectoryModalProps {
 }
 
 export const EditDirectoryModal: FC<EditDirectoryModalProps> = ({
-  currentName,
   idToEdit,
   open,
   title,
@@ -41,7 +39,6 @@ export const EditDirectoryModal: FC<EditDirectoryModalProps> = ({
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [dataLoaded, setDataLoaded] = useState(false);
-  const [name, setName] = useState('');
 
   const {
     handleSubmit,
@@ -56,10 +53,6 @@ export const EditDirectoryModal: FC<EditDirectoryModalProps> = ({
       newName: '',
     },
   });
-
-  useEffect(() => {
-    reset({ newName: currentName });
-  }, [currentName]);
 
   const editDirectory = async (input: EditDirectoryDto) => {
     console.log('input', input);
@@ -122,6 +115,7 @@ export const EditDirectoryModal: FC<EditDirectoryModalProps> = ({
           id="newName"
           disabled={loading}
           label={nameLabel}
+          autoComplete="newName"
           autoFocus
           {...register('newName')}
         />

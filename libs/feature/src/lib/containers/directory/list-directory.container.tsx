@@ -46,7 +46,6 @@ export const ListDirectoryContainer = () => {
   const [totalPage, setTotalPage] = useState<number>(1);
   const [listDirectory, setListDirectory] = useState<Directory[]>([]);
   const [selectedId, setSelectedId] = useState<string>('');
-  const [selectedName, setSelectedName] = useState<string>('');
   const [deleteDirectoryPopUp, setDeleteDirectoryPopUp] = useState(false);
   const [editDirectoryPopUp, setEditDirectoryPopUp] = useState(false);
 
@@ -67,7 +66,7 @@ export const ListDirectoryContainer = () => {
     }
   };
 
-  const handlePopUpOpen = (types: CrudType, id?: string, name?: string) => {
+  const handlePopUpOpen = (types: CrudType, id?: string) => {
     switch (types) {
       case 'create':
         setCreateDirectoryPopUp(true);
@@ -78,8 +77,6 @@ export const ListDirectoryContainer = () => {
         break;
       case 'edit':
         setSelectedId(id ?? '');
-        setSelectedName(name ?? '');
-        console.log('name', name);
         setEditDirectoryPopUp(true);
         break;
     }
@@ -196,7 +193,6 @@ export const ListDirectoryContainer = () => {
         showAlert={showAlert}
         title="Editar Diretório"
         idToEdit={selectedId}
-        currentName={selectedName}
       />
       <LayoutBase
         title="Listagem de Diretórios"
@@ -224,7 +220,7 @@ export const ListDirectoryContainer = () => {
                       handlePopUpOpen('delete', directory.id)
                     }
                     editDirectory={async () =>
-                      handlePopUpOpen('edit', directory.id, directory.name)
+                      handlePopUpOpen('edit', directory.id)
                     }
                   />
                 </Grid>
