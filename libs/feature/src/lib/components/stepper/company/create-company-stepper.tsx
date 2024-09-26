@@ -5,6 +5,7 @@ import {
   FormConsultCompanyByCnpj,
   FormCreateCompanyAddress,
   FormCreateCompanyResponsible,
+  FormSelectCompany,
 } from '../../form';
 import { Box } from '@mui/material';
 import { CompanyResponseDto } from '@workspaces/domain';
@@ -43,6 +44,7 @@ export const CreateCompanyStepper: FC<CompanyStepperProps> = ({
       {step === 1 && (
         <FormConsultCompanyByCnpj
           showAlert={showAlert}
+          selectCompanyRedirect={() => changeStage(6)}
           handlePopUpClose={() => changeStage(2)}
           changeCompany={changeCompany}
           step={{
@@ -104,6 +106,14 @@ export const CreateCompanyStepper: FC<CompanyStepperProps> = ({
             stepPosition: step,
             totalPositions: totalPosition,
           }}
+        />
+      )}
+
+      {step === 6 && (
+        <FormSelectCompany
+          backButton={() => changeStage(1)}
+          showAlert={showAlert}
+          handlePopUpClose={handlePopUpClose}
         />
       )}
     </Box>

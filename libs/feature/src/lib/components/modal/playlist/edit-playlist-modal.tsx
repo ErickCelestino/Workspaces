@@ -1,4 +1,4 @@
-import { FC, useCallback, useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { SimpleFormModal } from '../simple';
 import {
   Box,
@@ -13,24 +13,22 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import {
   EditPlaylistDto,
   ErrorResponse,
-  FindPlaylistByIdDto,
-  ListPlaylistCategoryDto,
   PlaylistBodyDto,
-  PlaylistCategory,
 } from '@workspaces/domain';
 import { PlaylistSchema, ValidationsError } from '../../../shared';
 import { useLoggedUser } from '../../../contexts';
-import {
-  EditPlaylistRequest,
-  FindPlaylistByIdRequest,
-  ListPlaylistCategoryRequest,
-} from '../../../services';
+import { EditPlaylistRequest } from '../../../services';
 import axios, { AxiosError } from 'axios';
+import {
+  useFindPlaylistByIdData,
+  useListPlaylistCategoryData,
+} from '../../../hooks';
 
 interface EditPlaylistModalProps {
   idToEdit: string;
   open: boolean;
   title: string;
+  companyId: string;
   handlePopUpClose: () => void;
   showAlert: (message: string, success: boolean) => void;
   nameLabel?: string;
@@ -41,6 +39,7 @@ export const EditPlaylistModal: FC<EditPlaylistModalProps> = ({
   idToEdit,
   open,
   title,
+  companyId,
   handlePopUpClose,
   showAlert,
   nameLabel = 'Nome',
@@ -52,7 +51,6 @@ export const EditPlaylistModal: FC<EditPlaylistModalProps> = ({
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [categoryId, setCategoryId] = useState('');
-  const [categories, setCategories] = useState<PlaylistCategory[]>([]);
   const [dataLoaded, setDataLoaded] = useState(false);
 
   const {
@@ -70,69 +68,48 @@ export const EditPlaylistModal: FC<EditPlaylistModalProps> = ({
     },
   });
 
+  const { listPlaylistCategory, getPlaylistCategoryData } =
+    useListPlaylistCategoryData({
+      showAlert,
+      loggedUserId: loggedUser?.id ?? '',
+      companyId: loggedUser?.selectedCompany.id ?? '',
+    });
+
+  const { getPlaylistByIdData, playlistById } = useFindPlaylistByIdData({
+    showAlert,
+    loggedUserId: loggedUser?.id ?? '',
+    playlistId: idToEdit,
+  });
+
+  useEffect(() => {
+    if (open && playlistById?.id) {
+      reset({
+        name: playlistById.name,
+      });
+      setCategoryId(playlistById.category.id);
+      setDataLoaded(true);
+    }
+  }, [open, playlistById, reset]);
+
+  useEffect(() => {
+    if (open && idToEdit && !dataLoaded) {
+      getPlaylistCategoryData();
+      getPlaylistByIdData();
+    }
+  }, [
+    loggedUser,
+    idToEdit,
+    dataLoaded,
+    open,
+    getPlaylistCategoryData,
+    getPlaylistByIdData,
+  ]);
+
   useEffect(() => {
     if (!open) {
       setDataLoaded(false);
     }
   }, [open]);
-
-  const getCategories = useCallback(
-    async (input: ListPlaylistCategoryDto) => {
-      try {
-        const result = await ListPlaylistCategoryRequest(input);
-        setCategories(result.categories);
-        setDataLoaded(true);
-      } catch (error) {
-        console.error(error);
-        if (axios.isAxiosError(error)) {
-          const axiosError = error as AxiosError<ErrorResponse>;
-          const errors = ValidationsError(axiosError, 'Category');
-          if (errors) {
-            showAlert(errors, false);
-          }
-        }
-      }
-    },
-    [showAlert]
-  );
-
-  const getPlaylist = useCallback(
-    async (input: FindPlaylistByIdDto) => {
-      try {
-        const result = await FindPlaylistByIdRequest(input);
-        reset({
-          name: result.name,
-          playlistCategoryId: result.category.id,
-        });
-        setCategoryId(result.category.id);
-      } catch (error) {
-        console.error(error);
-        if (axios.isAxiosError(error)) {
-          const axiosError = error as AxiosError<ErrorResponse>;
-          const errors = ValidationsError(axiosError, 'Category');
-          if (errors) {
-            showAlert(errors, false);
-          }
-        }
-      }
-    },
-    [showAlert, reset]
-  );
-
-  useEffect(() => {
-    if (open && idToEdit && !dataLoaded) {
-      const loggedUserId = loggedUser?.id ?? '';
-      getCategories({
-        loggedUserId: loggedUserId,
-        userInput: '',
-      });
-
-      getPlaylist({
-        id: idToEdit,
-        loggedUserId: loggedUserId,
-      });
-    }
-  }, [loggedUser, idToEdit, dataLoaded, open, getCategories, getPlaylist]);
 
   const editPlaylist = async (input: EditPlaylistDto) => {
     try {
@@ -214,7 +191,7 @@ export const EditPlaylistModal: FC<EditPlaylistModalProps> = ({
             onChange: handleChangeCategory,
           })}
         >
-          {categories.map((item) => (
+          {listPlaylistCategory.map((item) => (
             <MenuItem key={item.id} value={item.id}>
               {item.name}
             </MenuItem>

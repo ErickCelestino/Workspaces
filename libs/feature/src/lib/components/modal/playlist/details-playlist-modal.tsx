@@ -1,4 +1,4 @@
-import { FC, useCallback, useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { SimpleFormModal } from '../simple';
 import {
   Box,
@@ -13,27 +13,13 @@ import {
 import DeleteSweepIcon from '@mui/icons-material/DeleteSweep';
 import OpenWithIcon from '@mui/icons-material/OpenWith';
 import FolderOffIcon from '@mui/icons-material/FolderOff';
-import {
-  ContentFile,
-  DetailsPlaylistDto,
-  ErrorResponse,
-  FindFilesByPlaylistDto,
-  IconMenuItem,
-  PlaylistResponseDto,
-} from '@workspaces/domain';
-import {
-  DetailsPlaylistRequest,
-  FindFilesByPlaylistRequest,
-} from '../../../services';
-import axios, { AxiosError } from 'axios';
-import { formatBrDate, ValidationsError } from '../../../shared';
+import { IconMenuItem } from '@workspaces/domain';
+import { formatBrDate } from '../../../shared';
 import { useLoggedUser } from '../../../contexts';
 import { ContentFileItem, EmptyListResponse } from '../../list';
 import { ButtonFileMenu } from '../../menu';
-import {
-  DeletePlaylistFilesModal,
-  MoveFileToAnotherPlaylistModal,
-} from '../file-to-playlist';
+import { FileToPlaylistModals } from '../file-to-playlist';
+import { useDetailsPlaylistData, useFilesByPlaylistData } from '../../../hooks';
 
 interface DetailsPlaylistModalProps {
   open: boolean;
@@ -52,75 +38,59 @@ export const DetailsPlaylistModal: FC<DetailsPlaylistModalProps> = ({
   title,
   open,
 }) => {
-  const [playlistDetails, setPlaylistDetails] = useState<PlaylistResponseDto>(
-    {} as PlaylistResponseDto
-  );
-  const [files, setFiles] = useState<ContentFile[]>([]);
-  const [totalPagesFiles, setTotalPagesFiles] = useState(0);
   const [dataLoaded, setDataLoaded] = useState(false);
-  const [moveFilePopUp, setMoveFilePopUp] = useState(false);
-  const [deleteFilePopUp, setDeleteFilePopUp] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState<Record<string, boolean>>(
     {}
   );
+  const [openModal, setOpenModal] = useState({
+    move: false,
+    delete: false,
+  });
 
   const { loggedUser } = useLoggedUser();
   const theme = useTheme();
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const getPlaylist = useCallback(
-    async (input: DetailsPlaylistDto) => {
-      try {
-        const result = await DetailsPlaylistRequest(input);
-        setPlaylistDetails(result);
-      } catch (error) {
-        console.error(error);
-        if (axios.isAxiosError(error)) {
-          const axiosError = error as AxiosError<ErrorResponse>;
-          const errors = ValidationsError(axiosError, 'Playlist');
-          if (errors) {
-            showAlert(errors, false);
-          }
-        }
-      }
-    },
-    [showAlert]
-  );
+  const { listFiles, totalPage, getFilesByPlaylistData } =
+    useFilesByPlaylistData({
+      showAlert,
+      loggedUserId: loggedUser?.id ?? '',
+      playlistId: idPlaylist,
+    });
 
-  const getFilesByPlaylist = useCallback(
-    async (input: FindFilesByPlaylistDto) => {
-      try {
-        const result = await FindFilesByPlaylistRequest(input);
-        setFiles(result.files);
-        setTotalPagesFiles(result.totalPages);
-      } catch (error) {
-        console.error(error);
-        if (axios.isAxiosError(error)) {
-          const axiosError = error as AxiosError<ErrorResponse>;
-          const errors = ValidationsError(axiosError, 'Arquivos');
-          if (errors) {
-            showAlert(errors, false);
-          }
-        }
-      }
+  const { detailsPlaylist, getDetailsPlaylistData } = useDetailsPlaylistData({
+    input: {
+      loggedUserId: loggedUser?.id ?? '',
+      playlistId: idPlaylist,
     },
-    [showAlert]
-  );
+    showAlert,
+  });
+
+  const renderFilesByPlaylist = () =>
+    listFiles.length > 0 ? (
+      listFiles.map((file) => (
+        <ContentFileItem
+          contentFile={file}
+          key={file.id}
+          isSelected={!!selectedFiles[file.id]}
+          onFileToggle={handleFileToggle}
+        />
+      ))
+    ) : (
+      <EmptyListResponse
+        message="Sem Arquivos"
+        icon={
+          <FolderOffIcon
+            sx={{
+              fontSize: theme.spacing(10),
+            }}
+          />
+        }
+      />
+    );
 
   const getSelectedFilesIds = () => {
     return Object.keys(selectedFiles).filter((fileId) => selectedFiles[fileId]);
-  };
-
-  const handleChange = async (
-    event: React.ChangeEvent<unknown>,
-    value: number
-  ) => {
-    const result = await FindFilesByPlaylistRequest({
-      loggedUserId: loggedUser?.id ?? '',
-      idPlaylist,
-      skip: (value - 1) * 8,
-    });
-    setFiles(result.files);
   };
 
   useEffect(() => {
@@ -131,22 +101,16 @@ export const DetailsPlaylistModal: FC<DetailsPlaylistModalProps> = ({
 
   useEffect(() => {
     if (open && idPlaylist && !dataLoaded) {
-      getPlaylist({
-        loggedUserId: loggedUser?.id ?? '',
-        playlistId: idPlaylist,
-      });
-      getFilesByPlaylist({
-        idPlaylist,
-        loggedUserId: loggedUser?.id ?? '',
-      });
+      getDetailsPlaylistData();
+      getFilesByPlaylistData();
     }
   }, [
     open,
     idPlaylist,
     dataLoaded,
-    getPlaylist,
+    getDetailsPlaylistData,
     loggedUser,
-    getFilesByPlaylist,
+    getFilesByPlaylistData,
   ]);
 
   const handleFileToggle = (fileId: string) => {
@@ -159,34 +123,30 @@ export const DetailsPlaylistModal: FC<DetailsPlaylistModalProps> = ({
     });
   };
 
-  const handlePopUpOpen = (types: 'move-file' | 'delete-file', id?: string) => {
-    const selecteFileMessage = 'Selecione um arquivo para mover';
-    switch (types) {
-      case 'move-file':
-        if (getSelectedFilesIds().length > 0) {
-          setMoveFilePopUp(true);
-        } else {
-          showAlert(selecteFileMessage, false);
-        }
-        break;
-      case 'delete-file':
-        if (getSelectedFilesIds().length > 0) {
-          setDeleteFilePopUp(true);
-        } else {
-          showAlert(selecteFileMessage, false);
-        }
-        break;
-    }
+  const handleChange = async (
+    event: React.ChangeEvent<unknown>,
+    value: number
+  ) => {
+    getFilesByPlaylistData('', value);
   };
 
-  const handlesPopUpClose = (types: 'move-file' | 'delete-file') => {
-    switch (types) {
-      case 'move-file':
-        setMoveFilePopUp(false);
-        break;
-      case 'delete-file':
-        setDeleteFilePopUp(false);
-        break;
+  const handlePopUpFilesClose = async (type: 'move' | 'delete') => {
+    setOpenModal((prev) => ({
+      ...prev,
+      [type]: false,
+    }));
+    getFilesByPlaylistData();
+  };
+
+  const handlePopUpOpen = async (type: 'move' | 'delete', id?: string) => {
+    const selecteFileMessage = 'Selecione um arquivo para mover';
+    if (getSelectedFilesIds().length > 0) {
+      setOpenModal((prev) => ({
+        ...prev,
+        [type]: true,
+      }));
+    } else {
+      showAlert(selecteFileMessage, false);
     }
   };
 
@@ -194,32 +154,24 @@ export const DetailsPlaylistModal: FC<DetailsPlaylistModalProps> = ({
     {
       icon: <OpenWithIcon />,
       title: 'Mover para',
-      handleClick: async () => handlePopUpOpen('move-file'),
+      handleClick: async () => handlePopUpOpen('move'),
     },
     {
       icon: <DeleteSweepIcon />,
       title: 'Deletar Arquivos',
-      handleClick: async () => handlePopUpOpen('delete-file'),
+      handleClick: async () => handlePopUpOpen('delete'),
     },
   ];
   return (
     <>
-      <MoveFileToAnotherPlaylistModal
-        handlePopUpClose={() => handlesPopUpClose('move-file')}
+      <FileToPlaylistModals
+        selectedIds={selectedFiles}
+        getSelectedFilesIds={getSelectedFilesIds}
+        handlePopUpClose={handlePopUpFilesClose}
         oldPlaylist={idPlaylist}
-        open={moveFilePopUp}
+        openModal={openModal}
         showAlert={showAlert}
-        title="Mover Arquivos para Playlist"
-        selectedFiles={selectedFiles}
-      />
-      <DeletePlaylistFilesModal
-        handlePopUpClose={() => handlesPopUpClose('delete-file')}
-        idsToDelete={getSelectedFilesIds()}
-        idPlaylist={idPlaylist}
-        open={deleteFilePopUp}
-        showAlert={showAlert}
-        title="Deletar Arquivos"
-        subTitle={`Deseja realmente deletar os ${
+        deletePlaylistFilesSubTitle={`Deseja realmente deletar os ${
           getSelectedFilesIds().length
         } arquivos selecionados?`}
       />
@@ -245,10 +197,10 @@ export const DetailsPlaylistModal: FC<DetailsPlaylistModalProps> = ({
               }}
             >
               <strong>Nome: </strong>
-              {playlistDetails?.name ?? ''}
+              {detailsPlaylist?.name ?? ''}
             </Typography>
             <Chip
-              label={playlistDetails.category?.name ?? ''}
+              label={detailsPlaylist.category?.name ?? ''}
               color="success"
               variant="filled"
               size="medium"
@@ -267,12 +219,12 @@ export const DetailsPlaylistModal: FC<DetailsPlaylistModalProps> = ({
               }}
             >
               <strong>Criado por: </strong>
-              {playlistDetails?.created_by ?? ''}
+              {detailsPlaylist?.created_by ?? ''}
             </Typography>
             <Typography>
               <strong>Criado em: </strong>
               {formatBrDate(
-                new Date(playlistDetails?.created_at ?? new Date())
+                new Date(detailsPlaylist?.created_at ?? new Date())
               )}
             </Typography>
           </Box>
@@ -294,29 +246,7 @@ export const DetailsPlaylistModal: FC<DetailsPlaylistModalProps> = ({
               </Typography>
               <ButtonFileMenu iconMenuItemList={iconMenuList} />
             </Box>
-            <List>
-              {files.length > 0 ? (
-                files.map((file) => (
-                  <ContentFileItem
-                    contentFile={file}
-                    key={file.id}
-                    isSelected={!!selectedFiles[file.id]}
-                    onFileToggle={handleFileToggle}
-                  />
-                ))
-              ) : (
-                <EmptyListResponse
-                  message="Sem Arquivos"
-                  icon={
-                    <FolderOffIcon
-                      sx={{
-                        fontSize: theme.spacing(10),
-                      }}
-                    />
-                  }
-                />
-              )}
-            </List>
+            <List>{renderFilesByPlaylist()}</List>
             <Box
               width="100%"
               display="flex"
@@ -324,7 +254,7 @@ export const DetailsPlaylistModal: FC<DetailsPlaylistModalProps> = ({
               marginTop={theme.spacing(2)}
             >
               <Pagination
-                count={totalPagesFiles}
+                count={totalPage}
                 color="primary"
                 onChange={handleChange}
               />

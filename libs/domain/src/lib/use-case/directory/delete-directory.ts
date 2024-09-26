@@ -1,12 +1,13 @@
 import { Inject } from '@nestjs/common';
 import {
   DeleteDirectoryRepository,
+  FindContentFilesByDirectoryIdRepository,
   FindDirectoryByIdRepository,
   FindUserByIdRepository,
 } from '../../repository';
 import { DeleteDirectoryDto } from '../../dto';
 import { Either, left, right } from '../../shared/either';
-import { EntityNotEmpty } from '../../error';
+import { EntityIsNotEmpty, EntityNotEmpty } from '../../error';
 import { ValidationDirectoryId, ValidationUserId } from '../../utils';
 
 export class DeleteDirectory {
@@ -15,6 +16,8 @@ export class DeleteDirectory {
     private findUserByIdRepository: FindUserByIdRepository,
     @Inject('FindDirectoryByIdRepository')
     private findDirectoryByIdRepository: FindDirectoryByIdRepository,
+    @Inject('FindContentFilesByDirectoryIdRepository')
+    private findContentFilesByDirectoryIdRepository: FindContentFilesByDirectoryIdRepository,
     @Inject('DeleteDirectoryRepository')
     private deleteDirectoryRepository: DeleteDirectoryRepository
   ) {}
@@ -48,6 +51,13 @@ export class DeleteDirectory {
 
     if (directoryValidation.isLeft()) {
       return left(directoryValidation.value);
+    }
+
+    const filteredContentFiles =
+      await this.findContentFilesByDirectoryIdRepository.find(id);
+
+    if (filteredContentFiles.length > 0) {
+      return left(new EntityIsNotEmpty('Directory'));
     }
 
     await this.deleteDirectoryRepository.delete(input);

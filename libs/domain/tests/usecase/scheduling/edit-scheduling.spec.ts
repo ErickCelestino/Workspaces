@@ -72,7 +72,7 @@ describe('EditScheduling', () => {
 
     expect(result.isRight()).toBe(true);
     expect(result.isLeft()).toBe(false);
-    expect(result.value).toStrictEqual(undefined);
+    expect(result.value).toStrictEqual(SchedulingMock.id);
   });
 
   it('should return EntityNotEmpty when pass incorrect User ID', async () => {

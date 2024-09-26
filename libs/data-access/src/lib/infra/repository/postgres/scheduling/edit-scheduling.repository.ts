@@ -7,8 +7,8 @@ import { PrismaService } from 'nestjs-prisma';
 
 export class EditSchedulingRepositoryImpl implements EditSchedulingRepository {
   constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
-  async edit(input: EditSchedulingDto): Promise<void> {
-    await this.prismaService.scheduling.update({
+  async edit(input: EditSchedulingDto): Promise<string> {
+    const editedScheduling = await this.prismaService.scheduling.update({
       where: {
         scheduling_id: input.id,
       },
@@ -21,5 +21,7 @@ export class EditSchedulingRepositoryImpl implements EditSchedulingRepository {
         priority: parseInt(input.body.priority),
       },
     });
+
+    return editedScheduling?.scheduling_id ?? '';
   }
 }

@@ -10,18 +10,19 @@ import { PrismaService } from 'nestjs-prisma';
 export class ListDirectoryRepositoryImpl implements ListDirectoryRepository {
   constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
   async list(input: ListDirectoryDto): Promise<ListDirectoryResponseDto> {
-    const { loggedUserId, userInput } = input;
+    const { loggedUserId, userInput, companyId } = input;
 
     const skip = input?.skip || 0;
     const take = input?.take || 6;
 
     const whereClause = {
       user_id: loggedUserId,
+      company_id: companyId,
       ...(userInput !== ''
         ? {
             name: {
               contains: userInput,
-              mode: 'insensitive' as 'insensitive',
+              mode: 'insensitive' as const,
             },
           }
         : {}),
@@ -50,6 +51,7 @@ export class ListDirectoryRepositoryImpl implements ListDirectoryRepository {
         this.prismaService.directory.count({
           where: {
             user_id: loggedUserId,
+            company_id: companyId,
           },
         }),
       ]);

@@ -18,10 +18,12 @@ export class ListSimpleDirectoryController {
     @Query('filter') filter: string,
     @Query('skip') skip: number,
     @Query('take') take: number,
-    @Query('loggedUserId') loggedUserId: string
+    @Query('loggedUserId') loggedUserId: string,
+    @Query('companyId') companyId: string
   ) {
     const result = await this.listSimpleDirectoryService.list({
       loggedUserId,
+      companyId,
       userInput: filter,
       skip,
       take,

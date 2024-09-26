@@ -3,7 +3,6 @@ import {
   EditSchedulingBodyDto,
   EditSchedulingDto,
   ErrorResponse,
-  FindSchedulingByIdDto,
   ComboBoxScheduling,
 } from '@workspaces/domain';
 import { useForm } from 'react-hook-form';
@@ -23,14 +22,12 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
-import { useCallback, useEffect, useState } from 'react';
-import {
-  FindSchedulingByIdRequest,
-  EditSchedulingRequest,
-} from '../../../services';
+import { useEffect, useState } from 'react';
+import { EditSchedulingRequest } from '../../../services';
 import axios, { AxiosError } from 'axios';
 import { SimpleFormModal } from '../simple';
 import { FormButton } from '../../form';
+import { useFindSchedulingByIdData } from '../../../hooks';
 
 interface EditSchedulingModalProps {
   open: boolean;
@@ -90,63 +87,56 @@ export const EditSchedulingModal: React.FC<EditSchedulingModalProps> = ({
     },
   });
 
+  const { SchedulingById, getSchedulingByIdData } = useFindSchedulingByIdData({
+    showAlert,
+    findSchedulingByIdDto: {
+      id: idToEdit,
+      loggedUserId: loggedUser?.id ?? '',
+    },
+  });
+
+  useEffect(() => {
+    if (open && SchedulingById?.id) {
+      reset({
+        name: SchedulingById.name,
+        endTime: SchedulingById.endTime,
+        startTime: SchedulingById.startTime,
+        priority: SchedulingById.priority,
+      });
+      setLooping(SchedulingById.lopping);
+
+      setTimeGroup({
+        endTime: SchedulingById.endTime,
+        startTime: SchedulingById.startTime,
+        priority: SchedulingById.priority,
+      });
+      setDataLoaded(true);
+    }
+  }, [open, SchedulingById, reset]);
+
+  useEffect(() => {
+    if (open && idToEdit && !dataLoaded) {
+      getSchedulingByIdData();
+    }
+  }, [loggedUser, idToEdit, dataLoaded, open, getSchedulingByIdData]);
+
   useEffect(() => {
     if (!open) {
       setDataLoaded(false);
     }
   }, [open]);
 
-  const getScheduling = useCallback(
-    async (input: FindSchedulingByIdDto) => {
-      try {
-        const result = await FindSchedulingByIdRequest(input);
-        reset({
-          name: result.name,
-          endTime: result.endTime,
-          startTime: result.startTime,
-          priority: result.priority,
-        });
-        setLooping(result.lopping);
-
-        setTimeGroup({
-          endTime: result.endTime,
-          startTime: result.startTime,
-          priority: result.priority,
-        });
-        setDataLoaded(true);
-      } catch (error) {
-        console.error(error);
-        if (axios.isAxiosError(error)) {
-          const axiosError = error as AxiosError<ErrorResponse>;
-          const errors = ValidationsError(axiosError, 'Agendamento');
-          if (errors) {
-            showAlert(errors, false);
-          }
-        }
-      }
-    },
-    [showAlert, reset]
-  );
-
-  useEffect(() => {
-    if (open && idToEdit && !dataLoaded) {
-      const loggedUserId = loggedUser?.id ?? '';
-
-      getScheduling({
-        id: idToEdit,
-        loggedUserId: loggedUserId,
-      });
-    }
-  }, [loggedUser, idToEdit, dataLoaded, open, getScheduling]);
-
   const editScheduling = async (input: EditSchedulingDto) => {
     try {
-      await EditSchedulingRequest(input);
-      setLoading(false);
-      setSuccess(true);
-      showAlert(successMessage, true);
-      setSuccess(false);
-      handlePopUpClose();
+      const result = await EditSchedulingRequest(input);
+
+      if (result) {
+        setLoading(false);
+        setSuccess(true);
+        showAlert(successMessage, true);
+        setSuccess(false);
+        handlePopUpClose();
+      }
     } catch (error) {
       setLoading(false);
       setSuccess(false);

@@ -1,17 +1,15 @@
-/* eslint-disable no-fallthrough */
-import { FC, useCallback, useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { useLoggedUser } from '../../../contexts';
 import {
   BodyUserDto,
   ErrorResponse,
-  FindUserByIdDto,
   StatusUser,
   userTypes,
 } from '@workspaces/domain';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { EditUserSchema, ValidationsError } from '../../../shared';
-import { EditUserRequest, FindUserRequest } from '../../../services';
+import { EditUserRequest } from '../../../services';
 import axios, { AxiosError } from 'axios';
 import { SimpleFormModal } from '../simple';
 import {
@@ -22,6 +20,7 @@ import {
   useTheme,
 } from '@mui/material';
 import { FormButton } from '../../form';
+import { useFindUserByIdData } from '../../../hooks';
 
 interface EditUserModalProps {
   open: boolean;
@@ -59,6 +58,12 @@ export const EditUserModal: FC<EditUserModalProps> = ({
   const [typeList, setTypeList] = useState<string[]>([]);
   const [type, setType] = useState<string>('');
 
+  const { getUserByIdData, userById } = useFindUserByIdData({
+    showAlert,
+    loggedUserId: loggedUser?.id ?? '',
+    UserId: idToEdit,
+  });
+
   const {
     handleSubmit,
     register,
@@ -77,40 +82,35 @@ export const EditUserModal: FC<EditUserModalProps> = ({
   });
 
   useEffect(() => {
+    if (open && userById?.userId) {
+      const formattedBirthDate = userById.birthDate
+        ? new Date(userById.birthDate).toISOString().split('T')[0]
+        : new Date();
+      reset({
+        id: userById.userId,
+        name: userById.name,
+        birthDate: formattedBirthDate as Date,
+        type: userById.type,
+      });
+      setDataLoaded(true);
+      setType(userById.type);
+      setStatus(userById.status);
+      setDataLoaded(true);
+    }
+  }, [open, userById, reset]);
+
+  useEffect(() => {
+    if (open && idToEdit && !dataLoaded) {
+      getUserByIdData();
+      mappedUserTypes(loggedUser?.type ?? '');
+    }
+  }, [loggedUser, idToEdit, dataLoaded, open, getUserByIdData]);
+
+  useEffect(() => {
     if (!open) {
       setDataLoaded(false);
     }
   }, [open]);
-
-  const getUserData = useCallback(
-    async (input: FindUserByIdDto) => {
-      try {
-        const result = await FindUserRequest(input);
-        const formattedBirthDate = result.birthDate
-          ? new Date(result.birthDate).toISOString().split('T')[0]
-          : new Date();
-        reset({
-          id: result.userId,
-          name: result.name,
-          birthDate: formattedBirthDate as Date,
-          type: result.type,
-        });
-        setDataLoaded(true);
-        setType(result.type);
-        setStatus(result.status);
-      } catch (error) {
-        console.error(error);
-        if (axios.isAxiosError(error)) {
-          const axiosError = error as AxiosError<ErrorResponse>;
-          const errors = ValidationsError(axiosError, 'Usuario');
-          if (errors) {
-            showAlert(errors, false);
-          }
-        }
-      }
-    },
-    [reset, showAlert]
-  );
 
   const mappedUserTypes = (type: string) => {
     const list: userTypes[] = ['DEFAULT', 'DEFAULT_ADMIN'];
@@ -123,19 +123,6 @@ export const EditUserModal: FC<EditUserModalProps> = ({
         setTypeList(list);
     }
   };
-
-  useEffect(() => {
-    if (open && idToEdit && !dataLoaded) {
-      const loggedUserId = loggedUser?.id ?? '';
-
-      getUserData({
-        id: idToEdit,
-        loggedUserId: loggedUserId,
-      });
-
-      mappedUserTypes(loggedUser?.type ?? '');
-    }
-  }, [loggedUser, idToEdit, dataLoaded, open, getUserData]);
 
   const editUser = async (request: BodyUserDto) => {
     try {

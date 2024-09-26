@@ -14,13 +14,14 @@ export class ListPlaylistCategoryRepositoryImpl
   async list(
     input: ListPlaylistCategoryDto
   ): Promise<ListPlaylistCategoryReponseDto> {
-    const { loggedUserId, userInput } = input;
+    const { loggedUserId, companyId, userInput } = input;
 
     const skip = input?.skip || 0;
     const take = input?.take || 6;
 
     const whereClause = {
       user_id: loggedUserId,
+      company_id: companyId,
       ...(userInput !== ''
         ? {
             name: {
@@ -55,6 +56,7 @@ export class ListPlaylistCategoryRepositoryImpl
         this.prismaService.playlist_Category.count({
           where: {
             user_id: loggedUserId,
+            company_id: companyId,
           },
         }),
       ]);

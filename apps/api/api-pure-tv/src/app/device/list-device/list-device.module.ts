@@ -3,6 +3,7 @@ import { ListDeviceService } from './list-device.service';
 import { ListDeviceController } from './list-device.controller';
 import { ListDevice } from '@workspaces/domain';
 import {
+  FindCompanyByIdRepositoryImpl,
   FindUserByIdRepositoryImpl,
   ListDeviceRepositoryImpl,
   PrismaService,
@@ -20,6 +21,10 @@ import {
     {
       provide: 'FindUserByIdRepository',
       useClass: FindUserByIdRepositoryImpl,
+    },
+    {
+      provide: 'FindCompanyByIdRepository',
+      useClass: FindCompanyByIdRepositoryImpl,
     },
     {
       provide: 'ListDeviceRepository',

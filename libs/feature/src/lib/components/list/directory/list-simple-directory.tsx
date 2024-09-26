@@ -79,6 +79,7 @@ export const ListSimpleDirectory: FC<ListSimpleDirectoryProps> = ({
     if (!openSubItems[id]) {
       await getFiles({
         directoryId: id,
+        companyId: loggedUser?.selectedCompany.id ?? '',
         loggedUserId: loggedUser?.id ?? '',
         userInput: '',
       });

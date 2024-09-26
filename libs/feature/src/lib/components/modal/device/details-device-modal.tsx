@@ -10,28 +10,17 @@ import DeleteSweepIcon from '@mui/icons-material/DeleteSweep';
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
 import OpenWithIcon from '@mui/icons-material/OpenWith';
 import { useLoggedUser } from '../../../contexts';
-import { FC, useCallback, useEffect, useState } from 'react';
-import {
-  Device,
-  ErrorResponse,
-  FindDeviceByIdDto,
-  FindSchedulesByDeviceIdDto,
-  IconMenuItem,
-  Scheduling,
-} from '@workspaces/domain';
-import {
-  FindDeviceByIdRequest,
-  FindSchedulesByDeviceIdRequest,
-} from '../../../services';
-import axios, { AxiosError } from 'axios';
-import { formatBrDate, ValidationsError } from '../../../shared';
+import { FC, useEffect, useState } from 'react';
+import { IconMenuItem } from '@workspaces/domain';
 import { SimpleFormModal } from '../simple';
 import { ButtonFileMenu } from '../../menu';
 import { EmptyListResponse, SchedulingSimpleItem } from '../../list';
+import { SchedulesToDeviceModals } from '../schedules-to-device';
 import {
-  DeleteSchedulesToDeviceModal,
-  MoveSchedulesToAnotherDeviceModal,
-} from '../schedules-to-device';
+  useFindDeviceByIdData,
+  useFindSchedulesByDeviceIdData,
+} from '../../../hooks';
+import { formatBrDate } from '../../../shared';
 
 interface DetailsDeviceModalProps {
   open: boolean;
@@ -54,58 +43,36 @@ export const DetailsDeviceModal: FC<DetailsDeviceModalProps> = ({
   const theme = useTheme();
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const [schedules, setSchedules] = useState<Scheduling[]>([]);
   const [dataLoaded, setDataLoaded] = useState(false);
-  const [deviceDetails, setDeviceDetails] = useState<Device>({} as Device);
   const [selectedSchedules, setSelectedSchedules] = useState<
     Record<string, boolean>
   >({});
-  const [deleteSchedulesPopUp, setDeleteSchedulesPopUp] = useState(false);
-  const [moveSchedulesPopUp, setMoveSchedulesPopUp] = useState(false);
-
-  const getDevice = useCallback(
-    async (input: FindDeviceByIdDto) => {
-      try {
-        const result = await FindDeviceByIdRequest(input);
-        setDeviceDetails(result);
-      } catch (error) {
-        console.error(error);
-        if (axios.isAxiosError(error)) {
-          const axiosError = error as AxiosError<ErrorResponse>;
-          const errors = ValidationsError(axiosError, 'Playlist');
-          if (errors) {
-            showAlert(errors, false);
-          }
-        }
-      }
+  const [openModal, setOpenModal] = useState({
+    move: false,
+    delete: false,
+  });
+  const { deviceById, getDeviceByIdData } = useFindDeviceByIdData({
+    input: {
+      id: idDevice,
+      loggedUserId: loggedUser?.id ?? '',
     },
-    [showAlert]
-  );
+    showAlert,
+  });
+
+  const { getListSchedulesByDeviceIdData, listSchedulesByDeviceId } =
+    useFindSchedulesByDeviceIdData({
+      findSchedulesByDeviceIdDto: {
+        idDevice,
+        loggedUserId: loggedUser?.id ?? '',
+      },
+      showAlert,
+    });
 
   const getSelectedSchedulingIds = () => {
     return Object.keys(selectedSchedules).filter(
       (fileId) => selectedSchedules[fileId]
     );
   };
-
-  const getSchedulesToDevice = useCallback(
-    async (input: FindSchedulesByDeviceIdDto) => {
-      try {
-        const result = await FindSchedulesByDeviceIdRequest(input);
-        setSchedules(result);
-      } catch (error) {
-        console.error(error);
-        if (axios.isAxiosError(error)) {
-          const axiosError = error as AxiosError<ErrorResponse>;
-          const errors = ValidationsError(axiosError, 'Arquivos');
-          if (errors) {
-            showAlert(errors, false);
-          }
-        }
-      }
-    },
-    [showAlert]
-  );
 
   useEffect(() => {
     if (!open) {
@@ -115,16 +82,17 @@ export const DetailsDeviceModal: FC<DetailsDeviceModalProps> = ({
 
   useEffect(() => {
     if (open && idDevice && !dataLoaded) {
-      getDevice({
-        loggedUserId: loggedUser?.id ?? '',
-        id: idDevice,
-      });
-      getSchedulesToDevice({
-        idDevice,
-        loggedUserId: loggedUser?.id ?? '',
-      });
+      getDeviceByIdData();
+      getListSchedulesByDeviceIdData();
+      setDataLoaded(true);
     }
-  }, [open, idDevice, dataLoaded, getDevice, loggedUser, getSchedulesToDevice]);
+  }, [
+    open,
+    idDevice,
+    dataLoaded,
+    getDeviceByIdData,
+    getListSchedulesByDeviceIdData,
+  ]);
 
   const handleSchedulingToggle = (schedulingId: string) => {
     setSelectedSchedules((prevSelectedSchedules) => {
@@ -136,62 +104,49 @@ export const DetailsDeviceModal: FC<DetailsDeviceModalProps> = ({
     });
   };
 
-  const handlePopUpOpen = (types: 'delete-scheduling' | 'move-scheduling') => {
+  const handlePopUpOpen = async (type: 'delete' | 'move', id?: string) => {
     const selecteFileMessage = 'Selecione um Agendamento para mover';
-    const selectedIds = getSelectedSchedulingIds();
-    switch (types) {
-      case 'delete-scheduling':
-        if (selectedIds.length > 0) {
-          setDeleteSchedulesPopUp(true);
-        } else {
-          showAlert(selecteFileMessage, false);
-        }
-        break;
-      case 'move-scheduling':
-        if (selectedIds.length > 0) {
-          setMoveSchedulesPopUp(true);
-        } else {
-          showAlert(selecteFileMessage, false);
-        }
-        break;
+    if (getSelectedSchedulingIds().length > 0) {
+      setOpenModal((prev) => ({
+        ...prev,
+        [type]: true,
+      }));
+    } else {
+      showAlert(selecteFileMessage, false);
     }
+  };
+
+  const handlePopUpSchedulinClose = async (type: 'move' | 'delete') => {
+    setOpenModal((prev) => ({
+      ...prev,
+      [type]: false,
+    }));
+    getListSchedulesByDeviceIdData();
   };
 
   const iconMenuList: IconMenuItem[] = [
     {
       icon: <DeleteSweepIcon />,
       title: 'Deletar Agendamentos',
-      handleClick: async () => handlePopUpOpen('delete-scheduling'),
+      handleClick: async () => handlePopUpOpen('delete'),
     },
     {
       icon: <OpenWithIcon />,
       title: 'Mover Agendamentos',
-      handleClick: async () => handlePopUpOpen('move-scheduling'),
+      handleClick: async () => handlePopUpOpen('move'),
     },
   ];
 
   return (
     <>
-      <DeleteSchedulesToDeviceModal
-        idDevice={idDevice}
-        loggedUserId={loggedUser?.id ?? ''}
-        open={deleteSchedulesPopUp}
-        title="Deletar Agendamento"
-        schedulesIds={getSelectedSchedulingIds()}
+      <SchedulesToDeviceModals
+        selectedId={idDevice}
+        getSelectedSchedulingIds={getSelectedSchedulingIds}
+        handlePopUpClose={handlePopUpSchedulinClose}
+        companyId={loggedUser?.selectedCompany.id ?? ''}
+        openModal={openModal}
         showAlert={showAlert}
-        onClose={() => setDeleteSchedulesPopUp(false)}
-        subTitle={`Deseja realmente deletar os ${
-          getSelectedSchedulingIds().length
-        } agendamentos selecionados?`}
-      />
-      <MoveSchedulesToAnotherDeviceModal
-        open={moveSchedulesPopUp}
-        oldDeviceId={idDevice}
         loggedUserId={loggedUser?.id ?? ''}
-        selectedSchedules={getSelectedSchedulingIds()}
-        showAlert={showAlert}
-        onClose={() => setMoveSchedulesPopUp(false)}
-        title="Mover Agendamentos"
       />
       <SimpleFormModal
         height={smDown ? theme.spacing(55) : theme.spacing(80)}
@@ -207,7 +162,7 @@ export const DetailsDeviceModal: FC<DetailsDeviceModalProps> = ({
             }}
           >
             <strong>Nome: </strong>
-            {deviceDetails?.name ?? ''}
+            {deviceById?.name ?? ''}
           </Typography>
           <Box
             sx={{
@@ -222,11 +177,11 @@ export const DetailsDeviceModal: FC<DetailsDeviceModalProps> = ({
               }}
             >
               <strong>Criado por: </strong>
-              {deviceDetails?.createdBy ?? ''}
+              {deviceById?.createdBy ?? ''}
             </Typography>
             <Typography>
               <strong>Criado em: </strong>
-              {formatBrDate(new Date(deviceDetails?.createdAt ?? new Date()))}
+              {formatBrDate(new Date(deviceById?.createdAt ?? new Date()))}
             </Typography>
           </Box>
           <Divider
@@ -249,8 +204,8 @@ export const DetailsDeviceModal: FC<DetailsDeviceModalProps> = ({
               <ButtonFileMenu iconMenuItemList={iconMenuList} />
             </Box>
             <List>
-              {schedules.length > 0 ? (
-                schedules.map((scheduling) => (
+              {listSchedulesByDeviceId.length > 0 ? (
+                listSchedulesByDeviceId.map((scheduling) => (
                   <SchedulingSimpleItem
                     scheduling={scheduling}
                     key={scheduling.id}

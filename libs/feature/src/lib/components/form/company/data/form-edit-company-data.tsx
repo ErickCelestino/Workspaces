@@ -160,7 +160,6 @@ export const FormEditCompanyData: FC<FormEditCompanyDataProps> = ({
   const handleCompanyData = async (data: CompanyDataBodyDto) => {
     setLoading(true);
     setSuccess(false);
-    console.log(data);
     const result = await editCompany({
       body: data,
       loggedUserId: loggedUser?.id ?? '',

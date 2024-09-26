@@ -30,7 +30,7 @@ export class EditSchedulingController {
       loggedUserId,
     });
 
-    if (result.isRight()) return result.value;
+    if (result.isRight()) return { editSchedulingId: result.value };
     else await ErrorMessageResult(result.value.name, result.value.message);
   }
 }

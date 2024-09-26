@@ -3,6 +3,7 @@ import { ListSchedulesService } from './list-schedules.service';
 import { ListSchedulesController } from './list-schedules.controller';
 import { ListSchedules } from '@workspaces/domain';
 import {
+  FindCompanyByIdRepositoryImpl,
   FindUserByIdRepositoryImpl,
   ListSchedulesRepositoryImpl,
   PrismaService,
@@ -20,6 +21,10 @@ import {
     {
       provide: 'FindUserByIdRepository',
       useClass: FindUserByIdRepositoryImpl,
+    },
+    {
+      provide: 'FindCompanyByIdRepository',
+      useClass: FindCompanyByIdRepositoryImpl,
     },
     {
       provide: 'ListSchedulesRepository',
