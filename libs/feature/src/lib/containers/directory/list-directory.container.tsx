@@ -21,6 +21,7 @@ export const ListDirectoryContainer = () => {
   const navigate = useNavigate();
   const { showSnackbarAlert, SnackbarAlert } = useSnackbarAlert();
   const [selectedId, setSelectedId] = useState<string>('');
+  const [selectedName, setSelectedName] = useState<string>('');
   const [openModal, setOpenModal] = useState({
     create: false,
     delete: false,
@@ -46,8 +47,13 @@ export const ListDirectoryContainer = () => {
     companyId: loggedUser?.selectedCompany.id ?? '',
   });
 
-  const handlePopUpOpen = async (type: CrudType, id?: string) => {
+  const handlePopUpOpen = async (
+    type: CrudType,
+    id?: string,
+    name?: string
+  ) => {
     setSelectedId(id ?? '');
+    setSelectedName(name ?? '');
     setOpenModal((prev) => ({
       ...prev,
       [type]: true,
@@ -109,7 +115,9 @@ export const ListDirectoryContainer = () => {
               deleteDirectory={async () =>
                 handlePopUpOpen('delete', directory.id)
               }
-              editDirectory={async () => handlePopUpOpen('edit', directory.id)}
+              editDirectory={async () =>
+                handlePopUpOpen('edit', directory.id, directory.name)
+              }
             />
           </Grid>
         ))}
@@ -134,6 +142,7 @@ export const ListDirectoryContainer = () => {
         openModal={openModal}
         handlePopUpClose={handlePopUpClose}
         showAlert={showAlert}
+        editDirectoryName={selectedName}
       />
 
       <LayoutBase

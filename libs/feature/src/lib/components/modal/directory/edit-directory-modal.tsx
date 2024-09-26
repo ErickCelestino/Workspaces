@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { useLoggedUser } from '../../../contexts';
 import { Box, TextField, useMediaQuery, useTheme } from '@mui/material';
 import {
@@ -21,6 +21,7 @@ interface EditDirectoryModalProps {
   handlePopUpClose: () => void;
   showAlert: (message: string, success: boolean) => void;
   nameLabel?: string;
+  nameDirectory?: string;
   successMessage?: string;
 }
 
@@ -31,6 +32,7 @@ export const EditDirectoryModal: FC<EditDirectoryModalProps> = ({
   handlePopUpClose,
   showAlert,
   nameLabel = 'Novo Nome',
+  nameDirectory = '',
   successMessage = 'Diretório Editado com Sucesso',
 }) => {
   const { loggedUser } = useLoggedUser();
@@ -38,7 +40,6 @@ export const EditDirectoryModal: FC<EditDirectoryModalProps> = ({
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [dataLoaded, setDataLoaded] = useState(false);
 
   const {
     handleSubmit,
@@ -53,6 +54,13 @@ export const EditDirectoryModal: FC<EditDirectoryModalProps> = ({
       newName: '',
     },
   });
+
+  useEffect(() => {
+    console.log('nameDirectory', nameDirectory);
+    if (open) {
+      reset({ newName: nameDirectory });
+    }
+  }, [open, reset, nameDirectory]);
 
   const editDirectory = async (input: EditDirectoryDto) => {
     try {

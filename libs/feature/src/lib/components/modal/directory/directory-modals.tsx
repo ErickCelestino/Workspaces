@@ -1,7 +1,10 @@
 import { FC } from 'react';
 import { CrudType } from '@workspaces/domain';
-import { CreateDirectoryModal, DeleteDirectoryModal } from '.';
-import { AddSchedulesToDeviceModal } from '../schedules-to-device';
+import {
+  CreateDirectoryModal,
+  DeleteDirectoryModal,
+  EditDirectoryModal,
+} from '.';
 
 interface DeviceModalsProps {
   selectedId: string;
@@ -15,6 +18,8 @@ interface DeviceModalsProps {
   showAlert: (message: string, success: boolean) => void;
   createDirectoryTitle?: string;
   deleteDirectoryTitle?: string;
+  editDirectoryTitle?: string;
+  editDirectoryName?: string;
 }
 
 export const DirectoryModals: FC<DeviceModalsProps> = ({
@@ -24,6 +29,8 @@ export const DirectoryModals: FC<DeviceModalsProps> = ({
   showAlert,
   createDirectoryTitle = 'Cadastrar Diretório',
   deleteDirectoryTitle = 'Deletar Diretório',
+  editDirectoryTitle = 'Editar Diretório',
+  editDirectoryName = '',
 }) => {
   return (
     <>
@@ -39,6 +46,14 @@ export const DirectoryModals: FC<DeviceModalsProps> = ({
         handlePopUpClose={() => handlePopUpClose('delete')}
         showAlert={showAlert}
         idToDelete={selectedId}
+      />
+      <EditDirectoryModal
+        open={openModal.edit}
+        title={editDirectoryTitle}
+        handlePopUpClose={() => handlePopUpClose('edit')}
+        showAlert={showAlert}
+        idToEdit={selectedId}
+        nameDirectory={editDirectoryName}
       />
     </>
   );
