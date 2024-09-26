@@ -12,7 +12,6 @@ import {
   useAuth,
   LoadingProvider,
   useLoading,
-  useLoadUserData,
 } from '@workspaces/feature';
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -33,7 +32,6 @@ const Content = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { isLoading } = useLoading();
-  useLoadUserData();
 
   useEffect(() => {
     const token = getItemLocalStorage('u');
@@ -47,9 +45,13 @@ const Content = () => {
     }
   }, [location, navigate]);
 
+  if (isLoading) {
+    return <div>Carregando aplicação...</div>;
+  }
+
   return (
     <>
-      {isLoading && <div>Carregando aplicação...</div>}
+      {console.log(isLoading)}
       {!auth.isAuthenticated && <AuthRouters />}
       {auth.isAuthenticated && (
         <DrawerProvider>

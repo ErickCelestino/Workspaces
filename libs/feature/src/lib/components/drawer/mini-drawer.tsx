@@ -15,7 +15,7 @@ import {
 } from '@mui/material';
 import MuiDrawer from '@mui/material/Drawer';
 import { DrawerConfiguration } from './config';
-import { useSnackbarAlert } from '../../hooks';
+import { useLoadUserData, useSnackbarAlert } from '../../hooks';
 
 const drawerWidth = 200;
 
@@ -87,7 +87,6 @@ export const MiniDrawer: FC<MiniDrawerProps> = ({
 
   return (
     <>
-      {console.log(Object.keys(drawerOptions).length)}
       <Box sx={{ display: 'flex' }}>
         <CssBaseline />
         {Object.keys(drawerOptions).length > 0 && (

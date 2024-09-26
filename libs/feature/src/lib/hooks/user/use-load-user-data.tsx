@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDrawerContext, useLoggedUser } from '@workspaces/feature';
 import { useLoading } from '../../contexts';
@@ -6,13 +6,11 @@ import { useLoading } from '../../contexts';
 export const useLoadUserData = () => {
   const { loggedUser } = useLoggedUser();
   const { setDrawerOptions } = useDrawerContext();
-  const { setIsLoading } = useLoading();
+  const { setLoading } = useLoading();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    setDrawerOptions({});
-    setIsLoading(true);
-
+  const getLoadUserData = useCallback(() => {
+    setLoading(true);
     if (loggedUser?.status !== 'BLOCKED') {
       navigate('/');
       const drawerOptions = {
@@ -62,9 +60,8 @@ export const useLoadUserData = () => {
       setDrawerOptions({});
       navigate('/unauthorized-access');
     }
+    setLoading(false);
+  }, [setDrawerOptions, setLoading, loggedUser, navigate]);
 
-    setIsLoading(false);
-  }, [loggedUser, navigate, setDrawerOptions, setIsLoading]);
-
-  return;
+  return getLoadUserData;
 };
