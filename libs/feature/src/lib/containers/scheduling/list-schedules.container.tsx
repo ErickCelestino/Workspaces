@@ -9,7 +9,7 @@ import {
   ToolbarPureTV,
 } from '../../components';
 import { ContainerSimpleList } from '../utils';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { CrudType, IconMenuItem } from '@workspaces/domain';
 import { useListSchedulesData, useSnackbarAlert } from '../../hooks';
 import { useLoggedUser } from '../../contexts';
@@ -26,7 +26,7 @@ export const ListSchedulesContainer = () => {
     details: false,
     add: false,
   });
-  const [isMounted, setIsMounted] = useState(false);
+  const hasLoadedUserData = useRef(false);
 
   const showAlert = useCallback(
     (message: string, success: boolean) => {
@@ -62,15 +62,11 @@ export const ListSchedulesContainer = () => {
   };
 
   useEffect(() => {
-    setIsMounted(false);
-  }, [loggedUser?.selectedCompany.id]);
-
-  useEffect(() => {
-    if (!isMounted) {
+    if (!hasLoadedUserData.current) {
       getListSchedulesData();
-      setIsMounted(true);
+      hasLoadedUserData.current = true;
     }
-  }, [isMounted, getListSchedulesData]);
+  }, [getListSchedulesData]);
 
   const searchData = async (input: string) => {
     getListSchedulesData(input);

@@ -7,7 +7,7 @@ import {
   ToolbarPureTV,
 } from '../../../components';
 import { LayoutBase } from '../../../layout';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useListPlaylistCategoryData, useSnackbarAlert } from '../../../hooks';
 import { CrudType, IconMenuItem } from '@workspaces/domain';
 import { useLoggedUser } from '../../../contexts';
@@ -23,7 +23,7 @@ export const ListPlaylistCategoryContainer = () => {
     delete: false,
     edit: false,
   });
-  const [isMounted, setIsMounted] = useState(false);
+  const hasLoadedUserData = useRef(false);
 
   const showAlert = useCallback(
     (message: string, success: boolean) => {
@@ -82,15 +82,11 @@ export const ListPlaylistCategoryContainer = () => {
     );
 
   useEffect(() => {
-    setIsMounted(false);
-  }, [loggedUser?.selectedCompany.id]);
-
-  useEffect(() => {
-    if (!isMounted) {
+    if (!hasLoadedUserData.current) {
       getPlaylistCategoryData();
-      setIsMounted(true);
+      hasLoadedUserData.current = true;
     }
-  }, [isMounted, getPlaylistCategoryData]);
+  }, [getPlaylistCategoryData]);
 
   const searchData = async (input: string) => {
     getPlaylistCategoryData(input);
