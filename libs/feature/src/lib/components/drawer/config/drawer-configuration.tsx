@@ -39,7 +39,11 @@ export const DrawerConfiguration: FC<DrawerConfigurationProps> = ({
   const [dataLoaded, setDataLoaded] = useState(false);
 
   const logout = () => {
-    removeItemLocalStorage('u');
+    const localKeys = ['u', 'lu', 'ui'];
+    for (const item of localKeys) {
+      removeItemLocalStorage(item);
+    }
+    setLoggedUser(null);
     window.location.reload();
   };
 

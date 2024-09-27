@@ -12,14 +12,15 @@ export const UnauthorizedUserContainer: FC<UnauthorizedUserContainerProps> = ({
 }) => {
   return (
     <Box
-      sx={{
+      sx={(theme) => ({
+        zIndex: theme.zIndex.modal + 1,
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
         height: '80vh',
         textAlign: 'center',
-      }}
+      })}
     >
       <img
         width="300rem"

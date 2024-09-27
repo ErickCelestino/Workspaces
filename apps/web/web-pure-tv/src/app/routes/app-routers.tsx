@@ -21,11 +21,13 @@ export const AppRouters = () => {
   const hasLoadedUserData = useRef(false);
 
   useEffect(() => {
-    if (loggedUser?.id && !hasLoadedUserData.current) {
-      loadedData();
-      hasLoadedUserData.current = true;
+    if (loggedUser?.status && !hasLoadedUserData.current) {
+      if (loggedUser?.status) {
+        loadedData();
+        hasLoadedUserData.current = true;
+      }
     }
-  }, [loggedUser, loadedData]);
+  }, [loggedUser?.status, loadedData]);
 
   return (
     <Routes>

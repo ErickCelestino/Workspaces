@@ -19,13 +19,12 @@ export const useLoadUserPureTvData = () => {
     }
 
     if (loggedUser.status === 'BLOCKED') {
-      setDrawerOptions({});
       navigate('/unauthorized-access');
       setLoading(false);
       return;
     }
-
     navigate('/');
+    console.log('aaa');
 
     const baseDrawerOptions: Record<string, DrawerOption[]> = {
       'Página Inicial': [
@@ -69,7 +68,7 @@ export const useLoadUserPureTvData = () => {
       setDrawerOptions(baseDrawerOptions);
     }
     setLoading(false);
-  }, [setDrawerOptions, setLoading, loggedUser, navigate]);
+  }, [setLoading, loggedUser, navigate, setDrawerOptions]);
 
   return getLoadUserData;
 };
