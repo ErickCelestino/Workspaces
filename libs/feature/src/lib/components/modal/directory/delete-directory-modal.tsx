@@ -115,7 +115,6 @@ export const DeleteDirectoryModal: FC<DeleteDirectoryModalProps> = ({
       });
       showAlert(successMessage, true);
     } else if (userAction === 'move2') {
-      console.log('move2');
       await DeleteDirectoryRequest({
         id: idToDelete,
         loggedUserId: loggedUser?.id ?? '',

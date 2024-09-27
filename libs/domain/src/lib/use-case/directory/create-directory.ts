@@ -14,7 +14,11 @@ import {
 import { Either, left, right } from '../../shared/either';
 import { FindDirectoryByNameRepository } from '../../repository/directory/find-directory-by-name';
 import { Inject } from '@nestjs/common';
-import { ValidationCompanyId, ValidationUserId } from '../../utils';
+import {
+  ValidationCompanyId,
+  ValidationDirectoryByName,
+  ValidationUserId,
+} from '../../utils';
 
 export class CreateDirectory
   implements
@@ -80,13 +84,14 @@ export class CreateDirectory
       return left(companyValidation.value);
     }
 
-    const findDirectory = await this.findDirectoryByNameRepository.find({
-      name: body.name,
+    const directoryNameValidation = await ValidationDirectoryByName(
+      body.name,
       loggedUserId,
-    });
+      this.findDirectoryByNameRepository
+    );
 
-    if (Object.keys(findDirectory).length > 0) {
-      return left(new EntityAlreadyExists('Directory'));
+    if (directoryNameValidation.isLeft()) {
+      return left(directoryNameValidation.value);
     }
 
     const createDirectory = await this.createDirectoryRepository.create(input);
