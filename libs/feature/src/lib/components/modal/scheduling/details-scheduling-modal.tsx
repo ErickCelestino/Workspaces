@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useRef } from 'react';
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
 import { useLoggedUser } from '../../../contexts';
 import { SimpleFormModal } from '../simple';
@@ -55,23 +55,17 @@ export const DetailsSchedulingModal: FC<DetailsSchedulingModalProps> = ({
   });
   const theme = useTheme();
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
-  const [dataLoaded, setDataLoaded] = useState(false);
+  const hasLoadedUserData = useRef(false);
 
   useEffect(() => {
-    if (!open) {
-      setDataLoaded(false);
-    }
-  }, [open]);
-
-  useEffect(() => {
-    if (open && idToDetails && !dataLoaded) {
+    if (open && idToDetails && !hasLoadedUserData.current) {
       getSchedulingByIdData();
       getPlayListBySchedulingData();
+      hasLoadedUserData.current = true;
     }
   }, [
     loggedUser,
     idToDetails,
-    dataLoaded,
     open,
     getSchedulingByIdData,
     getPlayListBySchedulingData,

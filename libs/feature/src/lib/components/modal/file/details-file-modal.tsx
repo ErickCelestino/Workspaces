@@ -5,7 +5,7 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 import DescriptionIcon from '@mui/icons-material/Description';
 import FormatSizeIcon from '@mui/icons-material/FormatSize';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
@@ -48,6 +48,7 @@ export const DetailsFileModal: FC<DetailsFileModalPros> = ({
   const [editFileName, setEditFileName] = useState<boolean>(false);
   const theme = useTheme();
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const hasLoadedUserData = useRef(false);
 
   const { detailsFile, getFilesByPlaylistData } = useDetailsContentFileData({
     input: {
@@ -68,8 +69,9 @@ export const DetailsFileModal: FC<DetailsFileModalPros> = ({
   };
 
   useEffect(() => {
-    if (open) {
+    if (open && !hasLoadedUserData.current) {
       getFilesByPlaylistData();
+      hasLoadedUserData.current = true;
     }
   }, [
     directoryId,
