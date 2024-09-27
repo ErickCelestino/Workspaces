@@ -81,7 +81,7 @@ export const LoginContainer: React.FC<LoginContainerProps> = ({
         selectedCompany: user.companies[0],
         companies: user.companies,
       };
-      //setItemLocalStorage(JSON.stringify(loggedUser), 'lu');
+      setItemLocalStorage(JSON.stringify(loggedUser), 'lu');
       setLoggedUser(loggedUser);
     }
     history('/');
