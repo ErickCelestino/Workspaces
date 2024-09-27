@@ -6,13 +6,12 @@ import {
   Typography,
   useMediaQuery,
 } from '@mui/material';
-import { FC, ReactNode, useEffect, useState } from 'react';
+import { FC, ReactNode } from 'react';
 import { styled, useTheme } from '@mui/material/styles';
-import { useDrawerContext, useLoggedUser } from '../../contexts';
+import { useDrawerContext } from '../../contexts';
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
 import { MobileButtonMenu, RightClickMenu } from '../../components';
 import { IconMenuItem } from '@workspaces/domain';
-import { useLoadUserData } from '../../hooks';
 
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean;
@@ -52,18 +51,7 @@ export const LayoutBase: FC<ILayoutBasePros> = ({
   iconMenuItemList = [],
 }) => {
   const theme = useTheme();
-  const { loggedUser } = useLoggedUser();
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
-  const [dataLoaded, setDataLoaded] = useState(false);
-  const loadUserData = useLoadUserData();
-
-  useEffect(() => {
-    if (!dataLoaded && loggedUser) {
-      loadUserData();
-      setDataLoaded(true);
-    }
-  }, [dataLoaded, loggedUser, loadUserData]);
-
   const { toggleDrawerOpen, isDrawerOpen } = useDrawerContext();
 
   return (

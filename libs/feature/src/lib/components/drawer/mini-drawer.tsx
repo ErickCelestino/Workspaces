@@ -15,7 +15,7 @@ import {
 } from '@mui/material';
 import MuiDrawer from '@mui/material/Drawer';
 import { DrawerConfiguration } from './config';
-import { useLoadUserData, useSnackbarAlert } from '../../hooks';
+import { useLoadUserPureTvData, useSnackbarAlert } from '../../hooks';
 
 const drawerWidth = 200;
 
