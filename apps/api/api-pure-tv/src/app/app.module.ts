@@ -63,6 +63,7 @@ import {
   CreateDirectoryModule,
   ListDirectoryModule,
   DeleteDirectoryModule,
+  EditDirectoryModule,
 } from './directory';
 
 @Module({
@@ -116,6 +117,7 @@ import {
     ListDirectoryModule,
     MoveSchedulesToAnotherDeviceModule,
     DeleteDirectoryModule,
+    EditDirectoryModule,
   ],
   controllers: [AppController],
   providers: [AppService],

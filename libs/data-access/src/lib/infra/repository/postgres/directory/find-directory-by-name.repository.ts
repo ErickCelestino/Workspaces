@@ -11,7 +11,7 @@ export class FindDirectoryByNameRepositoryImpl
 {
   constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
 
-  async find(input: FindDirectoryByNameDto): Promise<Directory | object> {
+  async find(input: FindDirectoryByNameDto): Promise<Directory> {
     const filteredDirectory = await this.prismaService.directory.findFirst({
       where: {
         AND: [{ name: input.name }, { user_id: input.loggedUserId }],
@@ -23,7 +23,7 @@ export class FindDirectoryByNameRepositoryImpl
     });
 
     if (!filteredDirectory) {
-      return {};
+      return {} as Directory;
     }
 
     const mappedDirectory: Directory = {

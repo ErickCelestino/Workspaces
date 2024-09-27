@@ -20,6 +20,7 @@ interface ListDirectoryProps {
   deleteTitle?: string;
   onClick: () => void;
   deleteDirectory: () => Promise<void>;
+  editDirectory: () => Promise<void>;
 }
 
 export const DirectoryCard: FC<ListDirectoryProps> = ({
@@ -29,6 +30,7 @@ export const DirectoryCard: FC<ListDirectoryProps> = ({
   deleteTitle = 'Deletar',
   onClick,
   deleteDirectory,
+  editDirectory,
 }) => {
   const theme = useTheme();
   // const { loggedUser } = useLoggedUser();
@@ -48,9 +50,7 @@ export const DirectoryCard: FC<ListDirectoryProps> = ({
     {
       icon: <EditIcon />,
       title: editTitle,
-      handleClick: async () => {
-        console.log('Editando diretório');
-      },
+      handleClick: editDirectory,
     },
   ];
 
