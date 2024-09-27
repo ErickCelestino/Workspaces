@@ -6,6 +6,7 @@ export * from './drawer';
 export * from './file';
 export * from './form';
 export * from './list';
+export * from './loading';
 export * from './menu';
 export * from './modal';
 export * from './notification-card';

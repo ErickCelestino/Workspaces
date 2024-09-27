@@ -4,6 +4,7 @@ import {
   FileModalProvider,
   getItemLocalStorage,
   MiniDrawer,
+  SimpleLoading,
   useAuth,
   useLoading,
 } from '@workspaces/feature';
@@ -29,23 +30,21 @@ export const ContentApp = () => {
     }
   }, [location, navigate]);
 
-  if (isLoading) {
-    return <div>Carregando aplicação...</div>;
-  }
-
   return (
     <>
-      {console.log(isLoading)}
       {!auth.isAuthenticated && <AuthRouters />}
       {auth.isAuthenticated && (
-        <DrawerProvider>
-          <FileModalProvider>
-            <MiniDrawer image="https://github.com/ErickCelestino.png">
-              <AppRouters />
-              <FileModalContainer />
-            </MiniDrawer>
-          </FileModalProvider>
-        </DrawerProvider>
+        <>
+          <SimpleLoading open={isLoading} />
+          <DrawerProvider>
+            <FileModalProvider>
+              <MiniDrawer image="https://github.com/ErickCelestino.png">
+                <AppRouters />
+                <FileModalContainer />
+              </MiniDrawer>
+            </FileModalProvider>
+          </DrawerProvider>
+        </>
       )}
     </>
   );

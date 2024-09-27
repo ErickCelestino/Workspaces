@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useDrawerContext, useLoggedUser } from '@workspaces/feature';
+import { useDrawerContext, useLoggedUser } from '../../contexts';
 import { useLoading } from '../../contexts';
 import { DrawerOption } from '@workspaces/domain';
 
@@ -68,7 +68,6 @@ export const useLoadUserPureTvData = () => {
     } else {
       setDrawerOptions(baseDrawerOptions);
     }
-
     setLoading(false);
   }, [setDrawerOptions, setLoading, loggedUser, navigate]);
 
