@@ -34,7 +34,7 @@ export const AppRouters = () => {
 
   return (
     <Routes>
-      <Route path="/home" element={<TestContainer />} />
+      <Route path="/" element={<TestContainer />} />
       <Route path="user" element={<ListUserContainer />} />
       <Route path="/files" element={<ListContanteFilesContainer />} />
       <Route path="/directory" element={<ListDirectoryContainer />} />
@@ -51,7 +51,7 @@ export const AppRouters = () => {
         element={<UnauthorizedUserContainer />}
       />
 
-      <Route path="*" element={<Navigate to="/home" />} />
+      <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   );
 };

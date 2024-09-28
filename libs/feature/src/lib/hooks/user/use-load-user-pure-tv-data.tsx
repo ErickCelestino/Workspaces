@@ -16,56 +16,59 @@ export const useLoadUserPureTvData = () => {
       return;
     }
 
-    if (loggedUser.status === 'BLOCKED') {
+    if (loggedUser?.status === 'BLOCKED') {
       setLoading(false);
+
       navigate('/unauthorized-access');
       return;
-    }
-    navigate('/');
-    console.log('aaa');
-
-    const baseDrawerOptions: Record<string, DrawerOption[]> = {
-      'Página Inicial': [
-        { label: 'Página Inicial', icon: 'home', path: '/home' },
-      ],
-      Diretórios: [{ label: 'Diretórios', icon: 'folder', path: '/directory' }],
-      Playlists: [
-        { label: 'Playlists', icon: 'playlist_add', path: '/playlist' },
-        { label: 'Categorias', icon: 'category', path: '/playlist-category' },
-      ],
-      Agendamentos: [
-        {
-          label: 'Agendamentos',
-          icon: 'event_upcoming',
-          path: '/scheduling',
-        },
-      ],
-      Dispositivos: [
-        { label: 'Dispositivos', icon: 'important_devices', path: '/device' },
-      ],
-    };
-
-    if (loggedUser.type === 'DEFAULT_ADMIN') {
-      setDrawerOptions({
-        ...baseDrawerOptions,
-        Empresa: [
-          { label: 'Empresas', icon: 'add_business', path: '/company' },
-        ],
-      });
-    } else if (loggedUser.type === 'ADMIN') {
-      setDrawerOptions({
-        ...baseDrawerOptions,
-        Empresa: [
-          { label: 'Empresas', icon: 'add_business', path: '/company' },
-        ],
-        Usuários: [
-          { label: 'Usuários', icon: 'manage_accounts', path: '/user' },
-        ],
-      });
     } else {
-      setDrawerOptions(baseDrawerOptions);
+      navigate('/');
+
+      const baseDrawerOptions: Record<string, DrawerOption[]> = {
+        'Página Inicial': [
+          { label: 'Página Inicial', icon: 'home', path: '/home' },
+        ],
+        Diretórios: [
+          { label: 'Diretórios', icon: 'folder', path: '/directory' },
+        ],
+        Playlists: [
+          { label: 'Playlists', icon: 'playlist_add', path: '/playlist' },
+          { label: 'Categorias', icon: 'category', path: '/playlist-category' },
+        ],
+        Agendamentos: [
+          {
+            label: 'Agendamentos',
+            icon: 'event_upcoming',
+            path: '/scheduling',
+          },
+        ],
+        Dispositivos: [
+          { label: 'Dispositivos', icon: 'important_devices', path: '/device' },
+        ],
+      };
+
+      if (loggedUser.type === 'DEFAULT_ADMIN') {
+        setDrawerOptions({
+          ...baseDrawerOptions,
+          Empresa: [
+            { label: 'Empresas', icon: 'add_business', path: '/company' },
+          ],
+        });
+      } else if (loggedUser.type === 'ADMIN') {
+        setDrawerOptions({
+          ...baseDrawerOptions,
+          Empresa: [
+            { label: 'Empresas', icon: 'add_business', path: '/company' },
+          ],
+          Usuários: [
+            { label: 'Usuários', icon: 'manage_accounts', path: '/user' },
+          ],
+        });
+      } else {
+        setDrawerOptions(baseDrawerOptions);
+      }
+      setLoading(false);
     }
-    setLoading(false);
   }, [setLoading, loggedUser, navigate, setDrawerOptions]);
 
   return getLoadUserData;

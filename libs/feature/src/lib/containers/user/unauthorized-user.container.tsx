@@ -1,14 +1,17 @@
-import { Box, Typography } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 import { FC } from 'react';
+import { appLogout } from '../../services';
 
 interface UnauthorizedUserContainerProps {
   title?: string;
   subTitle?: string;
+  buttonTitle?: string;
 }
 
 export const UnauthorizedUserContainer: FC<UnauthorizedUserContainerProps> = ({
   title = 'Você não está autorizado a acessar a aplicação',
   subTitle = 'Por favor entre em contato com seu supervisor ou gerente para que o mesmo libere o seu acesso à aplicação',
+  buttonTitle = 'Voltar a tela de Login',
 }) => {
   return (
     <Box
@@ -34,6 +37,12 @@ export const UnauthorizedUserContainer: FC<UnauthorizedUserContainerProps> = ({
       <Typography variant="body1" sx={{ marginTop: 1 }}>
         {subTitle}
       </Typography>
+
+      <Box mt="2rem">
+        <Button variant="contained" onClick={appLogout}>
+          {buttonTitle}
+        </Button>
+      </Box>
     </Box>
   );
 };

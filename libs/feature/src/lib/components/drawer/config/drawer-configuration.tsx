@@ -8,7 +8,7 @@ import {
   useTheme,
 } from '@mui/material';
 import { FC, useCallback, useEffect, useState } from 'react';
-import { ListCompanyRequest, removeItemLocalStorage } from '../../../services';
+import { appLogout, ListCompanyRequest } from '../../../services';
 import { useAppThemeContext, useLoggedUser } from '../../../contexts';
 import {
   CompanySimpleResponseDto,
@@ -39,12 +39,8 @@ export const DrawerConfiguration: FC<DrawerConfigurationProps> = ({
   const [dataLoaded, setDataLoaded] = useState(false);
 
   const logout = () => {
-    const localKeys = ['u', 'lu', 'ui'];
-    for (const item of localKeys) {
-      removeItemLocalStorage(item);
-    }
+    appLogout();
     setLoggedUser(null);
-    window.location.reload();
   };
 
   useEffect(() => {
