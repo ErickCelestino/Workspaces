@@ -8,7 +8,7 @@ import {
 } from '../../components';
 import { LayoutBase } from '../../layout';
 import { useListPlaylistData, useSnackbarAlert } from '../../hooks';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { CrudType, IconMenuItem } from '@workspaces/domain';
 import { useLoggedUser } from '../../contexts';
 import { ContainerCardList } from '../utils';
@@ -25,7 +25,7 @@ export const ListPlaylistContainer = () => {
     details: false,
     add: false,
   });
-  const [isMounted, setIsMounted] = useState(false);
+  const hasLoadedUserData = useRef(false);
 
   const showAlert = useCallback(
     (message: string, success: boolean) => {
@@ -60,15 +60,11 @@ export const ListPlaylistContainer = () => {
   };
 
   useEffect(() => {
-    setIsMounted(false);
-  }, [loggedUser?.selectedCompany.id]);
-
-  useEffect(() => {
-    if (!isMounted) {
+    if (!hasLoadedUserData.current) {
       getListPlaylistData();
-      setIsMounted(true);
+      hasLoadedUserData.current = true;
     }
-  }, [isMounted, getListPlaylistData, listPlaylist]);
+  }, [getListPlaylistData, listPlaylist]);
 
   const rightClickMenuList: IconMenuItem[] = [
     {

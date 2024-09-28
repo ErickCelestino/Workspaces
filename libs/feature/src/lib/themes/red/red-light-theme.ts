@@ -3,15 +3,15 @@ import { createTheme } from '@mui/material';
 export const RedLightTheme = createTheme({
   palette: {
     primary: {
-      main: '#F41A43',
-      dark: '#FD496E',
-      light: '#F41A43',
+      main: '#9c1b1f',
+      dark: '#7c1518',
+      light: '#af484b',
       contrastText: '#ffffff',
     },
     secondary: {
-      main: '#24153C',
-      dark: '#342B5E',
-      light: '#3B376F',
+      main: '#8e8e8e',
+      dark: '#555555',
+      light: '#d1d1d1',
       contrastText: '#ffffff',
     },
     background: {

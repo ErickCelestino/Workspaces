@@ -2,7 +2,7 @@ import { List, useTheme } from '@mui/material';
 import AddBusinessIcon from '@mui/icons-material/AddBusiness';
 import StoreIcon from '@mui/icons-material/Store';
 import { useLoggedUser } from '../../contexts';
-import { FC, useCallback, useEffect, useState } from 'react';
+import { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { CrudType, IconMenuItem } from '@workspaces/domain';
 import { useSnackbarAlert, useListCompanyData } from '../../hooks';
 import { ContainerSimpleList } from '../utils';
@@ -32,7 +32,7 @@ export const ListCompanyContainer: FC<ListCompanyContainerProps> = ({
     details: false,
     'list-users': false,
   });
-  const [isMounted, setIsMounted] = useState(false);
+  const hasLoadedUserData = useRef(false);
 
   const showAlert = useCallback(
     (message: string, success: boolean) => {
@@ -69,15 +69,11 @@ export const ListCompanyContainer: FC<ListCompanyContainerProps> = ({
   };
 
   useEffect(() => {
-    setIsMounted(false);
-  }, [loggedUser?.selectedCompany.id]);
-
-  useEffect(() => {
-    if (!isMounted) {
+    if (!hasLoadedUserData.current) {
       getListCompanyData();
-      setIsMounted(true);
+      hasLoadedUserData.current = true;
     }
-  }, [isMounted, getListCompanyData]);
+  }, [getListCompanyData]);
 
   const searchData = async (input: string) => {
     getListCompanyData(input);

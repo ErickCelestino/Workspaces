@@ -7,7 +7,7 @@ import {
   UserModals,
 } from '../../components';
 import { LayoutBase } from '../../layout';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { CrudType } from '@workspaces/domain';
 import { useListUserData, useSnackbarAlert } from '../../hooks';
 import { useLoggedUser } from '../../contexts';
@@ -15,7 +15,6 @@ import { ContainerSimpleList } from '../utils';
 
 export const ListUserContainer = () => {
   const [selectedId, setSelectedId] = useState<string>('');
-  const [isMounted, setIsMounted] = useState(false);
   const theme = useTheme();
   const { loggedUser } = useLoggedUser();
   const { showSnackbarAlert, SnackbarAlert } = useSnackbarAlert();
@@ -24,6 +23,7 @@ export const ListUserContainer = () => {
     delete: false,
     edit: false,
   });
+  const hasLoadedUserData = useRef(false);
 
   const showAlert = useCallback(
     (message: string, success: boolean) => {
@@ -68,15 +68,11 @@ export const ListUserContainer = () => {
   };
 
   useEffect(() => {
-    setIsMounted(false);
-  }, [loggedUser?.selectedCompany.id]);
-
-  useEffect(() => {
-    if (!isMounted) {
+    if (!hasLoadedUserData.current) {
       getListUserData();
-      setIsMounted(true);
+      hasLoadedUserData.current = true;
     }
-  }, [isMounted, getListUserData]);
+  }, [getListUserData]);
 
   return (
     <>

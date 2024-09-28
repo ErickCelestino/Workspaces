@@ -16,6 +16,7 @@ import {
   EntityNotMoved,
   EntityNotFound,
   EntityNotValid,
+  EntityNotComplete,
 } from '../../messages';
 
 export function ValidationsError(
@@ -64,6 +65,9 @@ export function ValidationsError(
 
     case 'EntityNotValid':
       return EntityNotValid(entitie, 'PT-BR');
+
+    case 'EntityNotComplete':
+      return EntityNotComplete(entitie, 'PT-BR');
 
     default:
       return ConnectionError('PT-BR');

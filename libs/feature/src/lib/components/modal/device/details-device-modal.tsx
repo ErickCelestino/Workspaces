@@ -10,7 +10,7 @@ import DeleteSweepIcon from '@mui/icons-material/DeleteSweep';
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
 import OpenWithIcon from '@mui/icons-material/OpenWith';
 import { useLoggedUser } from '../../../contexts';
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 import { IconMenuItem } from '@workspaces/domain';
 import { SimpleFormModal } from '../simple';
 import { ButtonFileMenu } from '../../menu';
@@ -43,7 +43,7 @@ export const DetailsDeviceModal: FC<DetailsDeviceModalProps> = ({
   const theme = useTheme();
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const [dataLoaded, setDataLoaded] = useState(false);
+  const hasLoadedUserData = useRef(false);
   const [selectedSchedules, setSelectedSchedules] = useState<
     Record<string, boolean>
   >({});
@@ -75,24 +75,12 @@ export const DetailsDeviceModal: FC<DetailsDeviceModalProps> = ({
   };
 
   useEffect(() => {
-    if (!open) {
-      setDataLoaded(false);
-    }
-  }, [open]);
-
-  useEffect(() => {
-    if (open && idDevice && !dataLoaded) {
+    if (open && idDevice && !hasLoadedUserData.current) {
       getDeviceByIdData();
       getListSchedulesByDeviceIdData();
-      setDataLoaded(true);
+      hasLoadedUserData.current = true;
     }
-  }, [
-    open,
-    idDevice,
-    dataLoaded,
-    getDeviceByIdData,
-    getListSchedulesByDeviceIdData,
-  ]);
+  }, [open, idDevice, getDeviceByIdData, getListSchedulesByDeviceIdData]);
 
   const handleSchedulingToggle = (schedulingId: string) => {
     setSelectedSchedules((prevSelectedSchedules) => {

@@ -30,6 +30,9 @@ import {
   FindCompanyResponsibleByIdModule,
   ListUsersByCompanyIdModule,
   SelectCompanyModule,
+  AuthorizeUserToCompanyModule,
+  FindUnauthorizedUsersByCompanyIdModule,
+  UnauthorizeUserToCompanyModule,
 } from './company';
 import {
   ListSimpleStateModule,
@@ -70,6 +73,9 @@ import {
     FindCompanyResponsibleByIdModule,
     ListUsersByCompanyIdModule,
     SelectCompanyModule,
+    AuthorizeUserToCompanyModule,
+    FindUnauthorizedUsersByCompanyIdModule,
+    UnauthorizeUserToCompanyModule,
   ],
   controllers: [AppController],
   providers: [AppService],

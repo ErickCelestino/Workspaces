@@ -9,7 +9,7 @@ import {
 } from '@mui/material';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import { LayoutBase } from '../../layout';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   CrudType,
   DownloadContentFileDto,
@@ -63,7 +63,6 @@ export const ListContanteFilesContainer = () => {
   const [createDirectoryPopUp, setCreateDirectoryPopUp] = useState(false);
   const [fileId, setFileId] = useState('');
   const [directoyPopUp, setDirectoryPopUp] = useState(false);
-  const [isMounted, setIsMounted] = useState(false);
   const [popUpClosed, setPopUpClosed] = useState(false);
   const [openModal, setOpenModal] = useState({
     create: false,
@@ -77,6 +76,7 @@ export const ListContanteFilesContainer = () => {
   const { loggedUser } = useLoggedUser();
   const { showSnackbarAlert, SnackbarAlert } = useSnackbarAlert();
   const { handleOpen, setDirectoryId, closed } = useFileModal();
+  const hasLoadedUserData = useRef(false);
 
   const showAlert = useCallback(
     (message: string, success: boolean) => {
@@ -205,25 +205,15 @@ export const ListContanteFilesContainer = () => {
   };
 
   useEffect(() => {
-    setIsMounted(false);
-  }, [loggedUser?.selectedCompany.id]);
-
-  useEffect(() => {
-    if (!isMounted) {
+    if (!hasLoadedUserData.current) {
       const directoryId = getItemLocalStorage('di');
       if (directoryId) {
         getListContentFilesData('', directoryId);
         setLocalDirectoryId(directoryId);
       }
-      setIsMounted(true);
+      hasLoadedUserData.current = true;
     }
-  }, [
-    isMounted,
-    getListContentFilesData,
-    directoryId,
-    setLocalDirectoryId,
-    listFiles,
-  ]);
+  }, [getListContentFilesData, directoryId, setLocalDirectoryId, listFiles]);
 
   const rightClickMenuList: IconMenuItem[] = [
     {

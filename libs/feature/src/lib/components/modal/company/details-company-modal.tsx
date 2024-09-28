@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useRef } from 'react';
 import { useMediaQuery, useTheme } from '@mui/material';
 import { SimpleFormModal } from '../simple';
 import { useFindAllCompanyIdsData } from '../../../hooks';
@@ -23,7 +23,7 @@ export const DetailsCompanyModal: FC<DetailsCompanyModalProps> = ({
   const theme = useTheme();
   const { loggedUser } = useLoggedUser();
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
-  const [dataLoaded, setDataLoaded] = useState(false);
+  const hasLoadedUserData = useRef(false);
 
   const { companyIds, getCompanyIdsData } = useFindAllCompanyIdsData({
     companyId,
@@ -32,17 +32,11 @@ export const DetailsCompanyModal: FC<DetailsCompanyModalProps> = ({
   });
 
   useEffect(() => {
-    if (!open) {
-      setDataLoaded(false);
-    }
-  }, [open]);
-
-  useEffect(() => {
-    if (open && companyId && !dataLoaded) {
+    if (open && companyId && !hasLoadedUserData.current) {
       getCompanyIdsData();
-      setDataLoaded(true);
+      hasLoadedUserData.current = true;
     }
-  }, [loggedUser, companyId, dataLoaded, open, getCompanyIdsData]);
+  }, [loggedUser, companyId, open, getCompanyIdsData]);
 
   return (
     <SimpleFormModal

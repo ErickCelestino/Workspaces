@@ -6,7 +6,7 @@ import {
   EmptyListResponse,
   ToolbarPureTV,
 } from '../../components';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Grid, Icon, useTheme } from '@mui/material';
 import { useSnackbarAlert, useListDirectoryData } from '../../hooks';
 import { LayoutBase } from '../../layout';
@@ -29,7 +29,7 @@ export const ListDirectoryContainer = () => {
     details: false,
     add: false,
   });
-  const [isMounted, setIsMounted] = useState(false);
+  const hasLoadedUserData = useRef(false);
 
   const showAlert = useCallback(
     (message: string, success: boolean) => {
@@ -69,15 +69,11 @@ export const ListDirectoryContainer = () => {
   };
 
   useEffect(() => {
-    setIsMounted(false);
-  }, [loggedUser?.selectedCompany.id]);
-
-  useEffect(() => {
-    if (!isMounted) {
+    if (!hasLoadedUserData.current) {
       getListDeviceData();
-      setIsMounted(true);
+      hasLoadedUserData.current = true;
     }
-  }, [isMounted, getListDeviceData]);
+  }, [getListDeviceData]);
 
   const searchData = async (input: string) => {
     getListDeviceData(input);

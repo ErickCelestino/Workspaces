@@ -8,7 +8,7 @@ import {
 } from '../../components';
 import { LayoutBase } from '../../layout';
 import { CrudType, IconMenuItem } from '@workspaces/domain';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useListDeviceData, useSnackbarAlert } from '../../hooks';
 import { ContainerCardList } from '../utils';
 import { useLoggedUser } from '../../contexts';
@@ -25,7 +25,7 @@ export const ListDeviceContainer = () => {
     details: false,
     add: false,
   });
-  const [isMounted, setIsMounted] = useState(false);
+  const hasLoadedUserData = useRef(false);
 
   const showAlert = useCallback(
     (message: string, success: boolean) => {
@@ -60,15 +60,11 @@ export const ListDeviceContainer = () => {
   };
 
   useEffect(() => {
-    setIsMounted(false);
-  }, [loggedUser?.selectedCompany.id]);
-
-  useEffect(() => {
-    if (!isMounted) {
+    if (!hasLoadedUserData.current) {
       getListDeviceData();
-      setIsMounted(true);
+      hasLoadedUserData.current = true;
     }
-  }, [isMounted, getListDeviceData]);
+  }, [getListDeviceData]);
 
   const rightClickMenuList: IconMenuItem[] = [
     {

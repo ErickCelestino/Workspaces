@@ -16,7 +16,9 @@ interface LoggedUserContextProps {
 
 const LoggedUserContext = createContext<LoggedUserContextProps>({
   loggedUser: null,
-  setLoggedUser: () => {},
+  setLoggedUser: () => {
+    ('');
+  },
 });
 
 export const LoggedUserProvider: FC<{ children: ReactNode }> = ({

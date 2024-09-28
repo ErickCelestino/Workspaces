@@ -52,7 +52,6 @@ export const LayoutBase: FC<ILayoutBasePros> = ({
 }) => {
   const theme = useTheme();
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
-
   const { toggleDrawerOpen, isDrawerOpen } = useDrawerContext();
 
   return (

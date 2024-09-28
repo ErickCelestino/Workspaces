@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 import { SimpleFormModal } from '../simple';
 import {
   Box,
@@ -38,7 +38,6 @@ export const DetailsPlaylistModal: FC<DetailsPlaylistModalProps> = ({
   title,
   open,
 }) => {
-  const [dataLoaded, setDataLoaded] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState<Record<string, boolean>>(
     {}
   );
@@ -50,6 +49,7 @@ export const DetailsPlaylistModal: FC<DetailsPlaylistModalProps> = ({
   const { loggedUser } = useLoggedUser();
   const theme = useTheme();
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const hasLoadedUserData = useRef(false);
 
   const { listFiles, totalPage, getFilesByPlaylistData } =
     useFilesByPlaylistData({
@@ -94,20 +94,14 @@ export const DetailsPlaylistModal: FC<DetailsPlaylistModalProps> = ({
   };
 
   useEffect(() => {
-    if (!open) {
-      setDataLoaded(false);
-    }
-  }, [open]);
-
-  useEffect(() => {
-    if (open && idPlaylist && !dataLoaded) {
+    if (open && idPlaylist && !hasLoadedUserData.current) {
       getDetailsPlaylistData();
       getFilesByPlaylistData();
+      hasLoadedUserData.current = true;
     }
   }, [
     open,
     idPlaylist,
-    dataLoaded,
     getDetailsPlaylistData,
     loggedUser,
     getFilesByPlaylistData,

@@ -16,7 +16,7 @@ import { CompanyMock, userMock } from '../../../entity';
 import {
   FindCompanyByIdRepositoryMock,
   FindUserByIdRepositoryMock,
-  FindUserIdByCompanyIdRepositoryMock,
+  FindUserIdByCompanyIdRepositoryEmptyMock,
   SelectCompanyRepositoryMock,
 } from '../../../repository';
 
@@ -33,7 +33,7 @@ const makeSut = (): SutType => {
   const findUserByIdRepository = new FindUserByIdRepositoryMock();
   const findCompanyByIdRepository = new FindCompanyByIdRepositoryMock();
   const findUserIdByCompanyIdRepository =
-    new FindUserIdByCompanyIdRepositoryMock();
+    new FindUserIdByCompanyIdRepositoryEmptyMock();
   const selectCompanyRepository = new SelectCompanyRepositoryMock();
 
   const selectCompanyDto: SelectCompanyDto = {

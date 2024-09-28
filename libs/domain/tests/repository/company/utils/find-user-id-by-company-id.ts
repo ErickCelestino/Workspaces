@@ -2,6 +2,7 @@ import {
   FindUserAndCompanyIdDto,
   FindUserIdByCompanyIdRepository,
 } from '../../../../src';
+import { CompanyMock, userMock } from '../../../entity';
 
 export class FindUserIdByCompanyIdRepositoryMock
   implements FindUserIdByCompanyIdRepository
@@ -9,6 +10,6 @@ export class FindUserIdByCompanyIdRepositoryMock
   inputMock = {} as FindUserAndCompanyIdDto;
   async find(input: FindUserAndCompanyIdDto): Promise<string> {
     this.inputMock = input;
-    return '';
+    return `${userMock.userId}-${CompanyMock.simple.id}`;
   }
 }
