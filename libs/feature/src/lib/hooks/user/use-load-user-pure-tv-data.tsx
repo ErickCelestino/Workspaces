@@ -11,16 +11,14 @@ export const useLoadUserPureTvData = () => {
   const navigate = useNavigate();
 
   const getLoadUserData = useCallback(() => {
-    setLoading(true);
-
     if (!loggedUser) {
       setLoading(false);
       return;
     }
 
     if (loggedUser.status === 'BLOCKED') {
-      navigate('/unauthorized-access');
       setLoading(false);
+      navigate('/unauthorized-access');
       return;
     }
     navigate('/');

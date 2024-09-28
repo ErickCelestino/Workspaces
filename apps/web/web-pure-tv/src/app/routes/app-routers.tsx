@@ -12,6 +12,7 @@ import {
   UnauthorizedUserContainer,
   useLoggedUser,
   useLoadUserPureTvData,
+  useLoading,
 } from '@workspaces/feature';
 import { useEffect, useRef } from 'react';
 
@@ -19,15 +20,17 @@ export const AppRouters = () => {
   const { loggedUser } = useLoggedUser();
   const loadedData = useLoadUserPureTvData();
   const hasLoadedUserData = useRef(false);
+  const { setLoading } = useLoading();
 
   useEffect(() => {
     if (loggedUser?.status && !hasLoadedUserData.current) {
+      setLoading(true);
       if (loggedUser?.status) {
         loadedData();
         hasLoadedUserData.current = true;
       }
     }
-  }, [loggedUser?.status, loadedData]);
+  }, [loggedUser?.status, loadedData, setLoading]);
 
   return (
     <Routes>
