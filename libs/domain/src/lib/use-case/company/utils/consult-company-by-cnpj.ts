@@ -34,9 +34,6 @@ export class ConsultCompanyByCnpj
       return left(new EntityNotEmpty('CNPJ'));
     }
     const formatedcnpj = cnpj.replace(/[^\d]+/g, '');
-    if (Object.keys(loggedUserId).length < 1) {
-      return left(new EntityNotEmpty('Logged User ID'));
-    }
 
     const userValidation = await ValidationUserId(
       loggedUserId,

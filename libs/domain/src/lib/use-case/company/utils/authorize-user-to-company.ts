@@ -40,18 +40,6 @@ export class AuthorizeUserToCompany
   ): Promise<Either<EntityNotEmpty, string>> {
     const { companyId, loggedUserId, userId } = input;
 
-    if (Object.keys(loggedUserId).length < 1) {
-      return left(new EntityNotEmpty('Logged User ID'));
-    }
-
-    if (Object.keys(companyId).length < 1) {
-      return left(new EntityNotEmpty('Company ID'));
-    }
-
-    if (Object.keys(userId).length < 1) {
-      return left(new EntityNotEmpty('User ID'));
-    }
-
     const loggedUserValidation = await ValidationUserId(
       loggedUserId,
       this.findUserByIdRepository
