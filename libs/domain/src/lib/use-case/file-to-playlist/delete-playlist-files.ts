@@ -92,7 +92,7 @@ export class DeletePlaylistFiles
         });
 
       if (Object.keys(filteredPlaylist).length < 1) {
-        return left(new EntityNotAssociate(file));
+        return left(new EntityNotAssociate(file, 'Playlist'));
       }
 
       await this.deletePlaylistFileRepository.delete({
