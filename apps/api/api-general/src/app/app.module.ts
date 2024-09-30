@@ -10,6 +10,7 @@ import {
   DeleteUserByIdModule,
   CreateUserModule,
   FindUserByEmailModule,
+  AddUserToAnotherCompanyModule,
 } from './user';
 import {
   CreateCompanyModule,
@@ -76,6 +77,7 @@ import {
     AuthorizeUserToCompanyModule,
     FindUnauthorizedUsersByCompanyIdModule,
     UnauthorizeUserToCompanyModule,
+    AddUserToAnotherCompanyModule,
   ],
   controllers: [AppController],
   providers: [AppService],
