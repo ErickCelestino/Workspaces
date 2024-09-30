@@ -1,6 +1,10 @@
-import { Controller, Param, Post, Query } from '@nestjs/common';
+import { Controller, Param, Post, Query, UsePipes } from '@nestjs/common';
 import { AddUserToAnotherCompanyService } from './add-user-to-another-company.service';
-import { ErrorMessageResult } from '@workspaces/domain';
+import {
+  addUserToAnotherCompanySchema,
+  ErrorMessageResult,
+} from '@workspaces/domain';
+import { ZodValidationPipe } from '../../pipes/zod-validation-pipe';
 
 @Controller('add-user-to-another-company')
 export class AddUserToAnotherCompanyController {
@@ -9,6 +13,7 @@ export class AddUserToAnotherCompanyController {
   ) {}
 
   @Post(':userId')
+  @UsePipes(new ZodValidationPipe(addUserToAnotherCompanySchema))
   async add(
     @Param('userId') userId: string,
     @Query('loggedUserId') loggedUserId: string,
