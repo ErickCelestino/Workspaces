@@ -6,3 +6,4 @@ export * from './find-user-by-id';
 export * from './find-user-email';
 export * from './list-user';
 export * from './verify-user-permissions-by-id';
+export * from './verify-user-status-by-id';

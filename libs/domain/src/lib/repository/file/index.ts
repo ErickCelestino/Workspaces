@@ -5,6 +5,7 @@ export * from './download-content-file';
 export * from './edit-content-file';
 export * from './find-content-file-by-id';
 export * from './find-content-files-by-directory-id';
+export * from './find-url-file';
 export * from './generate-thumbnail';
 export * from './list-content-file';
 export * from './move-file-to-directory';
