@@ -22,6 +22,7 @@ export const ListUserContainer = () => {
     create: false,
     delete: false,
     edit: false,
+    'add-company': false,
   });
   const hasLoadedUserData = useRef(false);
 
@@ -47,7 +48,10 @@ export const ListUserContainer = () => {
     getListUserData('', value);
   };
 
-  const handlePopUpOpen = async (type: CrudType, id?: string) => {
+  const handlePopUpOpen = async (
+    type: CrudType | 'add-company',
+    id?: string
+  ) => {
     setSelectedId(id ?? '');
     setOpenModal((prev) => ({
       ...prev,
@@ -55,7 +59,7 @@ export const ListUserContainer = () => {
     }));
   };
 
-  const handlePopUpClose = async (type: CrudType | 'add') => {
+  const handlePopUpClose = async (type: CrudType | 'add-company') => {
     setOpenModal((prev) => ({
       ...prev,
       [type]: false,
@@ -104,6 +108,9 @@ export const ListUserContainer = () => {
                     handlePopUpOpen('delete', user.userId)
                   }
                   editUser={async () => handlePopUpOpen('edit', user.userId)}
+                  addUserToAnotherCompany={async () =>
+                    handlePopUpOpen('add-company', user.userId)
+                  }
                   key={user.userId}
                   user={user}
                   statusColor={user.status === 'ACTIVE' ? 'success' : 'error'}
