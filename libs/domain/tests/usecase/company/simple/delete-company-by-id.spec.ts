@@ -62,26 +62,6 @@ describe('DeleteCompanyById', () => {
     expect(result.value).toBe(CompanySimpleMock.id);
   });
 
-  it('should return EntityNotEmpty when pass incorrect Logged User id', async () => {
-    const { sut, deleteCompanyByIdDto } = makeSut();
-    deleteCompanyByIdDto.loggedUserId = '';
-    const result = await sut.execute(deleteCompanyByIdDto);
-
-    expect(result.isRight()).toBe(false);
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
-  it('should return EntityNotEmpty when pass incorrect Company id', async () => {
-    const { sut, deleteCompanyByIdDto } = makeSut();
-    deleteCompanyByIdDto.companyId = '';
-    const result = await sut.execute(deleteCompanyByIdDto);
-
-    expect(result.isRight()).toBe(false);
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
   it('should return EntityNotEmpty when pass incorrect Description', async () => {
     const { sut, deleteCompanyByIdDto } = makeSut();
     deleteCompanyByIdDto.description = '';

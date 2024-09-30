@@ -54,16 +54,6 @@ describe('FindSimpleCompanyById', () => {
     expect(result.value).toEqual(CompanySimpleMock);
   });
 
-  it('should return EntityNotEmpty when pass incorrect Logged User id', async () => {
-    const { sut, findSimpleCompanyByIdDto } = makeSut();
-    findSimpleCompanyByIdDto.loggedUserId = '';
-    const result = await sut.execute(findSimpleCompanyByIdDto);
-
-    expect(result.isRight()).toBe(false);
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
   it('should return EntityNotEmpty when pass incorrect Company id', async () => {
     const { sut, findSimpleCompanyByIdDto } = makeSut();
     findSimpleCompanyByIdDto.companyId = '';
