@@ -22,11 +22,9 @@ export const useLoadUserPureTvData = () => {
       navigate('/unauthorized-access');
       return;
     } else {
-      navigate('/');
-
       const baseDrawerOptions: Record<string, DrawerOption[]> = {
         'Página Inicial': [
-          { label: 'Página Inicial', icon: 'home', path: '/home' },
+          { label: 'Página Inicial', icon: 'home', path: '/' },
         ],
         Diretórios: [
           { label: 'Diretórios', icon: 'folder', path: '/directory' },
