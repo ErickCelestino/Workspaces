@@ -111,7 +111,7 @@ export class MoveFilesToAnotherPlaylist
         });
 
       if (Object.keys(filteredOldPlaylist).length < 1) {
-        return left(new EntityNotAssociate(file));
+        return left(new EntityNotAssociate(file, 'Playlist'));
       }
 
       const filterednewPlaylist =
