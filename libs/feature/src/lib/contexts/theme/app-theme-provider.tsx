@@ -1,4 +1,4 @@
-import { Box, ThemeProvider } from '@mui/material';
+import { Box, ThemeProvider, stepContentClasses } from '@mui/material';
 import React, { ReactNode, useCallback, useMemo, useState } from 'react';
 import { ThemeContext } from './theme-context';
 import { ThemeName } from '../../types';
