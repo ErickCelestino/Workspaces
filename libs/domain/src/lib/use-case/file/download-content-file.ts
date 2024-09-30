@@ -12,6 +12,7 @@ import {
   FindDirectoryByIdRepository,
   FindUserByIdRepository,
 } from '../../repository';
+import { ValidationDirectoryId, ValidationUserId } from '../../utils';
 
 export class DownloadContentFile
   implements
@@ -49,18 +50,22 @@ export class DownloadContentFile
       return left(new EntityNotEmpty('logged user ID'));
     }
 
-    const filteredUser = await this.findUserByIdRepository.find(loggedUserId);
-
-    if (Object.keys(filteredUser?.userId ?? filteredUser).length < 1) {
-      return left(new EntityNotExists('User'));
-    }
-
-    const fiteredDirectory = await this.findDirectoryByIdRepository.find(
-      directoryId
+    const userValidation = await ValidationUserId(
+      loggedUserId,
+      this.findUserByIdRepository
     );
 
-    if (Object.keys(fiteredDirectory?.id ?? fiteredDirectory).length < 1) {
-      return left(new EntityNotExists('Directory'));
+    if (userValidation.isLeft()) {
+      return left(userValidation.value);
+    }
+
+    const directoryValidation = await ValidationDirectoryId(
+      directoryId,
+      this.findDirectoryByIdRepository
+    );
+
+    if (directoryValidation.isLeft()) {
+      return left(directoryValidation.value);
     }
 
     const filteredContentFile = await this.findContentFileByIdRepository.find(

@@ -2,7 +2,7 @@ import { Box, ThemeProvider, stepContentClasses } from '@mui/material';
 import React, { ReactNode, useCallback, useMemo, useState } from 'react';
 import { ThemeContext } from './theme-context';
 import { ThemeName } from '../../types';
-import { LighTheme, DarkTheme } from '../../themes';
+import { RedLightTheme, RedDarkTheme } from '../../themes';
 import { getItemLocalStorage, setItemLocalStorage } from '../../services';
 
 interface AppThemeProviderProps {
@@ -25,9 +25,9 @@ export const AppThemeProvider: React.FC<AppThemeProviderProps> = ({
   }, []);
 
   const theme = useMemo(() => {
-    if (themeName === 'light') return LighTheme;
+    if (themeName === 'light') return RedLightTheme;
 
-    return DarkTheme;
+    return RedDarkTheme;
   }, [themeName]);
 
   return (

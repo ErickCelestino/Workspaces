@@ -1,13 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {
-  BadRequestException,
-  Controller,
-  Post,
-  Request,
-  UseGuards,
-} from '@nestjs/common';
+import { Controller, Post, Request, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from '@workspaces/data-access';
+import { ErrorMessageResult } from '@workspaces/domain';
 
 @Controller('auth')
 export class AuthController {
@@ -19,12 +14,6 @@ export class AuthController {
     const result = await this.authService.login(req.user);
 
     if (result.isRight()) return result.value;
-    else
-      throw new BadRequestException({
-        error: {
-          name: result.value.name,
-          message: result.value.message,
-        },
-      });
+    else await ErrorMessageResult(result.value.name, result.value.message);
   }
 }

@@ -32,19 +32,19 @@ export const ProgressFilesList: FC<ProgressFilesListProps> = ({
         <Box sx={{ width: '100%', mr: 1, ml: 1 }}>
           <LinearProgress
             variant="determinate"
-            value={progress == Infinity ? 0 : progress}
+            value={progress === Infinity ? 0 : progress}
           />
         </Box>
         <Box sx={{ minWidth: 35 }}>
           <Typography variant="body2" color="text.secondary">{`${Math.round(
-            progress == Infinity ? 0 : progress
+            progress === Infinity ? 0 : progress
           )}%`}</Typography>
         </Box>
       </Box>
       <Typography marginLeft="1rem" variant="h6">
         {title}
       </Typography>
-      <ScrollBox>
+      <ScrollBox maxHeight="11rem">
         <List>
           {filesList.map(({ file }) => (
             <ListItem key={file.name}>

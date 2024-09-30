@@ -13,6 +13,7 @@ import {
 } from '../../repository';
 import { Either, left, right } from '../../shared/either';
 import { Inject } from '@nestjs/common';
+import { ValidationUserId } from '../../utils';
 
 export class CreateAuth
   implements
@@ -23,7 +24,7 @@ export class CreateAuth
 {
   constructor(
     @Inject('FilterByEmailOrNicknameRepository')
-    private filterByEmailRepository: FilterByEmailOrNicknameRepository,
+    private filterByEmailOrNicknameRepository: FilterByEmailOrNicknameRepository,
     @Inject('FindUserByIdRepository')
     private findUserByIdRepository: FindUserByIdRepository,
     @Inject('HashGeneratorRepository')
@@ -49,15 +50,20 @@ export class CreateAuth
       return left(new EntityNotExists('User'));
     }
 
-    const filteredEmail = await this.filterByEmailRepository.filter(email);
+    const filteredEmail = await this.filterByEmailOrNicknameRepository.filter(
+      email
+    );
 
-    if (Object.keys(filteredEmail?.userId).length > 0) {
+    if (Object.keys(filteredEmail?.userId ?? filteredEmail).length > 0) {
       return left(new EntityAlreadyExists(email));
     }
-    const userResult = await this.findUserByIdRepository.find(userId);
+    const userValidation = await ValidationUserId(
+      userId,
+      this.findUserByIdRepository
+    );
 
-    if (Object.keys(userResult).length < 1) {
-      return left(new EntityNotExists('User'));
+    if (userValidation.isLeft()) {
+      return left(userValidation.value);
     }
 
     const hashedPassword = await this.hashGenerator.hash(password);

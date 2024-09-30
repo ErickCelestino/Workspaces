@@ -123,84 +123,39 @@ describe('EditPlaylist', () => {
     expect(result.value).toBeInstanceOf(EntityNotEmpty);
   });
 
-  it('should return EntityNotExists if there is no user created in the database', async () => {
-    const {
-      editPlaylistDto,
-      findPlaylistByIdRepository,
-      findPlaylistCategoryByIdRepository,
-      editPlaylistRepository,
-    } = makeSut();
-
-    const mockEmptyItem = {} as UserList;
-
-    const mockEmptyRepository: FindUserByIdRepository = {
-      find: jest.fn(async () => mockEmptyItem),
-    };
-
-    const sut = new EditPlaylist(
-      mockEmptyRepository,
-      findPlaylistByIdRepository,
-      findPlaylistCategoryByIdRepository,
-      editPlaylistRepository
-    );
-
+  it('should return EntityNotExists when a pass incorrect Playlist Category User ID', async () => {
+    const { editPlaylistDto, sut } = makeSut();
+    jest
+      .spyOn(sut['findPlaylistCategoryByIdRepository'], 'find')
+      .mockResolvedValueOnce({} as PlaylistCategory);
     const result = await sut.execute(editPlaylistDto);
 
     expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
     expect(result.value).toBeInstanceOf(EntityNotExists);
   });
 
-  it('should return EntityNotExists if there is no playlist created in the database', async () => {
-    const {
-      editPlaylistDto,
-      findUserByIdRepository,
-      editPlaylistRepository,
-      findPlaylistCategoryByIdRepository,
-    } = makeSut();
-
-    const mockEmptyItem = {} as PlaylistResponseDto;
-
-    const mockEmptyRepository: FindPlaylistByIdRepository = {
-      find: jest.fn(async () => mockEmptyItem),
-    };
-
-    const sut = new EditPlaylist(
-      findUserByIdRepository,
-      mockEmptyRepository,
-      findPlaylistCategoryByIdRepository,
-      editPlaylistRepository
-    );
-
+  it('should return EntityNotExists when a pass incorrect Logged User ID', async () => {
+    const { editPlaylistDto, sut } = makeSut();
+    jest
+      .spyOn(sut['findUserByIdRepository'], 'find')
+      .mockResolvedValueOnce({} as UserList);
     const result = await sut.execute(editPlaylistDto);
 
     expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
     expect(result.value).toBeInstanceOf(EntityNotExists);
   });
 
-  it('should return EntityNotExists if there is no playlist category created in the database', async () => {
-    const {
-      editPlaylistDto,
-      findUserByIdRepository,
-      findPlaylistByIdRepository,
-      editPlaylistRepository,
-    } = makeSut();
-
-    const mockEmptyItem = {} as PlaylistCategory;
-
-    const mockEmptyRepository: FindPlaylistCategoryByIdRepository = {
-      find: jest.fn(async () => mockEmptyItem),
-    };
-
-    const sut = new EditPlaylist(
-      findUserByIdRepository,
-      findPlaylistByIdRepository,
-      mockEmptyRepository,
-      editPlaylistRepository
-    );
-
+  it('should return EntityNotExists when a pass incorrect Playlist ID', async () => {
+    const { editPlaylistDto, sut } = makeSut();
+    jest
+      .spyOn(sut['findPlaylistByIdRepository'], 'find')
+      .mockResolvedValueOnce({} as PlaylistResponseDto);
     const result = await sut.execute(editPlaylistDto);
 
     expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
     expect(result.value).toBeInstanceOf(EntityNotExists);
   });
 });

@@ -1,4 +1,4 @@
-import { FileConfigs, FileWithProgress } from '@workspaces/domain';
+import { FileConfigs } from '@workspaces/domain';
 import { pureTvApi } from '../../axios-config';
 
 export async function CreateContenVideoRequest(
@@ -19,6 +19,7 @@ export async function CreateContenVideoRequest(
     params: {
       loggedUserId: data.loggedUserId,
       directoryId: data.directoryId,
+      companyId: data.companyId,
     },
     onUploadProgress: (progressEvent) => {
       if (progressEvent) {

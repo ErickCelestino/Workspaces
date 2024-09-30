@@ -1,13 +1,15 @@
 import { Inject } from '@nestjs/common';
-import { EditUserDto, EditUserRepository } from '@workspaces/domain';
+import { EditUserDto, EditUserRepository, userTypes } from '@workspaces/domain';
 import { PrismaService } from 'nestjs-prisma';
 
 export class EditUserRepositoryImpl implements EditUserRepository {
   constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
-  async edit(input: EditUserDto): Promise<void> {
-    const { id, name, birthDate, status } = input;
+  async edit(input: EditUserDto): Promise<string> {
+    const {
+      body: { id, name, birthDate, status, type },
+    } = input;
 
-    await this.prismaService.user.update({
+    const editedUser = await this.prismaService.user.update({
       where: {
         user_id: id,
       },
@@ -17,7 +19,11 @@ export class EditUserRepositoryImpl implements EditUserRepository {
           ? { birth_date: birthDate }
           : {}),
         status: status,
+        updated_at: new Date(),
+        type: type as userTypes,
       },
     });
+
+    return editedUser.user_id;
   }
 }

@@ -9,6 +9,11 @@ import {
   FindUserByIdRepository,
   MoveFileToDirectoryRepository,
 } from '../../repository';
+import {
+  ValidationContentFileId,
+  ValidationDirectoryId,
+  ValidationUserId,
+} from '../../utils';
 
 export class MoveFileToDirectory
   implements
@@ -44,26 +49,31 @@ export class MoveFileToDirectory
       return left(new EntityNotEmpty('logged user ID'));
     }
 
-    const filteredUser = await this.findUserByIdRepository.find(loggedUserId);
-
-    if (Object.keys(filteredUser?.userId ?? filteredUser).length < 1) {
-      return left(new EntityNotExists('User'));
-    }
-
-    const fiteredDirectory = await this.findDirectoryByIdRepository.find(
-      idToMoveDirectory
+    const userValidation = await ValidationUserId(
+      loggedUserId,
+      this.findUserByIdRepository
     );
 
-    if (Object.keys(fiteredDirectory?.id ?? fiteredDirectory).length < 1) {
-      return left(new EntityNotExists('Directory'));
+    if (userValidation.isLeft()) {
+      return left(userValidation.value);
     }
 
-    const filteredFile = await this.findContentFileByIdRepository.find(
-      idToMove
+    const directoryValidation = await ValidationDirectoryId(
+      idToMoveDirectory,
+      this.findDirectoryByIdRepository
     );
 
-    if (Object.keys(filteredFile?.id ?? filteredFile).length < 1) {
-      return left(new EntityNotExists('File'));
+    if (directoryValidation.isLeft()) {
+      return left(directoryValidation.value);
+    }
+
+    const contentFileValidation = await ValidationContentFileId(
+      idToMove,
+      this.findContentFileByIdRepository
+    );
+
+    if (contentFileValidation.isLeft()) {
+      return left(contentFileValidation.value);
     }
 
     await this.moveFileToDirectoryRepository.move(input);

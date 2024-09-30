@@ -107,84 +107,39 @@ describe('EditContentFile', () => {
     expect(result.value).toBeInstanceOf(EntityNotEmpty);
   });
 
-  it('should return EntityNotExists if there is no user created in the database', async () => {
-    const {
-      editContentFileDto,
-      findDirectoryByIdRepository,
-      findContentFileByIdRepository,
-      editContentFileRepository,
-    } = makeSut();
-
-    const mockEmptyItem = {} as UserList;
-
-    const mockEmptyRepository: FindUserByIdRepository = {
-      find: jest.fn(async () => mockEmptyItem),
-    };
-
-    const sut = new EditContentFile(
-      editContentFileRepository,
-      mockEmptyRepository,
-      findDirectoryByIdRepository,
-      findContentFileByIdRepository
-    );
-
+  it('should return EntityNotExists when a pass incorrect Logged User ID', async () => {
+    const { editContentFileDto, sut } = makeSut();
+    jest
+      .spyOn(sut['findUserByIdRepository'], 'find')
+      .mockResolvedValueOnce({} as UserList);
     const result = await sut.execute(editContentFileDto);
 
     expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
     expect(result.value).toBeInstanceOf(EntityNotExists);
   });
 
-  it('should return EntityNotExists if there is no directory created in the database', async () => {
-    const {
-      editContentFileDto,
-      findUserByIdRepository,
-      editContentFileRepository,
-      findContentFileByIdRepository,
-    } = makeSut();
-
-    const mockEmptyItem = {} as Directory;
-
-    const mockEmptyRepository: FindDirectoryByIdRepository = {
-      find: jest.fn(async () => mockEmptyItem),
-    };
-
-    const sut = new EditContentFile(
-      editContentFileRepository,
-      findUserByIdRepository,
-      mockEmptyRepository,
-      findContentFileByIdRepository
-    );
-
+  it('should return EntityNotExists when a pass incorrect Directory ID', async () => {
+    const { editContentFileDto, sut } = makeSut();
+    jest
+      .spyOn(sut['findDirectoryByIdRepository'], 'find')
+      .mockResolvedValueOnce({} as Directory);
     const result = await sut.execute(editContentFileDto);
 
     expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
     expect(result.value).toBeInstanceOf(EntityNotExists);
   });
 
-  it('should return EntityNotExists if there is no content file created in the database', async () => {
-    const {
-      editContentFileDto,
-      findUserByIdRepository,
-      editContentFileRepository,
-      findDirectoryByIdRepository,
-    } = makeSut();
-
-    const mockEmptyItem = {} as ContentFile;
-
-    const mockEmptyRepository: FindContentFileByIdRepository = {
-      find: jest.fn(async () => mockEmptyItem),
-    };
-
-    const sut = new EditContentFile(
-      editContentFileRepository,
-      findUserByIdRepository,
-      findDirectoryByIdRepository,
-      mockEmptyRepository
-    );
-
+  it('should return EntityNotExists when a pass incorrect File ID', async () => {
+    const { editContentFileDto, sut } = makeSut();
+    jest
+      .spyOn(sut['findContentFileByIdRepository'], 'find')
+      .mockResolvedValueOnce({} as ContentFile);
     const result = await sut.execute(editContentFileDto);
 
     expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
     expect(result.value).toBeInstanceOf(EntityNotExists);
   });
 });

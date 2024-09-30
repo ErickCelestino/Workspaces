@@ -19,10 +19,52 @@ import {
   FindPlaylistCategoryByIdModule,
   DeletePlaylistCategoryModule,
 } from './playlist-category';
-import { CreatePlaylistModule } from './create-playlist/create-playlist.module';
-import { ListPlaylistModule } from './list-playlist/list-playlist.module';
-import { FindPlaylistByIdModule } from './find-playlist-by-id/find-playlist-by-id.module';
-import { EditPlaylistModule } from './edit-playlist/edit-playlist.module';
+import {
+  CreatePlaylistModule,
+  ListPlaylistModule,
+  FindPlaylistByIdModule,
+  EditPlaylistModule,
+  DeletePlaylistModule,
+  DetailsPlaylistModule,
+} from './playlist';
+import {
+  AddFileToPlaylistModule,
+  FindFilesByPlaylistModule,
+  MoveFilesToAnotherPlaylistModule,
+  DeletePlaylistFilesModule,
+} from './file-to-playlist';
+import {
+  CreateSchedulingModule,
+  ListSchedulesModule,
+  DeleteSchedulingModule,
+  EditSchedulingModule,
+  FindSchedulingByIdModule,
+} from './scheduling';
+import {
+  AddPlaylistsToSchedulingModule,
+  ListPlaylistBySchedulingIdModule,
+  DeletePlaylistToSchedulingModule,
+} from './playlist-to-scheduling';
+import {
+  CreateDeviceModule,
+  ListDeviceModule,
+  DeleteDeviceModule,
+  EditDeviceModule,
+  FindDeviceByIdModule,
+} from './device';
+import {
+  AddSchedulesToDeviceModule,
+  FindSchedulesByDeviceIdModule,
+  DeleteSchedulesToDeviceModule,
+  MoveSchedulesToAnotherDeviceModule,
+} from './schedules-to-device';
+import {
+  ListSimpleDirectoryModule,
+  CreateDirectoryModule,
+  ListDirectoryModule,
+  DeleteDirectoryModule,
+  EditDirectoryModule,
+} from './directory';
 
 @Module({
   imports: [
@@ -47,6 +89,35 @@ import { EditPlaylistModule } from './edit-playlist/edit-playlist.module';
     ListPlaylistModule,
     FindPlaylistByIdModule,
     EditPlaylistModule,
+    DeletePlaylistModule,
+    AddFileToPlaylistModule,
+    ListSimpleDirectoryModule,
+    DetailsPlaylistModule,
+    FindFilesByPlaylistModule,
+    CreateDirectoryModule,
+    MoveFilesToAnotherPlaylistModule,
+    DeletePlaylistFilesModule,
+    ListDirectoryModule,
+    CreateSchedulingModule,
+    ListSchedulesModule,
+    DeleteSchedulingModule,
+    EditSchedulingModule,
+    FindSchedulingByIdModule,
+    AddPlaylistsToSchedulingModule,
+    ListPlaylistBySchedulingIdModule,
+    DeletePlaylistToSchedulingModule,
+    CreateDeviceModule,
+    ListDeviceModule,
+    DeleteDeviceModule,
+    EditDeviceModule,
+    FindDeviceByIdModule,
+    AddSchedulesToDeviceModule,
+    FindSchedulesByDeviceIdModule,
+    DeleteSchedulesToDeviceModule,
+    ListDirectoryModule,
+    MoveSchedulesToAnotherDeviceModule,
+    DeleteDirectoryModule,
+    EditDirectoryModule,
   ],
   controllers: [AppController],
   providers: [AppService],

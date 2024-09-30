@@ -2,22 +2,24 @@ import { Inject } from '@nestjs/common';
 import { UseCase } from '../../base/use-case';
 import { DeleteUserByIdDto } from '../../dto';
 import {
+  EntityNotDeleted,
   EntityNotEmpty,
   EntityNotExists,
-  NotPermissionError,
+  EntityNotPermissions,
 } from '../../error';
 import {
   DeleteUserByIdRepository,
   FindUserByIdRepository,
-  VerifyUserStatusByIdRepository,
+  VerifyUserPermissionsByIdRepository,
 } from '../../repository';
 import { Either, left, right } from '../../shared/either';
+import { ValidationUserId, ValidationUserPermisssions } from '../../utils';
 
 export class DeleteUserById
   implements
     UseCase<
       DeleteUserByIdDto,
-      Either<EntityNotEmpty | EntityNotExists | NotPermissionError, void>
+      Either<EntityNotEmpty | EntityNotExists | EntityNotPermissions, string>
     >
 {
   constructor(
@@ -25,13 +27,13 @@ export class DeleteUserById
     private deleteUserByIdRepository: DeleteUserByIdRepository,
     @Inject('FindUserByIdRepository')
     private findUserByIdRepository: FindUserByIdRepository,
-    @Inject('VerifyUserStatusByIdRepository')
-    private verifyUserStatusByIdRepository: VerifyUserStatusByIdRepository
+    @Inject('VerifyUserPermissionsByIdRepository')
+    private verifyUserPermissionsByIdRepository: VerifyUserPermissionsByIdRepository
   ) {}
   async execute(
     input: DeleteUserByIdDto
   ): Promise<
-    Either<EntityNotEmpty | EntityNotExists | NotPermissionError, void>
+    Either<EntityNotEmpty | EntityNotExists | EntityNotPermissions, string>
   > {
     const { id, loggedUser, description } = input;
     const idString = 'id';
@@ -49,30 +51,37 @@ export class DeleteUserById
       return left(new EntityNotEmpty('descrição'));
     }
 
-    const findedLoggedUser = await this.verifyUserStatusByIdRepository.verify(
-      loggedUser
-    );
+    const findedLoggedUser = await this.findUserByIdRepository.find(loggedUser);
 
     if (Object.keys(findedLoggedUser).length < 1) {
       return left(new EntityNotExists(loggedUserString));
     }
 
-    if (
-      loggedUser !== id &&
-      findedLoggedUser !== 'ADMIN' &&
-      findedLoggedUser !== 'DEFAULT_ADMIN'
-    ) {
-      return left(new NotPermissionError(loggedUserString));
+    const permissionValidation = await ValidationUserPermisssions(
+      loggedUser,
+      ['ADMIN', 'DEFAULT_ADMIN'],
+      this.verifyUserPermissionsByIdRepository
+    );
+
+    if (permissionValidation.isLeft()) {
+      return left(permissionValidation.value);
     }
 
-    const findedUser = await this.findUserByIdRepository.find(id);
+    const userValidation = await ValidationUserId(
+      id,
+      this.findUserByIdRepository
+    );
 
-    if (Object.keys(findedUser).length < 1) {
-      return left(new EntityNotExists(idString));
+    if (userValidation.isLeft()) {
+      return left(userValidation.value);
     }
 
-    await this.deleteUserByIdRepository.delete(input);
+    const deletedUser = await this.deleteUserByIdRepository.delete(input);
 
-    return right(undefined);
+    if (Object.keys(deletedUser).length < 1) {
+      return left(new EntityNotDeleted('Usuário'));
+    }
+
+    return right(deletedUser);
   }
 }

@@ -1,7 +1,7 @@
-import { useAppThemeContext, useDrawerContext } from '../../contexts';
+import { useDrawerContext } from '../../contexts';
 import { DrawerHeader } from './drawer-header';
 import { DrawerListItem } from './drawer-list';
-import { FC, ReactNode } from 'react';
+import { FC, ReactNode, useCallback } from 'react';
 import { styled, Theme, CSSObject, useTheme } from '@mui/material/styles';
 import {
   Box,
@@ -10,13 +10,12 @@ import {
   Divider,
   useMediaQuery,
   Avatar,
-  Button,
   Icon,
-  Typography,
   IconButton,
 } from '@mui/material';
 import MuiDrawer from '@mui/material/Drawer';
-import { removeItemLocalStorage } from '../../services';
+import { DrawerConfiguration } from './config';
+import { useLoadUserPureTvData, useSnackbarAlert } from '../../hooks';
 
 const drawerWidth = 200;
 
@@ -72,102 +71,91 @@ export const MiniDrawer: FC<MiniDrawerProps> = ({
   themeTitle = 'Alterar Tema',
 }) => {
   const theme = useTheme();
-  const { toggleTheme } = useAppThemeContext();
   const { isDrawerOpen, toggleDrawerOpen, drawerOptions } = useDrawerContext();
+  const { showSnackbarAlert, SnackbarAlert } = useSnackbarAlert();
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const logout = () => {
-    removeItemLocalStorage('u');
-    window.location.reload();
-  };
+  const showAlert = useCallback(
+    (message: string, success: boolean) => {
+      showSnackbarAlert({
+        message: message,
+        severity: success ? 'success' : 'error',
+      });
+    },
+    [showSnackbarAlert]
+  );
 
   return (
-    <Box sx={{ display: 'flex' }}>
-      <CssBaseline />
-      <Drawer
-        variant={smDown ? 'temporary' : 'permanent'}
-        open={isDrawerOpen}
-        onClose={toggleDrawerOpen}
-      >
-        <DrawerHeader
-          open={isDrawerOpen}
-          handleDrawerClose={toggleDrawerOpen}
-        />
-        {isDrawerOpen && (
-          <Box
-            width="100%"
-            marginTop={-5}
-            height={theme.spacing(15)}
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-          >
-            <Avatar
-              sx={{ height: theme.spacing(12), width: theme.spacing(12) }}
-              src={image}
-            />
-          </Box>
-        )}
-        <Divider />
-        <List component="nav">
-          <DrawerListItem
-            items={drawerOptions}
+    <>
+      <Box sx={{ display: 'flex' }}>
+        <CssBaseline />
+        {Object.keys(drawerOptions).length > 0 && (
+          <Drawer
+            variant={smDown ? 'temporary' : 'permanent'}
             open={isDrawerOpen}
-            onClick={smDown ? toggleDrawerOpen : undefined}
-          />
-        </List>
-        <Box
-          sx={{
-            marginTop: 'auto',
-          }}
-        >
-          <Divider />
-          {isDrawerOpen && (
+            onClose={toggleDrawerOpen}
+          >
+            <DrawerHeader
+              open={isDrawerOpen}
+              handleDrawerClose={toggleDrawerOpen}
+            />
+            {isDrawerOpen && (
+              <Box
+                width="100%"
+                marginTop={-5}
+                height={theme.spacing(15)}
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+              >
+                <Avatar
+                  sx={{ height: theme.spacing(12), width: theme.spacing(12) }}
+                  src={image}
+                />
+              </Box>
+            )}
+            <Divider />
+            <List component="nav">
+              <DrawerListItem
+                items={drawerOptions}
+                open={isDrawerOpen}
+                onClick={smDown ? toggleDrawerOpen : undefined}
+              />
+            </List>
             <Box
               sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                padding: theme.spacing(2),
+                marginTop: 'auto',
               }}
             >
-              <Button
-                onClick={logout}
-                color="inherit"
-                sx={{
-                  marginBottom: theme.spacing(0.5),
-                }}
-                startIcon={<Icon>logout</Icon>}
-              >
-                <Typography>{logoutTitle}</Typography>
-              </Button>
-
-              <Button
-                onClick={toggleTheme}
-                color="inherit"
-                startIcon={<Icon>dark_mode</Icon>}
-              >
-                <Typography>{themeTitle}</Typography>
-              </Button>
+              <Divider />
+              {isDrawerOpen && (
+                <DrawerConfiguration
+                  logoutTitle={logoutTitle}
+                  themeTitle={themeTitle}
+                  showAlert={showAlert}
+                />
+              )}
+              {!isDrawerOpen && (
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    padding: theme.spacing(1),
+                  }}
+                >
+                  <IconButton onClick={toggleDrawerOpen}>
+                    <Icon>settings</Icon>
+                  </IconButton>
+                </Box>
+              )}
             </Box>
-          )}
-          {!isDrawerOpen && (
-            <Box
-              sx={{
-                display: 'flex',
-                justifyContent: 'center',
-                padding: theme.spacing(1),
-              }}
-            >
-              <IconButton onClick={toggleDrawerOpen}>
-                <Icon>settings</Icon>
-              </IconButton>
-            </Box>
-          )}
+          </Drawer>
+        )}
+        <Box component="main" sx={{ flexGrow: 1, p: theme.spacing(1) }}>
+          {children}
         </Box>
-      </Drawer>
-      <Box component="main" sx={{ flexGrow: 1, p: theme.spacing(1) }}>
-        {children}
       </Box>
-    </Box>
+      {SnackbarAlert}
+    </>
   );
 };

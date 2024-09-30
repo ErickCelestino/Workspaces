@@ -5,39 +5,56 @@ import {
   CreateContentFileRepository,
   FindDirectoryByIdRepository,
   EntityNotEmpty,
+  EntityNotCreated,
+  FileNotAllowed,
   UserList,
   EntityNotExists,
   Directory,
-  EntityNotCreated,
-  FileNotAllowed,
-  FindUrlFileRepository,
+  UploadContentFileRepository,
+  EntityNotLoaded,
+  GenerateThumbnailRepository,
+  EntityNotConverted,
+  FindCompanyByIdRepository,
+  CompanyResponseDto,
 } from '../../../src';
-import { ContentFileMock, DirectoryMock, userMock } from '../../entity';
+import {
+  CompanySimpleMock,
+  ContentFileMock,
+  DirectoryMock,
+  userMock,
+} from '../../entity';
 import {
   CreateContentFileRepositoryMock,
+  FindCompanyByIdRepositoryMock,
   FindDirectoryByIdRespositoryMock,
-  FindUrlFileRepositoryMock,
   FindUserByIdRepositoryMock,
+  GenerateThumbnailRepositoryMock,
+  UploadContentFileRepositoryMock,
 } from '../../repository';
 
 interface SutTypes {
   sut: CreateContentFile;
   CreateContentFileDto: CreateContentFileDto;
   findUserByIdRepository: FindUserByIdRepository;
+  findCompanyByIdRepository: FindCompanyByIdRepository;
   findDirectoryByIdRepository: FindDirectoryByIdRepository;
   CreateContentFileRepository: CreateContentFileRepository;
-  findUrlFileRespository: FindUrlFileRepository;
+  generateThumbnailRepository: GenerateThumbnailRepository;
+  uploadContentFileRepository: UploadContentFileRepository;
 }
 
 const makeSut = (): SutTypes => {
   const CreateContentFileRepository = new CreateContentFileRepositoryMock();
   const findUserByIdRepository = new FindUserByIdRepositoryMock();
+  const findCompanyByIdRepository = new FindCompanyByIdRepositoryMock();
   const findDirectoryByIdRepository = new FindDirectoryByIdRespositoryMock();
-  const findUrlFileRespository = new FindUrlFileRepositoryMock();
+  const generateThumbnailRepository = new GenerateThumbnailRepositoryMock();
+  const uploadContentFileRepository = new UploadContentFileRepositoryMock();
   const mockBuffer = {} as Buffer;
   const CreateContentFileDto: CreateContentFileDto = {
     directoryId: DirectoryMock.id,
     loggedUserId: userMock.userId,
+    companyId: CompanySimpleMock.id,
     file: [
       {
         fieldname: 'any_fieldname',
@@ -55,15 +72,19 @@ const makeSut = (): SutTypes => {
   const sut = new CreateContentFile(
     CreateContentFileRepository,
     findUserByIdRepository,
+    findCompanyByIdRepository,
     findDirectoryByIdRepository,
-    findUrlFileRespository
+    generateThumbnailRepository,
+    uploadContentFileRepository
   );
 
   return {
     CreateContentFileRepository,
     findUserByIdRepository,
+    findCompanyByIdRepository,
     findDirectoryByIdRepository,
-    findUrlFileRespository,
+    generateThumbnailRepository,
+    uploadContentFileRepository,
     CreateContentFileDto,
     sut,
   };
@@ -83,6 +104,16 @@ describe('CreateContentFile', () => {
   it('should return EntityNotEmpty when a pass incorrect logged user id', async () => {
     const { CreateContentFileDto, sut } = makeSut();
     CreateContentFileDto.loggedUserId = '';
+    const result = await sut.execute(CreateContentFileDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
+    expect(result.value).toBeInstanceOf(EntityNotEmpty);
+  });
+
+  it('should return EntityNotEmpty when a pass incorrect Company id', async () => {
+    const { CreateContentFileDto, sut } = makeSut();
+    CreateContentFileDto.companyId = '';
     const result = await sut.execute(CreateContentFileDto);
 
     expect(result.isLeft()).toBe(true);
@@ -110,78 +141,11 @@ describe('CreateContentFile', () => {
     expect(result.value).toBeInstanceOf(EntityNotEmpty);
   });
 
-  it('should return EntityNotExists if there is no user created in the database', async () => {
-    const {
-      CreateContentFileDto,
-      findDirectoryByIdRepository,
-      CreateContentFileRepository,
-      findUrlFileRespository,
-    } = makeSut();
-
-    const mockEmptyItem = {} as UserList;
-
-    const mockEmptyRepository: FindUserByIdRepository = {
-      find: jest.fn(async () => mockEmptyItem),
-    };
-
-    const sut = new CreateContentFile(
-      CreateContentFileRepository,
-      mockEmptyRepository,
-      findDirectoryByIdRepository,
-      findUrlFileRespository
-    );
-
-    const result = await sut.execute(CreateContentFileDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotExists);
-  });
-
-  it('should return EntityNotExists if there is no directory created in the database', async () => {
-    const {
-      CreateContentFileDto,
-      findUserByIdRepository,
-      CreateContentFileRepository,
-      findUrlFileRespository,
-    } = makeSut();
-
-    const mockEmptyItem = {} as Directory;
-
-    const mockEmptyRepository: FindDirectoryByIdRepository = {
-      find: jest.fn(async () => mockEmptyItem),
-    };
-
-    const sut = new CreateContentFile(
-      CreateContentFileRepository,
-      findUserByIdRepository,
-      mockEmptyRepository,
-      findUrlFileRespository
-    );
-
-    const result = await sut.execute(CreateContentFileDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotExists);
-  });
-
   it('should return EntityNotCreated if there is no content video created in the database', async () => {
-    const {
-      findDirectoryByIdRepository,
-      findUserByIdRepository,
-      CreateContentFileDto,
-      findUrlFileRespository,
-    } = makeSut();
-
-    const mockEmptyRepository: CreateContentFileRepository = {
-      create: jest.fn(async () => ''),
-    };
-
-    const sut = new CreateContentFile(
-      mockEmptyRepository,
-      findUserByIdRepository,
-      findDirectoryByIdRepository,
-      findUrlFileRespository
-    );
+    const { sut, CreateContentFileDto } = makeSut();
+    jest
+      .spyOn(sut['createContentFileRepository'], 'create')
+      .mockResolvedValueOnce('');
 
     const result = await sut.execute(CreateContentFileDto);
 
@@ -197,5 +161,85 @@ describe('CreateContentFile', () => {
     expect(result.isLeft()).toBe(true);
     expect(result.isRight()).toBe(false);
     expect(result.value).toBeInstanceOf(FileNotAllowed);
+  });
+
+  it('should return EntityNotExists when a pass incorrect Logged User ID', async () => {
+    const { CreateContentFileDto, sut } = makeSut();
+    jest
+      .spyOn(sut['findUserByIdRepository'], 'find')
+      .mockResolvedValueOnce({} as UserList);
+    const result = await sut.execute(CreateContentFileDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
+    expect(result.value).toBeInstanceOf(EntityNotExists);
+  });
+
+  it('should return EntityNotExists when a pass incorrect Directory ID', async () => {
+    const { CreateContentFileDto, sut } = makeSut();
+    jest
+      .spyOn(sut['findDirectoryByIdRepository'], 'find')
+      .mockResolvedValueOnce({} as Directory);
+    const result = await sut.execute(CreateContentFileDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
+    expect(result.value).toBeInstanceOf(EntityNotExists);
+  });
+
+  it('should return EntityNotLoaded when not loaded content file in cloud', async () => {
+    const { CreateContentFileDto, sut } = makeSut();
+    jest
+      .spyOn(sut['uploadContentFileRepository'], 'upload')
+      .mockResolvedValueOnce('');
+    const result = await sut.execute(CreateContentFileDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
+    expect(result.value).toBeInstanceOf(EntityNotLoaded);
+  });
+
+  it('should return EntityNotConverted when not converted content file in system', async () => {
+    const { CreateContentFileDto, sut } = makeSut();
+
+    CreateContentFileDto.file[0].mimetype = 'video/mp4';
+    CreateContentFileDto.file[0].buffer = Buffer.from('valid buffer content');
+
+    const result = await sut.execute(CreateContentFileDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
+    expect(result.value).toBeInstanceOf(EntityNotConverted);
+  });
+
+  it('should return EntityNotLoaded when not uploaded content file in system', async () => {
+    const { CreateContentFileDto, sut } = makeSut();
+    jest
+      .spyOn(sut['generateThumbnailRepository'], 'generate')
+      .mockResolvedValueOnce(Buffer.from('files'));
+    jest
+      .spyOn(sut['uploadContentFileRepository'], 'upload')
+      .mockResolvedValueOnce('');
+
+    CreateContentFileDto.file[0].mimetype = 'video/mp4';
+    CreateContentFileDto.file[0].buffer = Buffer.from('valid buffer content');
+
+    const result = await sut.execute(CreateContentFileDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
+    expect(result.value).toBeInstanceOf(EntityNotLoaded);
+  });
+
+  it('should return EntityNotExists when a no exist company in system', async () => {
+    const { CreateContentFileDto, sut } = makeSut();
+    jest
+      .spyOn(sut['findCompanyByIdRepository'], 'find')
+      .mockResolvedValueOnce({} as CompanyResponseDto);
+    const result = await sut.execute(CreateContentFileDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
+    expect(result.value).toBeInstanceOf(EntityNotExists);
   });
 });

@@ -1,13 +1,14 @@
 import { Inject } from '@nestjs/common';
 import { UseCase } from '../../../base/use-case';
 import { DeletePlaylistCategoryDto } from '../../../dto';
-import { EntityNotEmpty, EntityNotExists } from '../../../error';
+import { EntityNotEmpty } from '../../../error';
 import {
   DeletePlaylistCategoryRepository,
   FindPlaylistCategoryByIdRepository,
   FindUserByIdRepository,
 } from '../../../repository';
 import { Either, left, right } from '../../../shared/either';
+import { ValidationPlaylistCategoryId, ValidationUserId } from '../../../utils';
 
 export class DeletePlaylistCategory
   implements UseCase<DeletePlaylistCategoryDto, Either<EntityNotEmpty, void>>
@@ -15,7 +16,7 @@ export class DeletePlaylistCategory
   constructor(
     @Inject('FindUserByIdRepository')
     private findUserByIdRepository: FindUserByIdRepository,
-    @Inject('FindUserByIdRepository')
+    @Inject('FindPlaylistCategoryByIdRepository')
     private findPlaylistCategoryByIdRepository: FindPlaylistCategoryByIdRepository,
     @Inject('DeletePlaylistCategoryRepository')
     private deletePlaylistRepository: DeletePlaylistCategoryRepository
@@ -33,20 +34,22 @@ export class DeletePlaylistCategory
       return left(new EntityNotEmpty('Logged User ID'));
     }
 
-    const filteredUser = await this.findUserByIdRepository.find(loggedUserId);
+    const userValidation = await ValidationUserId(
+      loggedUserId,
+      this.findUserByIdRepository
+    );
 
-    if (Object.keys(filteredUser?.userId ?? filteredUser).length < 1) {
-      return left(new EntityNotExists('User'));
+    if (userValidation.isLeft()) {
+      return left(userValidation.value);
     }
 
-    const filteredPlaylistCategory =
-      await this.findPlaylistCategoryByIdRepository.find(id);
+    const playlistCategoryValidation = await ValidationPlaylistCategoryId(
+      id,
+      this.findPlaylistCategoryByIdRepository
+    );
 
-    if (
-      Object.keys(filteredPlaylistCategory?.id ?? filteredPlaylistCategory)
-        .length < 1
-    ) {
-      return left(new EntityNotExists('Playlist Category'));
+    if (playlistCategoryValidation.isLeft()) {
+      return left(playlistCategoryValidation.value);
     }
 
     await this.deletePlaylistRepository.delete(id);

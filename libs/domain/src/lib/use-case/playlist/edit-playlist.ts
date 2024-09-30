@@ -9,6 +9,7 @@ import {
   FindPlaylistCategoryByIdRepository,
   FindUserByIdRepository,
 } from '../../repository';
+import { ValidationPlaylistId, ValidationUserId } from '../../utils';
 
 export class EditPlaylist
   implements UseCase<EditPlaylistDto, Either<EntityNotEmpty, void>>
@@ -42,10 +43,13 @@ export class EditPlaylist
       return left(new EntityNotEmpty('Playlist'));
     }
 
-    const filteredUser = await this.findUserByIdRepository.find(loggedUserId);
+    const userValidation = await ValidationUserId(
+      loggedUserId,
+      this.findUserByIdRepository
+    );
 
-    if (Object.keys(filteredUser?.userId ?? filteredUser).length < 1) {
-      return left(new EntityNotExists('User'));
+    if (userValidation.isLeft()) {
+      return left(userValidation.value);
     }
 
     const filteredCategory = await this.findPlaylistCategoryByIdRepository.find(
@@ -56,10 +60,13 @@ export class EditPlaylist
       return left(new EntityNotExists('Category'));
     }
 
-    const filteredPlaylist = await this.findPlaylistByIdRepository.find(id);
+    const playlitValidation = await ValidationPlaylistId(
+      id,
+      this.findPlaylistByIdRepository
+    );
 
-    if (Object.keys(filteredPlaylist?.id ?? filteredPlaylist).length < 1) {
-      return left(new EntityNotExists('Playlist'));
+    if (playlitValidation.isLeft()) {
+      return left(playlitValidation.value);
     }
 
     await this.editPlaylistRepository.edit(input);

@@ -106,53 +106,27 @@ describe('EditPlaylistCategory', () => {
     expect(result.value).toBeInstanceOf(EntityNotEmpty);
   });
 
-  it('should return EntityNotExists if there is no user created in the database', async () => {
-    const {
-      editPlaylistCategoryDto,
-      editPlaylistCategoryRespository,
-      findPlaylistCategoryByIdRepository,
-    } = makeSut();
-
-    const mockEmptyItem = {} as UserList;
-
-    const mockEmptyRepository: FindUserByIdRepository = {
-      find: jest.fn(async () => mockEmptyItem),
-    };
-
-    const sut = new EditPlaylistCategory(
-      mockEmptyRepository,
-      findPlaylistCategoryByIdRepository,
-      editPlaylistCategoryRespository
-    );
-
+  it('should return EntityNotExists when a pass incorrect Logged User ID', async () => {
+    const { editPlaylistCategoryDto, sut } = makeSut();
+    jest
+      .spyOn(sut['findUserByIdRepository'], 'find')
+      .mockResolvedValueOnce({} as UserList);
     const result = await sut.execute(editPlaylistCategoryDto);
 
     expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
     expect(result.value).toBeInstanceOf(EntityNotExists);
   });
 
-  it('should return EntityNotExists if there is no playlist category created in the database', async () => {
-    const {
-      editPlaylistCategoryDto,
-      editPlaylistCategoryRespository,
-      findUserByIdRepository,
-    } = makeSut();
-
-    const mockEmptyItem = {} as PlaylistCategory;
-
-    const mockEmptyRepository: FindPlaylistCategoryByIdRepository = {
-      find: jest.fn(async () => mockEmptyItem),
-    };
-
-    const sut = new EditPlaylistCategory(
-      findUserByIdRepository,
-      mockEmptyRepository,
-      editPlaylistCategoryRespository
-    );
-
+  it('should return EntityNotExists when a pass incorrect Playlist Category User ID', async () => {
+    const { editPlaylistCategoryDto, sut } = makeSut();
+    jest
+      .spyOn(sut['findPlaylistCategoryByIdRepository'], 'find')
+      .mockResolvedValueOnce({} as PlaylistCategory);
     const result = await sut.execute(editPlaylistCategoryDto);
 
     expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
     expect(result.value).toBeInstanceOf(EntityNotExists);
   });
 });

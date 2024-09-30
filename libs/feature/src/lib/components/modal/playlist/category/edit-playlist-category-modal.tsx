@@ -1,17 +1,6 @@
-import {
-  Box,
-  Divider,
-  Fade,
-  IconButton,
-  Modal,
-  TextField,
-  Typography,
-  useMediaQuery,
-  useTheme,
-} from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
+import { Box, TextField, useMediaQuery, useTheme } from '@mui/material';
 import { useLoggedUser } from '../../../../contexts';
-import { FC, useCallback, useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { EditPlaylistCategoryBodyDto, ErrorResponse } from '@workspaces/domain';
 import {
@@ -26,6 +15,8 @@ import {
 import axios, { AxiosError } from 'axios';
 import { FormButton } from '../../../form';
 import { SimpleFormModal } from '../../simple';
+import { useFindPlaylistCategoryByIdData } from 'libs/feature/src/lib/hooks';
+import { Console } from 'console';
 
 interface EditPlaylistCategoryModalProps {
   open: boolean;
@@ -49,6 +40,13 @@ export const EditPlaylistCategoryModal: FC<EditPlaylistCategoryModalProps> = ({
   const [success, setSuccess] = useState(false);
   const [dataLoaded, setDataLoaded] = useState(false);
 
+  const { getPlaylistCategoryByIdData, playlistCategoryById } =
+    useFindPlaylistCategoryByIdData({
+      loggedUserId: loggedUser?.id ?? '',
+      playlistCategoryId: selectedId,
+      showAlert,
+    });
+
   const {
     handleSubmit,
     register,
@@ -65,35 +63,28 @@ export const EditPlaylistCategoryModal: FC<EditPlaylistCategoryModalProps> = ({
     },
   });
 
-  const getData = useCallback(async () => {
-    try {
-      const result = await FindPlaylistCategoryByIdRequest({
-        loggedUserId: loggedUser?.id ?? '',
-        id: selectedId,
-      });
-      reset({
-        id: result.id,
-        name: result.name,
-        description: result.description,
-      });
-      setDataLoaded(true);
-    } catch (error) {
-      console.error(error);
-      if (axios.isAxiosError(error)) {
-        const axiosError = error as AxiosError<ErrorResponse>;
-        const errors = ValidationsError(axiosError, 'Usuario ou Categoria');
-        if (errors) {
-          showAlert(errors, false);
-        }
-      }
-    }
-  }, [loggedUser?.id, selectedId, reset, showAlert]);
-
   useEffect(() => {
     if (open && selectedId && !dataLoaded) {
-      getData();
+      reset({
+        id: '',
+        name: '',
+        description: '',
+      });
+
+      getPlaylistCategoryByIdData();
     }
-  }, [open, selectedId, getData, dataLoaded]);
+  }, [open, selectedId, getPlaylistCategoryByIdData, reset, dataLoaded]);
+
+  useEffect(() => {
+    if (open && playlistCategoryById?.id) {
+      reset({
+        id: playlistCategoryById.id,
+        name: playlistCategoryById.name,
+        description: playlistCategoryById.description,
+      });
+      setDataLoaded(true);
+    }
+  }, [open, playlistCategoryById, reset]);
 
   useEffect(() => {
     if (!open) {

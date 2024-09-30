@@ -5,6 +5,7 @@ import {
   EditUserRepositoryImpl,
   FindUserByIdRepositoryImpl,
   PrismaService,
+  VerifyUserPermissionsByIdRepositoryImpl,
 } from '@workspaces/data-access';
 import { EditUser } from '@workspaces/domain';
 
@@ -24,6 +25,10 @@ import { EditUser } from '@workspaces/domain';
     {
       provide: 'FindUserByIdRepository',
       useClass: FindUserByIdRepositoryImpl,
+    },
+    {
+      provide: 'VerifyUserPermissionsByIdRepository',
+      useClass: VerifyUserPermissionsByIdRepositoryImpl,
     },
   ],
 })

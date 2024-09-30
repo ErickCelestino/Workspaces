@@ -15,6 +15,7 @@ import {
   EntityNotExist,
   ConnectionError,
   EditContentFileSchema,
+  ValidationsError,
 } from '../../../shared';
 import { EditContentFileDto, ErrorResponse } from '@workspaces/domain';
 import { useForm } from 'react-hook-form';
@@ -23,7 +24,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 
 interface FormEditContentFileProps {
   handleEditFileName: () => void;
-  showErrorAlert: (message: string) => void;
+  showAlert: (message: string, success: boolean) => void;
   onEditSuccess: () => void;
   directoryId: string;
   idToEdit: string;
@@ -32,7 +33,7 @@ interface FormEditContentFileProps {
 
 export const FormEditContentFile: FC<FormEditContentFileProps> = ({
   handleEditFileName,
-  showErrorAlert,
+  showAlert,
   onEditSuccess,
   directoryId,
   idToEdit,
@@ -69,16 +70,9 @@ export const FormEditContentFile: FC<FormEditContentFileProps> = ({
       console.error(error);
       if (axios.isAxiosError(error)) {
         const axiosError = error as AxiosError<ErrorResponse>;
-        switch (axiosError.response?.data.error.name) {
-          case 'EntityNotEmpty':
-            showErrorAlert(EntityNotEmpty('Arquivos', 'PT-BR'));
-            break;
-          case 'EntityNotExists':
-            showErrorAlert(EntityNotExist('Diretorio', 'PT-BR'));
-            break;
-          default:
-            showErrorAlert(ConnectionError('PT-BR'));
-            break;
+        const errors = ValidationsError(axiosError, 'Arquivos');
+        if (errors) {
+          showAlert(errors, false);
         }
       }
     }

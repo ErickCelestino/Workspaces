@@ -1,33 +1,23 @@
 import {
   Box,
-  Divider,
-  Fade,
   IconButton,
-  Modal,
   Typography,
   useMediaQuery,
   useTheme,
 } from '@mui/material';
-import { FC, useEffect, useState } from 'react';
-import {
-  ContentFile,
-  DetailsContentFileDto,
-  ErrorResponse,
-} from '@workspaces/domain';
-import CloseIcon from '@mui/icons-material/Close';
+import { FC, useEffect, useRef, useState } from 'react';
 import DescriptionIcon from '@mui/icons-material/Description';
 import FormatSizeIcon from '@mui/icons-material/FormatSize';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import AttachmentIcon from '@mui/icons-material/Attachment';
-import { DetailsContentFileRequest } from '../../../services';
-import axios, { AxiosError } from 'axios';
 import EditIcon from '@mui/icons-material/Edit';
 import { FormEditContentFile } from '../../form';
-import { ValidationsError, formatBrDate } from '../../../shared';
+import { formatBrDate } from '../../../shared';
 import { SimpleFormModal } from '../simple';
+import { useDetailsContentFileData } from '../../../hooks';
 
 interface DetailsFileModalPros {
-  showErrorAlert: (message: string) => void;
+  showAlert: (message: string, success: boolean) => void;
   handlePopUpClose: () => void;
   open: boolean;
   directoryId: string;
@@ -38,10 +28,11 @@ interface DetailsFileModalPros {
   formatFileTitle?: string;
   sizeFileTitle?: string;
   uploadDateTitle?: string;
+  successMessage?: string;
 }
 
 export const DetailsFileModal: FC<DetailsFileModalPros> = ({
-  showErrorAlert,
+  showAlert,
   handlePopUpClose,
   open,
   directoryId,
@@ -52,11 +43,21 @@ export const DetailsFileModal: FC<DetailsFileModalPros> = ({
   formatFileTitle = 'Formato do Arquivo',
   sizeFileTitle = 'Tamanho do Arquivo',
   uploadDateTitle = 'Data de Upload',
+  successMessage = 'Arquivo Editado com Sucesso!',
 }) => {
-  const [detailsFile, setDetailsFile] = useState<ContentFile>();
   const [editFileName, setEditFileName] = useState<boolean>(false);
   const theme = useTheme();
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const hasLoadedUserData = useRef(false);
+
+  const { detailsFile, getFilesByPlaylistData } = useDetailsContentFileData({
+    input: {
+      directoryId,
+      id: idDetails,
+      loggedUserId: loggedUserId,
+    },
+    showAlert,
+  });
 
   const handleEditFileName = () => {
     setEditFileName(!editFileName);
@@ -64,40 +65,22 @@ export const DetailsFileModal: FC<DetailsFileModalPros> = ({
 
   const editSuccess = () => {
     setEditFileName(false);
+    showAlert(successMessage, true);
   };
 
   useEffect(() => {
-    const getContentFile = async () => {
-      try {
-        const dto: DetailsContentFileDto = {
-          directoryId,
-          id: idDetails,
-          loggedUserId,
-        };
-        const result = await DetailsContentFileRequest(dto);
-        const formattedUploadDate = result.uploadDate
-          ? new Date(result.uploadDate).toISOString().split('T')[0]
-          : new Date();
-        setDetailsFile({
-          ...result,
-          uploadDate: formattedUploadDate as Date,
-        });
-      } catch (error) {
-        console.error(error);
-        if (axios.isAxiosError(error)) {
-          const axiosError = error as AxiosError<ErrorResponse>;
-          const errors = ValidationsError(axiosError, 'arquivo ou diretório');
-          if (errors) {
-            showErrorAlert(errors);
-          }
-        }
-      }
-    };
-
-    if (open) {
-      getContentFile();
+    if (open && !hasLoadedUserData.current) {
+      getFilesByPlaylistData();
+      hasLoadedUserData.current = true;
     }
-  }, [directoryId, idDetails, loggedUserId, open, showErrorAlert]);
+  }, [
+    directoryId,
+    idDetails,
+    loggedUserId,
+    open,
+    showAlert,
+    getFilesByPlaylistData,
+  ]);
 
   return (
     <SimpleFormModal
@@ -147,7 +130,7 @@ export const DetailsFileModal: FC<DetailsFileModalPros> = ({
             directoryId={directoryId}
             idToEdit={idDetails}
             loggedUserId={loggedUserId}
-            showErrorAlert={showErrorAlert}
+            showAlert={showAlert}
             handleEditFileName={handleEditFileName}
           />
         )}

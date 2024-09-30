@@ -11,6 +11,7 @@ export async function CreatePlaylistRequest(input: CreatePlaylistDto) {
       params: {
         loggedUserId: input.loggedUserId,
         playlistCategoryId: input.playlistCategoryId,
+        companyId: input.companyId,
       },
     }
   );

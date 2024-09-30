@@ -1,40 +1,41 @@
 import {
-  Box,
+  Dialog,
+  DialogContent,
+  DialogTitle,
   Grid,
-  Pagination,
-  Typography,
-  useMediaQuery,
+  Icon,
+  IconButton,
   useTheme,
 } from '@mui/material';
+import AttachFileIcon from '@mui/icons-material/AttachFile';
 import { LayoutBase } from '../../layout';
-
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
-  ContentFile,
+  CrudType,
   DownloadContentFileDto,
   DownloadContentFileResponseDto,
   ErrorResponse,
   FileContentType,
-  ListContentFileDto,
+  IconMenuItem,
 } from '@workspaces/domain';
 import {
   DownloadContentFileRequest,
-  ListContentFilesRequest,
   getItemLocalStorage,
 } from '../../services';
-import { useLoggedUser } from '../../contexts';
+import { useFileModal, useLoggedUser } from '../../contexts';
 import {
   ContentFileCard,
-  DeleteFileModal,
-  DetailsFileModal,
-  MoveFileToDirectoryModal,
-  SearchBar,
+  ContentFileModals,
+  CreateDirectoryModal,
+  EmptyListResponse,
+  ListDirectory,
   ToolbarPureTV,
 } from '../../components';
 import axios, { AxiosError } from 'axios';
-import { useSnackbarAlert } from '../../hooks';
+import { useListContentFilesData, useSnackbarAlert } from '../../hooks';
 import { DownloadError } from '../../shared';
 import { ValidationsError } from '../../shared/validations/utils';
+import { ContainerCardList } from '../utils';
 
 const onDownloadFile = async (input: DownloadContentFileResponseDto) => {
   try {
@@ -58,106 +59,102 @@ const onDownloadFile = async (input: DownloadContentFileResponseDto) => {
 };
 
 export const ListContanteFilesContainer = () => {
-  const [search, setSearch] = useState(false);
-  const [fileList, setFileList] = useState<ContentFile[]>([]);
-  const [totalPage, setTotalPage] = useState<number>(1);
-  const [directoryId, setDirectoryId] = useState('');
-  const [deletePopUp, setDeletePopUp] = useState(false);
-  const [detailsPopUp, setDetailsPopUp] = useState(false);
-  const [movePopUp, setMovePopUp] = useState(false);
+  const [directoryId, setLocalDirectoryId] = useState('');
+  const [createDirectoryPopUp, setCreateDirectoryPopUp] = useState(false);
   const [fileId, setFileId] = useState('');
+  const [directoyPopUp, setDirectoryPopUp] = useState(false);
+  const [popUpClosed, setPopUpClosed] = useState(false);
+  const [openModal, setOpenModal] = useState({
+    create: false,
+    delete: false,
+    edit: false,
+    details: false,
+    moveFile: false,
+  });
 
   const theme = useTheme();
-  const smDown = useMediaQuery(theme.breakpoints.down('sm'));
-  const mdUp = useMediaQuery(theme.breakpoints.up('md'));
-  const mdDown = useMediaQuery(theme.breakpoints.down('md'));
   const { loggedUser } = useLoggedUser();
   const { showSnackbarAlert, SnackbarAlert } = useSnackbarAlert();
+  const { handleOpen, setDirectoryId, closed } = useFileModal();
+  const hasLoadedUserData = useRef(false);
 
-  const showErrorAlert = useCallback(
-    (message: string) => {
+  const showAlert = useCallback(
+    (message: string, success: boolean) => {
       showSnackbarAlert({
         message: message,
-        severity: 'error',
+        severity: success ? 'success' : 'error',
       });
     },
     [showSnackbarAlert]
   );
 
-  const handleData = useCallback(
-    async (data: ListContentFileDto) => {
-      try {
-        const result = await ListContentFilesRequest({
-          userInput: data.userInput ?? '',
-          loggedUserId: data.loggedUserId,
-          directoryId: data.directoryId,
-          take: data.take,
-          skip: data.skip,
-        });
-
-        return result;
-      } catch (error) {
-        console.error(error);
-        if (axios.isAxiosError(error)) {
-          const axiosError = error as AxiosError<ErrorResponse>;
-          const errors = ValidationsError(axiosError, 'Arquivos');
-          if (errors) {
-            showErrorAlert(errors);
-          }
-        }
-      }
-    },
-    [showErrorAlert]
-  );
-
-  const getData = useCallback(async () => {
-    const directoryId = getItemLocalStorage('di');
-    const result = await handleData({
-      directoryId,
+  const { getListContentFilesData, listFiles, totalPage } =
+    useListContentFilesData({
+      showAlert,
+      directoryId: directoryId,
+      companyId: loggedUser?.selectedCompany.id ?? '',
       loggedUserId: loggedUser?.id ?? '',
-      userInput: '',
     });
-    setFileList(result?.files ?? []);
-    setDirectoryId(directoryId);
-    setTotalPage(result?.totalPages ?? 0);
-  }, [loggedUser, handleData]);
 
   useEffect(() => {
-    if (!search) {
-      getData();
+    if (closed && !popUpClosed) {
+      const directoryId = getItemLocalStorage('di');
+      if (directoryId) {
+        getListContentFilesData('', directoryId);
+        setLocalDirectoryId(directoryId);
+        setPopUpClosed(true);
+      }
     }
-  }, [getData, search]);
+  }, [closed, getListContentFilesData, setLocalDirectoryId, popUpClosed]);
 
-  const handlePopUpClose = (types: FileContentType) => {
+  const handlePopUpClose = async (type: FileContentType | 'add') => {
+    setOpenModal((prev) => ({
+      ...prev,
+      [type]: false,
+    }));
+    getListContentFilesData();
+  };
+
+  const handlePopUpOpen = async (type: FileContentType, id?: string) => {
+    setFileId(id ?? '');
+    switch (type) {
+      case 'create':
+        setDirectoryId(directoryId);
+        setPopUpClosed(false);
+        handleOpen();
+        break;
+      case 'download':
+        downloadFile(id ?? '');
+        break;
+      default:
+        setOpenModal((prev) => ({
+          ...prev,
+          [type]: true,
+        }));
+        break;
+    }
+    getListContentFilesData();
+  };
+
+  const handleDirectoryPopUpOpen = (types: CrudType | 'changeDirectory') => {
     switch (types) {
-      case 'delete':
-        setDeletePopUp(false);
+      case 'create':
+        setCreateDirectoryPopUp(true);
         break;
-      case 'details':
-        setDetailsPopUp(false);
-        break;
-      case 'moveFile':
-        setMovePopUp(false);
+      case 'changeDirectory':
+        setDirectoryPopUp(true);
         break;
     }
   };
 
-  const handleFile = async (id: string, types: FileContentType) => {
+  const handleDirectoryPopUpClose = (types: CrudType | 'changeDirectory') => {
+    getListContentFilesData('', directoryId);
     switch (types) {
-      case 'delete':
-        setFileId(id);
-        setDeletePopUp(true);
+      case 'create':
+        setCreateDirectoryPopUp(false);
         break;
-      case 'details':
-        setFileId(id);
-        setDetailsPopUp(true);
-        break;
-      case 'download':
-        downloadFile(id);
-        break;
-      case 'moveFile':
-        setFileId(id);
-        setMovePopUp(true);
+      case 'changeDirectory':
+        setDirectoryPopUp(false);
         break;
     }
   };
@@ -174,7 +171,7 @@ export const ListContanteFilesContainer = () => {
         const axiosError = error as AxiosError<ErrorResponse>;
         const errors = ValidationsError(axiosError, 'Download');
         if (errors) {
-          showErrorAlert(errors);
+          showAlert(errors, false);
         }
       }
     }
@@ -192,7 +189,7 @@ export const ListContanteFilesContainer = () => {
     if (url) {
       onDownloadFile(url);
     } else {
-      showErrorAlert(DownloadError('PT-BR'));
+      showAlert(DownloadError('PT-BR'), true);
     }
   };
 
@@ -200,110 +197,129 @@ export const ListContanteFilesContainer = () => {
     event: React.ChangeEvent<unknown>,
     value: number
   ) => {
-    const result = await ListContentFilesRequest({
-      userInput: '',
-      directoryId: directoryId,
-      loggedUserId: loggedUser?.id ?? '',
-      skip: (value - 1) * 8,
-    });
-    setFileList(result.files);
+    getListContentFilesData('', directoryId, value);
   };
 
   const searchData = async (input: string) => {
-    setSearch(true);
-    const result = await handleData({
-      directoryId,
-      loggedUserId: loggedUser?.id ?? '',
-      userInput: input,
-    });
-    setFileList(result?.files ?? []);
-    setTotalPage(result?.totalPages ?? 0);
+    getListContentFilesData(input, directoryId);
   };
 
+  useEffect(() => {
+    if (!hasLoadedUserData.current) {
+      const directoryId = getItemLocalStorage('di');
+      if (directoryId) {
+        getListContentFilesData('', directoryId);
+        setLocalDirectoryId(directoryId);
+      }
+      hasLoadedUserData.current = true;
+    }
+  }, [getListContentFilesData, directoryId, setLocalDirectoryId, listFiles]);
+
+  const rightClickMenuList: IconMenuItem[] = [
+    {
+      icon: <Icon>create_new_folder</Icon>,
+      title: 'Novo Diretório',
+      handleClick: async () => handleDirectoryPopUpOpen('create'),
+    },
+    {
+      icon: <Icon>note_add</Icon>,
+      title: 'Novo Arquivo',
+      handleClick: async () => handlePopUpOpen('create'),
+    },
+  ];
   return (
     <>
-      <DeleteFileModal
-        open={deletePopUp}
+      <ContentFileModals
+        companyId={loggedUser?.selectedCompany.id ?? ''}
         directoryId={directoryId}
-        onClose={() => handlePopUpClose('delete')}
-        idToDelete={fileId}
+        handlePopUpClose={handlePopUpClose}
         loggedUserId={loggedUser?.id ?? ''}
-        showErrorAlert={showErrorAlert}
+        openModal={openModal}
+        selectedId={fileId}
+        showAlert={showAlert}
       />
-      <DetailsFileModal
-        directoryId={directoryId}
-        open={detailsPopUp}
-        idDetails={fileId}
-        loggedUserId={loggedUser?.id ?? ''}
-        showErrorAlert={showErrorAlert}
-        handlePopUpClose={() => handlePopUpClose('details')}
+      <CreateDirectoryModal
+        open={createDirectoryPopUp}
+        showAlert={showAlert}
+        handlePopUpClose={() => handleDirectoryPopUpClose('create')}
+        title="Criar Diretório"
       />
-      <MoveFileToDirectoryModal
-        open={movePopUp}
-        loggedUserId={loggedUser?.id ?? ''}
-        showErrorAlert={showErrorAlert}
-        onClose={() => handlePopUpClose('moveFile')}
-        idToMove={fileId}
-        title="Mover Arquivo para"
-        buttonTitle="Mover Arquivo"
-      />
-
-      <LayoutBase title="Listagem de Usuários" toolBar={<ToolbarPureTV />}>
-        <Box display="flex" justifyContent="center">
-          <Box width={mdUp ? '85%' : '100%'}>
-            <Box
-              width={mdUp ? '92%' : smDown ? '94%' : mdDown ? '95%' : '80%'}
-              marginLeft={smDown ? theme.spacing(1) : 0}
-            >
-              <SearchBar
-                onSearch={searchData}
-                placeholder="Pesquisar Arquivo"
-              />
-              <Box display="flex" justifyContent="center" mt={theme.spacing(2)}>
-                {fileList.length > 0 ? (
-                  <Grid justifyContent="center" container spacing={2}>
-                    {fileList.map((file, index) => (
-                      <Grid item md={6} lg={4} key={index}>
-                        <ContentFileCard
-                          deleteFile={() => handleFile(file.id, 'delete')}
-                          detailsFile={() => handleFile(file.id, 'details')}
-                          downloadFile={() => handleFile(file.id, 'download')}
-                          moveFile={() => handleFile(file.id, 'moveFile')}
-                          fileImage={file.path}
-                          fileImageName={file.fileName}
-                          name={file.originalName}
-                          key={file.id}
-                        />
-                      </Grid>
-                    ))}
-                  </Grid>
-                ) : (
-                  <Box
-                    marginTop={theme.spacing(2)}
-                    width="100%"
-                    display="flex"
-                    justifyContent="center"
-                  >
-                    <Typography variant="h4">
-                      Não foram encontrados registros
-                    </Typography>
-                  </Box>
-                )}
-              </Box>
-            </Box>
-            <Box
-              marginTop={theme.spacing(2)}
-              display="flex"
-              justifyContent="end"
-            >
-              <Pagination
-                count={totalPage}
-                color="primary"
-                onChange={handleChange}
-              />
-            </Box>
-          </Box>
-        </Box>
+      <Dialog
+        open={directoyPopUp}
+        onClose={() => handleDirectoryPopUpClose('changeDirectory')}
+      >
+        <DialogTitle>
+          Selecione um Diretório
+          <IconButton
+            aria-label="close"
+            onClick={() => handleDirectoryPopUpClose('changeDirectory')}
+            sx={{
+              position: 'absolute',
+              right: 8,
+              top: 8,
+              color: (theme) => theme.palette.grey[500],
+            }}
+          >
+            <Icon>close_icon</Icon>
+          </IconButton>
+        </DialogTitle>
+        <DialogContent>
+          <ListDirectory getDataInput={getListContentFilesData} />
+        </DialogContent>
+      </Dialog>
+      <LayoutBase
+        title="Listagem de Arquivos"
+        iconMenuItemList={rightClickMenuList}
+        toolBar={<ToolbarPureTV />}
+      >
+        <ContainerCardList
+          search={{
+            searchData: searchData,
+            placeholder: 'Pesquisar Arquivo',
+            createPopUp: () => handlePopUpOpen('create'),
+          }}
+          totalPage={totalPage}
+          handleChange={handleChange}
+          mobileBackButtom
+          // changeDirectory
+          handleDirectoryPopUpOpen={() =>
+            handleDirectoryPopUpOpen('changeDirectory')
+          }
+        >
+          {listFiles.length > 0 ? (
+            <Grid justifyContent="center" container spacing={2}>
+              {listFiles.map((file, index) => (
+                <Grid item md={6} lg={4} xl={3} key={index}>
+                  <ContentFileCard
+                    deleteFile={() => handlePopUpOpen('delete', file.id)}
+                    detailsFile={() => handlePopUpOpen('details', file.id)}
+                    downloadFile={() => handlePopUpOpen('download', file.id)}
+                    moveFile={() => handlePopUpOpen('moveFile', file.id)}
+                    fileImage={
+                      !file.format.startsWith('video/')
+                        ? file.path ?? ''
+                        : file.thumbnail ?? ''
+                    }
+                    fileImageName={file.originalName}
+                    name={file.originalName}
+                    key={file.id}
+                  />
+                </Grid>
+              ))}
+            </Grid>
+          ) : (
+            <EmptyListResponse
+              message="Sem Arquivos"
+              icon={
+                <AttachFileIcon
+                  sx={{
+                    fontSize: theme.spacing(10),
+                  }}
+                />
+              }
+            />
+          )}
+        </ContainerCardList>
       </LayoutBase>
       {SnackbarAlert}
     </>

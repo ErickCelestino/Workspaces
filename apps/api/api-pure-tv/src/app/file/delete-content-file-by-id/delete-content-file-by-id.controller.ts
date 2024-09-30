@@ -1,15 +1,9 @@
-import {
-  BadRequestException,
-  Controller,
-  Delete,
-  Param,
-  Query,
-  UsePipes,
-} from '@nestjs/common';
+import { Controller, Delete, Param, Query, UsePipes } from '@nestjs/common';
 import { DeleteContentFileByIdService } from './delete-content-file-by-id.service';
 import {
   DeleteContentFileByIdDto,
   deleteContentFileByIdSchema,
+  ErrorMessageResult,
 } from '@workspaces/domain';
 import { ZodValidationPipe } from '../../pipes/zod-validation-pipe';
 
@@ -34,12 +28,6 @@ export class DeleteContentFileByIdController {
     const result = await this.deleteContentFileByIdService.delete(dto);
 
     if (result.isRight()) return result.value;
-    else
-      throw new BadRequestException({
-        error: {
-          name: result.value.name,
-          message: result.value.message,
-        },
-      });
+    else await ErrorMessageResult(result.value.name, result.value.message);
   }
 }

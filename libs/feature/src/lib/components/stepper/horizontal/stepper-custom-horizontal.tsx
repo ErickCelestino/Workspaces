@@ -35,6 +35,10 @@ export const StepperCustomHorizontal: React.FC<StepperCustomProps> = ({
       icon: <Icon>password</Icon>,
       step: 'Criar Senha',
     },
+    {
+      icon: <Icon>add_business</Icon>,
+      step: 'Criar Empresa',
+    },
   ],
 }) => {
   const theme = useTheme();

@@ -7,9 +7,15 @@ import {
 import { EntityNotEmpty, EntityNotExists } from '../../../error';
 import { Either, left, right } from '../../../shared/either';
 import {
+  FindCompanyByIdRepository,
   FindUserByIdRepository,
   ListPlaylistCategoryRepository,
 } from '../../../repository';
+import {
+  ValidationCompanyId,
+  ValidationTextField,
+  ValidationUserId,
+} from '../../../utils';
 
 export class ListPlaylistCategory
   implements
@@ -21,6 +27,8 @@ export class ListPlaylistCategory
   constructor(
     @Inject('FindUserByIdRepository')
     private findUserByIdRepository: FindUserByIdRepository,
+    @Inject('FindCompanyByIdRepository')
+    private findCompanyByIdRepository: FindCompanyByIdRepository,
     @Inject('ListPlaylistCategoryRepository')
     private listPlaylistCategoryRepository: ListPlaylistCategoryRepository
   ) {}
@@ -30,16 +38,37 @@ export class ListPlaylistCategory
   ): Promise<
     Either<EntityNotEmpty | EntityNotExists, ListPlaylistCategoryReponseDto>
   > {
-    const { loggedUserId } = input;
+    const { loggedUserId, companyId } = input;
 
-    if (Object.keys(loggedUserId).length < 1) {
-      return left(new EntityNotEmpty('logged User ID'));
+    const loggedUserIdValidation = await ValidationTextField(
+      loggedUserId,
+      'Logged User ID'
+    );
+    if (loggedUserIdValidation.isLeft())
+      return left(loggedUserIdValidation.value);
+
+    const companyIdValidation = await ValidationTextField(
+      companyId,
+      'Company ID'
+    );
+    if (companyIdValidation.isLeft()) return left(companyIdValidation.value);
+
+    const userValidation = await ValidationUserId(
+      loggedUserId,
+      this.findUserByIdRepository
+    );
+
+    if (userValidation.isLeft()) {
+      return left(userValidation.value);
     }
 
-    const filteredUser = await this.findUserByIdRepository.find(loggedUserId);
+    const companyValidation = await ValidationCompanyId(
+      companyId,
+      this.findCompanyByIdRepository
+    );
 
-    if (Object.keys(filteredUser?.userId ?? filteredUser).length < 1) {
-      return left(new EntityNotExists('User'));
+    if (companyValidation.isLeft()) {
+      return left(companyValidation.value);
     }
 
     const listCategory = await this.listPlaylistCategoryRepository.list(input);

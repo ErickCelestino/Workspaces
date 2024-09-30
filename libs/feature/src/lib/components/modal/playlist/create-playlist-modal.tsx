@@ -117,6 +117,7 @@ export const CreatePlaylistModal: FC<CreatePlaylistModalProps> = ({
 
   useEffect(() => {
     getCategories({
+      companyId: loggedUser?.selectedCompany.id ?? '',
       loggedUserId: loggedUser?.id ?? '',
       userInput: '',
     });
@@ -128,6 +129,7 @@ export const CreatePlaylistModal: FC<CreatePlaylistModalProps> = ({
       loggedUserId: loggedUser?.id ?? '',
       name: data.name,
       playlistCategoryId: categoryId,
+      companyId: loggedUser?.selectedCompany.id ?? '',
     });
   };
 

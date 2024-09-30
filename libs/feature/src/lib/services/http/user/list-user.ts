@@ -1,4 +1,4 @@
-import { ListUserDto, ListUserResponseDto, UserList } from '@workspaces/domain';
+import { ListUserDto, ListUserResponseDto } from '@workspaces/domain';
 import { generalApi } from '../axios-config';
 
 export async function ListUserRequest(input: ListUserDto) {
@@ -6,7 +6,8 @@ export async function ListUserRequest(input: ListUserDto) {
   const take = input?.take || 4;
   const result = await generalApi.get<ListUserResponseDto>('list-user', {
     params: {
-      filter: input.input,
+      filter: input.filter,
+      loggedUserId: input.loggedUserId,
       skip,
       take,
     },

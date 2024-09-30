@@ -1,13 +1,7 @@
-import {
-  BadRequestException,
-  Body,
-  Controller,
-  Post,
-  Query,
-  UsePipes,
-} from '@nestjs/common';
+import { Body, Controller, Post, Query, UsePipes } from '@nestjs/common';
 import { CreatePlaylistCategoryService } from './create-playlist-category.service';
 import {
+  ErrorMessageResult,
   PlaylistCategoryBodyDto,
   createPlaylistCategorySchema,
 } from '@workspaces/domain';
@@ -22,21 +16,20 @@ export class CreatePlaylistCategoryController {
   @UsePipes(new ZodValidationPipe(createPlaylistCategorySchema))
   @Post()
   async create(
+    @Query('companyId') companyId: string,
     @Query('loggedUserId') loggedUserId: string,
     @Body() body: PlaylistCategoryBodyDto
   ) {
     const result = await this.createPlaylistCategoryService.create({
-      body,
+      body: {
+        description: body?.description ?? '',
+        name: body?.name ?? '',
+      },
       loggedUserId,
+      companyId,
     });
 
     if (result.isRight()) return { playlistCategoryId: result.value };
-    else
-      throw new BadRequestException({
-        error: {
-          name: result.value.name,
-          message: result.value.message,
-        },
-      });
+    else await ErrorMessageResult(result.value.name, result.value.message);
   }
 }

@@ -2,15 +2,15 @@ import {
   FindUserByIdRepository,
   FindDirectoryByIdRepository,
   EntityNotEmpty,
-  UserList,
   EntityNotExists,
-  Directory,
   DeleteContentFileById,
   DeleteContentFileByIdDto,
   DeleteContentFileByIdRepository,
   FindContentFileByIdRepository,
   ContentFile,
   DeleteFileByNameRepository,
+  UserList,
+  Directory,
 } from '../../../src';
 import { ContentFileMock, DirectoryMock, userMock } from '../../entity';
 import {
@@ -103,90 +103,53 @@ describe('DeleteContentFileById', () => {
     expect(result.value).toBeInstanceOf(EntityNotEmpty);
   });
 
-  it('should return EntityNotExists if there is no user created in the database', async () => {
-    const {
-      deleteContentFileByIdDto,
-      findDirectoryByIdRepository,
-      deleteContentFileByIdRepository,
-      findContentFileByIdRepository,
-      deleteFileByNameRepository,
-    } = makeSut();
-
-    const mockEmptyItem = {} as UserList;
-
-    const mockEmptyRepository: FindUserByIdRepository = {
-      find: jest.fn(async () => mockEmptyItem),
-    };
-
-    const sut = new DeleteContentFileById(
-      deleteContentFileByIdRepository,
-      mockEmptyRepository,
-      findDirectoryByIdRepository,
-      findContentFileByIdRepository,
-      deleteFileByNameRepository
-    );
-
-    const result = await sut.execute(deleteContentFileByIdDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotExists);
-  });
-
-  it('should return EntityNotExists if there is no directory created in the database', async () => {
-    const {
-      deleteContentFileByIdDto,
-      findUserByIdRepository,
-      deleteContentFileByIdRepository,
-      findContentFileByIdRepository,
-      deleteFileByNameRepository,
-    } = makeSut();
-
-    const mockEmptyItem = {} as Directory;
-
-    const mockEmptyRepository: FindDirectoryByIdRepository = {
-      find: jest.fn(async () => mockEmptyItem),
-    };
-
-    const sut = new DeleteContentFileById(
-      deleteContentFileByIdRepository,
-      findUserByIdRepository,
-      mockEmptyRepository,
-      findContentFileByIdRepository,
-      deleteFileByNameRepository
-    );
-
-    const result = await sut.execute(deleteContentFileByIdDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotExists);
-  });
-
   it('should return EntityNotExists if there is no content file created in the database', async () => {
-    const {
-      deleteContentFileByIdDto,
-      findUserByIdRepository,
-      deleteContentFileByIdRepository,
-      findDirectoryByIdRepository,
-      deleteFileByNameRepository,
-    } = makeSut();
-
-    const mockEmptyItem = {} as ContentFile;
-
-    const mockEmptyRepository: FindContentFileByIdRepository = {
-      find: jest.fn(async () => mockEmptyItem),
-    };
-
-    const sut = new DeleteContentFileById(
-      deleteContentFileByIdRepository,
-      findUserByIdRepository,
-      findDirectoryByIdRepository,
-      mockEmptyRepository,
-      deleteFileByNameRepository
-    );
+    const { deleteContentFileByIdDto, sut } = makeSut();
+    jest
+      .spyOn(sut['findContentFileByIdRepository'], 'find')
+      .mockResolvedValueOnce({} as ContentFile);
 
     const result = await sut.execute(deleteContentFileByIdDto);
 
     expect(result.isLeft()).toBe(true);
     expect(result.value).toBeInstanceOf(EntityNotExists);
+  });
+
+  it('should return EntityNotExists when a pass incorrect Logged User ID', async () => {
+    const { deleteContentFileByIdDto, sut } = makeSut();
+    jest
+      .spyOn(sut['findUserByIdRepository'], 'find')
+      .mockResolvedValueOnce({} as UserList);
+    const result = await sut.execute(deleteContentFileByIdDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
+    expect(result.value).toBeInstanceOf(EntityNotExists);
+  });
+
+  it('should return EntityNotExists when a pass incorrect Directory ID', async () => {
+    const { deleteContentFileByIdDto, sut } = makeSut();
+    jest
+      .spyOn(sut['findDirectoryByIdRepository'], 'find')
+      .mockResolvedValueOnce({} as Directory);
+    const result = await sut.execute(deleteContentFileByIdDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
+    expect(result.value).toBeInstanceOf(EntityNotExists);
+  });
+
+  it('should return when a pass incorrect Directory ID', async () => {
+    const { deleteContentFileByIdDto, sut } = makeSut();
+    jest
+      .spyOn(sut['findContentFileByIdRepository'], 'find')
+      .mockResolvedValueOnce({
+        thumbnail: 'aa',
+      } as ContentFile);
+    const result = await sut.execute(deleteContentFileByIdDto);
+
+    expect(result.isLeft()).toBe(false);
+    expect(result.isRight()).toBe(true);
+    expect(result.value).toStrictEqual(undefined);
   });
 });

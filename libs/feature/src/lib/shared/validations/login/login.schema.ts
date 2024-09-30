@@ -1,10 +1,9 @@
 import { z } from 'zod';
-import { EntityMinLength } from '../../messages';
-import { InvalidEmail } from '../../messages/invalid-email';
+import { EntityMinLength, EntityIsInvalid } from '../../messages';
 
 export const LoginSchema = z
   .object({
-    email: z.string().email({ message: InvalidEmail('PT-BR') }),
+    email: z.string().email({ message: EntityIsInvalid('Email', 'PT-BR') }),
     password: z.string().min(3, {
       message: EntityMinLength({ entity: 'senha', minOrMax: 3 }, 'PT-BR'),
     }),

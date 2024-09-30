@@ -8,6 +8,7 @@ import {
   FindPlaylistCategoryByIdRepository,
   FindUserByIdRepository,
 } from '../../../repository';
+import { ValidationPlaylistCategoryId, ValidationUserId } from '../../../utils';
 
 export class EditPlaylistCategory
   implements
@@ -45,20 +46,22 @@ export class EditPlaylistCategory
       return left(new EntityNotEmpty('Description'));
     }
 
-    const filteredUser = await this.findUserByIdRepository.find(loggedUserId);
+    const userValidation = await ValidationUserId(
+      loggedUserId,
+      this.findUserByIdRepository
+    );
 
-    if (Object.keys(filteredUser?.userId ?? filteredUser).length < 1) {
-      return left(new EntityNotExists('User'));
+    if (userValidation.isLeft()) {
+      return left(userValidation.value);
     }
 
-    const filteredPlaylistCategory =
-      await this.findPlaylistCategoryByIdRepository.find(id);
+    const playlistCategoryValidation = await ValidationPlaylistCategoryId(
+      id,
+      this.findPlaylistCategoryByIdRepository
+    );
 
-    if (
-      Object.keys(filteredPlaylistCategory?.id ?? filteredPlaylistCategory)
-        .length < 1
-    ) {
-      return left(new EntityNotExists('Category'));
+    if (playlistCategoryValidation.isLeft()) {
+      return left(playlistCategoryValidation.value);
     }
 
     await this.editPlaylistCategoryRepository.edit(input);

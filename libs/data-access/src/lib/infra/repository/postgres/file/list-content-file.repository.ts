@@ -20,6 +20,7 @@ export class ListContentFileRepositoryImpl
         where: {
           user_id: input.loggedUserId,
           directory_id: input.directoryId,
+          company_id: input.companyId,
           ...(input.userInput !== ''
             ? {
                 original_name: {
@@ -42,6 +43,7 @@ export class ListContentFileRepositoryImpl
           file_name: true,
           path: true,
           original_name: true,
+          thumbnail: true,
           user: {
             select: {
               nick_name: true,
@@ -51,7 +53,21 @@ export class ListContentFileRepositoryImpl
         skip: parseInt(skip.toString()),
         take: parseInt(take.toString()),
       }),
-      this.prismaService.content_Files.count(),
+      this.prismaService.content_Files.count({
+        where: {
+          user_id: input.loggedUserId,
+          directory_id: input.directoryId,
+          company_id: input.companyId,
+          ...(input.userInput !== ''
+            ? {
+                original_name: {
+                  contains: input.userInput,
+                  mode: 'insensitive',
+                },
+              }
+            : {}),
+        },
+      }),
     ]);
 
     const totalPages = Math.ceil(total / take);
@@ -66,6 +82,7 @@ export class ListContentFileRepositoryImpl
         size: file.size,
         uploadDate: file.upload_date,
         created_by: file.user.nick_name,
+        thumbnail: file.thumbnail ?? '',
       };
     });
 

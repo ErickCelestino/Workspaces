@@ -13,6 +13,7 @@ export async function CreatePlaylistCategoryRequest(
     {
       params: {
         loggedUserId: input.loggedUserId,
+        companyId: input.companyId,
       },
     }
   );

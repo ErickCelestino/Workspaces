@@ -18,5 +18,6 @@ export async function DownloadContentFileRequest(
       },
     }
   );
+
   return result.data;
 }

@@ -19,11 +19,11 @@ export class ListUserRepositoryImpl implements ListUserRepository {
           ...(input !== null
             ? {
                 OR: [
-                  { name: { contains: input.input, mode: 'insensitive' } },
+                  { name: { contains: input.filter, mode: 'insensitive' } },
                   {
                     auth: {
                       some: {
-                        email: { contains: input.input, mode: 'insensitive' },
+                        email: { contains: input.filter, mode: 'insensitive' },
                       },
                     },
                   },

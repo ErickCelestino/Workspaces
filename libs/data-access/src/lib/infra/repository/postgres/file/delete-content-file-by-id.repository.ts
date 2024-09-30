@@ -10,6 +10,12 @@ export class DeleteContentFileByIdRepositoryImpl
 {
   constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
   async delete(input: DeleteContentFileByIdDto): Promise<void> {
+    await this.prismaService.playlist_X_Content_Files.deleteMany({
+      where: {
+        Content_Files_id: input.idToDelete,
+      },
+    });
+
     await this.prismaService.content_Files.delete({
       where: {
         Content_Files_id: input.idToDelete,

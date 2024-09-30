@@ -18,15 +18,11 @@ import {
 } from '@workspaces/domain';
 import { useSnackbarAlert } from '../../hooks';
 import axios, { AxiosError } from 'axios';
-import {
-  ConnectionError,
-  EntityNotAllowed,
-  EntityNotCreated,
-  EntityNotEmpty,
-} from '../../shared';
+import { ValidationsError } from '../../shared';
 import {
   CreateContenVideoRequest,
-  getItemLocalStorage,
+  CreateDirectoryRequest,
+  ListDirectoryRequest,
   removeItemLocalStorage,
 } from '../../services';
 import { ProgressFilePopUp } from '../../components/popup';
@@ -42,7 +38,7 @@ export const FileModalContainer: FC<FileModalContainerProps> = ({
   sucessAlertMessage = 'Arquivos Salvos com sucesso',
   uploadTitleButton = 'Subir Arquivos',
 }) => {
-  const { open, handleClose } = useFileModal();
+  const { open, handleClose, directoryId, setDirectoryId } = useFileModal();
   const [uploading, setUploading] = useState(false);
   const [progress, setProgress] = useState(0);
   const [filesToUpload, setFilesToUpload] = useState<FileWithProgress[]>([]);
@@ -54,7 +50,6 @@ export const FileModalContainer: FC<FileModalContainerProps> = ({
 
   const handleUpload = () => {
     setUploading(true);
-    handleClose();
     uploadFiles();
   };
 
@@ -80,75 +75,118 @@ export const FileModalContainer: FC<FileModalContainerProps> = ({
   };
 
   const updateProgress = useCallback((progress: number) => {
-    setProgress(progress);
+    if (progress <= 99) {
+      setProgress(progress);
+    } else {
+      setProgress(100);
+    }
   }, []);
 
-  const onFinish = async (
-    data: FileConfigs,
-    updateProgress: (progress: number) => void
-  ) => {
-    try {
-      const result = await CreateContenVideoRequest(data, updateProgress);
-      setFilesToUpload([]);
-      removeItemLocalStorage('files');
+  const showErrorAlert = useCallback(
+    (message: string, success: boolean) => {
+      showSnackbarAlert({
+        message: message,
+        severity: success ? 'success' : 'error',
+      });
+    },
+    [showSnackbarAlert]
+  );
 
-      return result;
-    } catch (error) {
-      console.error(error);
-      console.error((error as { message: string }).message);
-      if (axios.isAxiosError(error)) {
-        const axiosError = error as AxiosError<ErrorResponse>;
-        switch (axiosError.response?.data.error.name) {
-          case 'EntityNotEmpty':
-            showErrorAlert(EntityNotEmpty('Arquivos', 'PT-BR'));
-            break;
-
-          case 'EntityNotCreated':
-            showErrorAlert(EntityNotCreated('Arquivos', 'PT-BR'));
-            break;
-
-          case 'FileNotAllowed':
-            showErrorAlert(EntityNotAllowed('Arquivos', 'PT-BR'));
-            break;
-
-          default:
-            showErrorAlert(ConnectionError('PT-BR'));
-            break;
+  const onFinish = useCallback(
+    async (data: FileConfigs, updateProgress: (progress: number) => void) => {
+      try {
+        const result = await CreateContenVideoRequest(data, updateProgress);
+        setFilesToUpload([]);
+        removeItemLocalStorage('files');
+        if (result) {
+          setProgress(100);
+        }
+        return result;
+      } catch (error) {
+        setFilesToUpload([]);
+        removeItemLocalStorage('files');
+        setProgress(0);
+        console.error(error);
+        if (axios.isAxiosError(error)) {
+          const axiosError = error as AxiosError<ErrorResponse>;
+          const errors = ValidationsError(axiosError, 'Arquivo');
+          if (errors) {
+            showErrorAlert(errors, false);
+          }
         }
       }
-    }
-  };
-
-  const showErrorAlert = (message: string) => {
-    showSnackbarAlert({
-      message: message,
-      severity: 'error',
-    });
-  };
+    },
+    [showErrorAlert]
+  );
 
   const onCloseProgressFile = () => {
     setUploading(false);
+    setProgress(0);
   };
+
+  const fileValidate = useCallback(
+    async (directoryId: string) => {
+      if (Object.keys(directoryId).length === 0) {
+        const fileredDirectory = await ListDirectoryRequest({
+          companyId: loggedUser?.selectedCompany.id ?? '',
+          loggedUserId: loggedUser?.id ?? '',
+          userInput: 'Base',
+        });
+
+        if (fileredDirectory.directories.length < 1) {
+          const createdDirectory = await CreateDirectoryRequest({
+            loggedUserId: loggedUser?.id ?? '',
+            companyId: loggedUser?.selectedCompany.id ?? '',
+            body: {
+              name: 'Base',
+            },
+          });
+          return createdDirectory.directory_id;
+        }
+
+        return fileredDirectory.directories[0].id;
+      }
+    },
+    [loggedUser]
+  );
 
   const uploadFiles = useCallback(async () => {
     const loggedUserId = loggedUser?.id ?? '';
-    const directoryId = getItemLocalStorage('di');
+    const directoryToUpload = directoryId ?? '';
+    const createdDirectoryId =
+      directoryToUpload === ''
+        ? await fileValidate(directoryId ?? '')
+        : directoryToUpload;
 
     const result = await onFinish(
       {
-        directoryId: directoryId,
+        directoryId: createdDirectoryId ?? '',
         loggedUserId: loggedUserId,
         filesToUpload: filesToUpload,
+        companyId: loggedUser?.selectedCompany.id ?? '',
       },
       updateProgress
     );
     if (result) {
+      setDirectoryId('');
+      handleClose();
       showSnackbarAlert({
         message: sucessAlertMessage,
         severity: 'success',
       });
     }
-  }, [onFinish]);
+  }, [
+    directoryId,
+    fileValidate,
+    filesToUpload,
+    handleClose,
+    loggedUser,
+    onFinish,
+    setDirectoryId,
+    showSnackbarAlert,
+    sucessAlertMessage,
+    updateProgress,
+  ]);
 
   return (
     <>
@@ -160,7 +198,7 @@ export const FileModalContainer: FC<FileModalContainerProps> = ({
             left: '50%',
             transform: 'translate(-50%, -50%)',
             width: smDown
-              ? theme.spacing(45)
+              ? '95%'
               : mdDown
               ? theme.spacing(65)
               : theme.spacing(100),
@@ -184,13 +222,7 @@ export const FileModalContainer: FC<FileModalContainerProps> = ({
               onFileDelete={handleFileToDelete}
               progress={progress}
               onFileUpload={handleFileUpload}
-              width={
-                smDown
-                  ? theme.spacing(45)
-                  : mdDown
-                  ? theme.spacing(65)
-                  : theme.spacing(92)
-              }
+              width="100%"
               height={theme.spacing(28)}
             />
           </Box>

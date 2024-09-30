@@ -10,9 +10,11 @@ import {
 import { Either, left, right } from '../../../shared/either';
 import {
   CreatePlaylistCategoryRepository,
+  FindCompanyByIdRepository,
   FindPlaylistCategoryByNameRepository,
   FindUserByIdRepository,
 } from '../../../repository';
+import { ValidationCompanyId, ValidationUserId } from '../../../utils';
 
 export class CreatePlaylistCategory
   implements
@@ -30,10 +32,12 @@ export class CreatePlaylistCategory
   constructor(
     @Inject('FindUserByIdRepository')
     private findUserByIdRepository: FindUserByIdRepository,
+    @Inject('FindCompanyByIdRepository')
+    private findCompanyByIdRepository: FindCompanyByIdRepository,
     @Inject('CreatePlaylistCategoryRepository')
     private createPlaylistCategoryRepository: CreatePlaylistCategoryRepository,
     @Inject('FindPlaylistCategoryByNameRepository')
-    private findPlaylistCategoryRepository: FindPlaylistCategoryByNameRepository
+    private findPlaylistCategoryByNameRepository: FindPlaylistCategoryByNameRepository
   ) {}
   async execute(
     input: CreatePlaylistCategoryDto
@@ -43,7 +47,7 @@ export class CreatePlaylistCategory
       string
     >
   > {
-    const { loggedUserId, body } = input;
+    const { loggedUserId, companyId, body } = input;
 
     if (Object.keys(loggedUserId).length < 1) {
       return left(new EntityNotEmpty('logged user ID'));
@@ -53,18 +57,34 @@ export class CreatePlaylistCategory
       return left(new EntityNotEmpty('name'));
     }
 
+    if (Object.keys(companyId).length < 1) {
+      return left(new EntityNotEmpty('Company ID'));
+    }
+
     if (Object.keys(body.description).length < 1) {
       return left(new EntityNotEmpty('description'));
     }
 
-    const filteredUser = await this.findUserByIdRepository.find(loggedUserId);
+    const userValidation = await ValidationUserId(
+      loggedUserId,
+      this.findUserByIdRepository
+    );
 
-    if (Object.keys(filteredUser?.userId ?? filteredUser).length < 1) {
-      return left(new EntityNotExists('User'));
+    if (userValidation.isLeft()) {
+      return left(userValidation.value);
+    }
+
+    const companyValidation = await ValidationCompanyId(
+      companyId,
+      this.findCompanyByIdRepository
+    );
+
+    if (companyValidation.isLeft()) {
+      return left(companyValidation.value);
     }
 
     const filteredPlaylistCategory =
-      await this.findPlaylistCategoryRepository.find({
+      await this.findPlaylistCategoryByNameRepository.find({
         loggedUserId,
         name: body.name,
       });

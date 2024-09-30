@@ -75,20 +75,11 @@ describe('FindPlaylistCategoryById', () => {
     expect(result.value).toBeInstanceOf(EntityNotEmpty);
   });
 
-  it('should return EntityNotExists if there is no user created in the database', async () => {
-    const { findPlaylistCategoryByIdDto, findPlaylistCategoryByIdRepository } =
-      makeSut();
-
-    const mockEmptyItem = {} as UserList;
-
-    const mockEmptyRepository: FindUserByIdRepository = {
-      find: jest.fn(async () => mockEmptyItem),
-    };
-
-    const sut = new FindPlaylistCategoryById(
-      mockEmptyRepository,
-      findPlaylistCategoryByIdRepository
-    );
+  it('should return EntityNotExists if there is no playlist category created in the database', async () => {
+    const { findPlaylistCategoryByIdDto, sut } = makeSut();
+    jest
+      .spyOn(sut['findPlaylistCategoryByIdRepository'], 'find')
+      .mockResolvedValueOnce({} as PlaylistCategory);
 
     const result = await sut.execute(findPlaylistCategoryByIdDto);
 
@@ -96,23 +87,15 @@ describe('FindPlaylistCategoryById', () => {
     expect(result.value).toBeInstanceOf(EntityNotExists);
   });
 
-  it('should return EntityNotExists if there is no playlist category created in the database', async () => {
-    const { findPlaylistCategoryByIdDto, findUserByIdRepository } = makeSut();
-
-    const mockEmptyItem = {} as PlaylistCategory;
-
-    const mockEmptyRepository: FindPlaylistCategoryByIdRepository = {
-      find: jest.fn(async () => mockEmptyItem),
-    };
-
-    const sut = new FindPlaylistCategoryById(
-      findUserByIdRepository,
-      mockEmptyRepository
-    );
-
+  it('should return EntityNotExists when a pass incorrect Logged User ID', async () => {
+    const { findPlaylistCategoryByIdDto, sut } = makeSut();
+    jest
+      .spyOn(sut['findUserByIdRepository'], 'find')
+      .mockResolvedValueOnce({} as UserList);
     const result = await sut.execute(findPlaylistCategoryByIdDto);
 
     expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
     expect(result.value).toBeInstanceOf(EntityNotExists);
   });
 });

@@ -17,10 +17,10 @@ export const ScrollBox = styled(Box)<ScrollBoxProps>(
     scrollbarThumbColor,
     scrollbarThumbHoverColor,
   }) => ({
-    maxHeight: maxHeight || '11rem',
+    maxHeight: maxHeight,
     overflow: 'auto',
     '&::-webkit-scrollbar': {
-      width: scrollbarWidth || '12px',
+      width: scrollbarWidth,
     },
     '&::-webkit-scrollbar-track': {
       background: scrollbarTrackColor || '#f1f1f1',

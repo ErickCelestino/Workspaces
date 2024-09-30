@@ -1,4 +1,5 @@
 import {
+  CompanyResponseDto,
   CreatePlaylist,
   CreatePlaylistDto,
   CreatePlaylistRepository,
@@ -6,33 +7,46 @@ import {
   EntityNotCreated,
   EntityNotEmpty,
   EntityNotExists,
+  FindCompanyByIdRepository,
   FindPlaylistByNameRepository,
+  FindPlaylistCategoryByIdRepository,
   FindUserByIdRepository,
-  Playlist,
+  PlaylistCategory,
   UserList,
 } from '../../../src';
-import { PlaylistCategoryMock, PlaylistMock, userMock } from '../../entity';
+import {
+  CompanySimpleMock,
+  PlaylistCategoryMock,
+  PlaylistMock,
+  userMock,
+} from '../../entity';
 import {
   CreatePlaylistRepositoryMock,
+  FindCompanyByIdRepositoryMock,
+  FindPlaylistByNameRepositoryMock,
+  FindPlaylistCategoryByIdRepositoryMock,
   FindUserByIdRepositoryMock,
 } from '../../repository';
 interface SutTypes {
   sut: CreatePlaylist;
   createPlaylistDto: CreatePlaylistDto;
   findUserByIdRepository: FindUserByIdRepository;
+  findCompanyByIdRepository: FindCompanyByIdRepository;
+  findPlaylistCategoryByIdRepository: FindPlaylistCategoryByIdRepository;
   findPlaylistByNameRepository: FindPlaylistByNameRepository;
   createPlaylistRepository: CreatePlaylistRepository;
 }
 
 const makeSut = (): SutTypes => {
   const findUserByIdRepository = new FindUserByIdRepositoryMock();
-  const mockResult = {} as Playlist;
-  const findPlaylistByNameRepository: FindPlaylistByNameRepository = {
-    find: jest.fn(async () => mockResult),
-  };
+  const findCompanyByIdRepository = new FindCompanyByIdRepositoryMock();
+  const findPlaylistCategoryByIdRepository =
+    new FindPlaylistCategoryByIdRepositoryMock();
+  const findPlaylistByNameRepository = new FindPlaylistByNameRepositoryMock();
   const createPlaylistRepository = new CreatePlaylistRepositoryMock();
 
   const createPlaylistDto: CreatePlaylistDto = {
+    companyId: CompanySimpleMock.id,
     loggedUserId: userMock.userId,
     name: PlaylistMock.name,
     playlistCategoryId: PlaylistCategoryMock.id,
@@ -40,12 +54,16 @@ const makeSut = (): SutTypes => {
 
   const sut = new CreatePlaylist(
     findUserByIdRepository,
+    findCompanyByIdRepository,
+    findPlaylistCategoryByIdRepository,
     findPlaylistByNameRepository,
     createPlaylistRepository
   );
 
   return {
     findUserByIdRepository,
+    findCompanyByIdRepository,
+    findPlaylistCategoryByIdRepository,
     findPlaylistByNameRepository,
     createPlaylistRepository,
     createPlaylistDto,
@@ -74,6 +92,16 @@ describe('CreatePlaylist', () => {
     expect(result.value).toBeInstanceOf(EntityNotEmpty);
   });
 
+  it('should return EntityNotEmpty when a pass incorrect Company ID', async () => {
+    const { createPlaylistDto, sut } = makeSut();
+    createPlaylistDto.companyId = '';
+    const result = await sut.execute(createPlaylistDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
+    expect(result.value).toBeInstanceOf(EntityNotEmpty);
+  });
+
   it('should return EntityNotEmpty when a pass incorrect name', async () => {
     const { createPlaylistDto, sut } = makeSut();
     createPlaylistDto.name = '';
@@ -94,48 +122,12 @@ describe('CreatePlaylist', () => {
     expect(result.value).toBeInstanceOf(EntityNotEmpty);
   });
 
-  it('should return EntityNotExists if there is no user created in the database', async () => {
-    const {
-      createPlaylistDto,
-      findPlaylistByNameRepository,
-      createPlaylistRepository,
-    } = makeSut();
-
-    const mockEmptyItem = {} as UserList;
-
-    const mockEmptyRepository: FindUserByIdRepository = {
-      find: jest.fn(async () => mockEmptyItem),
-    };
-
-    const sut = new CreatePlaylist(
-      mockEmptyRepository,
-      findPlaylistByNameRepository,
-      createPlaylistRepository
-    );
-
-    const result = await sut.execute(createPlaylistDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotExists);
-  });
-
   it('should return EntityAlreadyExists if there is no user created in the database', async () => {
-    const {
-      createPlaylistDto,
-      findUserByIdRepository,
-      createPlaylistRepository,
-    } = makeSut();
+    const { createPlaylistDto, sut } = makeSut();
 
-    const mockEmptyRepository: FindPlaylistByNameRepository = {
-      find: jest.fn(async () => PlaylistMock),
-    };
-
-    const sut = new CreatePlaylist(
-      findUserByIdRepository,
-      mockEmptyRepository,
-      createPlaylistRepository
-    );
-
+    jest
+      .spyOn(sut['findPlaylistByNameRepository'], 'find')
+      .mockResolvedValueOnce(PlaylistMock);
     const result = await sut.execute(createPlaylistDto);
 
     expect(result.isLeft()).toBe(true);
@@ -143,25 +135,50 @@ describe('CreatePlaylist', () => {
   });
 
   it('should return EntityNotCreated if there is no user created in the database', async () => {
-    const {
-      createPlaylistDto,
-      findUserByIdRepository,
-      findPlaylistByNameRepository,
-    } = makeSut();
+    const { createPlaylistDto, sut } = makeSut();
 
-    const mockEmptyRepository: CreatePlaylistRepository = {
-      create: jest.fn(async () => ''),
-    };
-
-    const sut = new CreatePlaylist(
-      findUserByIdRepository,
-      findPlaylistByNameRepository,
-      mockEmptyRepository
-    );
-
+    jest
+      .spyOn(sut['createPlaylistRepository'], 'create')
+      .mockResolvedValueOnce('');
     const result = await sut.execute(createPlaylistDto);
 
     expect(result.isLeft()).toBe(true);
     expect(result.value).toBeInstanceOf(EntityNotCreated);
+  });
+
+  it('should return EntityNotExists when a pass incorrect Logged User ID', async () => {
+    const { createPlaylistDto, sut } = makeSut();
+    jest
+      .spyOn(sut['findUserByIdRepository'], 'find')
+      .mockResolvedValueOnce({} as UserList);
+    const result = await sut.execute(createPlaylistDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
+    expect(result.value).toBeInstanceOf(EntityNotExists);
+  });
+
+  it('should return EntityNotExists when a pass incorrect Playlist Category User ID', async () => {
+    const { createPlaylistDto, sut } = makeSut();
+    jest
+      .spyOn(sut['findPlaylistCategoryByIdRepository'], 'find')
+      .mockResolvedValueOnce({} as PlaylistCategory);
+    const result = await sut.execute(createPlaylistDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
+    expect(result.value).toBeInstanceOf(EntityNotExists);
+  });
+
+  it('should return EntityNotExists when a no exist company in system', async () => {
+    const { createPlaylistDto, sut } = makeSut();
+    jest
+      .spyOn(sut['findCompanyByIdRepository'], 'find')
+      .mockResolvedValueOnce({} as CompanyResponseDto);
+    const result = await sut.execute(createPlaylistDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
+    expect(result.value).toBeInstanceOf(EntityNotExists);
   });
 });

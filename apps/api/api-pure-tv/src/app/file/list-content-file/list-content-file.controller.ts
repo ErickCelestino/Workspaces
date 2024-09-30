@@ -1,12 +1,10 @@
-import {
-  BadRequestException,
-  Controller,
-  Get,
-  Query,
-  UsePipes,
-} from '@nestjs/common';
+import { Controller, Get, Query, UsePipes } from '@nestjs/common';
 import { ListContentFileService } from './list-content-file.service';
-import { ListContentFileDto, listContentFileSchema } from '@workspaces/domain';
+import {
+  ErrorMessageResult,
+  ListContentFileDto,
+  listContentFileSchema,
+} from '@workspaces/domain';
 import { ZodValidationPipe } from '../../pipes/zod-validation-pipe';
 
 @Controller('list-content-file')
@@ -22,11 +20,13 @@ export class ListContentFileController {
     @Query('skip') skip: number,
     @Query('take') take: number,
     @Query('loggedUserId') loggedUserId: string,
-    @Query('directoryId') directoryId: string
+    @Query('directoryId') directoryId: string,
+    @Query('companyId') companyId: string
   ) {
     const dto: ListContentFileDto = {
       directoryId,
       loggedUserId,
+      companyId,
       userInput: filter,
       skip: skip,
       take: take,
@@ -35,12 +35,6 @@ export class ListContentFileController {
     const result = await this.listContentFileService.list(dto);
 
     if (result.isRight()) return result.value;
-    else
-      throw new BadRequestException({
-        error: {
-          name: result.value.name,
-          message: result.value.message,
-        },
-      });
+    else await ErrorMessageResult(result.value.name, result.value.message);
   }
 }

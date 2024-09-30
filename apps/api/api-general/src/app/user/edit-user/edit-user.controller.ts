@@ -1,12 +1,10 @@
-import {
-  BadRequestException,
-  Body,
-  Controller,
-  Put,
-  UsePipes,
-} from '@nestjs/common';
+import { Body, Controller, Put, Query, UsePipes } from '@nestjs/common';
 import { EditUserService } from './edit-user.service';
-import { EditUserDto, editUserSchema } from '@workspaces/domain';
+import {
+  BodyUserDto,
+  editUserSchema,
+  ErrorMessageResult,
+} from '@workspaces/domain';
 import { ZodValidationPipe } from '../../pipes/zod-validation-pipe';
 
 @Controller('edit-user')
@@ -15,16 +13,16 @@ export class EditUserController {
 
   @Put()
   @UsePipes(new ZodValidationPipe(editUserSchema))
-  async edit(@Body() input: EditUserDto) {
-    const result = await this.editUserService.edit(input);
+  async edit(
+    @Body() input: BodyUserDto,
+    @Query('loggedUserId') loggedUserId: string
+  ) {
+    const result = await this.editUserService.edit({
+      body: input,
+      loggedUserId,
+    });
 
-    if (result.isRight()) return;
-    else
-      throw new BadRequestException({
-        error: {
-          name: result.value.name,
-          message: result.value.message,
-        },
-      });
+    if (result.isRight()) return { userId: result.value };
+    else await ErrorMessageResult(result.value.name, result.value.message);
   }
 }

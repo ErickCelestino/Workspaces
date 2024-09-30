@@ -10,9 +10,16 @@ import {
 import { Either, left, right } from '../../shared/either';
 import {
   CreatePlaylistRepository,
+  FindCompanyByIdRepository,
   FindPlaylistByNameRepository,
+  FindPlaylistCategoryByIdRepository,
   FindUserByIdRepository,
 } from '../../repository';
+import {
+  ValidationCompanyId,
+  ValidationPlaylistCategoryId,
+  ValidationUserId,
+} from '../../utils';
 
 export class CreatePlaylist
   implements
@@ -30,6 +37,10 @@ export class CreatePlaylist
   constructor(
     @Inject('FindUserByIdRepository')
     private findUserByIdRepository: FindUserByIdRepository,
+    @Inject('FindCompanyByIdRepository')
+    private findCompanyByIdRepository: FindCompanyByIdRepository,
+    @Inject('FindPlaylistCategoryByIdRepository')
+    private findPlaylistCategoryByIdRepository: FindPlaylistCategoryByIdRepository,
     @Inject('FindPlaylistByNameRepository')
     private findPlaylistByNameRepository: FindPlaylistByNameRepository,
     @Inject('CreatePlaylistRepository')
@@ -43,7 +54,7 @@ export class CreatePlaylist
       string
     >
   > {
-    const { loggedUserId, playlistCategoryId, name } = input;
+    const { loggedUserId, playlistCategoryId, companyId, name } = input;
 
     if (Object.keys(loggedUserId).length < 1) {
       return left(new EntityNotEmpty('Logged User'));
@@ -53,14 +64,38 @@ export class CreatePlaylist
       return left(new EntityNotEmpty('Playlist Category'));
     }
 
+    if (Object.keys(companyId).length < 1) {
+      return left(new EntityNotEmpty('Company ID'));
+    }
+
     if (Object.keys(name).length < 1) {
       return left(new EntityNotEmpty('Name'));
     }
 
-    const filteredUser = await this.findUserByIdRepository.find(loggedUserId);
+    const userValidation = await ValidationUserId(
+      loggedUserId,
+      this.findUserByIdRepository
+    );
 
-    if (Object.keys(filteredUser?.userId ?? filteredUser).length < 1) {
-      return left(new EntityNotExists('User'));
+    if (userValidation.isLeft()) {
+      return left(userValidation.value);
+    }
+
+    const companyValidation = await ValidationCompanyId(
+      companyId,
+      this.findCompanyByIdRepository
+    );
+
+    if (companyValidation.isLeft()) {
+      return left(companyValidation.value);
+    }
+    const playlistCategoryValidation = await ValidationPlaylistCategoryId(
+      playlistCategoryId,
+      this.findPlaylistCategoryByIdRepository
+    );
+
+    if (playlistCategoryValidation.isLeft()) {
+      return left(playlistCategoryValidation.value);
     }
 
     const filteredPlaylist = await this.findPlaylistByNameRepository.find({

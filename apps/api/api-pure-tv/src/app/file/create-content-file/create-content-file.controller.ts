@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   Controller,
   Post,
   Query,
@@ -10,8 +9,7 @@ import {
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { CreateContentFileService } from './create-content-file.service';
 import {
-  CreateContentFileDto,
-  UploadedFile,
+  ErrorMessageResult,
   createContentFileSchema,
 } from '@workspaces/domain';
 import { FileS3Storage } from '@workspaces/data-access';
@@ -28,32 +26,31 @@ export class CreateContentFileController {
   @UseInterceptors(
     FilesInterceptor('files', undefined, {
       storage: FileS3Storage.Storage,
+      fileFilter: FileS3Storage.fileFilter,
     })
   )
   async create(
-    @UploadedFiles() files: UploadedFile[],
+    @UploadedFiles() files: Express.Multer.File[],
     @Query('loggedUserId') loggedUserId: string,
-    @Query('directoryId') directoryId: string
+    @Query('directoryId') directoryId: string,
+    @Query('companyId') companyId: string
   ) {
     const uploadedFileNames = FileS3Storage.getUploadedFileNames();
-    const updatedFiles = files.map((file, index) => ({
-      ...file,
-      filename: uploadedFileNames[index],
-    }));
-    const dtoRequest: CreateContentFileDto = {
+    const updatedFiles =
+      files?.length > 0
+        ? files.map((file, index) => ({
+            ...file,
+            filename: uploadedFileNames[index],
+          }))
+        : [];
+    const result = await this.createContentVideoService.create({
       directoryId: directoryId,
       file: updatedFiles,
       loggedUserId,
-    };
-    const result = await this.createContentVideoService.create(dtoRequest);
+      companyId,
+    });
 
     if (result.isRight()) return result.value;
-    else
-      throw new BadRequestException({
-        error: {
-          name: result.value.name,
-          message: result.value.message,
-        },
-      });
+    else await ErrorMessageResult(result.value.name, result.value.message);
   }
 }

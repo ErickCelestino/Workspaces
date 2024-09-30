@@ -1,8 +1,6 @@
-import { StatusUser } from '../../../type';
+import { BodyUserDto } from './body-user.dto';
 
 export interface EditUserDto {
-  id: string;
-  name: string;
-  birthDate?: Date;
-  status: StatusUser;
+  body: BodyUserDto;
+  loggedUserId: string;
 }

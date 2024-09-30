@@ -4,10 +4,12 @@ import { CreateContentFileController } from './create-content-file.controller';
 import { CreateContentFile } from '@workspaces/domain';
 import {
   CreateContentFileRepositoryImpl,
+  FindCompanyByIdRepositoryImpl,
   FindDirectoryByIdRepositoryImpl,
   FindUserByIdRepositoryImpl,
+  GenerateThumbnailRepositoryImpl,
   PrismaService,
-  FindUrlFileRepositoryImpl,
+  UploadContentFileRepositoryImpl,
 } from '@workspaces/data-access';
 @Module({
   controllers: [CreateContentFileController],
@@ -27,12 +29,20 @@ import {
       useClass: FindUserByIdRepositoryImpl,
     },
     {
+      provide: 'FindCompanyByIdRepository',
+      useClass: FindCompanyByIdRepositoryImpl,
+    },
+    {
       provide: 'FindDirectoryByIdRepository',
       useClass: FindDirectoryByIdRepositoryImpl,
     },
     {
-      provide: 'FindUrlFileRepository',
-      useClass: FindUrlFileRepositoryImpl,
+      provide: 'GenerateThumbnailRepository',
+      useClass: GenerateThumbnailRepositoryImpl,
+    },
+    {
+      provide: 'UploadContentFileRepository',
+      useClass: UploadContentFileRepositoryImpl,
     },
   ],
 })

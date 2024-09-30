@@ -16,6 +16,7 @@ export async function ListContentFilesRequest(input: ListContentFileDto) {
         take: take,
         loggedUserId: input.loggedUserId,
         directoryId: input.directoryId,
+        companyId: input.companyId,
       },
     }
   );

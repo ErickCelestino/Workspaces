@@ -1,13 +1,7 @@
-import {
-  BadRequestException,
-  Controller,
-  Param,
-  Post,
-  Query,
-  UsePipes,
-} from '@nestjs/common';
+import { Controller, Param, Post, Query, UsePipes } from '@nestjs/common';
 import { MoveFileToDirectoryService } from './move-file-to-directory.service';
 import {
+  ErrorMessageResult,
   MoveFileToDirectoryDto,
   moveFileToDirectorySchema,
 } from '@workspaces/domain';
@@ -34,12 +28,6 @@ export class MoveFileToDirectoryController {
     const result = await this.moveFileToDirectoryService.move(dto);
 
     if (result.isRight()) return result.value;
-    else
-      throw new BadRequestException({
-        error: {
-          name: result.value.name,
-          message: result.value.message,
-        },
-      });
+    else await ErrorMessageResult(result.value.name, result.value.message);
   }
 }

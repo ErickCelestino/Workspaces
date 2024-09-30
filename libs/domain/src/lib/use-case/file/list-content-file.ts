@@ -3,11 +3,18 @@ import { UseCase } from '../../base/use-case';
 import { ListContentFileDto, ListContentFileResponseDto } from '../../dto';
 import { EntityNotEmpty, EntityNotExists } from '../../error';
 import {
+  FindCompanyByIdRepository,
   FindDirectoryByIdRepository,
   FindUserByIdRepository,
   ListContentFileRepository,
 } from '../../repository';
 import { Either, left, right } from '../../shared/either';
+import {
+  ValidationCompanyId,
+  ValidationDirectoryId,
+  ValidationTextField,
+  ValidationUserId,
+} from '../../utils';
 
 export class ListContentFile
   implements
@@ -21,6 +28,8 @@ export class ListContentFile
     private listContentFileRepository: ListContentFileRepository,
     @Inject('FindUserByIdRepository')
     private findUserByIdRepository: FindUserByIdRepository,
+    @Inject('FindCompanyByIdRepository')
+    private findCompanyByIdRepository: FindCompanyByIdRepository,
     @Inject('FindDirectoryByIdRepository')
     private findDirectoryByIdRepository: FindDirectoryByIdRepository
   ) {}
@@ -30,30 +39,55 @@ export class ListContentFile
   ): Promise<
     Either<EntityNotEmpty | EntityNotExists, ListContentFileResponseDto>
   > {
-    const { directoryId, loggedUserId } = input;
+    const { directoryId, loggedUserId, companyId } = input;
     const loggedUserString = 'logged user';
     const directoryString = 'directory';
 
-    if (Object.keys(directoryId).length < 1) {
-      return left(new EntityNotEmpty(`${directoryString} ID`));
-    }
+    const directoryIdValidation = await ValidationTextField(
+      directoryId,
+      directoryString
+    );
+    if (directoryIdValidation.isLeft())
+      return left(directoryIdValidation.value);
 
-    if (Object.keys(loggedUserId).length < 1) {
-      return left(new EntityNotEmpty(`${loggedUserString} ID`));
-    }
+    const loggedUserIdValidation = await ValidationTextField(
+      loggedUserId,
+      loggedUserString
+    );
+    if (loggedUserIdValidation.isLeft())
+      return left(loggedUserIdValidation.value);
 
-    const userResult = await this.findUserByIdRepository.find(loggedUserId);
+    const companyIdValidation = await ValidationTextField(
+      companyId,
+      'Company ID'
+    );
+    if (companyIdValidation.isLeft()) return left(companyIdValidation.value);
 
-    if (Object.keys(userResult?.userId ?? userResult).length < 1) {
-      return left(new EntityNotExists(loggedUserString));
-    }
-
-    const directoryResult = await this.findDirectoryByIdRepository.find(
-      directoryId
+    const userValidation = await ValidationUserId(
+      loggedUserId,
+      this.findUserByIdRepository
     );
 
-    if (Object.keys(directoryResult?.id ?? directoryResult).length < 1) {
-      return left(new EntityNotExists(directoryString));
+    if (userValidation.isLeft()) {
+      return left(userValidation.value);
+    }
+
+    const directoryValidation = await ValidationDirectoryId(
+      directoryId,
+      this.findDirectoryByIdRepository
+    );
+
+    if (directoryValidation.isLeft()) {
+      return left(directoryValidation.value);
+    }
+
+    const companyValidation = await ValidationCompanyId(
+      companyId,
+      this.findCompanyByIdRepository
+    );
+
+    if (companyValidation.isLeft()) {
+      return left(companyValidation.value);
     }
 
     const resultList = await this.listContentFileRepository.list(input);

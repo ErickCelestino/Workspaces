@@ -18,6 +18,7 @@ interface SimpleFormModalProps {
   children: ReactNode;
   height: string;
   width: string;
+  maxHeight?: string;
 }
 
 export const SimpleFormModal: FC<SimpleFormModalProps> = ({
@@ -27,6 +28,7 @@ export const SimpleFormModal: FC<SimpleFormModalProps> = ({
   children,
   width,
   height,
+  maxHeight = '80%',
 }) => {
   const theme = useTheme();
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
@@ -41,6 +43,7 @@ export const SimpleFormModal: FC<SimpleFormModalProps> = ({
             left: '50%',
             transform: 'translate(-50%, -50%)',
             height: height,
+            maxHeight: maxHeight,
             width: width,
             bgcolor: 'background.paper',
             boxShadow: 24,

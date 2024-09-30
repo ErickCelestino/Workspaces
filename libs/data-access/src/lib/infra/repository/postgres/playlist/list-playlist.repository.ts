@@ -1,7 +1,7 @@
 import { Inject } from '@nestjs/common';
 import {
   ListPlaylistDto,
-  ListPlaylistReponseDto,
+  ListPlaylistResponseDto,
   ListPlaylistRepository,
   Playlist,
 } from '@workspaces/domain';
@@ -9,19 +9,20 @@ import { PrismaService } from 'nestjs-prisma';
 
 export class ListPlaylistRepositoryImpl implements ListPlaylistRepository {
   constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
-  async list(input: ListPlaylistDto): Promise<ListPlaylistReponseDto> {
-    const { loggedUserId, userInput } = input;
+  async list(input: ListPlaylistDto): Promise<ListPlaylistResponseDto> {
+    const { loggedUserId, companyId, userInput } = input;
 
     const skip = input?.skip || 0;
     const take = input?.take || 6;
 
     const whereClause = {
       user_id: loggedUserId,
+      company_id: companyId,
       ...(userInput !== ''
         ? {
             name: {
               contains: userInput,
-              mode: 'insensitive' as 'insensitive',
+              mode: 'insensitive' as const,
             },
           }
         : {}),
@@ -55,6 +56,7 @@ export class ListPlaylistRepositoryImpl implements ListPlaylistRepository {
         this.prismaService.playlist.count({
           where: {
             user_id: loggedUserId,
+            company_id: companyId,
           },
         }),
       ]);
