@@ -25,7 +25,7 @@ export class AddUserToAnotherCompanyController {
       userId,
     });
 
-    if (result.isRight()) return { companyId: result.value };
+    if (result.isRight()) return { userAndCompanyId: result.value };
     else await ErrorMessageResult(result.value.name, result.value.message);
   }
 }
