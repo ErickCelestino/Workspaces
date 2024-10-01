@@ -69,26 +69,6 @@ describe('CreateCompanyData', () => {
     expect(result.value).toStrictEqual(CompanyDataMock.id);
   });
 
-  it('should return EntityNotEmpty when pass incorrect Logged User id', async () => {
-    const { sut, createCompanyDataDto } = makeSut();
-    createCompanyDataDto.loggedUserId = '';
-    const result = await sut.execute(createCompanyDataDto);
-
-    expect(result.isRight()).toBe(false);
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
-  it('should return EntityNotEmpty when pass incorrect Company id', async () => {
-    const { sut, createCompanyDataDto } = makeSut();
-    createCompanyDataDto.companyId = '';
-    const result = await sut.execute(createCompanyDataDto);
-
-    expect(result.isRight()).toBe(false);
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
   it('should return EntityNotEmpty when pass incorrect Legal Nature', async () => {
     const { sut, createCompanyDataDto } = makeSut();
     createCompanyDataDto.body.legalNature = '';

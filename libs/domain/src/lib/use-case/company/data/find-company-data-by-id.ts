@@ -27,14 +27,6 @@ export class FindCompanyDataById
   ): Promise<Either<EntityNotEmpty, CompanyDataResponseDto>> {
     const { companyDataId, loggedUserId } = input;
 
-    if (Object.keys(loggedUserId).length < 1) {
-      return left(new EntityNotEmpty('Logged User ID'));
-    }
-
-    if (Object.keys(companyDataId).length < 1) {
-      return left(new EntityNotEmpty('Company Data ID'));
-    }
-
     const userValidation = await ValidationUserId(
       loggedUserId,
       this.findUserByIdRepository

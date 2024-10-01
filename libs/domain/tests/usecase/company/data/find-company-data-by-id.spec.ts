@@ -1,6 +1,5 @@
 import {
   CompanyDataResponseDto,
-  EntityNotEmpty,
   EntityNotExists,
   FindCompanyDataById,
   FindCompanyDataByIdDto,
@@ -52,26 +51,6 @@ describe('FindCompanyDataById', () => {
     expect(result.isLeft()).toBeFalsy();
     expect(result.isRight()).toBeTruthy();
     expect(result.value).toStrictEqual(CompanyDataMock);
-  });
-
-  it('should return EntityNotEmpty when pass incorrect Logged User id', async () => {
-    const { sut, findCompanyDataByIdDto } = makeSut();
-    findCompanyDataByIdDto.loggedUserId = '';
-    const result = await sut.execute(findCompanyDataByIdDto);
-
-    expect(result.isRight()).toBe(false);
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
-  it('should return EntityNotEmpty when pass incorrect Company id', async () => {
-    const { sut, findCompanyDataByIdDto } = makeSut();
-    findCompanyDataByIdDto.companyDataId = '';
-    const result = await sut.execute(findCompanyDataByIdDto);
-
-    expect(result.isRight()).toBe(false);
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
   });
 
   it('should return EntityNotExists when a exist User in system', async () => {
