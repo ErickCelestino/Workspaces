@@ -30,14 +30,6 @@ export class EditPlaylistCategory
   ): Promise<Either<EntityNotEmpty | EntityNotExists, void>> {
     const { id, loggedUserId, body } = input;
 
-    if (Object.keys(id).length < 1) {
-      return left(new EntityNotEmpty('ID'));
-    }
-
-    if (Object.keys(loggedUserId).length < 1) {
-      return left(new EntityNotEmpty('Logged User ID'));
-    }
-
     if (Object.keys(body.name).length < 1) {
       return left(new EntityNotEmpty('Name'));
     }
