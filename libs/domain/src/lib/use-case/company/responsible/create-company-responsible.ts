@@ -45,14 +45,6 @@ export class CreateCompanyResponsible
       body: { name, birthdate, document, email, phone },
     } = input;
 
-    if (Object.keys(loggedUserId).length < 1) {
-      return left(new EntityNotEmpty('Logged User ID'));
-    }
-
-    if (Object.keys(companyId).length < 1) {
-      return left(new EntityNotEmpty('Company ID'));
-    }
-
     if (Object.keys(name).length < 1) {
       return left(new EntityNotEmpty('Name'));
     }

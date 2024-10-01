@@ -30,14 +30,6 @@ export class CreateCompanyData
       loggedUserId,
     } = input;
 
-    if (Object.keys(loggedUserId).length < 1) {
-      return left(new EntityNotEmpty('Logged User ID'));
-    }
-
-    if (Object.keys(companyId).length < 1) {
-      return left(new EntityNotEmpty('Company ID'));
-    }
-
     if (Object.keys(legalNature).length < 1) {
       return left(new EntityNotEmpty('Legal Nature'));
     }

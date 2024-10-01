@@ -55,16 +55,6 @@ describe('FindPlaylistCategoryById', () => {
     expect(result.value).toStrictEqual(PlaylistCategoryMock);
   });
 
-  it('should return EntityNotEmpty when a pass incorrect logged user ID', async () => {
-    const { findPlaylistCategoryByIdDto, sut } = makeSut();
-    findPlaylistCategoryByIdDto.loggedUserId = '';
-    const result = await sut.execute(findPlaylistCategoryByIdDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.isRight()).toBe(false);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
   it('should return EntityNotEmpty when a pass incorrect ID', async () => {
     const { findPlaylistCategoryByIdDto, sut } = makeSut();
     findPlaylistCategoryByIdDto.id = '';

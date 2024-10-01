@@ -5,7 +5,6 @@ import {
   FindCompanyResponsibleById,
   FindCompanyResponsibleByIdDto,
   FindCompanyResponsibleByIdRepository,
-  FindUserById,
   FindUserByIdRepository,
   UserList,
 } from '../../../../src';
@@ -54,16 +53,6 @@ describe('FindCompanyResponsibleById', () => {
     expect(result.isRight()).toBeTruthy();
     expect(result.isLeft()).toBeFalsy();
     expect(result.value).toEqual(CompanyResponsibleMock);
-  });
-
-  it('should return EntityNotEmpty when pass incorrect Logged User id', async () => {
-    const { sut, findCompanyResponsibleByIdDto } = makeSut();
-    findCompanyResponsibleByIdDto.loggedUserId = '';
-    const result = await sut.execute(findCompanyResponsibleByIdDto);
-
-    expect(result.isRight()).toBe(false);
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
   });
 
   it('should return EntityNotEmpty when pass incorrect Company Responsible id', async () => {

@@ -30,10 +30,6 @@ export class ListSimpleCity
   ): Promise<Either<EntityNotEmpty | EntityNotExists, CityResponseDto[]>> {
     const { loggedUserId, stateId } = input;
 
-    if (Object.keys(loggedUserId).length < 1) {
-      return left(new EntityNotEmpty('Logged User ID'));
-    }
-
     if (Object.keys(stateId).length < 1) {
       return left(new EntityNotEmpty('State ID'));
     }

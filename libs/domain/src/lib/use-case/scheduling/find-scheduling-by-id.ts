@@ -8,7 +8,7 @@ import {
   FindSchedulingByIdRepository,
   FindUserByIdRepository,
 } from '../../repository';
-import { ValidationSchedulingId, ValidationUserId } from '../../utils';
+import { ValidationUserId } from '../../utils';
 
 export class FindSchedulingById
   implements UseCase<FindSchedulingByIdDto, Either<EntityNotEmpty, Scheduling>>
@@ -26,10 +26,6 @@ export class FindSchedulingById
 
     if (Object.keys(id).length < 1) {
       return left(new EntityNotEmpty('Scheduling ID'));
-    }
-
-    if (Object.keys(loggedUserId).length < 1) {
-      return left(new EntityNotEmpty('User ID'));
     }
 
     const userValidation = await ValidationUserId(

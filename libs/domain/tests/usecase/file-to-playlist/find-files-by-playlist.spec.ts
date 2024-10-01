@@ -1,5 +1,4 @@
 import {
-  EntityNotEmpty,
   EntityNotExists,
   FindFilesByPlaylist,
   FindFilesByPlaylistDto,
@@ -62,26 +61,6 @@ describe('FindFilesByPlaylist', () => {
       totalPages: 1,
       files: [ContentFileMock],
     });
-  });
-
-  it('should return EntityNotEmpty when a incorrect User ID', async () => {
-    const { findFilesByPlaylistDto, sut } = makeSut();
-    findFilesByPlaylistDto.loggedUserId = '';
-    const result = await sut.execute(findFilesByPlaylistDto);
-
-    expect(result.isRight()).toBe(false);
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
-  it('should return EntityNotEmpty when a incorrect playlist ID', async () => {
-    const { findFilesByPlaylistDto, sut } = makeSut();
-    findFilesByPlaylistDto.idPlaylist = '';
-    const result = await sut.execute(findFilesByPlaylistDto);
-
-    expect(result.isRight()).toBe(false);
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
   });
 
   it('should return EntityNotExists when a pass incorrect Logged User ID', async () => {

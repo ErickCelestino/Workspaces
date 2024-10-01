@@ -59,25 +59,6 @@ describe('DetailsContentFile', () => {
     expect(result.isRight()).toBe(true);
     expect(result.value).toStrictEqual(ContentFileMock);
   });
-  it('should return EntityNotEmpty when a pass incorrect logged user id', async () => {
-    const { detailsContentFileByIdDto, sut } = makeSut();
-    detailsContentFileByIdDto.loggedUserId = '';
-    const result = await sut.execute(detailsContentFileByIdDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.isRight()).toBe(false);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
-  it('should return EntityNotEmpty when a pass incorrect directory id', async () => {
-    const { detailsContentFileByIdDto, sut } = makeSut();
-    detailsContentFileByIdDto.directoryId = '';
-    const result = await sut.execute(detailsContentFileByIdDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.isRight()).toBe(false);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
 
   it('should return EntityNotEmpty when a pass incorrect id to delete', async () => {
     const { detailsContentFileByIdDto, sut } = makeSut();

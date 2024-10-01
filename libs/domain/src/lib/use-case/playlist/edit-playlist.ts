@@ -27,14 +27,6 @@ export class EditPlaylist
   async execute(input: EditPlaylistDto): Promise<Either<EntityNotEmpty, void>> {
     const { id, loggedUserId, body } = input;
 
-    if (Object.keys(id).length < 1) {
-      return left(new EntityNotEmpty('ID'));
-    }
-
-    if (Object.keys(loggedUserId).length < 1) {
-      return left(new EntityNotEmpty('User ID'));
-    }
-
     if (Object.keys(body.name ?? body).length < 1) {
       return left(new EntityNotEmpty('Name'));
     }

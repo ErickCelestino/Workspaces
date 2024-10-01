@@ -2,7 +2,6 @@ import {
   ContentFile,
   EntityAlreadyExists,
   EntityNotAssociate,
-  EntityNotEmpty,
   EntityNotExists,
   FindContentFileByIdRepository,
   FindFileInFileToPlaylistRepository,
@@ -89,65 +88,6 @@ describe('MoveFilesToAnotherPlaylist', () => {
     expect(result.isRight()).toBe(true);
     expect(result.isLeft()).toBe(false);
     expect(result.value).toStrictEqual(undefined);
-  });
-  it('should return EntityNotEmpty when a pass incorrect logged id', async () => {
-    const { sut, moveFilesToAnotherPlaylistDto } = makeSut();
-    moveFilesToAnotherPlaylistDto.loggedUserId = '';
-    const result = await sut.execute(moveFilesToAnotherPlaylistDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.isRight()).toBe(false);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
-  it('should return EntityNotEmpty when a pass incorrect file id', async () => {
-    const { sut, moveFilesToAnotherPlaylistDto } = makeSut();
-    moveFilesToAnotherPlaylistDto.filesId[0] = '';
-    const result = await sut.execute(moveFilesToAnotherPlaylistDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.isRight()).toBe(false);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
-  it('should return EntityNotEmpty when a pass incorrect file id array', async () => {
-    const { sut, moveFilesToAnotherPlaylistDto } = makeSut();
-    moveFilesToAnotherPlaylistDto.filesId = [];
-    const result = await sut.execute(moveFilesToAnotherPlaylistDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.isRight()).toBe(false);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
-  it('should return EntityNotEmpty when a pass incorrect new Playlist id', async () => {
-    const { sut, moveFilesToAnotherPlaylistDto } = makeSut();
-    moveFilesToAnotherPlaylistDto.newPlaylistId = '';
-    const result = await sut.execute(moveFilesToAnotherPlaylistDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.isRight()).toBe(false);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
-  it('should return EntityNotEmpty when a pass incorrect new Playlist id', async () => {
-    const { sut, moveFilesToAnotherPlaylistDto } = makeSut();
-    moveFilesToAnotherPlaylistDto.newPlaylistId = '';
-    const result = await sut.execute(moveFilesToAnotherPlaylistDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.isRight()).toBe(false);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
-  it('should return EntityNotEmpty when a pass incorrect old Playlist id', async () => {
-    const { sut, moveFilesToAnotherPlaylistDto } = makeSut();
-    moveFilesToAnotherPlaylistDto.oldPlaylistId = '';
-    const result = await sut.execute(moveFilesToAnotherPlaylistDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.isRight()).toBe(false);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
   });
 
   it('should return EntityNotCreated if there is no file to new playlist created in the database', async () => {

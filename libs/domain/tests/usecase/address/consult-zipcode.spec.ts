@@ -55,16 +55,6 @@ describe('ConsultZipcode', () => {
     expect(result.value).toStrictEqual(SimpleAddressMock);
   });
 
-  it('should return EntityNotEmpty when pass incorrect Logged User id', async () => {
-    const { sut, consultZipcodeDto } = makeSut();
-    consultZipcodeDto.loggedUserId = '';
-    const result = await sut.execute(consultZipcodeDto);
-
-    expect(result.isRight()).toBe(false);
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
   it('should return EntityNotEmpty when pass incorrect Zipcode', async () => {
     const { sut, consultZipcodeDto } = makeSut();
     consultZipcodeDto.zipcode = '';

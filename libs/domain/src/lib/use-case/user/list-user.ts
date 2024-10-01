@@ -8,7 +8,7 @@ import {
   VerifyUserPermissionsByIdRepository,
 } from '../../repository';
 import { ListUserDto, ListUserResponseDto } from '../../dto';
-import { EntityNotEmpty, SyntaxError } from '../../error';
+import { SyntaxError } from '../../error';
 import { ValidationUserId, ValidationUserPermisssions } from '../../utils';
 
 export class ListUser
@@ -32,10 +32,6 @@ export class ListUser
     const sanitizedInput = await this.btrinSanitizeRepository.btrin(filter);
     if (sanitizedInput === undefined) {
       return left(new SyntaxError());
-    }
-
-    if (Object.keys(loggedUserId).length < 1) {
-      return left(new EntityNotEmpty('User ID'));
     }
 
     const userValidation = await ValidationUserId(

@@ -33,14 +33,6 @@ export class ListPlaylistBySchedulingId
   ): Promise<Either<EntityNotEmpty, ListPlaylistResponseDto>> {
     const { id, loggedUserId } = input;
 
-    if (Object.keys(id).length < 1) {
-      return left(new EntityNotEmpty('Scheduling ID'));
-    }
-
-    if (Object.keys(loggedUserId).length < 1) {
-      return left(new EntityNotEmpty('User ID'));
-    }
-
     const userValidation = await ValidationUserId(
       loggedUserId,
       this.findUserByIdRepository

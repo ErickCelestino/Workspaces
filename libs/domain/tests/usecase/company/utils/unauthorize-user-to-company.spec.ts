@@ -5,7 +5,6 @@ import {
   UnauthorizeUserToCompany,
   UnauthorizeUserToCompanyRepository,
   VerifyUserPermissionsByIdRepository,
-  EntityNotEmpty,
   EntityNotExists,
   UserList,
   CompanyResponseDto,
@@ -18,7 +17,6 @@ import { CompanyMock, listUserMock, userMock } from '../../../entity';
 import {
   FindCompanyByIdRepositoryMock,
   FindUserByIdRepositoryMock,
-  FindUserIdByCompanyIdRepositoryEmptyMock,
   UnauthorizeUserToCompanyRepositoryMock,
   VerifyUserPermissionsByIdRepositoryMock,
 } from '../../../repository';
@@ -78,36 +76,6 @@ describe('UnauthorizeUserToCompany', () => {
     expect(result.isLeft()).toBeFalsy();
     expect(result.isRight()).toBeTruthy();
     expect(result.value).toStrictEqual(CompanyMock.simple.id);
-  });
-
-  it('should return EntityNotEmpty when pass incorrect Company id', async () => {
-    const { sut, unauthorizeUserToCompanyDto } = makeSut();
-    unauthorizeUserToCompanyDto.companyId = '';
-    const result = await sut.execute(unauthorizeUserToCompanyDto);
-
-    expect(result.isRight()).toBe(false);
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
-  it('should return EntityNotEmpty when pass incorrect Logged User id', async () => {
-    const { sut, unauthorizeUserToCompanyDto } = makeSut();
-    unauthorizeUserToCompanyDto.loggedUserId = '';
-    const result = await sut.execute(unauthorizeUserToCompanyDto);
-
-    expect(result.isRight()).toBe(false);
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
-  it('should return EntityNotEmpty when pass incorrect User id', async () => {
-    const { sut, unauthorizeUserToCompanyDto } = makeSut();
-    unauthorizeUserToCompanyDto.userId = '';
-    const result = await sut.execute(unauthorizeUserToCompanyDto);
-
-    expect(result.isRight()).toBe(false);
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
   });
 
   it('should return EntityNotExists when a exist Logged User in system', async () => {

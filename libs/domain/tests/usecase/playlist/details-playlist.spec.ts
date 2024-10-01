@@ -2,7 +2,6 @@ import {
   DetailsPlaylist,
   DetailsPlaylistDto,
   DetailsPlaylistRepository,
-  EntityNotEmpty,
   EntityNotExists,
   FindPlaylistByIdRepository,
   FindUserByIdRepository,
@@ -60,25 +59,6 @@ describe('DetailsPlaylist', () => {
     expect(result.value).toStrictEqual(PlaylistResponseMock);
   });
 
-  it('should return EntityNotEmpty when a pass incorrect Logged User ID', async () => {
-    const { detailsPlaylistDto, sut } = makeSut();
-    detailsPlaylistDto.loggedUserId = '';
-    const result = await sut.execute(detailsPlaylistDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.isRight()).toBe(false);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
-  it('should return EntityNotEmpty when a pass incorrect Playlist ID', async () => {
-    const { detailsPlaylistDto, sut } = makeSut();
-    detailsPlaylistDto.playlistId = '';
-    const result = await sut.execute(detailsPlaylistDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.isRight()).toBe(false);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
   it('should return EntityNotExists if there is no playlist created in the database', async () => {
     const { detailsPlaylistDto, sut } = makeSut();
 

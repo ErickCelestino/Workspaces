@@ -3,7 +3,6 @@ import {
   ListCompanyRepositoryMock,
 } from '../../../repository';
 import {
-  EntityNotEmpty,
   EntityNotExists,
   FindUserByIdRepository,
   ListCompany,
@@ -47,16 +46,6 @@ describe('ListCompany', () => {
     expect(result.isLeft()).toBe(false);
     expect(result.isRight()).toBe(true);
     expect(result.value).toStrictEqual(ListCompanyMock);
-  });
-
-  it('should return EntityNotEmpty when pass incorrect Logged User id', async () => {
-    const { sut, listCompanyDto } = makeSut();
-    listCompanyDto.loggedUserId = '';
-    const result = await sut.execute(listCompanyDto);
-
-    expect(result.isRight()).toBe(false);
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
   });
 
   it('should return EntityNotExists when a exist User in system', async () => {

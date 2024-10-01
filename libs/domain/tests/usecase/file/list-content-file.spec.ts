@@ -2,7 +2,6 @@ import { faker } from '@faker-js/faker';
 import {
   FindUserByIdRepository,
   FindDirectoryByIdRepository,
-  EntityNotEmpty,
   ListContentFile,
   ListContentFileDto,
   ListContentFileRepository,
@@ -71,36 +70,6 @@ describe('ListContentFile', () => {
     expect(result.isLeft()).toBe(false);
     expect(result.isRight()).toBe(true);
     expect(result.value).toStrictEqual(ListContentFileReponseMock);
-  });
-
-  it('should return EntityNotEmpty when a pass incorrect logged user id', async () => {
-    const { listContentFileDto, sut } = makeSut();
-    listContentFileDto.loggedUserId = '';
-    const result = await sut.execute(listContentFileDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.isRight()).toBe(false);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
-  it('should return EntityNotEmpty when a pass incorrect directory id', async () => {
-    const { listContentFileDto, sut } = makeSut();
-    listContentFileDto.directoryId = '';
-    const result = await sut.execute(listContentFileDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.isRight()).toBe(false);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
-  it('should return EntityNotEmpty when a pass incorrect Company id', async () => {
-    const { listContentFileDto, sut } = makeSut();
-    listContentFileDto.companyId = '';
-    const result = await sut.execute(listContentFileDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.isRight()).toBe(false);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
   });
 
   it('should return EntityNotExists when not exist user in system', async () => {

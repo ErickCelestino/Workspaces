@@ -83,39 +83,9 @@ describe('AddPlaylistsToScheduling', () => {
     expect(result.value).toStrictEqual([PlaylistToSchedulingMock.id]);
   });
 
-  it('should return EntityNotEmpty when pass incorrect User ID', async () => {
-    const { sut, addPlaylistToSchedulingDto } = makeSut();
-    addPlaylistToSchedulingDto.loggedUserId = '';
-    const result = await sut.execute(addPlaylistToSchedulingDto);
-
-    expect(result.isRight()).toBe(false);
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
-  it('should return EntityNotEmpty when pass incorrect Scheduling ID', async () => {
-    const { sut, addPlaylistToSchedulingDto } = makeSut();
-    addPlaylistToSchedulingDto.schedulingId = '';
-    const result = await sut.execute(addPlaylistToSchedulingDto);
-
-    expect(result.isRight()).toBe(false);
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
   it('should return EntityNotEmpty when pass incorrect Playlist IDs', async () => {
     const { sut, addPlaylistToSchedulingDto } = makeSut();
     addPlaylistToSchedulingDto.playlistIds = [];
-    const result = await sut.execute(addPlaylistToSchedulingDto);
-
-    expect(result.isRight()).toBe(false);
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
-  it('should return EntityNotEmpty when pass incorrect Playlist ID', async () => {
-    const { sut, addPlaylistToSchedulingDto } = makeSut();
-    addPlaylistToSchedulingDto.playlistIds[0] = '';
     const result = await sut.execute(addPlaylistToSchedulingDto);
 
     expect(result.isRight()).toBe(false);

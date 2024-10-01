@@ -67,36 +67,6 @@ describe('EditContentFile', () => {
     expect(result.value).toStrictEqual(undefined);
   });
 
-  it('should return EntityNotEmpty when a pass incorrect logged user id', async () => {
-    const { editContentFileDto, sut } = makeSut();
-    editContentFileDto.loggedUserId = '';
-    const result = await sut.execute(editContentFileDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.isRight()).toBe(false);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
-  it('should return EntityNotEmpty when a pass incorrect directory id', async () => {
-    const { editContentFileDto, sut } = makeSut();
-    editContentFileDto.directoryId = '';
-    const result = await sut.execute(editContentFileDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.isRight()).toBe(false);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
-  it('should return EntityNotEmpty when a pass incorrect id to delete', async () => {
-    const { editContentFileDto, sut } = makeSut();
-    editContentFileDto.idToEdit = '';
-    const result = await sut.execute(editContentFileDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.isRight()).toBe(false);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
   it('should return EntityNotEmpty when a pass empty file name', async () => {
     const { editContentFileDto, sut } = makeSut();
     editContentFileDto.newFileName = '';

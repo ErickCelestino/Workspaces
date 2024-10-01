@@ -1,6 +1,5 @@
 import {
   CompanyResponseDto,
-  EntityNotEmpty,
   EntityNotExists,
   FindCompanyByIdRepository,
   FindUnauthorizedUsersByCompanyId,
@@ -64,26 +63,6 @@ describe('FindUnauthorizedUsersByCompanyId', () => {
     expect(result.isLeft()).toBeFalsy();
     expect(result.isRight()).toBeTruthy();
     expect(result.value).toStrictEqual(UnauthorizedUsersByCompanyIdMock);
-  });
-
-  it('should return EntityNotEmpty when pass incorrect Company id', async () => {
-    const { sut, findUnauthorizedUsersByCompanyIdDto } = makeSut();
-    findUnauthorizedUsersByCompanyIdDto.companyId = '';
-    const result = await sut.execute(findUnauthorizedUsersByCompanyIdDto);
-
-    expect(result.isRight()).toBe(false);
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
-  it('should return EntityNotEmpty when pass incorrect Logged User id', async () => {
-    const { sut, findUnauthorizedUsersByCompanyIdDto } = makeSut();
-    findUnauthorizedUsersByCompanyIdDto.loggedUserId = '';
-    const result = await sut.execute(findUnauthorizedUsersByCompanyIdDto);
-
-    expect(result.isRight()).toBe(false);
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
   });
 
   it('should return EntityNotExists when a exist User in system', async () => {

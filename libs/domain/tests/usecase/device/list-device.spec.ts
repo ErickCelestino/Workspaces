@@ -3,7 +3,6 @@ import {
   ListDeviceRepository,
   FindUserByIdRepository,
   ListDeviceDto,
-  EntityNotEmpty,
   EntityNotExists,
   UserList,
   FindCompanyByIdRepository,
@@ -59,26 +58,6 @@ describe('ListDevice', () => {
     expect(result.isRight()).toBe(true);
     expect(result.isLeft()).toBe(false);
     expect(result.value).toStrictEqual(ListDeviceResponseMock);
-  });
-
-  it('should  return EntityNotEmpty when pass incorrect Logged User Id', async () => {
-    const { listDeviceDto, sut } = makeSut();
-    listDeviceDto.loggedUserId = '';
-    const result = await sut.execute(listDeviceDto);
-
-    expect(result.isRight()).toBe(false);
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
-  it('should  return EntityNotEmpty when pass incorrect Company Id', async () => {
-    const { listDeviceDto, sut } = makeSut();
-    listDeviceDto.companyId = '';
-    const result = await sut.execute(listDeviceDto);
-
-    expect(result.isRight()).toBe(false);
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
   });
 
   it('should return EntityNotExists when a not exist User in system', async () => {

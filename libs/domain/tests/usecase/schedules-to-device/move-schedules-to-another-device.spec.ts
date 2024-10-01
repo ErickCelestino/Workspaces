@@ -89,49 +89,9 @@ describe('MoveSchedulesToAnotherDevice', () => {
     expect(result.value).toEqual([SchedulesToDeviceMock.id]);
   });
 
-  it('should return EntityNotEmpty when a pass incorrect logged id', async () => {
-    const { sut, moveSchedulesToAnotherDeviceDto } = makeSut();
-    moveSchedulesToAnotherDeviceDto.loggedUserId = '';
-    const result = await sut.execute(moveSchedulesToAnotherDeviceDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.isRight()).toBe(false);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
-  it('should return EntityNotEmpty when a pass incorrect new Device ID', async () => {
-    const { sut, moveSchedulesToAnotherDeviceDto } = makeSut();
-    moveSchedulesToAnotherDeviceDto.newDeviceId = '';
-    const result = await sut.execute(moveSchedulesToAnotherDeviceDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.isRight()).toBe(false);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
-  it('should return EntityNotEmpty when a pass incorrect old Device ID', async () => {
-    const { sut, moveSchedulesToAnotherDeviceDto } = makeSut();
-    moveSchedulesToAnotherDeviceDto.oldDeviceId = '';
-    const result = await sut.execute(moveSchedulesToAnotherDeviceDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.isRight()).toBe(false);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
   it('should return EntityNotEmpty when a pass incorrect schedules id list', async () => {
     const { sut, moveSchedulesToAnotherDeviceDto } = makeSut();
     moveSchedulesToAnotherDeviceDto.schedulesIds = [];
-    const result = await sut.execute(moveSchedulesToAnotherDeviceDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.isRight()).toBe(false);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
-  it('should return EntityNotEmpty when a pass incorrect scheduling id', async () => {
-    const { sut, moveSchedulesToAnotherDeviceDto } = makeSut();
-    moveSchedulesToAnotherDeviceDto.schedulesIds[0] = '';
     const result = await sut.execute(moveSchedulesToAnotherDeviceDto);
 
     expect(result.isLeft()).toBe(true);

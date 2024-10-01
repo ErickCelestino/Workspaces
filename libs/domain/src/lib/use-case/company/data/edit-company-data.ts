@@ -34,14 +34,6 @@ export class EditCompanyData
       loggedUserId,
     } = input;
 
-    if (Object.keys(loggedUserId).length < 1) {
-      return left(new EntityNotEmpty('Logged User ID'));
-    }
-
-    if (Object.keys(companyDataId).length < 1) {
-      return left(new EntityNotEmpty('Company Data ID'));
-    }
-
     if (Object.keys(legalNature).length < 1) {
       return left(new EntityNotEmpty('Legal Nature'));
     }

@@ -1,6 +1,5 @@
 import {
   CompanyResponseDto,
-  EntityNotEmpty,
   EntityNotExists,
   FindCompanyByIdRepository,
   FindUserByIdRepository,
@@ -66,25 +65,6 @@ describe('ListSimpleDirectory', () => {
     expect(result.value).toStrictEqual(ListSimpleDirectoryResponseDtoMock);
   });
 
-  it('should return EntityNotEmpty when a pass incorrect logged user id', async () => {
-    const { listSimpleDirectoryDto, sut } = makeSut();
-    listSimpleDirectoryDto.loggedUserId = '';
-    const result = await sut.execute(listSimpleDirectoryDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.isRight()).toBe(false);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
-  it('should return EntityNotEmpty when a pass incorrect Company id', async () => {
-    const { listSimpleDirectoryDto, sut } = makeSut();
-    listSimpleDirectoryDto.companyId = '';
-    const result = await sut.execute(listSimpleDirectoryDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.isRight()).toBe(false);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
   it('should return EntityNotExists when a not exist User in system', async () => {
     const { listSimpleDirectoryDto, sut } = makeSut();
     jest

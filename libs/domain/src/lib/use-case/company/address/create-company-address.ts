@@ -45,21 +45,6 @@ export class CreateCompanyAddress
       companyId,
       loggedUserId,
     } = input;
-    if (Object.keys(loggedUserId).length < 1) {
-      return left(new EntityNotEmpty('Logged User ID'));
-    }
-
-    if (Object.keys(companyId).length < 1) {
-      return left(new EntityNotEmpty('Company ID'));
-    }
-
-    if (Object.keys(cityId).length < 1) {
-      return left(new EntityNotEmpty('City'));
-    }
-
-    if (Object.keys(countryId).length < 1) {
-      return left(new EntityNotEmpty('Country'));
-    }
 
     if (Object.keys(district).length < 1) {
       return left(new EntityNotEmpty('District'));
@@ -67,10 +52,6 @@ export class CreateCompanyAddress
 
     if (Object.keys(number).length < 1) {
       return left(new EntityNotEmpty('Number'));
-    }
-
-    if (Object.keys(stateId).length < 1) {
-      return left(new EntityNotEmpty('State'));
     }
 
     if (Object.keys(street).length < 1) {

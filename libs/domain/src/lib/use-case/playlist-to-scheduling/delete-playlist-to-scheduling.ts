@@ -38,18 +38,6 @@ export class DeletePlaylistToScheduling
   ): Promise<Either<EntityNotEmpty | EntityNotExists, void>> {
     const { playlistId, schedulingId, loggedUserId } = input;
 
-    if (Object.keys(loggedUserId).length < 1) {
-      return left(new EntityNotEmpty('User ID'));
-    }
-
-    if (Object.keys(schedulingId).length < 1) {
-      return left(new EntityNotEmpty('Scheduling ID'));
-    }
-
-    if (Object.keys(playlistId).length < 1) {
-      return left(new EntityNotEmpty('Playlist ID'));
-    }
-
     const userValidation = await ValidationUserId(
       loggedUserId,
       this.findUserByIdRepository

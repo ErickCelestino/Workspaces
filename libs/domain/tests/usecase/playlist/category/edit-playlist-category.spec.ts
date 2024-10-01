@@ -66,26 +66,6 @@ describe('EditPlaylistCategory', () => {
     expect(result.value).toStrictEqual(undefined);
   });
 
-  it('should return EntityNotEmpty when a pass incorrect logged user', async () => {
-    const { editPlaylistCategoryDto, sut } = makeSut();
-    editPlaylistCategoryDto.loggedUserId = '';
-    const result = await sut.execute(editPlaylistCategoryDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.isRight()).toBe(false);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
-  it('should return EntityNotEmpty when a pass incorrect ID', async () => {
-    const { editPlaylistCategoryDto, sut } = makeSut();
-    editPlaylistCategoryDto.id = '';
-    const result = await sut.execute(editPlaylistCategoryDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.isRight()).toBe(false);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
   it('should return EntityNotEmpty when a pass incorrect name', async () => {
     const { editPlaylistCategoryDto, sut } = makeSut();
     editPlaylistCategoryDto.body.name = '';

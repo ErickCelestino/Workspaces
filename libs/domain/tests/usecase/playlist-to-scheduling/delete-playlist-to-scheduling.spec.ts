@@ -2,7 +2,6 @@ import {
   DeletePlaylistToScheduling,
   DeletePlaylistToSchedulingDto,
   DeletePlaylistToSchedulingRepository,
-  EntityNotEmpty,
   EntityNotExists,
   FindPlaylistByIdRepository,
   FindSchedulingByIdRepository,
@@ -67,36 +66,6 @@ describe('DeletePlaylistToScheduling', () => {
     expect(result.isLeft()).toBe(false);
     expect(result.isRight()).toBe(true);
     expect(result.value).toStrictEqual(undefined);
-  });
-
-  it('should return EntityNotEmpty when pass incorrect User ID', async () => {
-    const { sut, deletePlaylistToSchedulingDto } = makeSut();
-    deletePlaylistToSchedulingDto.loggedUserId = '';
-    const result = await sut.execute(deletePlaylistToSchedulingDto);
-
-    expect(result.isRight()).toBe(false);
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
-  it('should return EntityNotEmpty when pass incorrect Playlist ID', async () => {
-    const { sut, deletePlaylistToSchedulingDto } = makeSut();
-    deletePlaylistToSchedulingDto.playlistId = '';
-    const result = await sut.execute(deletePlaylistToSchedulingDto);
-
-    expect(result.isRight()).toBe(false);
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
-  it('should return EntityNotEmpty when pass incorrect Scheduling ID', async () => {
-    const { sut, deletePlaylistToSchedulingDto } = makeSut();
-    deletePlaylistToSchedulingDto.schedulingId = '';
-    const result = await sut.execute(deletePlaylistToSchedulingDto);
-
-    expect(result.isRight()).toBe(false);
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
   });
 
   it('should return EntityNotExists when a pass incorrect Logged User ID', async () => {

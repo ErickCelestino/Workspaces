@@ -52,15 +52,6 @@ describe('FindUserById', () => {
     expect(result.value).toBeInstanceOf(EntityNotEmpty);
   });
 
-  it('should return EntityNotEmpty when a pass incorrect logged user id', async () => {
-    const { sut, findUserByIdDto } = makeSut();
-    findUserByIdDto.loggedUserId = '';
-    const result = await sut.execute(findUserByIdDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
   it('should return EntityNotExists when not exist logged user id in database', async () => {
     const { sut, findUserByIdDto } = makeSut();
     jest

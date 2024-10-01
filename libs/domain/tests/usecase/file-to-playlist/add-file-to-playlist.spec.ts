@@ -5,7 +5,6 @@ import {
   ContentFile,
   EntityAlreadyExists,
   EntityNotCreated,
-  EntityNotEmpty,
   EntityNotExists,
   FindContentFileByIdRepository,
   FindFileInFileToPlaylistRepository,
@@ -80,36 +79,6 @@ describe('AddFileToPlaylist', () => {
     expect(result.isLeft()).toBe(false);
     expect(result.isRight()).toBe(true);
     expect(result.value).toStrictEqual([FileToPlaylistMock.id]);
-  });
-
-  it('should return EntityNotEmpty when a pass incorrect file id', async () => {
-    const { sut, addtFileToPlaylistDto } = makeSut();
-    addtFileToPlaylistDto.filesId[0] = '';
-    const result = await sut.execute(addtFileToPlaylistDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.isRight()).toBe(false);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
-  it('should return EntityNotEmpty when a pass incorrect logged user id', async () => {
-    const { sut, addtFileToPlaylistDto } = makeSut();
-    addtFileToPlaylistDto.loggedUserId = '';
-    const result = await sut.execute(addtFileToPlaylistDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.isRight()).toBe(false);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
-  it('should return EntityNotEmpty when a pass incorrect logged playlist id', async () => {
-    const { sut, addtFileToPlaylistDto } = makeSut();
-    addtFileToPlaylistDto.playlistId = '';
-    const result = await sut.execute(addtFileToPlaylistDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.isRight()).toBe(false);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
   });
 
   it('should return EntityNotCreated if there is no file to playlist created in the database', async () => {

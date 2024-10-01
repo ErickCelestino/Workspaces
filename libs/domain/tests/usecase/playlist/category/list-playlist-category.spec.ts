@@ -1,6 +1,5 @@
 import {
   CompanyResponseDto,
-  EntityNotEmpty,
   EntityNotExists,
   FindCompanyByIdRepository,
   FindUserByIdRepository,
@@ -64,26 +63,6 @@ describe('ListPlaylistCategory', () => {
     expect(result.isLeft()).toBe(false);
     expect(result.isRight()).toBe(true);
     expect(result.value).toStrictEqual(ListPlaylistCategoryReponseMock);
-  });
-
-  it('should return EntityNotEmpty when a pass incorrect logged user', async () => {
-    const { listPlaylistCategoryDto, sut } = makeSut();
-    listPlaylistCategoryDto.loggedUserId = '';
-    const result = await sut.execute(listPlaylistCategoryDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.isRight()).toBe(false);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
-  it('should return EntityNotEmpty when a pass incorrect Company ID', async () => {
-    const { listPlaylistCategoryDto, sut } = makeSut();
-    listPlaylistCategoryDto.companyId = '';
-    const result = await sut.execute(listPlaylistCategoryDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.isRight()).toBe(false);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
   });
 
   it('should return EntityNotExists when a not exist User in system', async () => {

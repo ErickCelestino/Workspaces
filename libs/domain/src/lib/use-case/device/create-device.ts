@@ -43,16 +43,8 @@ export class CreateDevice
       body: { name },
     } = input;
 
-    if (Object.keys(loggedUserId).length < 1) {
-      return left(new EntityNotEmpty('User ID'));
-    }
-
     if (Object.keys(name).length < 1) {
       return left(new EntityNotEmpty('Name'));
-    }
-
-    if (Object.keys(companyId).length < 1) {
-      return left(new EntityNotEmpty('Company'));
     }
 
     const userValidation = await ValidationUserId(

@@ -49,16 +49,8 @@ export class CreatePlaylistCategory
   > {
     const { loggedUserId, companyId, body } = input;
 
-    if (Object.keys(loggedUserId).length < 1) {
-      return left(new EntityNotEmpty('logged user ID'));
-    }
-
     if (Object.keys(body.name).length < 1) {
       return left(new EntityNotEmpty('name'));
-    }
-
-    if (Object.keys(companyId).length < 1) {
-      return left(new EntityNotEmpty('Company ID'));
     }
 
     if (Object.keys(body.description).length < 1) {

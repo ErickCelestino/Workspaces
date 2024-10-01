@@ -43,10 +43,6 @@ export class CreateCompany
 
     const formatedcnpj = cnpj.replace(/[^\d]+/g, '');
 
-    if (Object.keys(loggedUserId).length < 1) {
-      return left(new EntityNotEmpty('Logged User ID'));
-    }
-
     if (Object.keys(socialReason).length < 1) {
       return left(new EntityNotEmpty('Social Reason'));
     }

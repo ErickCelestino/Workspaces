@@ -40,14 +40,6 @@ export class AddFileToPlaylist
   ): Promise<Either<EntityNotEmpty, string[]>> {
     const { loggedUserId, filesId, playlistId } = input;
 
-    if (Object.keys(loggedUserId).length < 1) {
-      return left(new EntityNotEmpty('User ID'));
-    }
-
-    if (Object.keys(playlistId).length < 1) {
-      return left(new EntityNotEmpty('Playlist ID'));
-    }
-
     const userValidation = await ValidationUserId(
       loggedUserId,
       this.findUserByIdRepository
@@ -58,10 +50,6 @@ export class AddFileToPlaylist
     }
 
     for (const file of filesId) {
-      if (Object.keys(file).length < 1) {
-        return left(new EntityNotEmpty('File ID'));
-      }
-
       const contentFileValidation = await ValidationContentFileId(
         file,
         this.findContentFileByIdRepository

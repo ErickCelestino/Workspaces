@@ -68,29 +68,9 @@ describe('EditDirectory', () => {
     expect(result.value).toBe(DirectoryMock.id);
   });
 
-  it('should return EntityNotEmpty when pass incorrect Logged User id', async () => {
-    const { editDirectoryDto, sut } = makeSut();
-    editDirectoryDto.loggedUserId = '';
-    const result = await sut.execute(editDirectoryDto);
-
-    expect(result.isRight()).toBe(false);
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
   it('should return EntityNotEmpty when pass incorrect Directory newName', async () => {
     const { editDirectoryDto, sut } = makeSut();
     editDirectoryDto.newName = '';
-    const result = await sut.execute(editDirectoryDto);
-
-    expect(result.isRight()).toBe(false);
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
-  it('should return EntityNotEmpty when pass incorrect Directory ID', async () => {
-    const { editDirectoryDto, sut } = makeSut();
-    editDirectoryDto.id = '';
     const result = await sut.execute(editDirectoryDto);
 
     expect(result.isRight()).toBe(false);

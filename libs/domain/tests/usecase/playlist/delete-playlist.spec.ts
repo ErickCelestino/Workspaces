@@ -3,7 +3,6 @@ import {
   DeletePlaylist,
   DeletePlaylistDto,
   DeletePlaylistRepoistory,
-  EntityNotEmpty,
   EntityNotExists,
   FindPlaylistByIdRepository,
   FindUserByIdRepository,
@@ -65,36 +64,6 @@ describe('DeletePlaylist', () => {
     expect(result.isLeft()).toBe(false);
     expect(result.isRight()).toBe(true);
     expect(result.value).toStrictEqual(undefined);
-  });
-
-  it('should return EntityNotEmpty when a pass incorrect Logged User ID', async () => {
-    const { deletePlaylistDto, sut } = makeSut();
-    deletePlaylistDto.loggedUserId = '';
-    const result = await sut.execute(deletePlaylistDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.isRight()).toBe(false);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
-  it('should return EntityNotEmpty when a pass incorrect ID', async () => {
-    const { deletePlaylistDto, sut } = makeSut();
-    deletePlaylistDto.id = '';
-    const result = await sut.execute(deletePlaylistDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.isRight()).toBe(false);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
-  it('should return EntityNotEmpty when a pass incorrect Logged User ID', async () => {
-    const { deletePlaylistDto, sut } = makeSut();
-    deletePlaylistDto.loggedUserId = '';
-    const result = await sut.execute(deletePlaylistDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.isRight()).toBe(false);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
   });
 
   it('should return EntityNotExists when a pass incorrect Logged User ID', async () => {

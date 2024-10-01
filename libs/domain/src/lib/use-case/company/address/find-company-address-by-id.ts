@@ -30,14 +30,6 @@ export class FindCompanyAddressById
   ): Promise<Either<EntityNotEmpty, CompanyAddressResponseDto>> {
     const { companyAddressId, loggedUserId } = input;
 
-    if (Object.keys(loggedUserId).length < 1) {
-      return left(new EntityNotEmpty('Logged User ID'));
-    }
-
-    if (Object.keys(companyAddressId).length < 1) {
-      return left(new EntityNotEmpty('Company Address ID'));
-    }
-
     const userValidation = await ValidationUserId(
       loggedUserId,
       this.findUserByIdRepository

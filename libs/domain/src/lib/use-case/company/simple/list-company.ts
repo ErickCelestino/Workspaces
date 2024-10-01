@@ -24,10 +24,6 @@ export class ListCompany
   ): Promise<Either<EntityNotEmpty, ListCompanyResponseDto>> {
     const { loggedUserId } = input;
 
-    if (Object.keys(loggedUserId).length < 1) {
-      return left(new EntityNotEmpty('Logged User ID'));
-    }
-
     const userValidation = await ValidationUserId(
       loggedUserId,
       this.findUserByIdRepository

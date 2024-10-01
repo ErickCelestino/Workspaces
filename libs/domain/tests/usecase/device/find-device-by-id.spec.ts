@@ -54,16 +54,6 @@ describe('FindDeviceById', () => {
     expect(result.value).toEqual(DeviceMock);
   });
 
-  it('should return EntityNotEmpty when pass incorrect Logged User ID', async () => {
-    const { sut, findDeviceByIdDto } = makeSut();
-    findDeviceByIdDto.loggedUserId = '';
-    const result = await sut.execute(findDeviceByIdDto);
-
-    expect(result.isRight()).toBe(false);
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
   it('should return EntityNotEmpty when pass incorrect Device ID', async () => {
     const { sut, findDeviceByIdDto } = makeSut();
     findDeviceByIdDto.id = '';

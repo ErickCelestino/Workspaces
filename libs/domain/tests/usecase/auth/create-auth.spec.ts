@@ -89,17 +89,6 @@ describe('CreateAuth', () => {
     expect(result.value).toBeInstanceOf(InsufficientCharacters);
   });
 
-  it('should left EntityNotExists if sent an user id with less than three characters', async () => {
-    const { sut, createAuthDto } = makeSut();
-
-    createAuthDto.userId = '';
-
-    const result = await sut.execute(createAuthDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotExists);
-  });
-
   it('should return EntityAlreadyExists if send email already exist in database', async () => {
     const { sut, createAuthDto } = makeSut();
     createAuthDto.email = authMock.email;

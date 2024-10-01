@@ -27,10 +27,6 @@ export class FindUserById
       return left(new EntityNotEmpty(idString));
     }
 
-    if (Object.keys(loggedUserId).length < 1) {
-      return left(new EntityNotEmpty('Logged User ID'));
-    }
-
     const userValidation = await ValidationUserId(
       loggedUserId,
       this.findUserByIdRepository
