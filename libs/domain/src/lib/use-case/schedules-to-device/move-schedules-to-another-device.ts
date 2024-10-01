@@ -41,18 +41,6 @@ export class MoveSchedulesToAnotherDevice
     input: MoveSchedulesToAnotherDeviceDto
   ): Promise<Either<EntityNotEmpty, string[]>> {
     const { loggedUserId, newDeviceId, oldDeviceId, schedulesIds } = input;
-    if (Object.keys(loggedUserId).length < 1) {
-      return left(new EntityNotEmpty('loggedUserId'));
-    }
-
-    if (Object.keys(newDeviceId).length < 1) {
-      return left(new EntityNotEmpty('new Device ID'));
-    }
-
-    if (Object.keys(oldDeviceId).length < 1) {
-      return left(new EntityNotEmpty('old Device ID'));
-    }
-
     if (schedulesIds.length < 1) {
       return left(new EntityNotEmpty('Schedules'));
     }
@@ -85,10 +73,6 @@ export class MoveSchedulesToAnotherDevice
     }
     const ids = [];
     for (const scheduleId of schedulesIds) {
-      if (Object.keys(scheduleId).length < 1) {
-        return left(new EntityNotEmpty('Scheduling ID'));
-      }
-
       const schedulingValidation = await ValidationSchedulingId(
         scheduleId,
         this.findSchedulingByIdRepository

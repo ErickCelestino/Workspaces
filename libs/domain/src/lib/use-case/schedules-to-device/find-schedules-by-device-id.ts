@@ -28,14 +28,6 @@ export class FindSchedulesByDeviceId
   ): Promise<Either<EntityNotEmpty, Scheduling[]>> {
     const { idDevice, loggedUserId } = input;
 
-    if (Object.keys(loggedUserId).length < 1) {
-      return left(new EntityNotEmpty('loggedUserId'));
-    }
-
-    if (Object.keys(idDevice).length < 1) {
-      return left(new EntityNotEmpty('Device ID'));
-    }
-
     const userValidation = await ValidationUserId(
       loggedUserId,
       this.findUserByIdRepository

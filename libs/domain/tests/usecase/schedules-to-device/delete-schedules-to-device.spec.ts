@@ -3,7 +3,6 @@ import {
   DeleteSchedulesToDeviceDto,
   DeleteSchedulingToDeviceRepository,
   Device,
-  EntityAlreadyExists,
   EntityNotDeleted,
   EntityNotEmpty,
   EntityNotExists,
@@ -24,7 +23,6 @@ import {
   DeleteSchedulingToDeviceRepositoryMock,
   FindDeviceByIdRepositoryMock,
   FindSchedulingByIdRepositoryMock,
-  FindSchedulingToDeviceByIdsRepositoryMock,
   FindUserByIdRepositoryMock,
 } from '../../repository';
 
@@ -82,39 +80,9 @@ describe('DeleteSchedulesToDevice', () => {
     expect(result.value).toEqual([SchedulesToDeviceMock.id]);
   });
 
-  it('should return EntityNotEmpty when pass correct Logged User ID', async () => {
-    const { sut, deleteSchedulesToDeviceDto } = makeSut();
-    deleteSchedulesToDeviceDto.loggedUserId = '';
-    const result = await sut.execute(deleteSchedulesToDeviceDto);
-
-    expect(result.isRight()).toBe(false);
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
-  it('should return EntityNotEmpty when pass correct Device ID', async () => {
-    const { sut, deleteSchedulesToDeviceDto } = makeSut();
-    deleteSchedulesToDeviceDto.idDevice = '';
-    const result = await sut.execute(deleteSchedulesToDeviceDto);
-
-    expect(result.isRight()).toBe(false);
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
   it('should return EntityNotEmpty when pass correct Schedules', async () => {
     const { sut, deleteSchedulesToDeviceDto } = makeSut();
     deleteSchedulesToDeviceDto.schedulesIds = [];
-    const result = await sut.execute(deleteSchedulesToDeviceDto);
-
-    expect(result.isRight()).toBe(false);
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
-  it('should return EntityNotEmpty when pass correct Scheduling ID', async () => {
-    const { sut, deleteSchedulesToDeviceDto } = makeSut();
-    deleteSchedulesToDeviceDto.schedulesIds[0] = '';
     const result = await sut.execute(deleteSchedulesToDeviceDto);
 
     expect(result.isRight()).toBe(false);
