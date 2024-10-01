@@ -33,13 +33,6 @@ export class FindFilesByPlaylist
     input: FindFilesByPlaylistDto
   ): Promise<Either<EntityNotEmpty, FindFilesByPlaylistResponseDto>> {
     const { idPlaylist, loggedUserId } = input;
-    if (Object.keys(loggedUserId).length < 1) {
-      return left(new EntityNotEmpty('Logged User'));
-    }
-
-    if (Object.keys(idPlaylist).length < 1) {
-      return left(new EntityNotEmpty('Playlist ID'));
-    }
 
     const userValidation = await ValidationUserId(
       loggedUserId,
