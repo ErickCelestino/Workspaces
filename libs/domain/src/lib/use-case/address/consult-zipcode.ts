@@ -27,10 +27,6 @@ export class ConsultZipcode
   ): Promise<Either<EntityNotEmpty, SimpleAddressResponseDto>> {
     const { loggedUserId, zipcode } = input;
 
-    if (Object.keys(loggedUserId).length < 1) {
-      return left(new EntityNotEmpty('Logged User ID'));
-    }
-
     if (Object.keys(zipcode).length < 1) {
       return left(new EntityNotEmpty('Zipcode'));
     }

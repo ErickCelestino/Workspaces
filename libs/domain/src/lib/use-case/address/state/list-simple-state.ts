@@ -34,10 +34,6 @@ export class ListSimpleState
       return left(new EntityNotEmpty('Country ID'));
     }
 
-    if (Object.keys(loggedUserId).length < 1) {
-      return left(new EntityNotEmpty('Logged User ID'));
-    }
-
     const userValidation = await ValidationUserId(
       loggedUserId,
       this.findUserByIdRepository

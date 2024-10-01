@@ -60,16 +60,6 @@ describe('ListSimpleCity', () => {
     expect(result.value).toStrictEqual([CityMock]);
   });
 
-  it('should return EntityNotEmpty when pass incorrect Logged User id', async () => {
-    const { sut, listSimpleCityDto } = makeSut();
-    listSimpleCityDto.loggedUserId = '';
-    const result = await sut.execute(listSimpleCityDto);
-
-    expect(result.isRight()).toBe(false);
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
   it('should return EntityNotEmpty when pass incorrect State id', async () => {
     const { sut, listSimpleCityDto } = makeSut();
     listSimpleCityDto.stateId = '';

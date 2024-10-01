@@ -1,5 +1,4 @@
 import {
-  EntityNotEmpty,
   EntityNotExists,
   FindUserByIdRepository,
   ListSimpleCountry,
@@ -50,16 +49,6 @@ describe('ListSimpleCountry', () => {
     expect(result.isLeft()).toBe(false);
     expect(result.isRight()).toBe(true);
     expect(result.value).toStrictEqual([listSimpleCountryMock]);
-  });
-
-  it('should return EntityNotEmpty when pass incorrect Logged User id', async () => {
-    const { sut, listSimpleCountryDto } = makeSut();
-    listSimpleCountryDto.loggedUserId = '';
-    const result = await sut.execute(listSimpleCountryDto);
-
-    expect(result.isRight()).toBe(false);
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
   });
 
   it('should return EntityNotExists when a exist User in system', async () => {
