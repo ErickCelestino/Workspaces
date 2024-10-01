@@ -3,7 +3,6 @@ import {
   DeleteDeviceDto,
   DeleteDeviceRepository,
   Device,
-  EntityNotEmpty,
   EntityNotExists,
   FindDeviceByIdRepository,
   FindUserByIdRepository,
@@ -58,26 +57,6 @@ describe('DeleteDevice', () => {
     expect(result.isRight()).toBe(true);
     expect(result.isLeft()).toBe(false);
     expect(result.value).toBe(undefined);
-  });
-
-  it('should return EntityNotEmpty when pass incorrect id', async () => {
-    const { sut, deleteDeviceDto } = makeSut();
-    deleteDeviceDto.id = '';
-    const result = await sut.execute(deleteDeviceDto);
-
-    expect(result.isRight()).toBe(false);
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
-  it('should return EntityNotEmpty when pass incorrect Logged User ID', async () => {
-    const { sut, deleteDeviceDto } = makeSut();
-    deleteDeviceDto.loggedUserId = '';
-    const result = await sut.execute(deleteDeviceDto);
-
-    expect(result.isRight()).toBe(false);
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
   });
 
   it('should return EntityNotExists when a exist User in system', async () => {

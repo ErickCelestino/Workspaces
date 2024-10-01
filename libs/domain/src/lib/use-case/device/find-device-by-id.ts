@@ -28,10 +28,6 @@ export class FindDeviceById
       return left(new EntityNotEmpty('id'));
     }
 
-    if (Object.keys(loggedUserId).length < 1) {
-      return left(new EntityNotEmpty('loggedUserId'));
-    }
-
     const userValidation = await ValidationUserId(
       loggedUserId,
       this.findUserByIdRepository

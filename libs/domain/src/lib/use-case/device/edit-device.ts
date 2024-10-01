@@ -24,14 +24,6 @@ export class EditDevice
   async execute(input: EditDeviceDto): Promise<Either<EntityNotEmpty, string>> {
     const { id, loggedUserId, name } = input;
 
-    if (Object.keys(id).length < 1) {
-      return left(new EntityNotEmpty('id'));
-    }
-
-    if (Object.keys(loggedUserId).length < 1) {
-      return left(new EntityNotEmpty('loggedUserId'));
-    }
-
     if (Object.keys(name).length < 1) {
       return left(new EntityNotEmpty('name'));
     }
