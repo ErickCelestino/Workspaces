@@ -34,14 +34,6 @@ export class EditDirectory
   ): Promise<Either<EntityNotEmpty, string>> {
     const { id, loggedUserId, newName } = input;
 
-    if (Object.keys(id).length < 1) {
-      return left(new EntityNotEmpty('id'));
-    }
-
-    if (Object.keys(loggedUserId).length < 1) {
-      return left(new EntityNotEmpty('loggedUserId'));
-    }
-
     if (Object.keys(newName).length < 1) {
       return left(new EntityNotEmpty('name'));
     }
