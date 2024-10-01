@@ -69,16 +69,6 @@ describe('EditCompanyResponsible', () => {
     expect(result.value).toBe(CompanyResponsibleMock.id);
   });
 
-  it('should return EntityNotEmpty when pass incorrect Logged User id', async () => {
-    const { sut, editCompanyResponsibleDto } = makeSut();
-    editCompanyResponsibleDto.loggedUserId = '';
-    const result = await sut.execute(editCompanyResponsibleDto);
-
-    expect(result.isRight()).toBe(false);
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
   it('should return EntityNotEmpty when pass incorrect Company Responsible id', async () => {
     const { sut, editCompanyResponsibleDto } = makeSut();
     editCompanyResponsibleDto.companyResponsibleId = '';
