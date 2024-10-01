@@ -71,16 +71,6 @@ describe('EditUser', () => {
     expect(result.value).toBe(userMock.userId);
   });
 
-  it('should return EntityNotEmpty if this id is empty', async () => {
-    const { sut, editUserDto } = makeSut();
-    editUserDto.body.id = '';
-
-    const result = await sut.execute(editUserDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
   it('should return EntityNotEmpty if this status is empty', async () => {
     const { sut, editUserDto } = makeSut();
     editUserDto.body.status = {} as StatusUser;

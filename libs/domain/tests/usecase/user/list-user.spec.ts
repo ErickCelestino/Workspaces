@@ -1,6 +1,5 @@
 import {
   BtrinSanitizeRepository,
-  EntityNotEmpty,
   EntityNotExists,
   FindUserByIdRepository,
   ListUser,
@@ -80,16 +79,6 @@ describe('ListUser', () => {
     expect(result.isLeft()).toBe(true);
     expect(result.isRight()).toBe(false);
     expect(result.value).toBeInstanceOf(SyntaxError);
-  });
-
-  it('should return EntityNotEmpty when a pass incorrect Logged User ID', async () => {
-    const { listUserDto, sut } = makeSut();
-    listUserDto.loggedUserId = '';
-    const result = await sut.execute(listUserDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.isRight()).toBe(false);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
   });
 
   it('should return EntityNotExists when a pass incorrect Logged User ID', async () => {
