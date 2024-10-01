@@ -38,10 +38,6 @@ export class EditScheduling
       loggedUserId,
     } = input;
 
-    if (Object.keys(id).length < 1) {
-      return left(new EntityNotEmpty('id'));
-    }
-
     if (Object.keys(name).length < 1) {
       return left(new EntityNotEmpty('name'));
     }
@@ -52,10 +48,6 @@ export class EditScheduling
 
     if (Object.keys(startTime).length < 1) {
       return left(new EntityNotEmpty('start time'));
-    }
-
-    if (Object.keys(loggedUserId).length < 1) {
-      return left(new EntityNotEmpty('User id'));
     }
 
     if (Object.keys(priority).length < 1) {

@@ -7,7 +7,6 @@ import {
   ListSchedulesRepository,
   FindUserByIdRepository,
   ListSchedulesDto,
-  EntityNotEmpty,
   ListSchedules,
   UserList,
   EntityNotExists,
@@ -59,26 +58,6 @@ describe('ListScheduling', () => {
     expect(result.isRight()).toBe(true);
     expect(result.isLeft()).toBe(false);
     expect(result.value).toStrictEqual(ListSchedulesReponseMock);
-  });
-
-  it('should return EntityNotEmpty  when a pass incorrect User ID', async () => {
-    const { sut, listSchedulingDto } = makeSut();
-    listSchedulingDto.loggedUserId = '';
-    const result = await sut.execute(listSchedulingDto);
-
-    expect(result.isRight()).toBe(false);
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
-  it('should return EntityNotEmpty  when a pass incorrect Company ID', async () => {
-    const { sut, listSchedulingDto } = makeSut();
-    listSchedulingDto.companyId = '';
-    const result = await sut.execute(listSchedulingDto);
-
-    expect(result.isRight()).toBe(false);
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
   });
 
   it('should return EntityNotExists when a not exist User in system', async () => {

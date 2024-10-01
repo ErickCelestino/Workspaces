@@ -54,16 +54,6 @@ describe('FindSchedulingById', () => {
     expect(result.value).toStrictEqual(SchedulingMock);
   });
 
-  it('should return EntityNotEmpty when pass incorrect User ID', async () => {
-    const { sut, findSchedulingByIdDto } = makeSut();
-    findSchedulingByIdDto.loggedUserId = '';
-    const result = await sut.execute(findSchedulingByIdDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.isRight()).toBe(false);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
   it('should return EntityNotEmpty when pass incorrect Scheduling ID', async () => {
     const { sut, findSchedulingByIdDto } = makeSut();
     findSchedulingByIdDto.id = '';

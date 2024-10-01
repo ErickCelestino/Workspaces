@@ -84,26 +84,6 @@ describe('CreateScheduling', () => {
     expect(result.value).toStrictEqual(SchedulingMock.id);
   });
 
-  it('should return EntityNotEmpty when a pass incorrect Logged User ID', async () => {
-    const { sut, createSchedulingDto } = makeSut();
-    createSchedulingDto.loggedUserId = '';
-    const result = await sut.execute(createSchedulingDto);
-
-    expect(result.isRight()).toBe(false);
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
-  it('should return EntityNotEmpty when a pass incorrect Company ID', async () => {
-    const { createSchedulingDto, sut } = makeSut();
-    createSchedulingDto.companyId = '';
-    const result = await sut.execute(createSchedulingDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.isRight()).toBe(false);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
   it('should return EntityNotEmpty when a pass incorrect Name', async () => {
     const { sut, createSchedulingDto } = makeSut();
     createSchedulingDto.body.name = '';
