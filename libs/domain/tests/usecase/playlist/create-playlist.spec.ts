@@ -82,39 +82,9 @@ describe('CreatePlaylist', () => {
     expect(result.value).toStrictEqual(PlaylistMock.id);
   });
 
-  it('should return EntityNotEmpty when a pass incorrect Logged User ID', async () => {
-    const { createPlaylistDto, sut } = makeSut();
-    createPlaylistDto.loggedUserId = '';
-    const result = await sut.execute(createPlaylistDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.isRight()).toBe(false);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
-  it('should return EntityNotEmpty when a pass incorrect Company ID', async () => {
-    const { createPlaylistDto, sut } = makeSut();
-    createPlaylistDto.companyId = '';
-    const result = await sut.execute(createPlaylistDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.isRight()).toBe(false);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
   it('should return EntityNotEmpty when a pass incorrect name', async () => {
     const { createPlaylistDto, sut } = makeSut();
     createPlaylistDto.name = '';
-    const result = await sut.execute(createPlaylistDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.isRight()).toBe(false);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
-  it('should return EntityNotEmpty when a pass incorrect Playlist Category ID', async () => {
-    const { createPlaylistDto, sut } = makeSut();
-    createPlaylistDto.playlistCategoryId = '';
     const result = await sut.execute(createPlaylistDto);
 
     expect(result.isLeft()).toBe(true);

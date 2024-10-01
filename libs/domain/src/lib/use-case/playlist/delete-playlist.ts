@@ -29,14 +29,6 @@ export class DeletePlaylist
   ): Promise<Either<EntityNotEmpty, void>> {
     const { id, loggedUserId } = input;
 
-    if (Object.keys(id).length < 1) {
-      return left(new EntityNotEmpty('ID'));
-    }
-
-    if (Object.keys(loggedUserId).length < 1) {
-      return left(new EntityNotEmpty('Logged User'));
-    }
-
     const userValidation = await ValidationUserId(
       loggedUserId,
       this.findUserByIdRepository

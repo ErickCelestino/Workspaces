@@ -31,13 +31,6 @@ export class DetailsPlaylist
   ): Promise<Either<EntityNotEmpty | EntityNotExists, PlaylistResponseDto>> {
     const { loggedUserId, playlistId } = input;
 
-    if (Object.keys(loggedUserId).length < 1) {
-      return left(new EntityNotEmpty('Logged User'));
-    }
-
-    if (Object.keys(playlistId).length < 1) {
-      return left(new EntityNotEmpty('Playlist ID'));
-    }
     const userValidation = await ValidationUserId(
       loggedUserId,
       this.findUserByIdRepository
