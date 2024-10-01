@@ -68,25 +68,6 @@ describe('DownloadContentFile', () => {
       fileName: ContentFileMock.fileName,
     });
   });
-  it('should return EntityNotEmpty when a pass incorrect logged user id', async () => {
-    const { downloadContentFileDto, sut } = makeSut();
-    downloadContentFileDto.loggedUserId = '';
-    const result = await sut.execute(downloadContentFileDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.isRight()).toBe(false);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
-  it('should return EntityNotEmpty when a pass incorrect directory id', async () => {
-    const { downloadContentFileDto, sut } = makeSut();
-    downloadContentFileDto.directoryId = '';
-    const result = await sut.execute(downloadContentFileDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.isRight()).toBe(false);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
 
   it('should return EntityNotEmpty when a pass incorrect id to delete', async () => {
     const { downloadContentFileDto, sut } = makeSut();

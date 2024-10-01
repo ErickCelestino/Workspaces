@@ -12,7 +12,6 @@ import { Either, left, right } from '../../shared/either';
 import {
   ValidationCompanyId,
   ValidationDirectoryId,
-  ValidationTextField,
   ValidationUserId,
 } from '../../utils';
 
@@ -40,28 +39,6 @@ export class ListContentFile
     Either<EntityNotEmpty | EntityNotExists, ListContentFileResponseDto>
   > {
     const { directoryId, loggedUserId, companyId } = input;
-    const loggedUserString = 'logged user';
-    const directoryString = 'directory';
-
-    const directoryIdValidation = await ValidationTextField(
-      directoryId,
-      directoryString
-    );
-    if (directoryIdValidation.isLeft())
-      return left(directoryIdValidation.value);
-
-    const loggedUserIdValidation = await ValidationTextField(
-      loggedUserId,
-      loggedUserString
-    );
-    if (loggedUserIdValidation.isLeft())
-      return left(loggedUserIdValidation.value);
-
-    const companyIdValidation = await ValidationTextField(
-      companyId,
-      'Company ID'
-    );
-    if (companyIdValidation.isLeft()) return left(companyIdValidation.value);
 
     const userValidation = await ValidationUserId(
       loggedUserId,

@@ -35,18 +35,6 @@ export class EditContentFile
   ): Promise<Either<EntityNotEmpty | EntityNotExists, void>> {
     const { idToEdit, directoryId, loggedUserId, newFileName } = input;
 
-    if (Object.keys(idToEdit).length < 1) {
-      return left(new EntityNotEmpty('ID'));
-    }
-
-    if (Object.keys(loggedUserId).length < 1) {
-      return left(new EntityNotEmpty('Logged User ID'));
-    }
-
-    if (Object.keys(directoryId).length < 1) {
-      return left(new EntityNotEmpty('Directory ID'));
-    }
-
     if (Object.keys(newFileName).length < 1) {
       return left(new EntityNotEmpty('name'));
     }

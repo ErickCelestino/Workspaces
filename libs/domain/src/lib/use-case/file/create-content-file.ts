@@ -55,18 +55,6 @@ export class CreateContentFile
     const listId = [];
     const { loggedUserId, directoryId, companyId, file } = input;
 
-    if (Object.keys(loggedUserId).length < 1) {
-      return left(new EntityNotEmpty('logged User ID'));
-    }
-
-    if (Object.keys(companyId).length < 1) {
-      return left(new EntityNotEmpty('Company ID'));
-    }
-
-    if (Object.keys(directoryId).length < 1) {
-      return left(new EntityNotEmpty('Directory ID'));
-    }
-
     if (Object.keys(file).length < 1) {
       return left(new EntityNotEmpty('File'));
     }

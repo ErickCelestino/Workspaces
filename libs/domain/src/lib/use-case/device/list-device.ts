@@ -8,11 +8,7 @@ import {
   FindUserByIdRepository,
   ListDeviceRepository,
 } from '../../repository';
-import {
-  ValidationCompanyId,
-  ValidationTextField,
-  ValidationUserId,
-} from '../../utils';
+import { ValidationCompanyId, ValidationUserId } from '../../utils';
 
 export class ListDevice
   implements
@@ -30,19 +26,6 @@ export class ListDevice
     input: ListDeviceDto
   ): Promise<Either<EntityNotEmpty, ListDeviceResponseDto>> {
     const { loggedUserId, companyId } = input;
-
-    const loggedUserIdValidation = await ValidationTextField(
-      loggedUserId,
-      'Logged User ID'
-    );
-    if (loggedUserIdValidation.isLeft())
-      return left(loggedUserIdValidation.value);
-
-    const companyIdValidation = await ValidationTextField(
-      companyId,
-      'Company ID'
-    );
-    if (companyIdValidation.isLeft()) return left(companyIdValidation.value);
 
     const userValidation = await ValidationUserId(
       loggedUserId,

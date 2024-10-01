@@ -32,14 +32,6 @@ export class DetailsContentFile
       return left(new EntityNotEmpty('id'));
     }
 
-    if (Object.keys(loggedUserId).length < 1) {
-      return left(new EntityNotEmpty('Logged User ID'));
-    }
-
-    if (Object.keys(directoryId).length < 1) {
-      return left(new EntityNotEmpty('Directory ID'));
-    }
-
     const userValidation = await ValidationUserId(
       loggedUserId,
       this.findUserByIdRepository

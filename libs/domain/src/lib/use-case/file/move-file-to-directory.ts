@@ -37,18 +37,6 @@ export class MoveFileToDirectory
   ): Promise<Either<EntityNotEmpty | EntityNotExists, void>> {
     const { idToMove, idToMoveDirectory, loggedUserId } = input;
 
-    if (Object.keys(idToMove).length < 1) {
-      return left(new EntityNotEmpty('file ID'));
-    }
-
-    if (Object.keys(idToMoveDirectory).length < 1) {
-      return left(new EntityNotEmpty('ID'));
-    }
-
-    if (Object.keys(loggedUserId).length < 1) {
-      return left(new EntityNotEmpty('logged user ID'));
-    }
-
     const userValidation = await ValidationUserId(
       loggedUserId,
       this.findUserByIdRepository

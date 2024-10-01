@@ -38,16 +38,8 @@ export class DownloadContentFile
   > {
     const { directoryId, idToDownload, loggedUserId } = input;
 
-    if (Object.keys(directoryId).length < 1) {
-      return left(new EntityNotEmpty('directory ID'));
-    }
-
     if (Object.keys(idToDownload).length < 1) {
       return left(new EntityNotEmpty('ID to download'));
-    }
-
-    if (Object.keys(loggedUserId).length < 1) {
-      return left(new EntityNotEmpty('logged user ID'));
     }
 
     const userValidation = await ValidationUserId(
