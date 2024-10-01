@@ -42,14 +42,6 @@ export class AddPlaylistsToScheduling
   ): Promise<Either<EntityNotEmpty, string[]>> {
     const { loggedUserId, playlistIds, schedulingId } = input;
 
-    if (Object.keys(loggedUserId).length < 1) {
-      return left(new EntityNotEmpty('User ID'));
-    }
-
-    if (Object.keys(schedulingId).length < 1) {
-      return left(new EntityNotEmpty('Scheduling ID'));
-    }
-
     if (playlistIds.length < 1) {
       return left(new EntityNotEmpty('Playlist ID'));
     }
@@ -75,10 +67,6 @@ export class AddPlaylistsToScheduling
     const playlistToSchedulingList = [];
 
     for (const playlistId of playlistIds) {
-      if (Object.keys(playlistId).length < 1) {
-        return left(new EntityNotEmpty('Playlist ID'));
-      }
-
       const playlitValidation = await ValidationPlaylistId(
         playlistId,
         this.findPlaylistByIdRepository
