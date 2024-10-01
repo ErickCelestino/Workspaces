@@ -1,6 +1,10 @@
-import { Controller, Delete, Param, Query } from '@nestjs/common';
+import { Controller, Delete, Param, Query, UsePipes } from '@nestjs/common';
 import { RemoveUserAccessToTheCompanyService } from './remove-user-access-to-the-company.service';
-import { ErrorMessageResult } from '@workspaces/domain';
+import {
+  ErrorMessageResult,
+  removeUserAccessToTheCompanySchema,
+} from '@workspaces/domain';
+import { ZodValidationPipe } from '../../../pipes/zod-validation-pipe';
 
 @Controller('remove-user-access-to-the-company')
 export class RemoveUserAccessToTheCompanyController {
@@ -9,6 +13,7 @@ export class RemoveUserAccessToTheCompanyController {
   ) {}
 
   @Delete(':userId')
+  @UsePipes(new ZodValidationPipe(removeUserAccessToTheCompanySchema))
   async remove(
     @Param('userId') userId: string,
     @Query('loggedUserId') loggedUserId: string,
