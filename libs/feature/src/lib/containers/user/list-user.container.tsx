@@ -8,7 +8,7 @@ import {
 } from '../../components';
 import { LayoutBase } from '../../layout';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { CrudType } from '@workspaces/domain';
+import { UserPopupType } from '@workspaces/domain';
 import { useListUserData, useSnackbarAlert } from '../../hooks';
 import { useLoggedUser } from '../../contexts';
 import { ContainerSimpleList } from '../utils';
@@ -23,6 +23,7 @@ export const ListUserContainer = () => {
     delete: false,
     edit: false,
     'add-company': false,
+    'list-company': false,
   });
   const hasLoadedUserData = useRef(false);
 
@@ -48,10 +49,7 @@ export const ListUserContainer = () => {
     getListUserData('', value);
   };
 
-  const handlePopUpOpen = async (
-    type: CrudType | 'add-company',
-    id?: string
-  ) => {
+  const handlePopUpOpen = async (type: UserPopupType, id?: string) => {
     setSelectedId(id ?? '');
     setOpenModal((prev) => ({
       ...prev,
@@ -59,7 +57,7 @@ export const ListUserContainer = () => {
     }));
   };
 
-  const handlePopUpClose = async (type: CrudType | 'add-company') => {
+  const handlePopUpClose = async (type: UserPopupType) => {
     setOpenModal((prev) => ({
       ...prev,
       [type]: false,
@@ -110,6 +108,9 @@ export const ListUserContainer = () => {
                   editUser={async () => handlePopUpOpen('edit', user.userId)}
                   addUserToAnotherCompany={async () =>
                     handlePopUpOpen('add-company', user.userId)
+                  }
+                  listCompanyByUserId={async () =>
+                    handlePopUpOpen('list-company', user.userId)
                   }
                   key={user.userId}
                   user={user}

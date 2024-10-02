@@ -35,10 +35,10 @@ interface CompanyItemProps {
   titleCity?: string;
   statusTitle?: string;
   statusColor: StatusColor;
-  deleteCompany: () => Promise<void>;
-  editCompany: () => Promise<void>;
-  detailsCompany: () => Promise<void>;
-  listUsersByCompany: () => Promise<void>;
+  deleteCompany?: () => Promise<void>;
+  editCompany?: () => Promise<void>;
+  detailsCompany?: () => Promise<void>;
+  listUsersByCompany?: () => Promise<void>;
 }
 
 export const CompanyItem: FC<CompanyItemProps> = ({
@@ -62,29 +62,39 @@ export const CompanyItem: FC<CompanyItemProps> = ({
 }) => {
   const theme = useTheme();
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const iconMenuList: IconMenuItem[] = [];
 
-  const iconMenuList: IconMenuItem[] = [
-    {
+  if (deleteCompany) {
+    iconMenuList.push({
       icon: <DeleteIcon />,
       title: deleteTitle,
       handleClick: deleteCompany,
-    },
-    {
+    });
+  }
+
+  if (editCompany) {
+    iconMenuList.push({
       icon: <EditIcon />,
       title: editTitle,
       handleClick: editCompany,
-    },
-    {
+    });
+  }
+
+  if (listUsersByCompany) {
+    iconMenuList.push({
       icon: <Face3Icon />,
       title: listUsersByCompanyTitle,
       handleClick: listUsersByCompany,
-    },
-    {
+    });
+  }
+
+  if (detailsCompany) {
+    iconMenuList.push({
       icon: <InfoIcon />,
       title: detailsTitle,
       handleClick: detailsCompany,
-    },
-  ];
+    });
+  }
 
   return (
     <Box key={company.id}>
