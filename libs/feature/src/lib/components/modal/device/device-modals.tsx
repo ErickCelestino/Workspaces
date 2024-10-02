@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { CrudType } from '@workspaces/domain';
+import { CrudType, Device } from '@workspaces/domain';
 import {
   EditDeviceModal,
   DeleteDeviceModal,
@@ -24,6 +24,7 @@ interface DeviceModalsProps {
   detailsDeviceTitle?: string;
   deleteDeviceTitle?: string;
   addSchedulesTitle?: string;
+  deviceToEdit: Device;
 }
 
 export const DeviceModals: FC<DeviceModalsProps> = ({
@@ -36,6 +37,7 @@ export const DeviceModals: FC<DeviceModalsProps> = ({
   editDeviceTitle = 'Editar Dispositivo',
   detailsDeviceTitle = 'Detalhes da Dispositivo',
   addSchedulesTitle = 'Adicionar Agendamento',
+  deviceToEdit,
 }) => {
   return (
     <>
@@ -58,6 +60,7 @@ export const DeviceModals: FC<DeviceModalsProps> = ({
         handlePopUpClose={() => handlePopUpClose('edit')}
         showAlert={showAlert}
         idToEdit={selectedId}
+        deviceToEdit={deviceToEdit}
       />
       <DetailsDeviceModal
         open={openModal.details}

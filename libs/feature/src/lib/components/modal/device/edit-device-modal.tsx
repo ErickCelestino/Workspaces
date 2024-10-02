@@ -1,4 +1,5 @@
 import {
+  Device,
   DeviceBodyDto,
   EditDeviceDto,
   ErrorResponse,
@@ -11,9 +12,8 @@ import { useLoggedUser } from '../../../contexts';
 import { Box, TextField, useMediaQuery, useTheme } from '@mui/material';
 import axios, { AxiosError } from 'axios';
 import { SimpleFormModal } from '../simple';
-import { EditDeviceRequest, FindDeviceByIdRequest } from '../../../services';
+import { EditDeviceRequest } from '../../../services';
 import { FormButton } from '../../form';
-import { useFindDeviceByIdData } from '../../../hooks';
 
 interface EditDeviceModalProps {
   idToEdit: string;
@@ -23,6 +23,7 @@ interface EditDeviceModalProps {
   showAlert: (message: string, success: boolean) => void;
   nameLabel?: string;
   successMessage?: string;
+  deviceToEdit: Device;
 }
 
 export const EditDeviceModal: FC<EditDeviceModalProps> = ({
@@ -33,6 +34,7 @@ export const EditDeviceModal: FC<EditDeviceModalProps> = ({
   showAlert,
   nameLabel = 'Nome',
   successMessage = 'Dispositivo Editado com Sucesso',
+  deviceToEdit,
 }) => {
   const { loggedUser } = useLoggedUser();
   const theme = useTheme();
@@ -40,14 +42,6 @@ export const EditDeviceModal: FC<EditDeviceModalProps> = ({
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [dataLoaded, setDataLoaded] = useState(false);
-
-  const { deviceById, getDeviceByIdData } = useFindDeviceByIdData({
-    input: {
-      id: idToEdit,
-      loggedUserId: loggedUser?.id ?? '',
-    },
-    showAlert,
-  });
 
   const {
     handleSubmit,
@@ -88,22 +82,13 @@ export const EditDeviceModal: FC<EditDeviceModalProps> = ({
   };
 
   useEffect(() => {
-    if (open && idToEdit && !dataLoaded) {
+    if (open && deviceToEdit?.id && !dataLoaded) {
       reset({
-        name: '',
-      });
-      getDeviceByIdData();
-    }
-  }, [idToEdit, dataLoaded, reset, open, getDeviceByIdData]);
-
-  useEffect(() => {
-    if (open && deviceById?.id) {
-      reset({
-        name: deviceById.name,
+        name: deviceToEdit.name,
       });
       setDataLoaded(true);
     }
-  }, [open, deviceById, reset]);
+  }, [open, reset, deviceToEdit, dataLoaded]);
 
   useEffect(() => {
     if (!open) {

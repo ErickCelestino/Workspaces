@@ -7,7 +7,7 @@ import {
   ToolbarPureTV,
 } from '../../components';
 import { LayoutBase } from '../../layout';
-import { CrudType, IconMenuItem } from '@workspaces/domain';
+import { CrudType, Device, IconMenuItem } from '@workspaces/domain';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useListDeviceData, useSnackbarAlert } from '../../hooks';
 import { ContainerCardList } from '../utils';
@@ -26,6 +26,7 @@ export const ListDeviceContainer = () => {
     add: false,
   });
   const hasLoadedUserData = useRef(false);
+  const [deviceToEdit, setDeviceToEdit] = useState<Device>({} as Device);
 
   const showAlert = useCallback(
     (message: string, success: boolean) => {
@@ -43,8 +44,13 @@ export const ListDeviceContainer = () => {
     companyId: loggedUser?.selectedCompany.id ?? '',
   });
 
-  const handlePopUpOpen = async (type: CrudType | 'add', id?: string) => {
+  const handlePopUpOpen = async (
+    type: CrudType | 'add',
+    id?: string,
+    deviceToEdit?: Device
+  ) => {
     setSelectedId(id ?? '');
+    setDeviceToEdit(deviceToEdit ?? ({} as Device));
     setOpenModal((prev) => ({
       ...prev,
       [type]: true,
@@ -84,7 +90,7 @@ export const ListDeviceContainer = () => {
             addSchedulesToDevice={() => handlePopUpOpen('add', device.id)}
             deleteDevice={() => handlePopUpOpen('delete', device.id)}
             detailsDevice={() => handlePopUpOpen('details', device.id)}
-            editDevice={() => handlePopUpOpen('edit', device.id)}
+            editDevice={() => handlePopUpOpen('edit', device.id, device)}
           />
         </Grid>
       ))
@@ -119,6 +125,7 @@ export const ListDeviceContainer = () => {
         openModal={openModal}
         handlePopUpClose={handlePopUpClose}
         showAlert={showAlert}
+        deviceToEdit={deviceToEdit}
       />
       <LayoutBase
         title="Listagem Dispositivos"
