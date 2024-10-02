@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { FC, ReactNode } from 'react';
-import { SearchBar } from '../../search';
+import { SearchBarInModal } from '../../search';
 
 interface SearchContainerModalProps {
   open: boolean;
@@ -82,7 +82,7 @@ export const SearchContainerModal: FC<SearchContainerModalProps> = ({
             </IconButton>
           </Box>
           <Divider />
-          <SearchBar
+          <SearchBarInModal
             onSearch={search.searchData}
             placeholder={search.placeholder}
           />

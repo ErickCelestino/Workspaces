@@ -24,6 +24,7 @@ export const ListCompanyByUserIdModal: FC<ListCompanyByUserIdModalProps> = ({
   const { loggedUser } = useLoggedUser();
   const theme = useTheme();
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const mdDown = useMediaQuery(theme.breakpoints.down('md'));
   const hasLoadedUserData = useRef(false);
 
   const { listCompany, getListCompanyData } = useListCompanyData({
@@ -45,6 +46,7 @@ export const ListCompanyByUserIdModal: FC<ListCompanyByUserIdModalProps> = ({
           key={company.id}
           statusColor={company.status === 'ACTIVE' ? 'success' : 'error'}
           company={company}
+          inModal={true}
         />
       ))
     ) : (
@@ -61,7 +63,7 @@ export const ListCompanyByUserIdModal: FC<ListCompanyByUserIdModalProps> = ({
   return (
     <SearchContainerModal
       height={smDown ? theme.spacing(55) : theme.spacing(80)}
-      width={smDown ? '90%' : theme.spacing(80)}
+      width={mdDown ? '90%' : theme.spacing(100)}
       open={open}
       handlePopUpClose={handlePopUpClose}
       title={title}

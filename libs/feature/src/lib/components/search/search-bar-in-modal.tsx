@@ -9,12 +9,15 @@ import {
 } from '@mui/material';
 import { FC, useState } from 'react';
 
-interface SearchUserProps {
+interface SearchBarInModalProps {
   placeholder: string;
   onSearch: (text: string) => void;
 }
 
-export const SearchBar: FC<SearchUserProps> = ({ placeholder, onSearch }) => {
+export const SearchBarInModal: FC<SearchBarInModalProps> = ({
+  placeholder,
+  onSearch,
+}) => {
   const [inputText, setInputText] = useState<string>('');
   const theme = useTheme();
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
@@ -39,7 +42,7 @@ export const SearchBar: FC<SearchUserProps> = ({ placeholder, onSearch }) => {
   };
 
   return (
-    <Box display="flex" justifyContent="center">
+    <Box display="flex" justifyContent="center" mt={theme.spacing(2)}>
       <TextField
         value={inputText}
         onChange={handleInputChange}
@@ -48,7 +51,7 @@ export const SearchBar: FC<SearchUserProps> = ({ placeholder, onSearch }) => {
         placeholder={placeholder}
         sx={{
           fontSize: smDown ? 8 : 20,
-          maxWidth: theme.spacing(140),
+          maxWidth: theme.spacing(80),
           '& .MuiOutlinedInput-root': {
             borderRadius: '15px',
             paddingRight: smDown ? '-5px' : '8px',

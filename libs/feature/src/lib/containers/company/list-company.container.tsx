@@ -97,6 +97,7 @@ export const ListCompanyContainer: FC<ListCompanyContainerProps> = ({
           detailsCompany={() => handlePopUpOpen('details', company.id)}
           listUsersByCompany={() => handlePopUpOpen('list-users', company.id)}
           company={company}
+          inModal={false}
         />
       ))
     ) : (

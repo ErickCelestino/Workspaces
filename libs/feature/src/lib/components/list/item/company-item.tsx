@@ -35,6 +35,7 @@ interface CompanyItemProps {
   titleCity?: string;
   statusTitle?: string;
   statusColor: StatusColor;
+  inModal: boolean;
   deleteCompany?: () => Promise<void>;
   editCompany?: () => Promise<void>;
   detailsCompany?: () => Promise<void>;
@@ -55,6 +56,7 @@ export const CompanyItem: FC<CompanyItemProps> = ({
   titleCity = 'Cidade',
   statusTitle = 'Status',
   statusColor,
+  inModal,
   deleteCompany,
   editCompany,
   detailsCompany,

@@ -44,7 +44,7 @@ export const ToolbarPureTV: FC<ToolbarPureTVProps> = ({
   const { getUnauthorizedUsersByCompanyIdData, totalUsers } =
     useFindUnauthorizedUsersByCompanyIdData({
       showAlert,
-      companyId: loggedUser?.selectedCompany.id ?? '',
+      companyId: loggedUser?.selectedCompany?.id ?? '',
       loggedUserId: loggedUser?.id ?? '',
     });
 
