@@ -1,10 +1,10 @@
 import { FC, useEffect, useRef } from 'react';
 import { useLoggedUser } from '../../../contexts';
-import { SimpleFormModal } from '../simple';
 import { Box, useMediaQuery, useTheme } from '@mui/material';
 import { useListCompanyData } from '../../../hooks';
 import { CompanyItem, EmptyListResponse } from '../../list';
 import StoreIcon from '@mui/icons-material/Store';
+import { SearchContainerModal } from '../container';
 
 interface ListCompanyByUserIdModalProps {
   userId: string;
@@ -54,15 +54,23 @@ export const ListCompanyByUserIdModal: FC<ListCompanyByUserIdModalProps> = ({
       />
     );
 
+  const searchCompany = async (input: string) => {
+    console.log('pesquisou');
+  };
+
   return (
-    <SimpleFormModal
+    <SearchContainerModal
       height={smDown ? theme.spacing(55) : theme.spacing(80)}
       width={smDown ? '90%' : theme.spacing(80)}
       open={open}
       handlePopUpClose={handlePopUpClose}
       title={title}
+      search={{
+        placeholder: 'aa',
+        searchData: searchCompany,
+      }}
     >
       <Box sx={{ padding: theme.spacing(2) }}>{renderCompanies()}</Box>
-    </SimpleFormModal>
+    </SearchContainerModal>
   );
 };
