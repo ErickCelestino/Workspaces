@@ -17,6 +17,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import InfoIcon from '@mui/icons-material/Info';
 import Face3Icon from '@mui/icons-material/Face3';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { FC } from 'react';
 import { ButtonFileMenu } from '../../menu';
 import { formatBrDate } from '../../../shared';
@@ -27,6 +28,7 @@ interface CompanyItemProps {
   editTitle?: string;
   detailsTitle?: string;
   listUsersByCompanyTitle?: string;
+  removeUserAccessToTheCompanyTitle?: string;
   titleCnpj?: string;
   titleFantasyName?: string;
   titleCreatedBy?: string;
@@ -40,6 +42,7 @@ interface CompanyItemProps {
   editCompany?: () => Promise<void>;
   detailsCompany?: () => Promise<void>;
   listUsersByCompany?: () => Promise<void>;
+  removeUserAccessToTheCompany?: () => Promise<void>;
 }
 
 export const CompanyItem: FC<CompanyItemProps> = ({
@@ -48,6 +51,7 @@ export const CompanyItem: FC<CompanyItemProps> = ({
   editTitle = 'Editar',
   detailsTitle = 'Detalhes',
   listUsersByCompanyTitle = 'Usuários',
+  removeUserAccessToTheCompanyTitle = 'Remover Acesso',
   titleCnpj = 'CNPJ',
   titleFantasyName = 'Nome Fantasia',
   titleCreatedBy = 'Criado por',
@@ -61,6 +65,7 @@ export const CompanyItem: FC<CompanyItemProps> = ({
   editCompany,
   detailsCompany,
   listUsersByCompany,
+  removeUserAccessToTheCompany,
 }) => {
   const theme = useTheme();
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
@@ -95,6 +100,14 @@ export const CompanyItem: FC<CompanyItemProps> = ({
       icon: <InfoIcon />,
       title: detailsTitle,
       handleClick: detailsCompany,
+    });
+  }
+
+  if (removeUserAccessToTheCompany) {
+    iconMenuList.push({
+      icon: <DeleteForeverIcon />,
+      title: removeUserAccessToTheCompanyTitle,
+      handleClick: removeUserAccessToTheCompany,
     });
   }
 

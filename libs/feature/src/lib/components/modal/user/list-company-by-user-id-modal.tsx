@@ -1,15 +1,17 @@
-import { FC, useEffect, useRef } from 'react';
-import { useLoggedUser } from '../../../contexts';
+import { FC, useEffect, useState } from 'react';
 import { Box, useMediaQuery, useTheme } from '@mui/material';
 import { useListCompanyData } from '../../../hooks';
 import { CompanyItem, EmptyListResponse } from '../../list';
 import StoreIcon from '@mui/icons-material/Store';
 import { SearchContainerModal } from '../container';
+import { RemoveUserAccessToTheCompanyModal } from '../company';
 
 interface ListCompanyByUserIdModalProps {
   userId: string;
   open: boolean;
   title?: string;
+  removeUserAccessToTheCompanyTitle?: string;
+  removeUserAccessToTheCompanySubTitle?: string;
   handlePopUpClose: () => void;
   showAlert: (message: string, success: boolean) => void;
 }
@@ -20,24 +22,43 @@ export const ListCompanyByUserIdModal: FC<ListCompanyByUserIdModalProps> = ({
   handlePopUpClose,
   showAlert,
   title = 'Empresas',
+  removeUserAccessToTheCompanyTitle = 'Remover Acesso à Empresa',
+  removeUserAccessToTheCompanySubTitle = 'Deseja realmente remover o acesso a essa empresa?',
 }) => {
-  const { loggedUser } = useLoggedUser();
   const theme = useTheme();
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
   const mdDown = useMediaQuery(theme.breakpoints.down('md'));
-  const hasLoadedUserData = useRef(false);
+  const [selectedId, setSelectedId] = useState('');
+  const [openModal, setOpenModal] = useState({
+    'remove-company': false,
+  });
 
   const { listCompany, getListCompanyData } = useListCompanyData({
     showAlert,
-    loggedUserId: loggedUser?.id ?? '',
+    loggedUserId: userId,
   });
 
   useEffect(() => {
-    if (!hasLoadedUserData.current) {
+    if (open) {
       getListCompanyData();
-      hasLoadedUserData.current = true;
     }
-  }, [getListCompanyData]);
+  }, [getListCompanyData, open]);
+
+  const handlePopUpOpen = async (type: 'remove-company', id?: string) => {
+    setSelectedId(id ?? '');
+    setOpenModal((prev) => ({
+      ...prev,
+      [type]: true,
+    }));
+  };
+
+  const handleInModalPopUpClose = async (type: 'remove-company') => {
+    setOpenModal((prev) => ({
+      ...prev,
+      [type]: false,
+    }));
+    getListCompanyData();
+  };
 
   const renderCompanies = () =>
     listCompany.length > 0 ? (
@@ -47,6 +68,9 @@ export const ListCompanyByUserIdModal: FC<ListCompanyByUserIdModalProps> = ({
           statusColor={company.status === 'ACTIVE' ? 'success' : 'error'}
           company={company}
           inModal={true}
+          removeUserAccessToTheCompany={async () =>
+            handlePopUpOpen('remove-company', company.id)
+          }
         />
       ))
     ) : (
@@ -61,18 +85,29 @@ export const ListCompanyByUserIdModal: FC<ListCompanyByUserIdModalProps> = ({
   };
 
   return (
-    <SearchContainerModal
-      height={smDown ? theme.spacing(55) : theme.spacing(80)}
-      width={mdDown ? '90%' : theme.spacing(100)}
-      open={open}
-      handlePopUpClose={handlePopUpClose}
-      title={title}
-      search={{
-        placeholder: 'aa',
-        searchData: searchCompany,
-      }}
-    >
-      <Box sx={{ padding: theme.spacing(2) }}>{renderCompanies()}</Box>
-    </SearchContainerModal>
+    <>
+      <RemoveUserAccessToTheCompanyModal
+        companyId={selectedId}
+        handlePopUpClose={() => handleInModalPopUpClose('remove-company')}
+        open={openModal['remove-company']}
+        showAlert={showAlert}
+        title={removeUserAccessToTheCompanyTitle}
+        subTitle={removeUserAccessToTheCompanySubTitle}
+        userId={userId}
+      />
+      <SearchContainerModal
+        height={smDown ? theme.spacing(55) : theme.spacing(80)}
+        width={mdDown ? '90%' : theme.spacing(100)}
+        open={open}
+        handlePopUpClose={handlePopUpClose}
+        title={title}
+        search={{
+          placeholder: 'aa',
+          searchData: searchCompany,
+        }}
+      >
+        <Box sx={{ padding: theme.spacing(2) }}>{renderCompanies()}</Box>
+      </SearchContainerModal>
+    </>
   );
 };
