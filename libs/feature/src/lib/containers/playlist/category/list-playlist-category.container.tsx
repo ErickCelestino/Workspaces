@@ -9,7 +9,7 @@ import {
 import { LayoutBase } from '../../../layout';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useListPlaylistCategoryData, useSnackbarAlert } from '../../../hooks';
-import { CrudType, IconMenuItem } from '@workspaces/domain';
+import { CrudType, IconMenuItem, PlaylistCategory } from '@workspaces/domain';
 import { useLoggedUser } from '../../../contexts';
 import { ContainerSimpleList } from '../../utils';
 
@@ -24,6 +24,9 @@ export const ListPlaylistCategoryContainer = () => {
     edit: false,
   });
   const hasLoadedUserData = useRef(false);
+  const [categoryToEdit, setCategoryToEdit] = useState<PlaylistCategory>(
+    {} as PlaylistCategory
+  );
 
   const showAlert = useCallback(
     (message: string, success: boolean) => {
@@ -42,8 +45,15 @@ export const ListPlaylistCategoryContainer = () => {
       companyId: loggedUser?.selectedCompany.id ?? '',
     });
 
-  const handlePopUpOpen = async (type: CrudType, id?: string) => {
+  const handlePopUpOpen = async (
+    type: CrudType,
+    id?: string,
+    category?: PlaylistCategory
+  ) => {
     setSelectedId(id ?? '');
+    if (category) {
+      setCategoryToEdit(category);
+    }
     setOpenModal((prev) => ({
       ...prev,
       [type]: true,
@@ -63,7 +73,9 @@ export const ListPlaylistCategoryContainer = () => {
       listPlaylistCategory.map((category) => (
         <PlaylistCategoryItem
           key={category.id}
-          editPlaylistCategory={() => handlePopUpOpen('edit', category.id)}
+          editPlaylistCategory={() =>
+            handlePopUpOpen('edit', category.id, category)
+          }
           deletePlaylistCategory={() => handlePopUpOpen('delete', category.id)}
           category={category}
         />
@@ -115,6 +127,7 @@ export const ListPlaylistCategoryContainer = () => {
         openModal={openModal}
         handlePopUpClose={handlePopUpClose}
         showAlert={showAlert}
+        playlistCategoryToEdit={categoryToEdit}
       />
       <LayoutBase
         title="Listagem de Categoria da Playlist"

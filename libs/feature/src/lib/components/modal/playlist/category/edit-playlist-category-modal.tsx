@@ -2,7 +2,11 @@ import { Box, TextField, useMediaQuery, useTheme } from '@mui/material';
 import { useLoggedUser } from '../../../../contexts';
 import { FC, useEffect, useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { EditPlaylistCategoryBodyDto, ErrorResponse } from '@workspaces/domain';
+import {
+  EditPlaylistCategoryBodyDto,
+  ErrorResponse,
+  PlaylistCategory,
+} from '@workspaces/domain';
 import {
   EditPlaylistCategorySchema,
   ValidationsError,
@@ -24,6 +28,7 @@ interface EditPlaylistCategoryModalProps {
   showAlert: (message: string, success: boolean) => void;
   title: string;
   selectedId: string;
+  playlistCategoryToEdit: PlaylistCategory;
 }
 
 export const EditPlaylistCategoryModal: FC<EditPlaylistCategoryModalProps> = ({
@@ -32,6 +37,7 @@ export const EditPlaylistCategoryModal: FC<EditPlaylistCategoryModalProps> = ({
   showAlert,
   title,
   selectedId,
+  playlistCategoryToEdit,
 }) => {
   const theme = useTheme();
   const { loggedUser } = useLoggedUser();
@@ -39,13 +45,6 @@ export const EditPlaylistCategoryModal: FC<EditPlaylistCategoryModalProps> = ({
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [dataLoaded, setDataLoaded] = useState(false);
-
-  const { getPlaylistCategoryByIdData, playlistCategoryById } =
-    useFindPlaylistCategoryByIdData({
-      loggedUserId: loggedUser?.id ?? '',
-      playlistCategoryId: selectedId,
-      showAlert,
-    });
 
   const {
     handleSubmit,
@@ -64,27 +63,15 @@ export const EditPlaylistCategoryModal: FC<EditPlaylistCategoryModalProps> = ({
   });
 
   useEffect(() => {
-    if (open && selectedId && !dataLoaded) {
+    if (open && playlistCategoryToEdit && !dataLoaded) {
       reset({
-        id: '',
-        name: '',
-        description: '',
-      });
-
-      getPlaylistCategoryByIdData();
-    }
-  }, [open, selectedId, getPlaylistCategoryByIdData, reset, dataLoaded]);
-
-  useEffect(() => {
-    if (open && playlistCategoryById?.id) {
-      reset({
-        id: playlistCategoryById.id,
-        name: playlistCategoryById.name,
-        description: playlistCategoryById.description,
+        id: playlistCategoryToEdit.id,
+        name: playlistCategoryToEdit.name,
+        description: playlistCategoryToEdit.description,
       });
       setDataLoaded(true);
     }
-  }, [open, playlistCategoryById, reset]);
+  }, [dataLoaded, open, playlistCategoryToEdit, reset]);
 
   useEffect(() => {
     if (!open) {

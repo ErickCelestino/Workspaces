@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { CrudType } from '@workspaces/domain';
+import { CrudType, PlaylistCategory } from '@workspaces/domain';
 import {
   CreatePlaylistCategoryModal,
   DeletePlaylistCategoryModal,
@@ -20,6 +20,7 @@ interface playlistCategoryModalsProps {
   deletePlaylistCategoryTitle?: string;
   deletePlaylistCategorySubTitle?: string;
   editPlaylistCategoryTitle?: string;
+  playlistCategoryToEdit: PlaylistCategory;
 }
 
 export const PlaylistCategoryModals: FC<playlistCategoryModalsProps> = ({
@@ -32,6 +33,7 @@ export const PlaylistCategoryModals: FC<playlistCategoryModalsProps> = ({
   deletePlaylistCategoryTitle = 'Deletar Categoria da Playlist?',
   deletePlaylistCategorySubTitle = 'Por favor, selecione alguma das alternativas',
   editPlaylistCategoryTitle = 'Editar Categoria da Playlist',
+  playlistCategoryToEdit,
 }) => {
   return (
     <>
@@ -47,6 +49,7 @@ export const PlaylistCategoryModals: FC<playlistCategoryModalsProps> = ({
         showAlert={showAlert}
         open={openModal.edit}
         title={editPlaylistCategoryTitle}
+        playlistCategoryToEdit={playlistCategoryToEdit}
       />
       <DeletePlaylistCategoryModal
         selectedId={selectedId}
