@@ -12,15 +12,10 @@ import {
   ValidationsError,
 } from '../../../../shared';
 import { useForm } from 'react-hook-form';
-import {
-  EditPlaylistCategoryRequest,
-  FindPlaylistCategoryByIdRequest,
-} from '../../../../services';
+import { EditPlaylistCategoryRequest } from '../../../../services';
 import axios, { AxiosError } from 'axios';
 import { FormButton } from '../../../form';
 import { SimpleFormModal } from '../../simple';
-import { useFindPlaylistCategoryByIdData } from 'libs/feature/src/lib/hooks';
-import { Console } from 'console';
 
 interface EditPlaylistCategoryModalProps {
   open: boolean;

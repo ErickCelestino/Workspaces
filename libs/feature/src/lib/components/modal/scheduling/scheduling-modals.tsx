@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { CrudType } from '@workspaces/domain';
+import { CrudType, Scheduling } from '@workspaces/domain';
 import {
   CreateSchedulingModal,
   DeleteSchedulingModal,
@@ -25,6 +25,7 @@ interface SchedulingModalsProps {
   editSchedulingTitle?: string;
   detailsSchedulingTitle?: string;
   detailsTitle?: string;
+  schedulingToEdit: Scheduling;
 }
 
 export const SchedulingModals: FC<SchedulingModalsProps> = ({
@@ -37,6 +38,7 @@ export const SchedulingModals: FC<SchedulingModalsProps> = ({
   deleteSchedulingSubTitle = 'Por favor, selecione alguma das alternativas',
   editSchedulingTitle = 'Editar Agendamento',
   detailsSchedulingTitle = 'Detalhes da Agendamento',
+  schedulingToEdit,
 }) => {
   return (
     <>
@@ -52,6 +54,7 @@ export const SchedulingModals: FC<SchedulingModalsProps> = ({
         showAlert={showAlert}
         open={openModal.edit}
         title={editSchedulingTitle}
+        schedulingToEdit={schedulingToEdit}
       />
       <DeleteSchedulingModal
         idToDelete={selectedId}

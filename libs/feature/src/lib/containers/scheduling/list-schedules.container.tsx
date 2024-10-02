@@ -10,7 +10,7 @@ import {
 } from '../../components';
 import { ContainerSimpleList } from '../utils';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { CrudType, IconMenuItem } from '@workspaces/domain';
+import { CrudType, IconMenuItem, Scheduling } from '@workspaces/domain';
 import { useListSchedulesData, useSnackbarAlert } from '../../hooks';
 import { useLoggedUser } from '../../contexts';
 
@@ -27,6 +27,9 @@ export const ListSchedulesContainer = () => {
     add: false,
   });
   const hasLoadedUserData = useRef(false);
+  const [SchedulingToEdit, setSchedulingToEdit] = useState<Scheduling>(
+    {} as Scheduling
+  );
 
   const showAlert = useCallback(
     (message: string, success: boolean) => {
@@ -45,8 +48,13 @@ export const ListSchedulesContainer = () => {
       companyId: loggedUser?.selectedCompany.id ?? '',
     });
 
-  const handlePopUpOpen = async (type: CrudType | 'add', id?: string) => {
+  const handlePopUpOpen = async (
+    type: CrudType | 'add',
+    id?: string,
+    scheduling?: Scheduling
+  ) => {
     setSelectedId(id ?? '');
+    setSchedulingToEdit(scheduling ?? ({} as Scheduling));
     setOpenModal((prev) => ({
       ...prev,
       [type]: true,
@@ -83,7 +91,9 @@ export const ListSchedulesContainer = () => {
     listSchedules.length > 0 ? (
       listSchedules.map((scheduling) => (
         <SchedulingItem
-          editScheduling={() => handlePopUpOpen('edit', scheduling.id)}
+          editScheduling={() =>
+            handlePopUpOpen('edit', scheduling.id, scheduling)
+          }
           deleteScheduling={() => handlePopUpOpen('delete', scheduling.id)}
           addPlaylistToScheduling={() => handlePopUpOpen('add', scheduling.id)}
           detailsScheduling={() => handlePopUpOpen('details', scheduling.id)}
@@ -119,6 +129,7 @@ export const ListSchedulesContainer = () => {
         openModal={openModal}
         handlePopUpClose={handlePopUpClose}
         showAlert={showAlert}
+        schedulingToEdit={SchedulingToEdit}
       />
       <LayoutBase
         title="Listagem Agendamentos"

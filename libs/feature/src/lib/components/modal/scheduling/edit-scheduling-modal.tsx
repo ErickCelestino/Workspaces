@@ -4,6 +4,7 @@ import {
   EditSchedulingDto,
   ErrorResponse,
   ComboBoxScheduling,
+  Scheduling,
 } from '@workspaces/domain';
 import { useForm } from 'react-hook-form';
 import {
@@ -27,7 +28,6 @@ import { EditSchedulingRequest } from '../../../services';
 import axios, { AxiosError } from 'axios';
 import { SimpleFormModal } from '../simple';
 import { FormButton } from '../../form';
-import { useFindSchedulingByIdData } from '../../../hooks';
 
 interface EditSchedulingModalProps {
   open: boolean;
@@ -41,6 +41,7 @@ interface EditSchedulingModalProps {
   endTimeLabel?: string;
   loopingLabel?: string;
   priorityLabel?: string;
+  schedulingToEdit: Scheduling;
 }
 
 export const EditSchedulingModal: React.FC<EditSchedulingModalProps> = ({
@@ -55,6 +56,7 @@ export const EditSchedulingModal: React.FC<EditSchedulingModalProps> = ({
   loopingLabel = 'Repetir',
   priorityLabel = 'Prioridade',
   successMessage = 'Agendamento Editado com Sucesso',
+  schedulingToEdit,
 }) => {
   const { loggedUser } = useLoggedUser();
   const theme = useTheme();
@@ -87,38 +89,24 @@ export const EditSchedulingModal: React.FC<EditSchedulingModalProps> = ({
     },
   });
 
-  const { SchedulingById, getSchedulingByIdData } = useFindSchedulingByIdData({
-    showAlert,
-    findSchedulingByIdDto: {
-      id: idToEdit,
-      loggedUserId: loggedUser?.id ?? '',
-    },
-  });
-
   useEffect(() => {
-    if (open && SchedulingById?.id) {
+    if (open && schedulingToEdit?.id && !dataLoaded) {
       reset({
-        name: SchedulingById.name,
-        endTime: SchedulingById.endTime,
-        startTime: SchedulingById.startTime,
-        priority: SchedulingById.priority,
+        name: schedulingToEdit.name,
+        endTime: schedulingToEdit.endTime,
+        startTime: schedulingToEdit.startTime,
+        priority: schedulingToEdit.priority,
       });
-      setLooping(SchedulingById.lopping);
+      setLooping(schedulingToEdit.lopping);
 
       setTimeGroup({
-        endTime: SchedulingById.endTime,
-        startTime: SchedulingById.startTime,
-        priority: SchedulingById.priority,
+        endTime: schedulingToEdit.endTime,
+        startTime: schedulingToEdit.startTime,
+        priority: schedulingToEdit.priority,
       });
       setDataLoaded(true);
     }
-  }, [open, SchedulingById, reset]);
-
-  useEffect(() => {
-    if (open && idToEdit && !dataLoaded) {
-      getSchedulingByIdData();
-    }
-  }, [loggedUser, idToEdit, dataLoaded, open, getSchedulingByIdData]);
+  }, [dataLoaded, open, reset, schedulingToEdit]);
 
   useEffect(() => {
     if (!open) {
