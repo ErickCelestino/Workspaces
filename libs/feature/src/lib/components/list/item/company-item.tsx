@@ -122,7 +122,7 @@ export const CompanyItem: FC<CompanyItemProps> = ({
               >
                 <Box component="span">
                   <Typography
-                    sx={{ display: 'inline' }}
+                    sx={{ display: 'inline', fontSize: smDown ? 12 : 15 }}
                     component="span"
                     variant="body2"
                     color="text.primary"
@@ -130,7 +130,11 @@ export const CompanyItem: FC<CompanyItemProps> = ({
                     {titleCnpj}:
                   </Typography>
                   <Typography
-                    sx={{ display: 'inline', marginLeft: theme.spacing(1) }}
+                    sx={{
+                      display: 'inline',
+                      marginLeft: theme.spacing(1),
+                      fontSize: smDown ? 12 : 15,
+                    }}
                     component="span"
                     variant="body2"
                     color="text.secondary"
@@ -140,7 +144,7 @@ export const CompanyItem: FC<CompanyItemProps> = ({
                 </Box>
                 <Box component="span">
                   <Typography
-                    sx={{ display: 'inline' }}
+                    sx={{ display: 'inline', fontSize: smDown ? 12 : 15 }}
                     component="span"
                     variant="body2"
                     color="text.primary"
@@ -148,7 +152,11 @@ export const CompanyItem: FC<CompanyItemProps> = ({
                     {titleFantasyName}:
                   </Typography>
                   <Typography
-                    sx={{ display: 'inline', marginLeft: theme.spacing(1) }}
+                    sx={{
+                      display: 'inline',
+                      marginLeft: theme.spacing(1),
+                      fontSize: smDown ? 12 : 15,
+                    }}
                     component="span"
                     variant="body2"
                     color="text.secondary"
@@ -157,129 +165,149 @@ export const CompanyItem: FC<CompanyItemProps> = ({
                   </Typography>
                 </Box>
               </Box>
-              <Box
-                component="span"
-                sx={{
-                  display: 'flex',
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  marginTop: theme.spacing(1),
-                }}
-              >
-                <Box component="span">
-                  <Typography
-                    sx={{ display: 'inline' }}
-                    component="span"
-                    variant="body2"
-                    color="text.primary"
-                  >
-                    {titleId}:
-                  </Typography>
-                  <Typography
-                    sx={{ display: 'inline', marginLeft: theme.spacing(1) }}
-                    component="span"
-                    variant="body2"
-                    color="text.secondary"
-                  >
-                    {company.id}
-                  </Typography>
-                </Box>
-                <Box component="span">
-                  <Typography
-                    sx={{ display: 'inline' }}
-                    component="span"
-                    variant="body2"
-                    color="text.primary"
-                  >
-                    {titleCity}:
-                  </Typography>
-                  <Typography
-                    sx={{ display: 'inline', marginLeft: theme.spacing(1) }}
-                    component="span"
-                    variant="body2"
-                    color="text.secondary"
-                  >
-                    {company.city}
-                  </Typography>
-                </Box>
-              </Box>
-              <Box
-                component="span"
-                sx={{
-                  display: 'flex',
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  marginTop: theme.spacing(1),
-                }}
-              >
-                <Box component="span">
-                  <Typography
-                    sx={{ display: 'inline' }}
-                    component="span"
-                    variant="body2"
-                    color="text.primary"
-                  >
-                    {titleCreatedBy}:
-                  </Typography>
-                  <Typography
-                    sx={{ display: 'inline', marginLeft: theme.spacing(1) }}
-                    component="span"
-                    variant="body2"
-                    color="text.secondary"
-                  >
-                    {company.createdBy}
-                  </Typography>
-                </Box>
-                <Box component="span">
-                  <Typography
-                    sx={{ display: 'inline' }}
-                    component="span"
-                    variant="body2"
-                    color="text.primary"
-                  >
-                    {titleCreatedAt}:
-                  </Typography>
-                  <Typography
-                    sx={{ display: 'inline', marginLeft: theme.spacing(1) }}
-                    component="span"
-                    variant="body2"
-                    color="text.secondary"
-                  >
-                    {formatBrDate(new Date(company.createdAt))}
-                  </Typography>
-                </Box>
-              </Box>
-              <Box
-                component="span"
-                sx={{
-                  display: 'flex',
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'end',
-                  marginTop: theme.spacing(1),
-                }}
-              >
-                <Box component="span">
-                  <Typography
-                    sx={{ display: 'inline' }}
-                    component="span"
-                    variant="body2"
-                    color="text.primary"
-                  >
-                    {statusTitle}:
-                  </Typography>
-                  <Chip
+              {!inModal && (
+                <>
+                  <Box
                     component="span"
                     sx={{
-                      marginLeft: theme.spacing(1),
+                      display: 'flex',
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      marginTop: theme.spacing(1),
                     }}
-                    color={statusColor}
-                    label={company.status}
-                  />
-                </Box>
-              </Box>
+                  >
+                    <Box component="span">
+                      <Typography
+                        sx={{ display: 'inline', fontSize: smDown ? 12 : 15 }}
+                        component="span"
+                        variant="body2"
+                        color="text.primary"
+                      >
+                        {titleId}:
+                      </Typography>
+                      <Typography
+                        sx={{
+                          display: 'inline',
+                          marginLeft: theme.spacing(1),
+                          fontSize: smDown ? 12 : 15,
+                        }}
+                        component="span"
+                        variant="body2"
+                        color="text.secondary"
+                      >
+                        {company.id}
+                      </Typography>
+                    </Box>
+                    <Box component="span">
+                      <Typography
+                        sx={{ display: 'inline', fontSize: smDown ? 12 : 15 }}
+                        component="span"
+                        variant="body2"
+                        color="text.primary"
+                      >
+                        {titleCity}:
+                      </Typography>
+                      <Typography
+                        sx={{
+                          display: 'inline',
+                          marginLeft: theme.spacing(1),
+                          fontSize: smDown ? 12 : 15,
+                        }}
+                        component="span"
+                        variant="body2"
+                        color="text.secondary"
+                      >
+                        {company.city}
+                      </Typography>
+                    </Box>
+                  </Box>
+                  <Box
+                    component="span"
+                    sx={{
+                      display: 'flex',
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      marginTop: theme.spacing(1),
+                    }}
+                  >
+                    <Box component="span">
+                      <Typography
+                        sx={{ display: 'inline', fontSize: smDown ? 12 : 15 }}
+                        component="span"
+                        variant="body2"
+                        color="text.primary"
+                      >
+                        {titleCreatedBy}:
+                      </Typography>
+                      <Typography
+                        sx={{
+                          display: 'inline',
+                          marginLeft: theme.spacing(1),
+                          fontSize: smDown ? 12 : 15,
+                        }}
+                        component="span"
+                        variant="body2"
+                        color="text.secondary"
+                      >
+                        {company.createdBy}
+                      </Typography>
+                    </Box>
+                    <Box component="span">
+                      <Typography
+                        sx={{ display: 'inline', fontSize: smDown ? 12 : 15 }}
+                        component="span"
+                        variant="body2"
+                        color="text.primary"
+                      >
+                        {titleCreatedAt}:
+                      </Typography>
+                      <Typography
+                        sx={{
+                          display: 'inline',
+                          marginLeft: theme.spacing(1),
+                          fontSize: smDown ? 12 : 15,
+                        }}
+                        component="span"
+                        variant="body2"
+                        color="text.secondary"
+                      >
+                        {formatBrDate(new Date(company.createdAt))}
+                      </Typography>
+                    </Box>
+                  </Box>
+                  <Box
+                    component="span"
+                    sx={{
+                      display: 'flex',
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      justifyContent: 'end',
+                      marginTop: theme.spacing(1),
+                    }}
+                  >
+                    <Box component="span">
+                      <Typography
+                        sx={{ display: 'inline', fontSize: smDown ? 12 : 15 }}
+                        component="span"
+                        variant="body2"
+                        color="text.primary"
+                      >
+                        {statusTitle}:
+                      </Typography>
+                      <Chip
+                        component="span"
+                        sx={{
+                          marginLeft: theme.spacing(1),
+                        }}
+                        color={statusColor}
+                        label={company.status}
+                      />
+                    </Box>
+                  </Box>
+                </>
+              )}
             </Box>
           }
         />
