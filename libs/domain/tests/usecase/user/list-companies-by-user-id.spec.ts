@@ -1,10 +1,7 @@
 import {
-  CompanyResponseDto,
   EntityNotExists,
   EntityNotPermissions,
-  FindCompanyByIdRepository,
   FindUserByIdRepository,
-  FindUserIdByCompanyIdRepository,
   ListCompaniesByUserId,
   ListCompaniesByUserIdDto,
   ListCompaniesByUserIdRepository,
@@ -12,16 +9,9 @@ import {
   UserList,
   VerifyUserPermissionsByIdRepository,
 } from '../../../src';
+import { ListCompanyMock, listUserMock, userMock } from '../../entity';
 import {
-  CompanyMock,
-  ListCompanyMock,
-  listUserMock,
-  userMock,
-} from '../../entity';
-import {
-  FindCompanyByIdRepositoryMock,
   FindUserByIdRepositoryMock,
-  FindUserIdByCompanyIdRepositoryMock,
   ListCompaniesByUserIdRepositoryMock,
   VerifyUserPermissionsByIdRepositoryMock,
 } from '../../repository';
@@ -30,40 +20,31 @@ interface SutTypes {
   sut: ListCompaniesByUserId;
   listCompaniesByUserIdDto: ListCompaniesByUserIdDto;
   findUserByIdRepository: FindUserByIdRepository;
-  findCompanyByIdRepository: FindCompanyByIdRepository;
-  findUserIdByCompanyIdRepository: FindUserIdByCompanyIdRepository;
   verifyUserPermissionsByIdRepository: VerifyUserPermissionsByIdRepository;
   listCompaniesByUserIdRepository: ListCompaniesByUserIdRepository;
 }
 
 const makeSut = (): SutTypes => {
   const findUserByIdRepository = new FindUserByIdRepositoryMock();
-  const findCompanyByIdRepository = new FindCompanyByIdRepositoryMock();
-  const findUserIdByCompanyIdRepository =
-    new FindUserIdByCompanyIdRepositoryMock();
   const verifyUserPermissionsByIdRepository =
     new VerifyUserPermissionsByIdRepositoryMock();
   const listCompaniesByUserIdRepository =
     new ListCompaniesByUserIdRepositoryMock();
 
   const listCompaniesByUserIdDto: ListCompaniesByUserIdDto = {
-    companyId: CompanyMock.simple.id,
     loggedUserId: userMock.userId,
     userId: userMock.userId,
+    filter: '',
   };
 
   const sut = new ListCompaniesByUserId(
     findUserByIdRepository,
-    findCompanyByIdRepository,
-    findUserIdByCompanyIdRepository,
     verifyUserPermissionsByIdRepository,
     listCompaniesByUserIdRepository
   );
 
   return {
     findUserByIdRepository,
-    findCompanyByIdRepository,
-    findUserIdByCompanyIdRepository,
     verifyUserPermissionsByIdRepository,
     listCompaniesByUserIdRepository,
     listCompaniesByUserIdDto,
@@ -102,30 +83,6 @@ describe('ListCompaniesByUserId', () => {
     jest
       .spyOn(sut['findUserByIdRepository'], 'find')
       .mockResolvedValueOnce({} as UserList);
-    const result = await sut.execute(listCompaniesByUserIdDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.isRight()).toBe(false);
-    expect(result.value).toBeInstanceOf(EntityNotExists);
-  });
-
-  it('should return EntityNotExists when a exist Company in system', async () => {
-    const { listCompaniesByUserIdDto, sut } = makeSut();
-    jest
-      .spyOn(sut['findCompanyByIdRepository'], 'find')
-      .mockResolvedValueOnce({} as CompanyResponseDto);
-    const result = await sut.execute(listCompaniesByUserIdDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.isRight()).toBe(false);
-    expect(result.value).toBeInstanceOf(EntityNotExists);
-  });
-
-  it('should return EntityNotExists when a exist user in Company in system', async () => {
-    const { listCompaniesByUserIdDto, sut } = makeSut();
-    jest
-      .spyOn(sut['findUserIdByCompanyIdRepository'], 'find')
-      .mockResolvedValueOnce('');
     const result = await sut.execute(listCompaniesByUserIdDto);
 
     expect(result.isLeft()).toBe(true);

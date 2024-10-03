@@ -1,20 +1,14 @@
 import { Inject } from '@nestjs/common';
 import { UseCase } from '../../base/use-case';
 import { ListCompaniesByUserIdDto, ListCompanyResponseDto } from '../../dto';
-import { EntityIsNotEmpty, EntityNotExists } from '../../error';
+import { EntityIsNotEmpty } from '../../error';
 import { Either, left, right } from '../../shared/either';
 import {
-  FindCompanyByIdRepository,
   FindUserByIdRepository,
-  FindUserIdByCompanyIdRepository,
   ListCompaniesByUserIdRepository,
   VerifyUserPermissionsByIdRepository,
 } from '../../repository';
-import {
-  ValidationCompanyId,
-  ValidationUserId,
-  ValidationUserPermisssions,
-} from '../../utils';
+import { ValidationUserId, ValidationUserPermisssions } from '../../utils';
 
 export class ListCompaniesByUserId
   implements
@@ -26,10 +20,6 @@ export class ListCompaniesByUserId
   constructor(
     @Inject('FindUserByIdRepository')
     private findUserByIdRepository: FindUserByIdRepository,
-    @Inject('FindCompanyByIdRepository')
-    private findCompanyByIdRepository: FindCompanyByIdRepository,
-    @Inject('FindUserIdByCompanyIdRepository')
-    private findUserIdByCompanyIdRepository: FindUserIdByCompanyIdRepository,
     @Inject('VerifyUserPermissionsByIdRepository')
     private verifyUserPermissionsByIdRepository: VerifyUserPermissionsByIdRepository,
     @Inject('ListCompaniesByUserIdRepository')
@@ -38,7 +28,7 @@ export class ListCompaniesByUserId
   async execute(
     input: ListCompaniesByUserIdDto
   ): Promise<Either<EntityIsNotEmpty, ListCompanyResponseDto>> {
-    const { companyId, loggedUserId, userId } = input;
+    const { loggedUserId, userId } = input;
 
     const loggedUserValidation = await ValidationUserId(
       loggedUserId,
@@ -56,25 +46,6 @@ export class ListCompaniesByUserId
 
     if (userValidation.isLeft()) {
       return left(userValidation.value);
-    }
-
-    const companyValidation = await ValidationCompanyId(
-      companyId,
-      this.findCompanyByIdRepository
-    );
-
-    if (companyValidation.isLeft()) {
-      return left(companyValidation.value);
-    }
-
-    const userAndCompanyFiltered =
-      await this.findUserIdByCompanyIdRepository.find({
-        companyId,
-        userId: userId,
-      });
-
-    if (Object.keys(userAndCompanyFiltered).length < 1) {
-      return left(new EntityNotExists('User in Company'));
     }
 
     const permissionValidation = await ValidationUserPermisssions(

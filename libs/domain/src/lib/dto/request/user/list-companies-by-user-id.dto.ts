@@ -1,5 +1,7 @@
 export interface ListCompaniesByUserIdDto {
   loggedUserId: string;
   userId: string;
-  companyId: string;
+  filter: string;
+  take?: number;
+  skip?: number;
 }
