@@ -6,8 +6,9 @@ import { Either, left, right } from '../../../shared/either';
 import {
   FindUserByIdRepository,
   ListCompanyRepository,
+  VerifyUserPermissionsByIdRepository,
 } from '../../../repository';
-import { ValidationUserId } from '../../../utils';
+import { ValidationUserId, ValidationUserPermisssions } from '../../../utils';
 
 export class ListCompany
   implements
@@ -16,6 +17,8 @@ export class ListCompany
   constructor(
     @Inject('FindUserByIdRepository')
     private findUserByIdRepository: FindUserByIdRepository,
+    @Inject('VerifyUserPermissionsByIdRepository')
+    private verifyUserPermissionsByIdRepository: VerifyUserPermissionsByIdRepository,
     @Inject('ListCompanyRepository')
     private listCompanyRepository: ListCompanyRepository
   ) {}
@@ -31,6 +34,16 @@ export class ListCompany
 
     if (userValidation.isLeft()) {
       return left(userValidation.value);
+    }
+
+    const permissionValidation = await ValidationUserPermisssions(
+      loggedUserId,
+      ['ADMIN'],
+      this.verifyUserPermissionsByIdRepository
+    );
+
+    if (permissionValidation.isLeft()) {
+      return left(permissionValidation.value);
     }
 
     const listCompany = await this.listCompanyRepository.list(input);
