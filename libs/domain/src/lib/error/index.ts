@@ -2,6 +2,7 @@ export * from './crud';
 export * from './entity-already-exists.error';
 export * from './entity-is-not-authorized.error';
 export * from './entity-is-not-empty.error';
+export * from './entity-min-value.error';
 export * from './entity-not-active.error';
 export * from './entity-not-associate.error';
 export * from './entity-not-complete.error';

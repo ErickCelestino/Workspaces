@@ -2,6 +2,7 @@ import { Inject } from '@nestjs/common';
 import { UseCase } from '../../../base/use-case';
 import { RemoveUserAccessToTheCompanyDto } from '../../../dto';
 import {
+  EntityMinValue,
   EntityNotComplete,
   EntityNotEmpty,
   EntityNotExists,
@@ -9,6 +10,7 @@ import {
 import { Either, left, right } from '../../../shared/either';
 import {
   FindCompanyByIdRepository,
+  FindCompanyByUserIdRepository,
   FindUserByIdRepository,
   FindUserIdByCompanyIdRepository,
   RemoveUserAccessToTheCompanyRepository,
@@ -33,6 +35,8 @@ export class RemoveUserAccessToTheCompany
     private findUserIdByCompanyIdRepository: FindUserIdByCompanyIdRepository,
     @Inject('VerifyUserPermissionsByIdRepository')
     private verifyUserPermissionsByIdRepository: VerifyUserPermissionsByIdRepository,
+    @Inject('FindCompanyByUserIdRepository')
+    private findCompanyByUserIdRepository: FindCompanyByUserIdRepository,
     @Inject('RemoveUserAccessToTheCompanyRepository')
     private removeUserAccessToTheCompanyRepository: RemoveUserAccessToTheCompanyRepository
   ) {}
@@ -86,6 +90,14 @@ export class RemoveUserAccessToTheCompany
 
     if (permissionValidation.isLeft()) {
       return left(permissionValidation.value);
+    }
+
+    const filteredCompanies = await this.findCompanyByUserIdRepository.find(
+      loggedUserId
+    );
+
+    if (filteredCompanies.length <= 1) {
+      return left(new EntityMinValue('User', '1', 'Company'));
     }
 
     const removedUserAccess =

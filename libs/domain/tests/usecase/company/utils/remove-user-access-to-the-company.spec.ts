@@ -1,9 +1,11 @@
 import {
   CompanyResponseDto,
+  EntityMinValue,
   EntityNotComplete,
   EntityNotExists,
   EntityNotPermissions,
   FindCompanyByIdRepository,
+  FindCompanyByUserIdRepository,
   FindUserByIdRepository,
   FindUserIdByCompanyIdRepository,
   PermissionsUserResponseDto,
@@ -16,6 +18,7 @@ import {
 import { CompanyMock, listUserMock, userMock } from '../../../entity';
 import {
   FindCompanyByIdRepositoryMock,
+  FindCompanyByUserIdRepositoryMock,
   FindUserByIdRepositoryMock,
   FindUserIdByCompanyIdRepositoryMock,
   RemoveUserAccessToTheCompanyRepositoryMock,
@@ -29,6 +32,7 @@ interface SutTypes {
   findCompanyByIdRepository: FindCompanyByIdRepository;
   findUserIdByCompanyIdRepository: FindUserIdByCompanyIdRepository;
   verifyUserPermissionsByIdRepository: VerifyUserPermissionsByIdRepository;
+  findCompanyByUserIdRepository: FindCompanyByUserIdRepository;
   removeUserAccessToTheCompanyRepository: RemoveUserAccessToTheCompanyRepository;
 }
 
@@ -39,6 +43,7 @@ const makeSut = (): SutTypes => {
     new FindUserIdByCompanyIdRepositoryMock();
   const verifyUserPermissionsByIdRepository =
     new VerifyUserPermissionsByIdRepositoryMock();
+  const findCompanyByUserIdRepository = new FindCompanyByUserIdRepositoryMock();
   const removeUserAccessToTheCompanyRepository =
     new RemoveUserAccessToTheCompanyRepositoryMock();
 
@@ -53,6 +58,7 @@ const makeSut = (): SutTypes => {
     findCompanyByIdRepository,
     findUserIdByCompanyIdRepository,
     verifyUserPermissionsByIdRepository,
+    findCompanyByUserIdRepository,
     removeUserAccessToTheCompanyRepository
   );
 
@@ -62,6 +68,7 @@ const makeSut = (): SutTypes => {
     findUserIdByCompanyIdRepository,
     verifyUserPermissionsByIdRepository,
     removeUserAccessToTheCompanyRepository,
+    findCompanyByUserIdRepository,
     removeUserAccessToTheCompanyDto,
     sut,
   };
@@ -139,6 +146,18 @@ describe('RemoveUserAccessToTheCompany', () => {
     expect(result.isLeft()).toBe(true);
     expect(result.isRight()).toBe(false);
     expect(result.value).toBeInstanceOf(EntityNotPermissions);
+  });
+
+  it('should return EntityMinValue when a exist one Company associate to User in system', async () => {
+    const { removeUserAccessToTheCompanyDto, sut } = makeSut();
+    jest
+      .spyOn(sut['findCompanyByUserIdRepository'], 'find')
+      .mockResolvedValueOnce([]);
+    const result = await sut.execute(removeUserAccessToTheCompanyDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
+    expect(result.value).toBeInstanceOf(EntityMinValue);
   });
 
   it('should return EntityNotComplete when a not complete action in system', async () => {
