@@ -4,7 +4,7 @@ import StoreIcon from '@mui/icons-material/Store';
 import { useLoggedUser } from '../../contexts';
 import { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { CrudType, IconMenuItem } from '@workspaces/domain';
-import { useSnackbarAlert, useListCompanyData } from '../../hooks';
+import { useSnackbarAlert, useListCompaniesByUserIdData } from '../../hooks';
 import { ContainerSimpleList } from '../utils';
 import { LayoutBase } from '../../layout';
 import {
@@ -44,10 +44,12 @@ export const ListCompanyContainer: FC<ListCompanyContainerProps> = ({
     [showSnackbarAlert]
   );
 
-  const { listCompany, totalPage, getListCompanyData } = useListCompanyData({
-    showAlert,
-    loggedUserId: loggedUser?.id ?? '',
-  });
+  const { listCompaniesByUser, getListCompaniesByUserData, totalPage } =
+    useListCompaniesByUserIdData({
+      showAlert,
+      loggedUserId: loggedUser?.id ?? '',
+      userId: loggedUser?.id ?? '',
+    });
 
   const handlePopUpOpen = async (
     type: CrudType | 'list-users',
@@ -65,30 +67,30 @@ export const ListCompanyContainer: FC<ListCompanyContainerProps> = ({
       ...prev,
       [type]: false,
     }));
-    getListCompanyData();
+    getListCompaniesByUserData();
   };
 
   useEffect(() => {
     if (!hasLoadedUserData.current) {
-      getListCompanyData();
+      getListCompaniesByUserData();
       hasLoadedUserData.current = true;
     }
-  }, [getListCompanyData]);
+  }, [getListCompaniesByUserData]);
 
   const searchData = async (input: string) => {
-    getListCompanyData(input);
+    getListCompaniesByUserData(input);
   };
 
   const handleChange = async (
     event: React.ChangeEvent<unknown>,
     value: number
   ) => {
-    getListCompanyData('', value);
+    getListCompaniesByUserData('', value);
   };
 
   const renderCompanies = () =>
-    listCompany.length > 0 ? (
-      listCompany.map((company) => (
+    listCompaniesByUser.length > 0 ? (
+      listCompaniesByUser.map((company) => (
         <CompanyItem
           key={company.id}
           statusColor={company.status === 'ACTIVE' ? 'success' : 'error'}

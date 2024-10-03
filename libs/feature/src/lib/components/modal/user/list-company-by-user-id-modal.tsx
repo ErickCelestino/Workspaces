@@ -1,10 +1,11 @@
 import { FC, useEffect, useState } from 'react';
 import { Box, useMediaQuery, useTheme } from '@mui/material';
-import { useListCompanyData } from '../../../hooks';
+import { useListCompaniesByUserIdData } from '../../../hooks';
 import { CompanyItem, EmptyListResponse } from '../../list';
 import StoreIcon from '@mui/icons-material/Store';
 import { SearchContainerModal } from '../container';
 import { RemoveUserAccessToTheCompanyModal } from '../company';
+import { useLoggedUser } from '../../../contexts';
 
 interface ListCompanyByUserIdModalProps {
   userId: string;
@@ -25,6 +26,7 @@ export const ListCompanyByUserIdModal: FC<ListCompanyByUserIdModalProps> = ({
   removeUserAccessToTheCompanyTitle = 'Remover Acesso à Empresa',
   removeUserAccessToTheCompanySubTitle = 'Deseja realmente remover o acesso a essa empresa?',
 }) => {
+  const { loggedUser } = useLoggedUser();
   const theme = useTheme();
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
   const mdDown = useMediaQuery(theme.breakpoints.down('md'));
@@ -33,16 +35,18 @@ export const ListCompanyByUserIdModal: FC<ListCompanyByUserIdModalProps> = ({
     'remove-company': false,
   });
 
-  const { listCompany, getListCompanyData } = useListCompanyData({
-    showAlert,
-    loggedUserId: userId,
-  });
+  const { listCompaniesByUser, getListCompaniesByUserData } =
+    useListCompaniesByUserIdData({
+      showAlert,
+      loggedUserId: loggedUser?.id ?? '',
+      userId,
+    });
 
   useEffect(() => {
     if (open) {
-      getListCompanyData();
+      getListCompaniesByUserData();
     }
-  }, [getListCompanyData, open]);
+  }, [getListCompaniesByUserData, open]);
 
   const handlePopUpOpen = async (type: 'remove-company', id?: string) => {
     setSelectedId(id ?? '');
@@ -57,12 +61,12 @@ export const ListCompanyByUserIdModal: FC<ListCompanyByUserIdModalProps> = ({
       ...prev,
       [type]: false,
     }));
-    getListCompanyData();
+    getListCompaniesByUserData();
   };
 
   const renderCompanies = () =>
-    listCompany.length > 0 ? (
-      listCompany.map((company) => (
+    listCompaniesByUser.length > 0 ? (
+      listCompaniesByUser.map((company) => (
         <CompanyItem
           key={company.id}
           statusColor={company.status === 'ACTIVE' ? 'success' : 'error'}
