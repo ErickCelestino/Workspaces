@@ -1,6 +1,10 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import { Controller, Get, Param, Query, UsePipes } from '@nestjs/common';
 import { ListCompaniesByUserIdService } from './list-companies-by-user-id.service';
-import { ErrorMessageResult } from '@workspaces/domain';
+import {
+  ErrorMessageResult,
+  listUsersByCompanyIdSchema,
+} from '@workspaces/domain';
+import { ZodValidationPipe } from '../../pipes/zod-validation-pipe';
 
 @Controller('list-companies-by-user-id')
 export class ListCompaniesByUserIdController {
@@ -9,6 +13,7 @@ export class ListCompaniesByUserIdController {
   ) {}
 
   @Get(':userId')
+  @UsePipes(new ZodValidationPipe(listUsersByCompanyIdSchema))
   async list(
     @Param('userId') userId: string,
     @Query('filter') filter: string,
