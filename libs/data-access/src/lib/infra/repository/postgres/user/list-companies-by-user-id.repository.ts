@@ -18,9 +18,9 @@ export class ListCompaniesByUserIdRepositoryImpl
     const take = input?.take || 6;
 
     const whereClause = {
+      user_id: userId,
       ...(filter !== ''
         ? {
-            user_id: userId,
             company: {
               OR: [
                 {
@@ -82,7 +82,9 @@ export class ListCompaniesByUserIdRepositoryImpl
           where: whereClause,
         }),
         this.prismaService.user_X_Company.count({
-          where: {},
+          where: {
+            user_id: userId,
+          },
         }),
       ]);
 
