@@ -48,14 +48,26 @@ export class ChangeUserType
       return left(userValidation.value);
     }
 
-    const permissionValidation = await ValidationUserPermisssions(
-      loggedUserId,
-      ['ADMIN', 'DEFAULT_ADMIN'],
-      this.verifyUserPermissionsByIdRepository
-    );
+    if (status === 'ADMIN') {
+      const permissionValidation = await ValidationUserPermisssions(
+        loggedUserId,
+        ['ADMIN'],
+        this.verifyUserPermissionsByIdRepository
+      );
 
-    if (permissionValidation.isLeft()) {
-      return left(permissionValidation.value);
+      if (permissionValidation.isLeft()) {
+        return left(permissionValidation.value);
+      }
+    } else {
+      const permissionValidation = await ValidationUserPermisssions(
+        loggedUserId,
+        ['ADMIN', 'DEFAULT_ADMIN'],
+        this.verifyUserPermissionsByIdRepository
+      );
+
+      if (permissionValidation.isLeft()) {
+        return left(permissionValidation.value);
+      }
     }
 
     const changedUser = await this.changeUserTypeRepository.change(input);
