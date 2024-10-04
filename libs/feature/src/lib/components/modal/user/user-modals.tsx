@@ -1,9 +1,10 @@
 import { FC } from 'react';
-import { CrudType } from '@workspaces/domain';
+import { UserPopupType } from '@workspaces/domain';
 import {
   AddUserToAnotherCompanyModal,
   DeleteUserModal,
   EditUserModal,
+  ListCompanyByUserIdModal,
 } from '.';
 
 interface UserModalsProps {
@@ -12,13 +13,15 @@ interface UserModalsProps {
     delete: boolean;
     edit: boolean;
     'add-company': boolean;
+    'list-company': boolean;
   };
-  handlePopUpClose: (type: CrudType | 'add-company') => void;
+  handlePopUpClose: (type: UserPopupType) => void;
   showAlert: (message: string, success: boolean) => void;
   deleteUserTitle?: string;
   deleteUserSubTitle?: string;
   editUserTitle?: string;
   addUserToAnotherCompanyTitle?: string;
+  listCompanyByUserIdTitle?: string;
 }
 
 export const UserModals: FC<UserModalsProps> = ({
@@ -30,6 +33,7 @@ export const UserModals: FC<UserModalsProps> = ({
   deleteUserSubTitle = 'Por favor, selecione alguma das alternativas',
   editUserTitle = 'Editar Usuário',
   addUserToAnotherCompanyTitle = 'Adionar Empresa',
+  listCompanyByUserIdTitle = 'Empresas',
 }) => {
   return (
     <>
@@ -55,6 +59,14 @@ export const UserModals: FC<UserModalsProps> = ({
         showAlert={showAlert}
         open={openModal['add-company']}
         title={addUserToAnotherCompanyTitle}
+      />
+
+      <ListCompanyByUserIdModal
+        userId={selectedId}
+        handlePopUpClose={() => handlePopUpClose('list-company')}
+        showAlert={showAlert}
+        open={openModal['list-company']}
+        title={listCompanyByUserIdTitle}
       />
     </>
   );

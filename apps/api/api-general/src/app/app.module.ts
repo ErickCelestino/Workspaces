@@ -11,6 +11,7 @@ import {
   CreateUserModule,
   FindUserByEmailModule,
   AddUserToAnotherCompanyModule,
+  ListCompaniesByUserIdModule,
 } from './user';
 import {
   CreateCompanyModule,
@@ -34,6 +35,7 @@ import {
   AuthorizeUserToCompanyModule,
   FindUnauthorizedUsersByCompanyIdModule,
   UnauthorizeUserToCompanyModule,
+  RemoveUserAccessToTheCompanyModule,
 } from './company';
 import {
   ListSimpleStateModule,
@@ -78,6 +80,8 @@ import {
     FindUnauthorizedUsersByCompanyIdModule,
     UnauthorizeUserToCompanyModule,
     AddUserToAnotherCompanyModule,
+    RemoveUserAccessToTheCompanyModule,
+    ListCompaniesByUserIdModule,
   ],
   controllers: [AppController],
   providers: [AppService],

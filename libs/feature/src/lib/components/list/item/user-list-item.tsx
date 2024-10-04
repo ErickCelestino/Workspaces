@@ -14,6 +14,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
 import AddBusinessIcon from '@mui/icons-material/AddBusiness';
+import ApartmentIcon from '@mui/icons-material/Apartment';
 import { IconMenuItem, StatusColor, UserList } from '@workspaces/domain';
 import { FC } from 'react';
 import { ButtonFileMenu } from '../../menu';
@@ -26,10 +27,12 @@ interface UserListItemProps {
   deleteUser?: () => Promise<void>;
   authorizeUser?: () => Promise<void>;
   addUserToAnotherCompany?: () => Promise<void>;
+  listCompanyByUserId?: () => Promise<void>;
   deleteUserTitle?: string;
   editUserTitle?: string;
   authorizeUserTitle?: string;
   addUserToAnotherCompanyTitle?: string;
+  listCompanyByUserIdTitle?: string;
   nicknameTitle?: string;
   statusTitle?: string;
   idTitle?: string;
@@ -44,10 +47,12 @@ export const UserListItem: FC<UserListItemProps> = ({
   deleteUser,
   authorizeUser,
   addUserToAnotherCompany,
+  listCompanyByUserId,
   addUserToAnotherCompanyTitle = 'Adionar Empresa',
   authorizeUserTitle = 'Autorizar Usuário',
   deleteUserTitle = 'Deletar',
   editUserTitle = 'Editar',
+  listCompanyByUserIdTitle = 'Empresas',
   nicknameTitle = 'Nickname',
   statusTitle = 'Status',
   idTitle = 'ID',
@@ -86,6 +91,14 @@ export const UserListItem: FC<UserListItemProps> = ({
       icon: <AddBusinessIcon />,
       title: addUserToAnotherCompanyTitle,
       handleClick: addUserToAnotherCompany,
+    });
+  }
+
+  if (listCompanyByUserId) {
+    iconMenuList.push({
+      icon: <ApartmentIcon />,
+      title: listCompanyByUserIdTitle,
+      handleClick: listCompanyByUserId,
     });
   }
 

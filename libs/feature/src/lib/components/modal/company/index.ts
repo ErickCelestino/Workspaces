@@ -5,3 +5,4 @@ export * from './delete-company-modal';
 export * from './details-company-modal';
 export * from './edit-company-modal';
 export * from './list-users-by-company-id-modal';
+export * from './remove-user-access-to-the-company-modal';

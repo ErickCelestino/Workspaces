@@ -7,17 +7,11 @@ import {
   Typography,
   useTheme,
 } from '@mui/material';
-import { FC, useCallback, useEffect, useState } from 'react';
-import { appLogout, ListCompanyRequest } from '../../../services';
+import { FC, useEffect, useRef, useState } from 'react';
+import { appLogout } from '../../../services';
 import { useAppThemeContext, useLoggedUser } from '../../../contexts';
-import {
-  CompanySimpleResponseDto,
-  ErrorResponse,
-  ListCompanyDto,
-  LoggedUser,
-} from '@workspaces/domain';
-import axios, { AxiosError } from 'axios';
-import { ValidationsError } from '../../../shared';
+import { CompanySimpleResponseDto, LoggedUser } from '@workspaces/domain';
+import { useListCompaniesByUserIdData } from '../../../hooks';
 
 interface DrawerConfigurationProps {
   logoutTitle: string;
@@ -36,7 +30,14 @@ export const DrawerConfiguration: FC<DrawerConfigurationProps> = ({
   const { toggleTheme } = useAppThemeContext();
   const { loggedUser, setLoggedUser } = useLoggedUser();
   const [selectedCompany, setSelectedCompany] = useState('');
-  const [dataLoaded, setDataLoaded] = useState(false);
+  const hasLoadedUserData = useRef(false);
+
+  const { listCompaniesByUser, getListCompaniesByUserData } =
+    useListCompaniesByUserIdData({
+      showAlert,
+      loggedUserId: loggedUser?.id ?? '',
+      userId: loggedUser?.id ?? '',
+    });
 
   const logout = () => {
     appLogout();
@@ -44,22 +45,23 @@ export const DrawerConfiguration: FC<DrawerConfigurationProps> = ({
   };
 
   useEffect(() => {
-    if (!loggedUser?.id) {
-      setDataLoaded(false);
-    }
-  }, [loggedUser]);
-
-  useEffect(() => {
-    if (loggedUser?.id && !dataLoaded) {
-      handleData({
-        loggedUserId: loggedUser?.id ?? '',
-        filter: '',
-      }).then(() => {
-        setSelectedCompany(loggedUser?.selectedCompany.id ?? '');
-        setDataLoaded(true);
-      });
+    if (loggedUser?.id && !hasLoadedUserData.current) {
+      handleData();
     }
   });
+
+  const handleData = async () => {
+    await getListCompaniesByUserData().then(() => {
+      if (listCompaniesByUser.length > 0) {
+        hasLoadedUserData.current = true;
+        setLoggedUser({
+          ...(loggedUser ?? ({} as LoggedUser)),
+          companies: listCompaniesByUser ?? ([] as CompanySimpleResponseDto[]),
+        });
+        setSelectedCompany(loggedUser?.selectedCompany.id ?? '');
+      }
+    });
+  };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const filteredCompany: CompanySimpleResponseDto =
@@ -72,36 +74,6 @@ export const DrawerConfiguration: FC<DrawerConfigurationProps> = ({
       selectedCompany: filteredCompany,
     });
   };
-
-  const handleData = useCallback(
-    async (data: ListCompanyDto) => {
-      try {
-        const result = await ListCompanyRequest({
-          loggedUserId: data.loggedUserId,
-          filter: data.filter,
-          skip: data.skip,
-          take: data.take,
-        });
-        if (result) {
-          setLoggedUser({
-            ...(loggedUser ?? ({} as LoggedUser)),
-            companies: result?.companies ?? ([] as CompanySimpleResponseDto[]),
-          });
-        }
-        return result;
-      } catch (error) {
-        console.error(error);
-        if (axios.isAxiosError(error)) {
-          const axiosError = error as AxiosError<ErrorResponse>;
-          const errors = ValidationsError(axiosError, 'Empresa');
-          if (errors) {
-            showAlert(errors, false);
-          }
-        }
-      }
-    },
-    [loggedUser, setLoggedUser, showAlert]
-  );
 
   return (
     <Box

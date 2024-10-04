@@ -7,7 +7,7 @@ import { useLoggedUser } from '../../../contexts';
 import { useListUsersByCompanyIdData } from '../../../hooks';
 import { ContainerListModal } from '../list';
 import { ScrollBox } from '../../scroll';
-import { CrudType } from '@workspaces/domain';
+import { UserPopupType } from '@workspaces/domain';
 import { UserModals } from '../user';
 
 interface EditCompanyModalProps {
@@ -33,6 +33,7 @@ export const ListUsersByCompanyIdModal: FC<EditCompanyModalProps> = ({
     delete: false,
     edit: false,
     'add-company': false,
+    'list-company': false,
   });
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
   const [selectedId, setSelectedId] = useState<string>('');
@@ -62,10 +63,7 @@ export const ListUsersByCompanyIdModal: FC<EditCompanyModalProps> = ({
     getListCompanyData('', value);
   };
 
-  const handlePopUpOpen = async (
-    type: CrudType | 'add-company',
-    id?: string
-  ) => {
+  const handlePopUpOpen = async (type: UserPopupType, id?: string) => {
     setSelectedId(id ?? '');
     setOpenModal((prev) => ({
       ...prev,
@@ -73,7 +71,7 @@ export const ListUsersByCompanyIdModal: FC<EditCompanyModalProps> = ({
     }));
   };
 
-  const handleUserPopUpClose = async (type: CrudType | 'add-company') => {
+  const handleUserPopUpClose = async (type: UserPopupType) => {
     setOpenModal((prev) => ({
       ...prev,
       [type]: false,

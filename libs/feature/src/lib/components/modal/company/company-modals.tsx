@@ -1,24 +1,22 @@
 import { FC } from 'react';
-import { CrudType } from '@workspaces/domain';
+import { CompanyPopUp, CompanyPopupType } from '@workspaces/domain';
 import {
   CreateCompanyModal,
   DeleteCompanyModal,
   DetailsCompanyModal,
   EditCompanyModal,
   ListUsersByCompanyIdModal,
+  RemoveUserAccessToTheCompanyModal,
 } from '.';
 
 interface CompanyModalsProps {
   selectedId: string;
-  openModal: {
-    create: boolean;
-    delete: boolean;
-    edit: boolean;
-    details: boolean;
-    'list-users': boolean;
-  };
-  handlePopUpClose: (type: CrudType | 'list-users') => void;
+  userId?: string;
+  openModal: CompanyPopUp;
+  handlePopUpClose: (type: CompanyPopupType) => void;
   showAlert: (message: string, success: boolean) => void;
+  removeUserAccessToTheCompanyTitle?: string;
+  removeUserAccessToTheCompanySubTitle?: string;
   createCompanyTitle?: string;
   deleteCompanyTitle?: string;
   editCompanyTitle?: string;
@@ -31,11 +29,14 @@ export const CompanyModals: FC<CompanyModalsProps> = ({
   openModal,
   handlePopUpClose,
   showAlert,
+  userId,
   createCompanyTitle = 'Cadastrar Empresa',
   deleteCompanyTitle = 'Deletar Empresa',
   editCompanyTitle = 'Editar Empresa',
   detailsCompanyTitle = 'Detalhes da Empresa',
   listUsersByCompanyIdTitle = 'Listagem de Usuários',
+  removeUserAccessToTheCompanyTitle = 'Remover Acesso',
+  removeUserAccessToTheCompanySubTitle = 'Realmente deseja remover o acesso?',
 }) => {
   return (
     <>
@@ -72,6 +73,15 @@ export const CompanyModals: FC<CompanyModalsProps> = ({
         handlePopUpClose={() => handlePopUpClose('list-users')}
         showAlert={showAlert}
         companyId={selectedId}
+      />
+      <RemoveUserAccessToTheCompanyModal
+        open={openModal['remove-access']}
+        title={removeUserAccessToTheCompanyTitle}
+        handlePopUpClose={() => handlePopUpClose('remove-access')}
+        showAlert={showAlert}
+        companyId={selectedId}
+        userId={userId ?? ''}
+        subTitle={removeUserAccessToTheCompanySubTitle}
       />
     </>
   );

@@ -56,10 +56,10 @@ export const useLoadUserPureTvData = () => {
         setDrawerOptions({
           ...baseDrawerOptions,
           Empresa: [
-            { label: 'Empresas', icon: 'add_business', path: '/company' },
+            { label: 'Empresas', icon: 'add_business', path: '/auth/company' },
           ],
           Usuários: [
-            { label: 'Usuários', icon: 'manage_accounts', path: '/user' },
+            { label: 'Usuários', icon: 'manage_accounts', path: '/auth/user' },
           ],
         });
       } else {

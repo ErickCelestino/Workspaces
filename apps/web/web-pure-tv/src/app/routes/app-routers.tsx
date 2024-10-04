@@ -13,6 +13,7 @@ import {
   useLoggedUser,
   useLoadUserPureTvData,
   useLoading,
+  ListAllCompaniesContainer,
 } from '@workspaces/feature';
 import { useEffect, useRef } from 'react';
 
@@ -35,7 +36,7 @@ export const AppRouters = () => {
   return (
     <Routes>
       <Route path="/" element={<TestContainer />} />
-      <Route path="user" element={<ListUserContainer />} />
+      <Route path="/auth/user" element={<ListUserContainer />} />
       <Route path="/files" element={<ListContanteFilesContainer />} />
       <Route path="/directory" element={<ListDirectoryContainer />} />
       <Route path="playlist" element={<ListPlaylistContainer />} />
@@ -46,6 +47,7 @@ export const AppRouters = () => {
       <Route path="scheduling" element={<ListSchedulesContainer />} />
       <Route path="device" element={<ListDeviceContainer />} />
       <Route path="company" element={<ListCompanyContainer />} />
+      <Route path="/auth/company" element={<ListAllCompaniesContainer />} />
       <Route
         path="unauthorized-access"
         element={<UnauthorizedUserContainer />}
