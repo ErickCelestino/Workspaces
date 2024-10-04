@@ -3,7 +3,11 @@ import AddBusinessIcon from '@mui/icons-material/AddBusiness';
 import StoreIcon from '@mui/icons-material/Store';
 import { useLoggedUser } from '../../contexts';
 import { FC, useCallback, useEffect, useRef, useState } from 'react';
-import { CrudType, IconMenuItem } from '@workspaces/domain';
+import {
+  CompanyPopUp,
+  CompanyPopupType,
+  IconMenuItem,
+} from '@workspaces/domain';
 import { useSnackbarAlert, useListCompaniesByUserIdData } from '../../hooks';
 import { ContainerSimpleList } from '../utils';
 import { LayoutBase } from '../../layout';
@@ -25,12 +29,13 @@ export const ListCompanyContainer: FC<ListCompanyContainerProps> = ({
   const theme = useTheme();
   const { showSnackbarAlert, SnackbarAlert } = useSnackbarAlert();
   const [selectedId, setSelectedId] = useState<string>('');
-  const [openModal, setOpenModal] = useState({
+  const [openModal, setOpenModal] = useState<CompanyPopUp>({
     create: false,
     delete: false,
     edit: false,
     details: false,
     'list-users': false,
+    'remove-access': false,
   });
   const hasLoadedUserData = useRef(false);
 
@@ -51,10 +56,7 @@ export const ListCompanyContainer: FC<ListCompanyContainerProps> = ({
       userId: loggedUser?.id ?? '',
     });
 
-  const handlePopUpOpen = async (
-    type: CrudType | 'list-users',
-    id?: string
-  ) => {
+  const handlePopUpOpen = async (type: CompanyPopupType, id?: string) => {
     setSelectedId(id ?? '');
     setOpenModal((prev) => ({
       ...prev,
@@ -62,7 +64,7 @@ export const ListCompanyContainer: FC<ListCompanyContainerProps> = ({
     }));
   };
 
-  const handlePopUpClose = async (type: CrudType | 'list-users') => {
+  const handlePopUpClose = async (type: CompanyPopupType) => {
     setOpenModal((prev) => ({
       ...prev,
       [type]: false,
@@ -98,8 +100,12 @@ export const ListCompanyContainer: FC<ListCompanyContainerProps> = ({
           editCompany={() => handlePopUpOpen('edit', company.id)}
           detailsCompany={() => handlePopUpOpen('details', company.id)}
           listUsersByCompany={() => handlePopUpOpen('list-users', company.id)}
+          removeUserAccessToTheCompany={() =>
+            handlePopUpOpen('remove-access', company.id)
+          }
           company={company}
           inModal={false}
+          removeUserAccessToTheCompanyTitle="Remover Meu Acesso"
         />
       ))
     ) : (
@@ -124,6 +130,7 @@ export const ListCompanyContainer: FC<ListCompanyContainerProps> = ({
         openModal={openModal}
         handlePopUpClose={handlePopUpClose}
         showAlert={showAlert}
+        userId={loggedUser?.id ?? ''}
       />
       <LayoutBase
         title="Listagem de Empresas"
