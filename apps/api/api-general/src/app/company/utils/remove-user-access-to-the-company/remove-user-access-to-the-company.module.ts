@@ -6,6 +6,7 @@ import {
   FindCompanyByIdRepositoryImpl,
   FindUserByIdRepositoryImpl,
   FindUserIdByCompanyIdRepositoryImpl,
+  ListCompaniesByUserIdRepositoryImpl,
   PrismaService,
   RemoveUserAccessToTheCompanyRepositoryImpl,
   VerifyUserPermissionsByIdRepositoryImpl,
@@ -35,6 +36,10 @@ import {
     {
       provide: 'VerifyUserPermissionsByIdRepository',
       useClass: VerifyUserPermissionsByIdRepositoryImpl,
+    },
+    {
+      provide: 'ListCompaniesByUserIdRepository',
+      useClass: ListCompaniesByUserIdRepositoryImpl,
     },
     {
       provide: 'RemoveUserAccessToTheCompanyRepository',

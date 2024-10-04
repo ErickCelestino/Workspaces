@@ -10,9 +10,9 @@ import {
 import { Either, left, right } from '../../../shared/either';
 import {
   FindCompanyByIdRepository,
-  FindCompanyByUserIdRepository,
   FindUserByIdRepository,
   FindUserIdByCompanyIdRepository,
+  ListCompaniesByUserIdRepository,
   RemoveUserAccessToTheCompanyRepository,
   VerifyUserPermissionsByIdRepository,
 } from '../../../repository';
@@ -35,8 +35,8 @@ export class RemoveUserAccessToTheCompany
     private findUserIdByCompanyIdRepository: FindUserIdByCompanyIdRepository,
     @Inject('VerifyUserPermissionsByIdRepository')
     private verifyUserPermissionsByIdRepository: VerifyUserPermissionsByIdRepository,
-    @Inject('FindCompanyByUserIdRepository')
-    private findCompanyByUserIdRepository: FindCompanyByUserIdRepository,
+    @Inject('ListCompaniesByUserIdRepository')
+    private listCompaniesByUserIdRepository: ListCompaniesByUserIdRepository,
     @Inject('RemoveUserAccessToTheCompanyRepository')
     private removeUserAccessToTheCompanyRepository: RemoveUserAccessToTheCompanyRepository
   ) {}
@@ -92,11 +92,16 @@ export class RemoveUserAccessToTheCompany
       return left(permissionValidation.value);
     }
 
-    const filteredCompanies = await this.findCompanyByUserIdRepository.find(
-      loggedUserId
-    );
+    const filteredCompanies = await this.listCompaniesByUserIdRepository.list({
+      filter: '',
+      loggedUserId,
+      userId: loggedUserId,
+    });
 
-    if (filteredCompanies.length <= 1) {
+    if (
+      !Array.isArray(filteredCompanies?.companies) ||
+      filteredCompanies?.companies.length <= 1
+    ) {
       return left(new EntityMinValue('User', '1', 'Company'));
     }
 

@@ -5,9 +5,10 @@ import {
   EntityNotExists,
   EntityNotPermissions,
   FindCompanyByIdRepository,
-  FindCompanyByUserIdRepository,
   FindUserByIdRepository,
   FindUserIdByCompanyIdRepository,
+  ListCompaniesByUserIdRepository,
+  ListCompanyResponseDto,
   PermissionsUserResponseDto,
   RemoveUserAccessToTheCompany,
   RemoveUserAccessToTheCompanyDto,
@@ -18,9 +19,9 @@ import {
 import { CompanyMock, listUserMock, userMock } from '../../../entity';
 import {
   FindCompanyByIdRepositoryMock,
-  FindCompanyByUserIdRepositoryMock,
   FindUserByIdRepositoryMock,
   FindUserIdByCompanyIdRepositoryMock,
+  ListCompaniesByUserIdRepositoryMock,
   RemoveUserAccessToTheCompanyRepositoryMock,
   VerifyUserPermissionsByIdRepositoryMock,
 } from '../../../repository';
@@ -32,7 +33,7 @@ interface SutTypes {
   findCompanyByIdRepository: FindCompanyByIdRepository;
   findUserIdByCompanyIdRepository: FindUserIdByCompanyIdRepository;
   verifyUserPermissionsByIdRepository: VerifyUserPermissionsByIdRepository;
-  findCompanyByUserIdRepository: FindCompanyByUserIdRepository;
+  listCompaniesByUserIdRepository: ListCompaniesByUserIdRepository;
   removeUserAccessToTheCompanyRepository: RemoveUserAccessToTheCompanyRepository;
 }
 
@@ -43,7 +44,8 @@ const makeSut = (): SutTypes => {
     new FindUserIdByCompanyIdRepositoryMock();
   const verifyUserPermissionsByIdRepository =
     new VerifyUserPermissionsByIdRepositoryMock();
-  const findCompanyByUserIdRepository = new FindCompanyByUserIdRepositoryMock();
+  const listCompaniesByUserIdRepository =
+    new ListCompaniesByUserIdRepositoryMock();
   const removeUserAccessToTheCompanyRepository =
     new RemoveUserAccessToTheCompanyRepositoryMock();
 
@@ -58,7 +60,7 @@ const makeSut = (): SutTypes => {
     findCompanyByIdRepository,
     findUserIdByCompanyIdRepository,
     verifyUserPermissionsByIdRepository,
-    findCompanyByUserIdRepository,
+    listCompaniesByUserIdRepository,
     removeUserAccessToTheCompanyRepository
   );
 
@@ -68,7 +70,7 @@ const makeSut = (): SutTypes => {
     findUserIdByCompanyIdRepository,
     verifyUserPermissionsByIdRepository,
     removeUserAccessToTheCompanyRepository,
-    findCompanyByUserIdRepository,
+    listCompaniesByUserIdRepository,
     removeUserAccessToTheCompanyDto,
     sut,
   };
@@ -151,8 +153,8 @@ describe('RemoveUserAccessToTheCompany', () => {
   it('should return EntityMinValue when a exist one Company associate to User in system', async () => {
     const { removeUserAccessToTheCompanyDto, sut } = makeSut();
     jest
-      .spyOn(sut['findCompanyByUserIdRepository'], 'find')
-      .mockResolvedValueOnce([]);
+      .spyOn(sut['listCompaniesByUserIdRepository'], 'list')
+      .mockResolvedValueOnce({} as ListCompanyResponseDto);
     const result = await sut.execute(removeUserAccessToTheCompanyDto);
 
     expect(result.isLeft()).toBe(true);

@@ -2,7 +2,6 @@ export * from './add-user-to-another-company.mock';
 export * from './create-user.mock';
 export * from './delete-user-by-id.mock';
 export * from './edit-user.mock';
-export * from './find-company-by-user-id.mock';
 export * from './find-user-by-email.mock';
 export * from './find-user-by-id.mock';
 export * from './list-companies-by-user-id.mock';
