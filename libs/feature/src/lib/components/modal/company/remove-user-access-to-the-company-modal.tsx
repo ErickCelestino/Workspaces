@@ -47,7 +47,12 @@ export const RemoveUserAccessToTheCompanyModal: FC<
       console.error(error);
       if (axios.isAxiosError(error)) {
         const axiosError = error as AxiosError<ErrorResponse>;
-        const errors = ValidationsError(axiosError, 'Empresa');
+        const errors = ValidationsError(
+          axiosError,
+          'Empresa ou Usuário',
+          '1',
+          'Usuário'
+        );
         if (errors) {
           showAlert(errors, false);
         }

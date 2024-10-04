@@ -1,9 +1,10 @@
 import { UseCaseError } from '../base/use-case-error';
+import { EntityMinValueDto } from '../dto';
 
 export class EntityMinValue extends Error implements UseCaseError {
-  constructor(entitie: string, quantity: string, destiny: string) {
+  constructor(input: EntityMinValueDto) {
     super(
-      `The ${entitie} must have at least ${quantity} associated ${destiny}`
+      `The ${input.entitie} must have at least ${input.quantity} associated ${input.destiny}`
     );
     this.name = 'EntityMinValue';
   }

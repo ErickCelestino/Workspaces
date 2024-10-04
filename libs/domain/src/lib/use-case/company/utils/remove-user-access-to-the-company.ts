@@ -102,7 +102,13 @@ export class RemoveUserAccessToTheCompany
       !Array.isArray(filteredCompanies?.companies) ||
       filteredCompanies?.companies.length <= 1
     ) {
-      return left(new EntityMinValue('User', '1', 'Company'));
+      return left(
+        new EntityMinValue({
+          destiny: 'Company',
+          entitie: 'User',
+          quantity: '1',
+        })
+      );
     }
 
     const removedUserAccess =
