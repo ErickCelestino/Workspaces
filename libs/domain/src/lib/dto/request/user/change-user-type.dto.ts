@@ -1,5 +1,7 @@
+import { userTypes } from '../../../type';
+
 export interface ChangeUserTypeDto {
   loggedUserId: string;
   userId: string;
-  status: string;
+  type: userTypes;
 }

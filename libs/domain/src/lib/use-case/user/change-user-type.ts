@@ -24,10 +24,10 @@ export class ChangeUserType
   async execute(
     input: ChangeUserTypeDto
   ): Promise<Either<EntityNotEmpty, string>> {
-    const { loggedUserId, status, userId } = input;
+    const { loggedUserId, type, userId } = input;
 
-    if (Object.keys(status).length < 1) {
-      return left(new EntityNotEmpty('status'));
+    if (Object.keys(type).length < 1) {
+      return left(new EntityNotEmpty('type'));
     }
 
     const loggedUserValidation = await ValidationUserId(
@@ -48,7 +48,7 @@ export class ChangeUserType
       return left(userValidation.value);
     }
 
-    if (status === 'ADMIN') {
+    if (type === 'ADMIN') {
       const permissionValidation = await ValidationUserPermisssions(
         loggedUserId,
         ['ADMIN'],

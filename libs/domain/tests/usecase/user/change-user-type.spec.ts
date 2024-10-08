@@ -10,6 +10,7 @@ import {
   PermissionsUserResponseDto,
   UserList,
   VerifyUserPermissionsByIdRepository,
+  userTypes,
 } from '../../../src';
 import { listUserMock, userMock } from '../../entity';
 import {
@@ -34,7 +35,7 @@ const makeSut = (): SutTypes => {
 
   const changeUserTypeDto: ChangeUserTypeDto = {
     loggedUserId: userMock.userId,
-    status: 'DEFAULT_ADMIN',
+    type: 'DEFAULT_ADMIN',
     userId: userMock.userId,
   };
 
@@ -64,9 +65,9 @@ describe('ChangeUserType', () => {
     expect(result.value).toStrictEqual(userMock.userId);
   });
 
-  it('should return EntityNotEmpty when a passed empty User Status', async () => {
+  it('should return EntityNotEmpty when a passed empty User Type', async () => {
     const { sut, changeUserTypeDto } = makeSut();
-    changeUserTypeDto.status = '';
+    changeUserTypeDto.type = '' as userTypes;
     const result = await sut.execute(changeUserTypeDto);
 
     expect(result.isLeft()).toBe(true);
@@ -101,9 +102,9 @@ describe('ChangeUserType', () => {
     expect(result.value).toBeInstanceOf(EntityNotExists);
   });
 
-  it('should return EntityNotPermissions when a passed ADMIN User Status and the user is not admin', async () => {
+  it('should return EntityNotPermissions when a passed ADMIN User Type and the user is not admin', async () => {
     const { sut, changeUserTypeDto } = makeSut();
-    changeUserTypeDto.status = 'ADMIN';
+    changeUserTypeDto.type = 'ADMIN';
     jest
       .spyOn(sut['verifyUserPermissionsByIdRepository'], 'verify')
       .mockResolvedValueOnce({} as PermissionsUserResponseDto);
