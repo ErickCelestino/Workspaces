@@ -1,4 +1,5 @@
 export * from './add-user-to-another-company.mock';
+export * from './change-user-type.mock';
 export * from './create-user.mock';
 export * from './delete-user-by-id.mock';
 export * from './edit-user.mock';

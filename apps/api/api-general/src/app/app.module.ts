@@ -12,6 +12,7 @@ import {
   FindUserByEmailModule,
   AddUserToAnotherCompanyModule,
   ListCompaniesByUserIdModule,
+  ChangeUserTypeModule,
 } from './user';
 import {
   CreateCompanyModule,
@@ -82,6 +83,7 @@ import {
     AddUserToAnotherCompanyModule,
     RemoveUserAccessToTheCompanyModule,
     ListCompaniesByUserIdModule,
+    ChangeUserTypeModule,
   ],
   controllers: [AppController],
   providers: [AppService],

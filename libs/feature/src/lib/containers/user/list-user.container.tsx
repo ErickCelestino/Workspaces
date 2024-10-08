@@ -24,6 +24,7 @@ export const ListUserContainer = () => {
     edit: false,
     'add-company': false,
     'list-company': false,
+    'change-type': false,
   });
   const hasLoadedUserData = useRef(false);
 
@@ -111,6 +112,9 @@ export const ListUserContainer = () => {
                   }
                   listCompanyByUserId={async () =>
                     handlePopUpOpen('list-company', user.userId)
+                  }
+                  changeUserType={async () =>
+                    handlePopUpOpen('change-type', user.userId)
                   }
                   key={user.userId}
                   user={user}

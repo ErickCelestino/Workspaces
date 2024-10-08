@@ -1,4 +1,5 @@
 export * from './add-user-to-another-company.repository';
+export * from './change-user-type.repository';
 export * from './create-auth.repository';
 export * from './create-user.repository';
 export * from './delete-user-by-id.repository';

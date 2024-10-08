@@ -2,6 +2,7 @@ import { FC } from 'react';
 import { UserPopupType } from '@workspaces/domain';
 import {
   AddUserToAnotherCompanyModal,
+  ChangeUserTypeModal,
   DeleteUserModal,
   EditUserModal,
   ListCompanyByUserIdModal,
@@ -14,6 +15,7 @@ interface UserModalsProps {
     edit: boolean;
     'add-company': boolean;
     'list-company': boolean;
+    'change-type': boolean;
   };
   handlePopUpClose: (type: UserPopupType) => void;
   showAlert: (message: string, success: boolean) => void;
@@ -22,6 +24,7 @@ interface UserModalsProps {
   editUserTitle?: string;
   addUserToAnotherCompanyTitle?: string;
   listCompanyByUserIdTitle?: string;
+  changeUserTypeTitle?: string;
 }
 
 export const UserModals: FC<UserModalsProps> = ({
@@ -34,6 +37,7 @@ export const UserModals: FC<UserModalsProps> = ({
   editUserTitle = 'Editar Usuário',
   addUserToAnotherCompanyTitle = 'Adionar Empresa',
   listCompanyByUserIdTitle = 'Empresas',
+  changeUserTypeTitle = 'Alterar Tipo de Usuário',
 }) => {
   return (
     <>
@@ -67,6 +71,14 @@ export const UserModals: FC<UserModalsProps> = ({
         showAlert={showAlert}
         open={openModal['list-company']}
         title={listCompanyByUserIdTitle}
+      />
+
+      <ChangeUserTypeModal
+        idToChange={selectedId}
+        handlePopUpClose={() => handlePopUpClose('change-type')}
+        showAlert={showAlert}
+        open={openModal['change-type']}
+        title={changeUserTypeTitle}
       />
     </>
   );
