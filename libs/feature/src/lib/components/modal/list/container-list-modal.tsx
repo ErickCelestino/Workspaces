@@ -1,10 +1,4 @@
-import {
-  Box,
-  IconButton,
-  Pagination,
-  useMediaQuery,
-  useTheme,
-} from '@mui/material';
+import { Box, IconButton, Pagination, useTheme } from '@mui/material';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { ScrollBox, SearchBar } from '../../../components';
 import { FC, ReactNode } from 'react';
@@ -30,7 +24,6 @@ export const ContainerListModal: FC<ContainerSimpleListProps> = ({
   handleChange,
 }) => {
   const theme = useTheme();
-  const smDown = useMediaQuery(theme.breakpoints.down('sm'));
 
   return (
     <Box
@@ -41,7 +34,7 @@ export const ContainerListModal: FC<ContainerSimpleListProps> = ({
         mt: '1rem',
       }}
     >
-      <Box>
+      <Box width="100%">
         <Box
           sx={{
             display: 'flex',
@@ -49,7 +42,7 @@ export const ContainerListModal: FC<ContainerSimpleListProps> = ({
             alignItems: 'center',
           }}
         >
-          <Box width={'100%'}>
+          <Box width="100%">
             <SearchBar
               onSearch={search.searchData}
               placeholder={search.placeholder}
@@ -75,18 +68,8 @@ export const ContainerListModal: FC<ContainerSimpleListProps> = ({
             </IconButton>
           )}
         </Box>
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            flexDirection: 'column',
-            alignItems: 'center',
-            width: '100%',
-          }}
-        >
-          <Box>
-            <ScrollBox maxHeight="100%">{children}</ScrollBox>
-          </Box>
+        <Box>
+          <ScrollBox maxHeight="100%">{children}</ScrollBox>
         </Box>
         <Box
           display="flex"

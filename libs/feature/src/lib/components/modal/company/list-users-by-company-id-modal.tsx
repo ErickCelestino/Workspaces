@@ -6,7 +6,6 @@ import { EmptyListResponse, UserListItem } from '../../list';
 import { useLoggedUser } from '../../../contexts';
 import { useListUsersByCompanyIdData } from '../../../hooks';
 import { ContainerListModal } from '../list';
-import { ScrollBox } from '../../scroll';
 import { UserPopupType } from '@workspaces/domain';
 import { UserModals } from '../user';
 
@@ -92,7 +91,7 @@ export const ListUsersByCompanyIdModal: FC<EditCompanyModalProps> = ({
         open={open}
         handlePopUpClose={handlePopUpClose}
         height="auto"
-        width={smDown ? '90%' : theme.spacing(90)}
+        width={smDown ? '90%' : theme.spacing(100)}
         title={title}
       >
         <ContainerListModal
@@ -103,38 +102,39 @@ export const ListUsersByCompanyIdModal: FC<EditCompanyModalProps> = ({
           totalPage={totalPage}
           handleChange={handleChange}
         >
-          <ScrollBox maxHeight="80%">
-            <List
-              sx={{
-                width: '100%',
-              }}
-            >
-              {listUsersByCompanyId.length > 0 ? (
-                listUsersByCompanyId.map((user) => (
-                  <UserListItem
-                    key={user.userId}
-                    user={user}
-                    inModal={true}
-                    addUserToAnotherCompany={async () =>
-                      handlePopUpOpen('add-company', user.userId)
-                    }
-                    statusColor={user.status === 'ACTIVE' ? 'success' : 'error'}
-                  />
-                ))
-              ) : (
-                <EmptyListResponse
-                  message="Sem Usuários"
-                  icon={
-                    <PersonOffIcon
-                      sx={{
-                        fontSize: theme.spacing(10),
-                      }}
-                    />
+          <List
+            sx={{
+              width: '100%',
+            }}
+          >
+            {listUsersByCompanyId.length > 0 ? (
+              listUsersByCompanyId.map((user) => (
+                <UserListItem
+                  key={user.userId}
+                  user={user}
+                  inModal={true}
+                  addUserToAnotherCompany={async () =>
+                    handlePopUpOpen('add-company', user.userId)
                   }
+                  changeUserType={async () =>
+                    handlePopUpOpen('change-type', user.userId)
+                  }
+                  statusColor={user.status === 'ACTIVE' ? 'success' : 'error'}
                 />
-              )}
-            </List>
-          </ScrollBox>
+              ))
+            ) : (
+              <EmptyListResponse
+                message="Sem Usuários"
+                icon={
+                  <PersonOffIcon
+                    sx={{
+                      fontSize: theme.spacing(10),
+                    }}
+                  />
+                }
+              />
+            )}
+          </List>
         </ContainerListModal>
       </SimpleFormModal>
     </>
