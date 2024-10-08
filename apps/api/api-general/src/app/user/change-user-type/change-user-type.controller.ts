@@ -1,12 +1,18 @@
-import { Body, Controller, Param, Put, Query } from '@nestjs/common';
+import { Body, Controller, Param, Put, Query, UsePipes } from '@nestjs/common';
 import { ChangeUserTypeService } from './change-user-type.service';
-import { ErrorMessageResult, userTypes } from '@workspaces/domain';
+import {
+  changeUserSchema,
+  ErrorMessageResult,
+  userTypes,
+} from '@workspaces/domain';
+import { ZodValidationPipe } from '../../pipes/zod-validation-pipe';
 
 @Controller('change-user-type')
 export class ChangeUserTypeController {
   constructor(private readonly changeUserTypeService: ChangeUserTypeService) {}
 
   @Put(':userId')
+  @UsePipes(new ZodValidationPipe(changeUserSchema))
   async change(
     @Query('loggedUserId') loggedUserId: string,
     @Param('userId') userId: string,
