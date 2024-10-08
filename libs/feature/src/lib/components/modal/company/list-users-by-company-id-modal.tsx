@@ -34,6 +34,7 @@ export const ListUsersByCompanyIdModal: FC<EditCompanyModalProps> = ({
     edit: false,
     'add-company': false,
     'list-company': false,
+    'change-type': false,
   });
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
   const [selectedId, setSelectedId] = useState<string>('');
