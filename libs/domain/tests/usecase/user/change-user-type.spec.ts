@@ -6,6 +6,7 @@ import {
   EntityNotEmpty,
   EntityNotExists,
   EntityNotPermissions,
+  EntityNotType,
   FindUserByIdRepository,
   PermissionsUserResponseDto,
   UserList,
@@ -73,6 +74,16 @@ describe('ChangeUserType', () => {
     expect(result.isLeft()).toBe(true);
     expect(result.isRight()).toBe(false);
     expect(result.value).toBeInstanceOf(EntityNotEmpty);
+  });
+
+  it('should return EntityNotEmpty when a passed incorrect User Type', async () => {
+    const { sut, changeUserTypeDto } = makeSut();
+    changeUserTypeDto.type = 'ADMIN1' as userTypes;
+    const result = await sut.execute(changeUserTypeDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
+    expect(result.value).toBeInstanceOf(EntityNotType);
   });
 
   it('should return EntityNotExists when a exist Logged User in system', async () => {
