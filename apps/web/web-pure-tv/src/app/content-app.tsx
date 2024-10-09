@@ -30,6 +30,10 @@ export const ContentApp = () => {
     }
   }, [location, navigate]);
 
+  const editProfile = () => {
+    navigate('user-profile');
+  };
+
   return (
     <>
       {!auth.isAuthenticated && <AuthRouters />}
@@ -38,7 +42,10 @@ export const ContentApp = () => {
           <SimpleLoading open={isLoading} />
           <DrawerProvider>
             <FileModalProvider>
-              <MiniDrawer image="https://github.com/ErickCelestino.png">
+              <MiniDrawer
+                editProfile={editProfile}
+                image="https://github.com/ErickCelestino.png"
+              >
                 <AppRouters />
                 <FileModalContainer />
               </MiniDrawer>

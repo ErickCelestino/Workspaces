@@ -13,9 +13,10 @@ import {
   Icon,
   IconButton,
 } from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
 import MuiDrawer from '@mui/material/Drawer';
 import { DrawerConfiguration } from './config';
-import { useLoadUserPureTvData, useSnackbarAlert } from '../../hooks';
+import { useSnackbarAlert } from '../../hooks';
 
 const drawerWidth = 200;
 
@@ -60,6 +61,7 @@ const Drawer = styled(MuiDrawer)(({ theme, open }) => ({
 interface MiniDrawerProps {
   children: ReactNode;
   image: string;
+  editProfile: () => void;
   logoutTitle?: string;
   themeTitle?: string;
 }
@@ -67,6 +69,7 @@ interface MiniDrawerProps {
 export const MiniDrawer: FC<MiniDrawerProps> = ({
   children,
   image,
+  editProfile,
   logoutTitle = 'Fazer Logout',
   themeTitle = 'Alterar Tema',
 }) => {
@@ -112,6 +115,9 @@ export const MiniDrawer: FC<MiniDrawerProps> = ({
                   sx={{ height: theme.spacing(12), width: theme.spacing(12) }}
                   src={image}
                 />
+                <IconButton onClick={editProfile}>
+                  <EditIcon />
+                </IconButton>
               </Box>
             )}
             <Divider />

@@ -6,6 +6,7 @@ import {
   ListItemText,
   Icon,
   Collapse,
+  Box,
 } from '@mui/material';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
@@ -26,13 +27,11 @@ export const DrawerListItem = ({
 }: DrawerListItemProps) => {
   const { isDrawerOpen, toggleDrawerOpen } = useDrawerContext();
   const [buttonsDrawer, setButtonsDrawer] = useState<DrawerOption[]>([]);
-  const [openSubItems, setOpenSubItems] = useState<{ [key: string]: boolean }>(
-    {}
-  );
+  const [openSubItems, setOpenSubItems] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     if (!isDrawerOpen) {
-      let listItem: DrawerOption[] = [];
+      const listItem: DrawerOption[] = [];
       Object.keys(items).forEach((topic) => {
         items[topic].forEach(({ label, icon, path }) => {
           listItem.push({
@@ -63,7 +62,7 @@ export const DrawerListItem = ({
   };
 
   return (
-    <>
+    <Box>
       {isDrawerOpen
         ? Object.keys(items).map((topic) => (
             <div key={topic}>
@@ -173,6 +172,6 @@ export const DrawerListItem = ({
               </ListItemButton>
             </ListItem>
           ))}
-    </>
+    </Box>
   );
 };

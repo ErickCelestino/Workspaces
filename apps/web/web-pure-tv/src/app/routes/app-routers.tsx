@@ -14,6 +14,7 @@ import {
   useLoadUserPureTvData,
   useLoading,
   ListAllCompaniesContainer,
+  UserProfileContainer,
 } from '@workspaces/feature';
 import { useEffect, useRef } from 'react';
 
@@ -52,6 +53,7 @@ export const AppRouters = () => {
         path="unauthorized-access"
         element={<UnauthorizedUserContainer />}
       />
+      <Route path="/user-profile" element={<UserProfileContainer />} />
 
       <Route path="*" element={<Navigate to="/" />} />
     </Routes>

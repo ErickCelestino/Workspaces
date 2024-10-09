@@ -7,6 +7,7 @@ export async function EditProfileRequest(input: EditProfileDto) {
     {
       name: input.body.name,
       birthDate: input.body.birthDate,
+      nickname: input.body.nickname,
     },
     {
       params: {
