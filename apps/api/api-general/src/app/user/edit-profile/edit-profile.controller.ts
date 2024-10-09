@@ -1,12 +1,18 @@
-import { Body, Controller, Param, Put, Query } from '@nestjs/common';
+import { Body, Controller, Param, Put, Query, UsePipes } from '@nestjs/common';
 import { EditProfileService } from './edit-profile.service';
-import { BodyUserDto, ErrorMessageResult } from '@workspaces/domain';
+import {
+  BodyUserDto,
+  editProfileSchema,
+  ErrorMessageResult,
+} from '@workspaces/domain';
+import { ZodValidationPipe } from '../../pipes/zod-validation-pipe';
 
 @Controller('edit-profile')
 export class EditProfileController {
   constructor(private readonly editProfileService: EditProfileService) {}
 
   @Put(':userId')
+  @UsePipes(new ZodValidationPipe(editProfileSchema))
   async edit(
     @Param('userId') userId: string,
     @Query('loggedUserId') loggedUserId: string,
