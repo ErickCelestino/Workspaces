@@ -22,7 +22,8 @@ export class EditProfile
     input: EditProfileDto
   ): Promise<Either<EntityNotEmpty, string>> {
     const {
-      body: { id, name },
+      body: { name },
+      userId,
       loggedUserId,
     } = input;
 
@@ -30,7 +31,7 @@ export class EditProfile
       return left(new EntityNotEmpty('Name'));
     }
 
-    if (loggedUserId !== id) {
+    if (loggedUserId !== userId) {
       return left(new EntityNotValid('User'));
     }
 
@@ -44,7 +45,7 @@ export class EditProfile
     }
 
     const UserValidation = await ValidationUserId(
-      id,
+      userId,
       this.findUserByIdRepository
     );
 

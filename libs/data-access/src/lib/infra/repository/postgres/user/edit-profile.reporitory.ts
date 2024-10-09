@@ -6,12 +6,13 @@ export class EditProfileRepositoryImpl implements EditProfileRepository {
   constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
   async edit(input: EditProfileDto): Promise<string> {
     const {
-      body: { id, name, birthDate },
+      body: { name, birthDate },
+      userId,
     } = input;
 
     const editedProfile = await this.prismaService.user.update({
       where: {
-        user_id: id,
+        user_id: userId,
       },
       data: {
         name,

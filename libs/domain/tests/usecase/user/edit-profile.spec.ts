@@ -28,9 +28,9 @@ const makeSut = (): SutTypes => {
 
   const editProfileDto: EditProfileDto = {
     body: {
-      id: userMock.userId,
       name: userMock.name,
     },
+    userId: userMock.userId,
     loggedUserId: userMock.userId,
   };
 
@@ -67,7 +67,7 @@ describe('EditProfile', () => {
 
   it('should return EntityNotValid when a passed logged user id being different from user ID', async () => {
     const { sut, editProfileDto } = makeSut();
-    editProfileDto.body.id = '1';
+    editProfileDto.userId = '1';
     editProfileDto.loggedUserId = '2';
     const result = await sut.execute(editProfileDto);
 

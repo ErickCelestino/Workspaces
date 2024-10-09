@@ -13,6 +13,7 @@ import {
   AddUserToAnotherCompanyModule,
   ListCompaniesByUserIdModule,
   ChangeUserTypeModule,
+  EditProfileModule,
 } from './user';
 import {
   CreateCompanyModule,
@@ -84,6 +85,7 @@ import {
     RemoveUserAccessToTheCompanyModule,
     ListCompaniesByUserIdModule,
     ChangeUserTypeModule,
+    EditProfileModule,
   ],
   controllers: [AppController],
   providers: [AppService],

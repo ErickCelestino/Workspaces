@@ -7,3 +7,4 @@ export * from './find-user-by-email/find-user-by-email.module';
 export * from './add-user-to-another-company/add-user-to-another-company.module';
 export * from './list-companies-by-user-id/list-companies-by-user-id.module';
 export * from './change-user-type/change-user-type.module';
+export * from './edit-profile/edit-profile.module';
