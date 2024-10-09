@@ -60,6 +60,7 @@ model User {
   created_at DateTime @default(now())
   updated_at DateTime @default(now())
   deleted_at DateTime?
+  profile_url String?
 
   user_x_departament User_X_Departament[]
   user_x_summons User_X_Summons[]
