@@ -111,13 +111,28 @@ export const MiniDrawer: FC<MiniDrawerProps> = ({
                 alignItems="center"
                 justifyContent="center"
               >
-                <Avatar
-                  sx={{ height: theme.spacing(12), width: theme.spacing(12) }}
-                  src={image}
-                />
-                <IconButton onClick={editProfile}>
-                  <EditIcon />
-                </IconButton>
+                <Box
+                  sx={{
+                    position: 'relative',
+                    display: 'inline-block',
+                  }}
+                >
+                  <Avatar
+                    sx={{ height: theme.spacing(12), width: theme.spacing(12) }}
+                    src={image}
+                  />
+                  <IconButton
+                    onClick={editProfile}
+                    sx={{
+                      position: 'absolute',
+                      bottom: -10,
+                      right: -15,
+                      boxShadow: 1,
+                    }}
+                  >
+                    <EditIcon />
+                  </IconButton>
+                </Box>
               </Box>
             )}
             <Divider />
