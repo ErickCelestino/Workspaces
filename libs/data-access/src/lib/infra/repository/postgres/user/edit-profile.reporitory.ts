@@ -6,7 +6,7 @@ export class EditProfileRepositoryImpl implements EditProfileRepository {
   constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
   async edit(input: EditProfileDto): Promise<string> {
     const {
-      body: { name, birthDate },
+      body: { name, birthDate, nickname },
       userId,
     } = input;
 
@@ -19,6 +19,7 @@ export class EditProfileRepositoryImpl implements EditProfileRepository {
         ...(Object.keys({ birthDate }).length > 1
           ? { birth_date: birthDate }
           : {}),
+        nick_name: nickname,
         updated_at: new Date(),
       },
     });

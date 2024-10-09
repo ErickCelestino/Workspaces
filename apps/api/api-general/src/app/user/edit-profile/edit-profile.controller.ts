@@ -16,12 +16,17 @@ export class EditProfileController {
   async edit(
     @Param('userId') userId: string,
     @Query('loggedUserId') loggedUserId: string,
-    @Body() body: Omit<BodyUserDto, 'status' | 'type' | 'id'>
+    @Body()
+    body: Omit<BodyUserDto, 'status' | 'type' | 'id'> & {
+      nickname: string;
+    }
   ) {
     const result = await this.editProfileService.edit({
       body: body?.name
         ? body
-        : ({} as Omit<BodyUserDto, 'status' | 'type' | 'id'>),
+        : ({} as Omit<BodyUserDto, 'status' | 'type' | 'id'> & {
+            nickname: string;
+          }),
       loggedUserId,
       userId,
     });

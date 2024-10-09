@@ -22,13 +22,17 @@ export class EditProfile
     input: EditProfileDto
   ): Promise<Either<EntityNotEmpty, string>> {
     const {
-      body: { name },
+      body: { name, nickname },
       userId,
       loggedUserId,
     } = input;
 
     if (Object.keys(name).length < 1) {
       return left(new EntityNotEmpty('Name'));
+    }
+
+    if (Object.keys(nickname).length < 1) {
+      return left(new EntityNotEmpty('Nickname'));
     }
 
     if (loggedUserId !== userId) {

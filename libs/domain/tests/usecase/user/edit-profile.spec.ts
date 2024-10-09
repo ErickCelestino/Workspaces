@@ -29,6 +29,7 @@ const makeSut = (): SutTypes => {
   const editProfileDto: EditProfileDto = {
     body: {
       name: userMock.name,
+      nickname: 'any_nickname',
     },
     userId: userMock.userId,
     loggedUserId: userMock.userId,
@@ -55,9 +56,19 @@ describe('EditProfile', () => {
     expect(result.value).toStrictEqual(userMock.userId);
   });
 
-  it('should return EntityNotEmpty when a passed empty logged user id', async () => {
+  it('should return EntityNotEmpty when a passed empty name', async () => {
     const { sut, editProfileDto } = makeSut();
     editProfileDto.body.name = '';
+    const result = await sut.execute(editProfileDto);
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.isRight()).toBe(false);
+    expect(result.value).toBeInstanceOf(EntityNotEmpty);
+  });
+
+  it('should return EntityNotEmpty when a passed empty nickname', async () => {
+    const { sut, editProfileDto } = makeSut();
+    editProfileDto.body.nickname = '';
     const result = await sut.execute(editProfileDto);
 
     expect(result.isLeft()).toBe(true);
