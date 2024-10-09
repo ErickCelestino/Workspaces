@@ -6,7 +6,7 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
-import { EditUserDto, ErrorResponse } from '@workspaces/domain';
+import { BodyUserDto, EditUserDto, ErrorResponse } from '@workspaces/domain';
 import { FC, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { EditUserSchema, EntityNotExist } from '../../../shared';
@@ -18,6 +18,7 @@ import {
 import { FormButton } from '../form-button.component';
 import axios, { AxiosError } from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { useLoggedUser } from '../../../contexts';
 
 interface FormEditUserProps {
   nameLabel: string;
@@ -30,6 +31,7 @@ export const FormEditUser: FC<FormEditUserProps> = ({
   birthDateLabel,
   showAlert,
 }) => {
+  const { loggedUser } = useLoggedUser();
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [status, setStatus] = useState('');
@@ -43,7 +45,7 @@ export const FormEditUser: FC<FormEditUserProps> = ({
     register,
     formState: { errors },
     reset,
-  } = useForm<EditUserDto>({
+  } = useForm<BodyUserDto>({
     mode: 'all',
     criteriaMode: 'all',
     resolver: zodResolver(EditUserSchema),
@@ -75,7 +77,7 @@ export const FormEditUser: FC<FormEditUserProps> = ({
   const editUser = async (request: EditUserDto) => {
     try {
       const getUserId = getItemLocalStorage('eu');
-      request.id = getUserId;
+      request.body.id = getUserId;
       const result = await EditUserRequest(request);
       return result;
     } catch (error) {
@@ -84,7 +86,7 @@ export const FormEditUser: FC<FormEditUserProps> = ({
       if (axios.isAxiosError(error)) {
         const axiosError = error as AxiosError<ErrorResponse>;
         if (axiosError.response?.data.error?.name === 'EntityNotExists') {
-          const message = EntityNotExist(request.id, 'PT-BR');
+          const message = EntityNotExist(request.body.id, 'PT-BR');
           showAlert?.(message);
         }
       }
@@ -92,11 +94,14 @@ export const FormEditUser: FC<FormEditUserProps> = ({
     }
   };
 
-  const handleUserData = async (data: EditUserDto) => {
+  const handleUserData = async (data: BodyUserDto) => {
     setSuccess(false);
     setLoading(true);
     console.log(data);
-    await editUser(data);
+    await editUser({
+      body: data,
+      loggedUserId: loggedUser?.id ?? '',
+    });
     setSuccess(true);
     setLoading(false);
     navigate('/list-user');
