@@ -10,3 +10,5 @@ export * from './find-user-by-email.dto';
 export * from './find-user-by-id.dto';
 export * from './list-companies-by-user-id.dto';
 export * from './list-user.dto';
+export * from './register-profile-image.dto';
+export * from './upload-profile-image.dto';
