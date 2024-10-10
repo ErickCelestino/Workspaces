@@ -9,14 +9,13 @@ import {
   CssBaseline,
   Divider,
   useMediaQuery,
-  Avatar,
   Icon,
   IconButton,
 } from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
 import MuiDrawer from '@mui/material/Drawer';
 import { DrawerConfiguration } from './config';
 import { useSnackbarAlert } from '../../hooks';
+import { UserProfileImage } from '../image';
 
 const drawerWidth = 200;
 
@@ -103,37 +102,7 @@ export const MiniDrawer: FC<MiniDrawerProps> = ({
               handleDrawerClose={toggleDrawerOpen}
             />
             {isDrawerOpen && (
-              <Box
-                width="100%"
-                marginTop={-5}
-                height={theme.spacing(15)}
-                display="flex"
-                alignItems="center"
-                justifyContent="center"
-              >
-                <Box
-                  sx={{
-                    position: 'relative',
-                    display: 'inline-block',
-                  }}
-                >
-                  <Avatar
-                    sx={{ height: theme.spacing(12), width: theme.spacing(12) }}
-                    src={image}
-                  />
-                  <IconButton
-                    onClick={editProfile}
-                    sx={{
-                      position: 'absolute',
-                      bottom: -10,
-                      right: -15,
-                      boxShadow: 1,
-                    }}
-                  >
-                    <EditIcon />
-                  </IconButton>
-                </Box>
-              </Box>
+              <UserProfileImage editProfile={editProfile} image={image} />
             )}
             <Divider />
             <List component="nav">

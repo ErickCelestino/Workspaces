@@ -5,6 +5,7 @@ export * from './combo-box';
 export * from './drawer';
 export * from './file';
 export * from './form';
+export * from './image';
 export * from './list';
 export * from './loading';
 export * from './menu';
