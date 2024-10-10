@@ -8,3 +8,4 @@ export * from './add-user-to-another-company/add-user-to-another-company.module'
 export * from './list-companies-by-user-id/list-companies-by-user-id.module';
 export * from './change-user-type/change-user-type.module';
 export * from './edit-profile/edit-profile.module';
+export * from './upload-profile-image/upload-profile-image.module';

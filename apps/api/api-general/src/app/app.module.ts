@@ -14,6 +14,7 @@ import {
   ListCompaniesByUserIdModule,
   ChangeUserTypeModule,
   EditProfileModule,
+  UploadProfileImageModule,
 } from './user';
 import {
   CreateCompanyModule,
@@ -86,6 +87,7 @@ import {
     ListCompaniesByUserIdModule,
     ChangeUserTypeModule,
     EditProfileModule,
+    UploadProfileImageModule,
   ],
   controllers: [AppController],
   providers: [AppService],
