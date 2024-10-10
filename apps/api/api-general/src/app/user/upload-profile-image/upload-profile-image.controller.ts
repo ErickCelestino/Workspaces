@@ -1,6 +1,16 @@
-import { Controller, Post, Query, UploadedFiles } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Query,
+  UploadedFiles,
+  UsePipes,
+} from '@nestjs/common';
 import { UploadProfileImageService } from './upload-profile-image.service';
-import { ErrorMessageResult } from '@workspaces/domain';
+import {
+  ErrorMessageResult,
+  uploadProfileImageSchema,
+} from '@workspaces/domain';
+import { ZodValidationPipe } from '../../pipes/zod-validation-pipe';
 
 @Controller('upload-profile-image')
 export class UploadProfileImageController {
@@ -9,6 +19,7 @@ export class UploadProfileImageController {
   ) {}
 
   @Post()
+  @UsePipes(new ZodValidationPipe(uploadProfileImageSchema))
   async upload(
     @Query('loggedUserId') loggedUserId: string,
     @UploadedFiles() file: Express.Multer.File
