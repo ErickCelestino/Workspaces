@@ -11,6 +11,7 @@ export const listUserMock: UserList[] = [
     email: faker.internet.email(),
     status: 'ACTIVE',
     type: 'ADMIN',
+    userImage: faker.internet.url(),
   },
   {
     userId: faker.string.uuid(),
@@ -20,5 +21,6 @@ export const listUserMock: UserList[] = [
     email: faker.internet.email(),
     status: 'ACTIVE',
     type: 'DEFAULT',
+    userImage: faker.internet.url(),
   },
 ];

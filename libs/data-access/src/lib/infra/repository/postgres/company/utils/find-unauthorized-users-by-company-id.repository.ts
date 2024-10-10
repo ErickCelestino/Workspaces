@@ -3,6 +3,7 @@ import {
   FindUnauthorizedUsersByCompanyIdDto,
   FindUnauthorizedUsersByCompanyIdRepository,
   UnauthorizedUsersByCompanyIdResponseDto,
+  UserList,
 } from '@workspaces/domain';
 import { PrismaService } from 'nestjs-prisma';
 import { Status } from '@prisma/client';
@@ -35,6 +36,7 @@ export class FindUnauthorizedUsersByCompanyIdRepositoryImpl
               birth_date: true,
               status: true,
               type: true,
+              profile_url: true,
               auth: {
                 select: {
                   auth_id: false,
@@ -51,7 +53,7 @@ export class FindUnauthorizedUsersByCompanyIdRepositoryImpl
       }),
     ]);
 
-    const mappedUsers = users.map((user) => {
+    const mappedUsers: UserList[] = users.map((user) => {
       return {
         name: user.user.name ?? '',
         nickname: user.user.nick_name ?? '',
@@ -59,7 +61,8 @@ export class FindUnauthorizedUsersByCompanyIdRepositoryImpl
         userId: user.user_id ?? '',
         email: user.user.auth[0]?.email ?? '',
         status: user.user?.status ?? '',
-        type: user.user.type ?? '',
+        type: user.user?.type ?? '',
+        userImage: user.user?.profile_url ?? '',
       };
     });
 

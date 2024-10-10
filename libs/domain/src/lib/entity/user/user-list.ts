@@ -6,4 +6,5 @@ export interface UserList {
   email: string;
   status: string;
   type: string;
+  userImage: string;
 }

@@ -3,6 +3,7 @@ import {
   ListUsersByCompanyIdDto,
   ListUsersByCompanyIdRepository,
   ListUsersByCompanyIdResponseDto,
+  UserList,
 } from '@workspaces/domain';
 import { PrismaService } from 'nestjs-prisma';
 
@@ -65,6 +66,7 @@ export class ListUsersByCompanyIdRepositoryImpl
                 birth_date: true,
                 status: true,
                 type: true,
+                profile_url: true,
                 auth: {
                   select: {
                     auth_id: false,
@@ -96,7 +98,7 @@ export class ListUsersByCompanyIdRepositoryImpl
 
     const totalPages = Math.ceil(filteredTotal / take);
 
-    const mappedUsers = users.map((user) => {
+    const mappedUsers: UserList[] = users.map((user) => {
       return {
         name: user.user.name ?? '',
         nickname: user.user.nick_name ?? '',
@@ -105,6 +107,7 @@ export class ListUsersByCompanyIdRepositoryImpl
         email: user.user.auth[0]?.email ?? '',
         status: user.user?.status ?? '',
         type: user.user.type ?? '',
+        userImage: user.user.profile_url ?? '',
       };
     });
 
