@@ -1,4 +1,5 @@
 export * from './add-user-to-another-company.dto';
+export * from './body-profile.dto';
 export * from './body-user.dto';
 export * from './change-user-type.dto';
 export * from './create-user.dto';

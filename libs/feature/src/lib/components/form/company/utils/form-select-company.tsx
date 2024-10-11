@@ -5,9 +5,9 @@ import { FC, useState } from 'react';
 import { useListCompanyData } from '../../../../hooks';
 import { Box, Button, IconButton, useTheme } from '@mui/material';
 import { SearchComboBox } from '../../../combo-box';
-import { SelectCompanyRequest } from 'libs/feature/src/lib/services';
+import { SelectCompanyRequest } from '../../../../services';
 import axios, { AxiosError } from 'axios';
-import { ValidationsError } from 'libs/feature/src/lib/shared';
+import { ValidationsError } from '../../../../shared';
 
 interface FormSelectCompanyProps {
   backButton: () => void;

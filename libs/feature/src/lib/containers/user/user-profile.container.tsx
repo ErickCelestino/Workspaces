@@ -7,7 +7,11 @@ import {
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import StoreIcon from '@mui/icons-material/Store';
 import { FC, useCallback, useEffect, useRef, useState } from 'react';
-import { ToolbarPureTV, UserProfileImage } from '../../components';
+import {
+  FormEditProfile,
+  ToolbarPureTV,
+  UserProfileImage,
+} from '../../components';
 import { LayoutBase } from '../../layout';
 import { useLoggedUser } from '../../contexts';
 import { useFindUserByIdData, useSnackbarAlert } from '../../hooks';
@@ -57,11 +61,18 @@ export const UserProfileContainer: FC<UserProfileContainerProps> = ({
   const renderContent = () => {
     switch (selectedTab) {
       case 0:
-        return <div>Home Content</div>;
+        return (
+          <FormEditProfile
+            showAlert={showAlert}
+            userProfileData={{
+              name: userById.name,
+              nickname: userById.nickname,
+              birthDate: userById.birthDate ?? undefined,
+            }}
+          />
+        );
       case 1:
         return <div>Search Content</div>;
-      case 2:
-        return <div>Profile Content</div>;
       default:
         return null;
     }

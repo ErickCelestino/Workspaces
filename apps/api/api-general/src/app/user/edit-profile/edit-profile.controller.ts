@@ -1,6 +1,7 @@
 import { Body, Controller, Param, Put, Query, UsePipes } from '@nestjs/common';
 import { EditProfileService } from './edit-profile.service';
 import {
+  BodyProfileBodyDto,
   BodyUserDto,
   editProfileSchema,
   ErrorMessageResult,
@@ -17,9 +18,7 @@ export class EditProfileController {
     @Param('userId') userId: string,
     @Query('loggedUserId') loggedUserId: string,
     @Body()
-    body: Omit<BodyUserDto, 'status' | 'type' | 'id'> & {
-      nickname: string;
-    }
+    body: BodyProfileBodyDto
   ) {
     const result = await this.editProfileService.edit({
       body: body?.name
