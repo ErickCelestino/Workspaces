@@ -47,22 +47,6 @@ export class MoveFilesToAnotherPlaylist
   > {
     const { filesId, loggedUserId, newPlaylistId, oldPlaylistId } = input;
 
-    if (Object.keys(filesId).length < 1) {
-      return left(new EntityNotEmpty('File ID'));
-    }
-
-    if (Object.keys(loggedUserId).length < 1) {
-      return left(new EntityNotEmpty('User ID'));
-    }
-
-    if (Object.keys(newPlaylistId).length < 1) {
-      return left(new EntityNotEmpty('New Playlist ID'));
-    }
-
-    if (Object.keys(oldPlaylistId).length < 1) {
-      return left(new EntityNotEmpty('Old Playlist ID'));
-    }
-
     const userValidation = await ValidationUserId(
       loggedUserId,
       this.findUserByIdRepository
@@ -91,10 +75,6 @@ export class MoveFilesToAnotherPlaylist
     }
 
     for (const file of filesId) {
-      if (Object.keys(file).length < 1) {
-        return left(new EntityNotEmpty('File ID'));
-      }
-
       const contentFileValidation = await ValidationContentFileId(
         file,
         this.findContentFileByIdRepository
@@ -111,7 +91,7 @@ export class MoveFilesToAnotherPlaylist
         });
 
       if (Object.keys(filteredOldPlaylist).length < 1) {
-        return left(new EntityNotAssociate(file));
+        return left(new EntityNotAssociate(file, 'Playlist'));
       }
 
       const filterednewPlaylist =

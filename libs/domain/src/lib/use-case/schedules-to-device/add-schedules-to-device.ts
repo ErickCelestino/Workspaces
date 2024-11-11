@@ -39,13 +39,6 @@ export class AddSchedulesToDevice
     input: AddSchedulesToDeviceDto
   ): Promise<Either<EntityNotEmpty, string[]>> {
     const { idDevice, loggedUserId, schedulesIds } = input;
-    if (Object.keys(loggedUserId).length < 1) {
-      return left(new EntityNotEmpty('loggedUserId'));
-    }
-
-    if (Object.keys(idDevice).length < 1) {
-      return left(new EntityNotEmpty('Device ID'));
-    }
 
     if (schedulesIds.length < 1) {
       return left(new EntityNotEmpty('Schedules'));
@@ -70,10 +63,6 @@ export class AddSchedulesToDevice
     }
 
     for (const scheduleId of schedulesIds) {
-      if (Object.keys(scheduleId).length < 1) {
-        return left(new EntityNotEmpty('Scheduling ID'));
-      }
-
       const schedulingValidation = await ValidationSchedulingId(
         scheduleId,
         this.findSchedulingByIdRepository

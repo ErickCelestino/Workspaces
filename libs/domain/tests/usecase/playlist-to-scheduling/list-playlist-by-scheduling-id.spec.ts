@@ -1,5 +1,4 @@
 import {
-  EntityNotEmpty,
   EntityNotExists,
   FindSchedulingByIdRepository,
   FindUserByIdRepository,
@@ -64,26 +63,6 @@ describe('ListPlaylistBySchedulingId', () => {
     expect(result.isRight()).toBe(true);
     expect(result.isLeft()).toBe(false);
     expect(result.value).toStrictEqual(ListPlaylistResponseMock);
-  });
-
-  it('should return EntityNotEmpty when pass incorrect User ID', async () => {
-    const { sut, listPlaylistBySchedulingIdDto } = makeSut();
-    listPlaylistBySchedulingIdDto.loggedUserId = '';
-    const result = await sut.execute(listPlaylistBySchedulingIdDto);
-
-    expect(result.isRight()).toBe(false);
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
-  it('should return EntityNotEmpty when pass Scheduling ID', async () => {
-    const { sut, listPlaylistBySchedulingIdDto } = makeSut();
-    listPlaylistBySchedulingIdDto.id = '';
-    const result = await sut.execute(listPlaylistBySchedulingIdDto);
-
-    expect(result.isRight()).toBe(false);
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
   });
 
   it('should return EntityNotExists when a pass incorrect Logged User ID', async () => {

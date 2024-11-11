@@ -1,12 +1,7 @@
 import { Inject } from '@nestjs/common';
 import { UseCase } from '../../base/use-case';
 import { DeleteSchedulesToDeviceDto } from '../../dto';
-import {
-  EntityAlreadyExists,
-  EntityNotDeleted,
-  EntityNotEmpty,
-  EntityNotExists,
-} from '../../error';
+import { EntityNotDeleted, EntityNotEmpty, EntityNotExists } from '../../error';
 import { Either, left, right } from '../../shared/either';
 import {
   DeleteSchedulingToDeviceRepository,
@@ -43,14 +38,6 @@ export class DeleteSchedulesToDevice
   ): Promise<Either<EntityNotEmpty, string[]>> {
     const { idDevice, loggedUserId, schedulesIds } = input;
 
-    if (Object.keys(loggedUserId).length < 1) {
-      return left(new EntityNotEmpty('loggedUserId'));
-    }
-
-    if (Object.keys(idDevice).length < 1) {
-      return left(new EntityNotEmpty('Device ID'));
-    }
-
     if (schedulesIds.length < 1) {
       return left(new EntityNotEmpty('Schedules'));
     }
@@ -75,10 +62,6 @@ export class DeleteSchedulesToDevice
     const ids = [];
 
     for (const schedulingId of schedulesIds) {
-      if (Object.keys(schedulingId).length < 1) {
-        return left(new EntityNotEmpty('Scheduling ID'));
-      }
-
       const schedulingValidation = await ValidationSchedulingId(
         schedulingId,
         this.findSchedulingByIdRepository

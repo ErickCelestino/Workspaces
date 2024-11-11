@@ -63,16 +63,6 @@ describe('DeleteUserById', () => {
     expect(result.value).toBe(userMock.userId);
   });
 
-  it('should return EntityNotEmpty when a passed empty user id', async () => {
-    const { sut, deleteUserByIdDto } = makeSut();
-    deleteUserByIdDto.id = '';
-    const result = await sut.execute(deleteUserByIdDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.isRight()).toBe(false);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
   it('should return EntityNotEmpty when a passed empty logged user id', async () => {
     const { sut, deleteUserByIdDto } = makeSut();
     deleteUserByIdDto.loggedUser = '';

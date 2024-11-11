@@ -4,7 +4,6 @@ import {
   DeletePlaylistFiles,
   DeletePlaylistFilesDto,
   EntityNotAssociate,
-  EntityNotEmpty,
   EntityNotExists,
   FindContentFileByIdRepository,
   FindFileInFileToPlaylistRepository,
@@ -75,46 +74,6 @@ describe('DeletePlaylistFiles', () => {
     expect(result.isRight()).toBe(true);
     expect(result.isLeft()).toBe(false);
     expect(result.value).toBeUndefined();
-  });
-
-  it('should return EntityNotEmpty when a pass incorrect logged id', async () => {
-    const { sut, deletePlaylistFilesDto } = makeSut();
-    deletePlaylistFilesDto.loggedUserId = '';
-    const result = await sut.execute(deletePlaylistFilesDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.isRight()).toBe(false);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
-  it('should return EntityNotEmpty when a pass incorrect playlist id', async () => {
-    const { sut, deletePlaylistFilesDto } = makeSut();
-    deletePlaylistFilesDto.playlistId = '';
-    const result = await sut.execute(deletePlaylistFilesDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.isRight()).toBe(false);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
-  it('should return EntityNotEmpty when a pass incorrect file id list', async () => {
-    const { sut, deletePlaylistFilesDto } = makeSut();
-    deletePlaylistFilesDto.filesId = [];
-    const result = await sut.execute(deletePlaylistFilesDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.isRight()).toBe(false);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
-  it('should return EntityNotEmpty when a pass incorrect file id', async () => {
-    const { sut, deletePlaylistFilesDto } = makeSut();
-    deletePlaylistFilesDto.filesId[0] = '';
-    const result = await sut.execute(deletePlaylistFilesDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.isRight()).toBe(false);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
   });
 
   it('should return EntityNotCreated if there is no file to playlist created in the database', async () => {

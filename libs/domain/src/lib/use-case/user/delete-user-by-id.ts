@@ -36,12 +36,7 @@ export class DeleteUserById
     Either<EntityNotEmpty | EntityNotExists | EntityNotPermissions, string>
   > {
     const { id, loggedUser, description } = input;
-    const idString = 'id';
     const loggedUserString = 'Usuário';
-
-    if (Object.keys(id).length < 1) {
-      return left(new EntityNotEmpty(idString));
-    }
 
     if (Object.keys(loggedUser).length < 1) {
       return left(new EntityNotEmpty(loggedUserString));

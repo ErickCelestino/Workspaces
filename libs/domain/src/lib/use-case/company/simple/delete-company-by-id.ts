@@ -26,14 +26,6 @@ export class DeleteCompanyById
   ): Promise<Either<EntityNotEmpty, string>> {
     const { companyId, loggedUserId, description } = input;
 
-    if (Object.keys(loggedUserId).length < 1) {
-      return left(new EntityNotEmpty('Logged User ID'));
-    }
-
-    if (Object.keys(companyId).length < 1) {
-      return left(new EntityNotEmpty('Company ID'));
-    }
-
     if (Object.keys(description).length < 1) {
       return left(new EntityNotEmpty('Description'));
     }

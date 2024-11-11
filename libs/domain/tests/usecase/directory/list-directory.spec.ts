@@ -59,24 +59,6 @@ describe('ListDirectory', () => {
     expect(result.isRight()).toBe(true);
   });
 
-  it('should return EntityNotEmpty when a pass incorrect Logged User ID', async () => {
-    const { listDirectoryDto, sut } = makeSut();
-    listDirectoryDto.loggedUserId = '';
-    const result = await sut.execute(listDirectoryDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.isRight()).toBe(false);
-  });
-
-  it('should return EntityNotEmpty when a pass incorrect Company ID', async () => {
-    const { listDirectoryDto, sut } = makeSut();
-    listDirectoryDto.companyId = '';
-    const result = await sut.execute(listDirectoryDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.isRight()).toBe(false);
-  });
-
   it('should return EntityNotExists when a not exist User in system', async () => {
     const { listDirectoryDto, sut } = makeSut();
     jest

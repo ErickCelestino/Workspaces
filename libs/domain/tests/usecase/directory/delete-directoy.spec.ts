@@ -4,7 +4,6 @@ import {
   DeleteDirectoryRepository,
   Directory,
   EntityIsNotEmpty,
-  EntityNotEmpty,
   EntityNotExists,
   FindContentFilesByDirectoryIdRepository,
   FindDirectoryByIdRepository,
@@ -66,26 +65,6 @@ describe('DeleteDirectory', () => {
     expect(result.isRight()).toBe(true);
     expect(result.isLeft()).toBe(false);
     expect(result.value).toBe(undefined);
-  });
-
-  it('should return EntityNotEmpty when pass incorrect id', async () => {
-    const { sut, deleteDirectoryDto } = makeSut();
-    deleteDirectoryDto.id = '';
-    const result = await sut.execute(deleteDirectoryDto);
-
-    expect(result.isRight()).toBe(false);
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
-  it('should return EntityNotEmpty when pass incorrect Logged User ID', async () => {
-    const { sut, deleteDirectoryDto } = makeSut();
-    deleteDirectoryDto.loggedUserId = '';
-    const result = await sut.execute(deleteDirectoryDto);
-
-    expect(result.isRight()).toBe(false);
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
   });
 
   it('should return EntityNotExists when a exist User in system', async () => {

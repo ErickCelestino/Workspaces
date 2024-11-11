@@ -1,7 +1,6 @@
 import {
   ContentFile,
   Directory,
-  EntityNotEmpty,
   EntityNotExists,
   FindContentFileByIdRepository,
   FindDirectoryByIdRepository,
@@ -64,36 +63,6 @@ describe('MoveFileToDirectory', () => {
     expect(result.isLeft()).toBe(false);
     expect(result.isRight()).toBe(true);
     expect(result.value).toStrictEqual(undefined);
-  });
-
-  it('should return EntityNotEmpty when a pass incorrect logged user id', async () => {
-    const { moveFileToDirectoryDto, sut } = makeSut();
-    moveFileToDirectoryDto.loggedUserId = '';
-    const result = await sut.execute(moveFileToDirectoryDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.isRight()).toBe(false);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
-  it('should return EntityNotEmpty when a pass incorrect directory id', async () => {
-    const { moveFileToDirectoryDto, sut } = makeSut();
-    moveFileToDirectoryDto.idToMoveDirectory = '';
-    const result = await sut.execute(moveFileToDirectoryDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.isRight()).toBe(false);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
-  it('should return EntityNotEmpty when a pass incorrect id to move', async () => {
-    const { moveFileToDirectoryDto, sut } = makeSut();
-    moveFileToDirectoryDto.idToMove = '';
-    const result = await sut.execute(moveFileToDirectoryDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.isRight()).toBe(false);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
   });
 
   it('should return EntityNotExists when a pass incorrect Logged User ID', async () => {

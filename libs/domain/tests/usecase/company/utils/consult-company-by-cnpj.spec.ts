@@ -1,6 +1,4 @@
 import {
-  Company,
-  CompanyDataResponseDto,
   CompanyResponseDto,
   ConsultCompanyByCnpj,
   ConsultCompanyByCnpjDto,
@@ -12,12 +10,7 @@ import {
   FindUserByIdRepository,
   UserList,
 } from '../../../../src';
-import {
-  CompanyDataMock,
-  CompanyMock,
-  CompanySimpleMock,
-  userMock,
-} from '../../../entity';
+import { CompanyMock, CompanySimpleMock, userMock } from '../../../entity';
 import {
   ConsultCompanyByCnpjRepositoryMock,
   FindCompanyByCnpjRepositoryMock,
@@ -67,16 +60,6 @@ describe('ConsultCompanyByCnpj', () => {
     expect(result.isLeft()).toBe(false);
     expect(result.isRight()).toBe(true);
     expect(result.value).toStrictEqual(CompanyMock);
-  });
-
-  it('should return EntityNotEmpty when pass incorrect Logged User id', async () => {
-    const { sut, consultCompanyByCnpjDto } = makeSut();
-    consultCompanyByCnpjDto.loggedUserId = '';
-    const result = await sut.execute(consultCompanyByCnpjDto);
-
-    expect(result.isRight()).toBe(false);
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
   });
 
   it('should return EntityNotEmpty when pass incorrect cnpj', async () => {

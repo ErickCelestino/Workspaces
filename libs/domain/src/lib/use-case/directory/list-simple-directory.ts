@@ -11,11 +11,7 @@ import {
   ListSimpleDirectoryRepository,
 } from '../../repository';
 import { Either, left, right } from '../../shared/either';
-import {
-  ValidationCompanyId,
-  ValidationTextField,
-  ValidationUserId,
-} from '../../utils';
+import { ValidationCompanyId, ValidationUserId } from '../../utils';
 
 export class ListSimpleDirectory
   implements
@@ -36,19 +32,6 @@ export class ListSimpleDirectory
     input: ListSimpleDirectoryDto
   ): Promise<Either<EntityNotEmpty, ListSimpleDirectoryResponseDto>> {
     const { loggedUserId, companyId } = input;
-
-    const loggedUserIdValidation = await ValidationTextField(
-      loggedUserId,
-      'Logged User ID'
-    );
-    if (loggedUserIdValidation.isLeft())
-      return left(loggedUserIdValidation.value);
-
-    const companyIdValidation = await ValidationTextField(
-      companyId,
-      'Company ID'
-    );
-    if (companyIdValidation.isLeft()) return left(companyIdValidation.value);
 
     const userValidation = await ValidationUserId(
       loggedUserId,

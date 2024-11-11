@@ -32,10 +32,6 @@ export class FindCompanyResponsibleById
   > {
     const { companyResponsibleId, loggedUserId } = input;
 
-    if (Object.keys(loggedUserId).length < 1) {
-      return left(new EntityNotEmpty('Logged User ID'));
-    }
-
     if (Object.keys(companyResponsibleId).length < 1) {
       return left(new EntityNotEmpty('Company Responsible ID'));
     }

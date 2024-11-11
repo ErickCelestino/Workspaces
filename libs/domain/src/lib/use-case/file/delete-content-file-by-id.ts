@@ -37,14 +37,6 @@ export class DeleteContentFileById
   ): Promise<Either<EntityNotEmpty | EntityNotExists, void>> {
     const { directoryId, loggedUserId, idToDelete } = input;
 
-    if (Object.keys(directoryId).length < 1) {
-      return left(new EntityNotEmpty('directory ID'));
-    }
-
-    if (Object.keys(loggedUserId).length < 1) {
-      return left(new EntityNotEmpty('Logged User ID'));
-    }
-
     if (Object.keys(idToDelete).length < 1) {
       return left(new EntityNotEmpty('ID to delete'));
     }

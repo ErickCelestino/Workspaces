@@ -50,7 +50,7 @@ export const SearchBar: FC<SearchUserProps> = ({ placeholder, onSearch }) => {
           fontSize: smDown ? 8 : 20,
           maxWidth: theme.spacing(140),
           '& .MuiOutlinedInput-root': {
-            borderRadius: '999px',
+            borderRadius: '15px',
             paddingRight: smDown ? '-5px' : '8px',
           },
           '& .MuiOutlinedInput-notchedOutline': {

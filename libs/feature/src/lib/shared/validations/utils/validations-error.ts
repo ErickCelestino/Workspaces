@@ -17,12 +17,18 @@ import {
   EntityNotFound,
   EntityNotValid,
   EntityNotComplete,
+  EntityMinValue,
 } from '../../messages';
 
 export function ValidationsError(
   errors: AxiosError<ErrorResponse>,
-  entitie: string
+  entitie: string,
+  quantity?: string,
+  destiny?: string
 ) {
+  if (!quantity) return;
+  if (!destiny) return;
+
   switch (errors.response?.data.error.name) {
     case 'EntityNotEmpty':
       return EntityNotEmpty(entitie, 'PT-BR');
@@ -68,6 +74,9 @@ export function ValidationsError(
 
     case 'EntityNotComplete':
       return EntityNotComplete(entitie, 'PT-BR');
+
+    case 'EntityMinValue':
+      return EntityMinValue({ entitie, destiny, quantity }, 'PT-BR');
 
     default:
       return ConnectionError('PT-BR');

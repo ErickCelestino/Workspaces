@@ -54,16 +54,6 @@ describe('FindPlaylistById', () => {
     expect(result.value).toStrictEqual(PlaylistResponseMock);
   });
 
-  it('should return EntityNotEmpty when a pass incorrect Logged User ID', async () => {
-    const { findPlaylistByIdDto, sut } = makeSut();
-    findPlaylistByIdDto.loggedUserId = '';
-    const result = await sut.execute(findPlaylistByIdDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.isRight()).toBe(false);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
   it('should return EntityNotEmpty when a pass incorrect Playlist ID', async () => {
     const { findPlaylistByIdDto, sut } = makeSut();
     findPlaylistByIdDto.id = '';

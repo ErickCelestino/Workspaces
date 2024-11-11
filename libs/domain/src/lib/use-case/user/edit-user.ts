@@ -39,10 +39,6 @@ export class EditUser
       loggedUserId,
     } = input;
 
-    if (Object.keys(id).length < 1) {
-      return left(new EntityNotEmpty('id'));
-    }
-
     if (Object.keys(name).length < 3) {
       return left(new InsufficientCharacters('name'));
     }

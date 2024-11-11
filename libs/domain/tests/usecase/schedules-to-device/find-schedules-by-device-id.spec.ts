@@ -1,6 +1,5 @@
 import {
   Device,
-  EntityNotEmpty,
   EntityNotExists,
   FindDeviceByIdRepository,
   FindSchedulesByDeviceId,
@@ -59,26 +58,6 @@ describe('FindSchedulesByDeviceId', () => {
     expect(result.isRight()).toBe(true);
     expect(result.isLeft()).toBe(false);
     expect(result.value).toEqual([SchedulingMock]);
-  });
-
-  it('should return EntityNotEmpty when pass incorrect Logged User ID', async () => {
-    const { sut, findSchedulesByDeviceIdDto } = makeSut();
-    findSchedulesByDeviceIdDto.loggedUserId = '';
-    const result = await sut.execute(findSchedulesByDeviceIdDto);
-
-    expect(result.isRight()).toBe(false);
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
-  it('should return EntityNotEmpty when pass incorrect Device ID', async () => {
-    const { sut, findSchedulesByDeviceIdDto } = makeSut();
-    findSchedulesByDeviceIdDto.idDevice = '';
-    const result = await sut.execute(findSchedulesByDeviceIdDto);
-
-    expect(result.isRight()).toBe(false);
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
   });
 
   it('should return EntityAlreadyExists when a exist User in system', async () => {

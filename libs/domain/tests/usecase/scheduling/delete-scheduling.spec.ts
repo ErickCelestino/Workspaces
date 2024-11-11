@@ -4,7 +4,6 @@ import {
   DeleteSchedulingRepository,
   FindSchedulingByIdRepository,
   FindUserByIdRepository,
-  EntityNotEmpty,
   UserList,
   EntityNotExists,
   Scheduling,
@@ -58,26 +57,6 @@ describe('DeleteScheduling', () => {
     expect(result.isLeft()).toBe(false);
     expect(result.isRight()).toBe(true);
     expect(result.value).toStrictEqual(undefined);
-  });
-
-  it('should return EntityNotEmpty when pass incorrect Scheduling ID', async () => {
-    const { sut, deleteSchedulingDto } = makeSut();
-    deleteSchedulingDto.id = '';
-    const result = await sut.execute(deleteSchedulingDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.isRight()).toBe(false);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
-  it('should return EntityNotEmpty when pass incorrect User ID', async () => {
-    const { sut, deleteSchedulingDto } = makeSut();
-    deleteSchedulingDto.loggedUserId = '';
-    const result = await sut.execute(deleteSchedulingDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.isRight()).toBe(false);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
   });
 
   it('should return EntityNotExists when a pass incorrect Logged User ID', async () => {

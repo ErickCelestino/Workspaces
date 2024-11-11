@@ -13,6 +13,9 @@ import {
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
+import AddBusinessIcon from '@mui/icons-material/AddBusiness';
+import ApartmentIcon from '@mui/icons-material/Apartment';
+import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import { IconMenuItem, StatusColor, UserList } from '@workspaces/domain';
 import { FC } from 'react';
 import { ButtonFileMenu } from '../../menu';
@@ -24,9 +27,15 @@ interface UserListItemProps {
   editUser?: () => Promise<void>;
   deleteUser?: () => Promise<void>;
   authorizeUser?: () => Promise<void>;
+  addUserToAnotherCompany?: () => Promise<void>;
+  listCompanyByUserId?: () => Promise<void>;
+  changeUserType?: () => Promise<void>;
   deleteUserTitle?: string;
   editUserTitle?: string;
   authorizeUserTitle?: string;
+  addUserToAnotherCompanyTitle?: string;
+  listCompanyByUserIdTitle?: string;
+  changeUserTypeTitle?: string;
   nicknameTitle?: string;
   statusTitle?: string;
   idTitle?: string;
@@ -40,9 +49,15 @@ export const UserListItem: FC<UserListItemProps> = ({
   editUser,
   deleteUser,
   authorizeUser,
+  addUserToAnotherCompany,
+  listCompanyByUserId,
+  changeUserType,
+  addUserToAnotherCompanyTitle = 'Adionar Empresa',
   authorizeUserTitle = 'Autorizar Usuário',
   deleteUserTitle = 'Deletar',
   editUserTitle = 'Editar',
+  listCompanyByUserIdTitle = 'Empresas',
+  changeUserTypeTitle = 'Alterar Tipo',
   nicknameTitle = 'Nickname',
   statusTitle = 'Status',
   idTitle = 'ID',
@@ -73,6 +88,30 @@ export const UserListItem: FC<UserListItemProps> = ({
       icon: <VerifiedUserIcon />,
       title: authorizeUserTitle,
       handleClick: authorizeUser,
+    });
+  }
+
+  if (addUserToAnotherCompany) {
+    iconMenuList.push({
+      icon: <AddBusinessIcon />,
+      title: addUserToAnotherCompanyTitle,
+      handleClick: addUserToAnotherCompany,
+    });
+  }
+
+  if (listCompanyByUserId) {
+    iconMenuList.push({
+      icon: <ApartmentIcon />,
+      title: listCompanyByUserIdTitle,
+      handleClick: listCompanyByUserId,
+    });
+  }
+
+  if (changeUserType) {
+    iconMenuList.push({
+      icon: <AdminPanelSettingsIcon />,
+      title: changeUserTypeTitle,
+      handleClick: changeUserType,
     });
   }
 

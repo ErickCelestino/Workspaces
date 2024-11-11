@@ -101,36 +101,6 @@ describe('CreateContentFile', () => {
     expect(result.value).toStrictEqual(resultResponse);
   });
 
-  it('should return EntityNotEmpty when a pass incorrect logged user id', async () => {
-    const { CreateContentFileDto, sut } = makeSut();
-    CreateContentFileDto.loggedUserId = '';
-    const result = await sut.execute(CreateContentFileDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.isRight()).toBe(false);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
-  it('should return EntityNotEmpty when a pass incorrect Company id', async () => {
-    const { CreateContentFileDto, sut } = makeSut();
-    CreateContentFileDto.companyId = '';
-    const result = await sut.execute(CreateContentFileDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.isRight()).toBe(false);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
-  it('should return EntityNotEmpty when a pass incorrect directory id', async () => {
-    const { CreateContentFileDto, sut } = makeSut();
-    CreateContentFileDto.directoryId = '';
-    const result = await sut.execute(CreateContentFileDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.isRight()).toBe(false);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
   it('should return EntityNotEmpty when a pass incorrect file', async () => {
     const { CreateContentFileDto, sut } = makeSut();
     CreateContentFileDto.file = [];

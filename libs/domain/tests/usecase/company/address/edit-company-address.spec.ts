@@ -1,4 +1,3 @@
-import exp from 'constants';
 import {
   CityResponseDto,
   CompanyAddressResponseDto,
@@ -90,56 +89,6 @@ describe('EditCompanyAddress', () => {
     expect(result.isRight()).toBeTruthy();
     expect(result.isLeft()).toBeFalsy();
     expect(result.value).toBe(CompanyAddressMock.id);
-  });
-
-  it('should return EntityNotEmpty when pass incorrect Logged User id', async () => {
-    const { sut, editCompanyAddressDto } = makeSut();
-    editCompanyAddressDto.loggedUserId = '';
-    const result = await sut.execute(editCompanyAddressDto);
-
-    expect(result.isRight()).toBe(false);
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
-  it('should return EntityNotEmpty when pass incorrect Company Address id', async () => {
-    const { sut, editCompanyAddressDto } = makeSut();
-    editCompanyAddressDto.companyAddressId = '';
-    const result = await sut.execute(editCompanyAddressDto);
-
-    expect(result.isRight()).toBe(false);
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
-  it('should return EntityNotEmpty when pass incorrect City', async () => {
-    const { sut, editCompanyAddressDto } = makeSut();
-    editCompanyAddressDto.body.cityId = '';
-    const result = await sut.execute(editCompanyAddressDto);
-
-    expect(result.isRight()).toBe(false);
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
-  it('should return EntityNotEmpty when pass incorrect Country', async () => {
-    const { sut, editCompanyAddressDto } = makeSut();
-    editCompanyAddressDto.body.countryId = '';
-    const result = await sut.execute(editCompanyAddressDto);
-
-    expect(result.isRight()).toBe(false);
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
-  it('should return EntityNotEmpty when pass incorrect State', async () => {
-    const { sut, editCompanyAddressDto } = makeSut();
-    editCompanyAddressDto.body.stateId = '';
-    const result = await sut.execute(editCompanyAddressDto);
-
-    expect(result.isRight()).toBe(false);
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
   });
 
   it('should return EntityNotEmpty when pass incorrect District', async () => {

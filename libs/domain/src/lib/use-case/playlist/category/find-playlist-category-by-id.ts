@@ -32,10 +32,6 @@ export class FindPlaylistCategoryById
       return left(new EntityNotEmpty('ID'));
     }
 
-    if (Object.keys(loggedUserId).length < 1) {
-      return left(new EntityNotEmpty('ID'));
-    }
-
     const userValidation = await ValidationUserId(
       loggedUserId,
       this.findUserByIdRepository

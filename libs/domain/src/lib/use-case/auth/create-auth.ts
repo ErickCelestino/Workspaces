@@ -46,10 +46,6 @@ export class CreateAuth
       return left(new InsufficientCharacters('Password'));
     }
 
-    if (Object.keys(userId).length < 1) {
-      return left(new EntityNotExists('User'));
-    }
-
     const filteredEmail = await this.filterByEmailOrNicknameRepository.filter(
       email
     );

@@ -118,9 +118,11 @@ export const EditUserModal: FC<EditUserModalProps> = ({
       case 'ADMIN':
         list.push('ADMIN');
         setTypeList(list);
+        break;
       case 'DEFAULT_ADMIN':
         list.filter((item) => item !== 'ADMIN');
         setTypeList(list);
+        break;
     }
   };
 

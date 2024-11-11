@@ -41,18 +41,6 @@ export class DeletePlaylistFiles
   ): Promise<Either<EntityNotEmpty | EntityNotAssociate, void>> {
     const { filesId, loggedUserId, playlistId } = input;
 
-    if (Object.keys(filesId).length < 1) {
-      return left(new EntityNotEmpty('Files ID'));
-    }
-
-    if (Object.keys(loggedUserId).length < 1) {
-      return left(new EntityNotEmpty('User ID'));
-    }
-
-    if (Object.keys(playlistId).length < 1) {
-      return left(new EntityNotEmpty('Playlist ID'));
-    }
-
     const userValidation = await ValidationUserId(
       loggedUserId,
       this.findUserByIdRepository
@@ -72,10 +60,6 @@ export class DeletePlaylistFiles
     }
 
     for (const file of filesId) {
-      if (Object.keys(file).length < 1) {
-        return left(new EntityNotEmpty('File ID'));
-      }
-
       const contentFileValidation = await ValidationContentFileId(
         file,
         this.findContentFileByIdRepository
@@ -92,7 +76,7 @@ export class DeletePlaylistFiles
         });
 
       if (Object.keys(filteredPlaylist).length < 1) {
-        return left(new EntityNotAssociate(file));
+        return left(new EntityNotAssociate(file, 'Playlist'));
       }
 
       await this.deletePlaylistFileRepository.delete({

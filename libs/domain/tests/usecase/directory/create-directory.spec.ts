@@ -71,24 +71,6 @@ describe('CreateDirectory', () => {
     expect(result.value).toBeInstanceOf(EntityNotEmpty);
   });
 
-  it('ensure it will return EntityNotEmpty error if the loggedUserId field is empty', async () => {
-    const { sut, createDirectoryDto: CreateDirectoryDto } = makeSut();
-    CreateDirectoryDto.loggedUserId = '';
-    const result = await sut.execute(CreateDirectoryDto);
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
-  it('should return EntityNotEmpty when a pass incorrect Company ID', async () => {
-    const { createDirectoryDto, sut } = makeSut();
-    createDirectoryDto.companyId = '';
-    const result = await sut.execute(createDirectoryDto);
-
-    expect(result.isLeft()).toBe(true);
-    expect(result.isRight()).toBe(false);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
   it('ensure it will return EntityAlreadyExists error if the directory already exists', async () => {
     const {
       sut,

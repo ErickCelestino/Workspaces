@@ -70,10 +70,6 @@ export class CreateScheduling
       body: { name, priority, startTime, endTime, lopping },
     } = input;
 
-    if (Object.keys(loggedUserId).length < 1) {
-      return left(new EntityNotEmpty('User ID'));
-    }
-
     if (Object.keys(name).length < 1) {
       return left(new EntityNotEmpty('Name'));
     }

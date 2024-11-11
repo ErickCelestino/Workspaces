@@ -71,26 +71,6 @@ describe('CreateDevice', () => {
     expect(result.value).toBe(DeviceMock.id);
   });
 
-  it('should return EntityNotEmpty when a pass incorrect Logged User ID', async () => {
-    const { sut, createDeviceDto } = makeSut();
-    createDeviceDto.loggedUserId = '';
-    const result = await sut.execute(createDeviceDto);
-
-    expect(result.isRight()).toBe(false);
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
-  it('should return EntityNotEmpty when a pass incorrect Company ID', async () => {
-    const { sut, createDeviceDto } = makeSut();
-    createDeviceDto.companyId = '';
-    const result = await sut.execute(createDeviceDto);
-
-    expect(result.isRight()).toBe(false);
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
   it('should return EntityNotEmpty when a pass incorrect Name', async () => {
     const { sut, createDeviceDto } = makeSut();
     createDeviceDto.body.name = '';

@@ -83,39 +83,9 @@ describe('AddSchedulesToDevice', () => {
     expect(result.value).toStrictEqual([SchedulesToDeviceMock.id]);
   });
 
-  it('should return EntityNotEmpty when pass correct Logged User ID', async () => {
-    const { sut, addSchedulesToDeviceDto } = makeSut();
-    addSchedulesToDeviceDto.loggedUserId = '';
-    const result = await sut.execute(addSchedulesToDeviceDto);
-
-    expect(result.isRight()).toBe(false);
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
-  it('should return EntityNotEmpty when pass correct Device ID', async () => {
-    const { sut, addSchedulesToDeviceDto } = makeSut();
-    addSchedulesToDeviceDto.idDevice = '';
-    const result = await sut.execute(addSchedulesToDeviceDto);
-
-    expect(result.isRight()).toBe(false);
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
   it('should return EntityNotEmpty when pass correct Schedules', async () => {
     const { sut, addSchedulesToDeviceDto } = makeSut();
     addSchedulesToDeviceDto.schedulesIds = [];
-    const result = await sut.execute(addSchedulesToDeviceDto);
-
-    expect(result.isRight()).toBe(false);
-    expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(EntityNotEmpty);
-  });
-
-  it('should return EntityNotEmpty when pass correct Scheduling ID', async () => {
-    const { sut, addSchedulesToDeviceDto } = makeSut();
-    addSchedulesToDeviceDto.schedulesIds[0] = '';
     const result = await sut.execute(addSchedulesToDeviceDto);
 
     expect(result.isRight()).toBe(false);
