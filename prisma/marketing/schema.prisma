@@ -1,0 +1,66 @@
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["multiSchema", "fullTextSearch"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_MARKETING_URL")
+  schemas  = ["marketing"]
+}
+
+model Enterprise_Meling {
+  enterprise_meling_id String @id @default(uuid())
+  name String?
+  fantasy_name String?
+  whatsapp String?
+  ddd String?
+  email String?
+  coontact_valid Boolean?
+  open_date DateTime?
+  main_activity_code String?
+  main_activity_description String?
+  cnpj String?
+  situation String?
+  created_at DateTime @default(now())
+  country String?
+  state String?
+  region String?
+  share_capital String?
+  @@schema("marketing")
+  Sending Sending[]
+}
+
+model runner {
+  runner_id String @id @default(uuid())
+  runner String
+  platform String
+  created_at DateTime @default(now())
+  @@schema("marketing")
+  Sending Sending[]
+}
+
+model Sending {
+  sending_id String @id @default(uuid())
+  enterprise_meling_id String
+  runner_id String
+  sended_email Boolean
+  sended_email_date DateTime @default(now())
+
+  enterprise_meling Enterprise_Meling @relation(fields: [enterprise_meling_id], references: [enterprise_meling_id])
+  runner runner @relation(fields: [runner_id], references: [runner_id])
+  @@schema("marketing")
+  email_return_information email_return_information[]
+}
+
+model email_return_information {
+  email_return_information_id String @id @default(uuid())
+  sending_id String
+  email_opned Boolean?
+  email_opned_date DateTime?
+  link_clicked Boolean?
+  link_clicked_date DateTime?
+
+  sending Sending @relation(fields: [sending_id], references: [sending_id])
+  @@schema("marketing")
+}
