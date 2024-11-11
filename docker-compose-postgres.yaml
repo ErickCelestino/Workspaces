@@ -2,11 +2,27 @@ version: '3.8'
 services:
   postgres:
     image: 'postgres'
+    container_name: general
     environment:
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_GENERAL_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_GENERAL_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_GENERAL_DB}
     ports:
-      - '5432:5432'
+      - '${POSTGRES_GENERAL_PORT}:5432'
     volumes:
-      - /postgres-data:/var/lib/postgresql/data
+      - /general_data:/var/lib/postgresql/data
+
+  postgresMarketing:
+    image: 'postgres'
+    container_name: marketing
+    environment:
+      - POSTGRES_USER=${POSTGRES_MARKETING_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_MARKETING_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_MARKETING_DB}
+    ports:
+      - '${POSTGRES_MARKETING_PORT}:5432'
+    volumes:
+      - /marketing_data:/var/lib/postgresql/data
+volumes:
+  general_data:
+  marketing_data:
