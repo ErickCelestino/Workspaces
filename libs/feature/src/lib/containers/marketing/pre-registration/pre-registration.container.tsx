@@ -1,20 +1,18 @@
-import {
-  Box,
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  TextField,
-  Typography,
-} from '@mui/material';
-import { useEffect } from 'react';
+import { Box, Card, CardContent, Typography } from '@mui/material';
+import { FC, useEffect } from 'react';
+import { FormPreRegistration } from '../../../components';
 //import { useNavigate } from "react-router-dom";
 
-export const PreRegistrationContainer = () => {
+interface PreRegistrationContainerProps {
+  title: string;
+}
+
+export const PreRegistrationContainer: FC<PreRegistrationContainerProps> = ({
+  title,
+}) => {
   //const navigate = useNavigate();
 
   useEffect(() => {
-    // Extrai o parâmetro "user_id" da URL
     const urlParams = new URLSearchParams(window.location.search);
     const sendingId = urlParams.get('sending_id');
     console.log(sendingId);
@@ -29,41 +27,17 @@ export const PreRegistrationContainer = () => {
     >
       <Card sx={{ maxWidth: 400, padding: 2, boxShadow: 3 }}>
         <CardContent>
-          <Typography variant="h5" component="div" gutterBottom>
-            Preencha o Formulário
+          <Typography
+            fontWeight={800}
+            variant="h5"
+            component="div"
+            gutterBottom
+          >
+            {title}
           </Typography>
 
-          {/* Campos do formulário */}
-          <Box component="form" noValidate autoComplete="off">
-            <TextField
-              label="Nome"
-              variant="outlined"
-              fullWidth
-              margin="normal"
-            />
-            <TextField
-              label="Email"
-              type="email"
-              variant="outlined"
-              fullWidth
-              margin="normal"
-            />
-            <TextField
-              label="Mensagem"
-              variant="outlined"
-              fullWidth
-              multiline
-              rows={4}
-              margin="normal"
-            />
-          </Box>
+          <FormPreRegistration name="Nome" companyName="Nome da Empresa" />
         </CardContent>
-
-        <CardActions>
-          <Button variant="contained" color="primary" fullWidth>
-            Enviar
-          </Button>
-        </CardActions>
       </Card>
     </Box>
   );
