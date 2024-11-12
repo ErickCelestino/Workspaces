@@ -36,7 +36,27 @@ export const PreRegistrationContainer: FC<PreRegistrationContainerProps> = ({
             {title}
           </Typography>
 
-          <FormPreRegistration name="Nome" companyName="Nome da Empresa" />
+          <FormPreRegistration
+            nameLabel="Nome"
+            companyNameLabel="Nome da Empresa"
+            ladingpageUse={{
+              ladingpageUseLabel: 'Para que você quer usar sua landing page?',
+              ladingpageUseList: [
+                'Gerar vendas',
+                'Capturar contatos (leads)',
+                'Divulgar algo (evento, marca, etc.)',
+              ],
+            }}
+            ladingPageemphasis={{
+              ladingPageemphasisLabel:
+                'Você já sabe o que gostaria de destacar na sua landing page?',
+              ladingPageemphasisList: [
+                'Sim, já tenho uma ideia clara.',
+                'Tenho algumas ideias, mas preciso de orientação.',
+                'Não, preciso de ajuda desde o início.',
+              ],
+            }}
+          />
         </CardContent>
       </Card>
     </Box>
