@@ -46,6 +46,7 @@ model Sending {
   runner_id String
   sended_email Boolean
   sended_email_date DateTime @default(now())
+  sended_token String?
 
   enterprise_meling Enterprise_Meling @relation(fields: [enterprise_meling_id], references: [enterprise_meling_id])
   runner runner @relation(fields: [runner_id], references: [runner_id])
