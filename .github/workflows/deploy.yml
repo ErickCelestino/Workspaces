@@ -1,0 +1,108 @@
+name: Deploy to Google Cloud Run
+
+on:
+  push:
+    branches: ['main']
+
+jobs:
+  deploy_to_gcloud:
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Fetch all braches
+        run: git fetch orgin 'refs/heads/*:refs/remotes/origin/*'
+
+      - name: Ensure dev branch exists
+        runs: |
+          if git show-ref --verify --quiet refs/heads/dev; then
+              echo "Branch dev exists locally"
+            else
+              echo "Branch dev doesn't exist locally. Creating it."
+              git checkout -b dev origin/dev
+           fi
+
+      - name: Checkout main branch
+        run: git checkout main
+
+      - name: Pull latest changes from main
+        run: git pull origin main
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Determine affected projects
+        id: affected
+        run: |
+          echo "Running Nx command..."
+          npx nx reset
+          npx nx show projects --affected --type=app --base=dev > affected.txt
+          echo "Nx command completed with exit code $?."
+          cat affected.txt
+
+      - name: Check for affected projects
+        run: |
+          if [ ! -s affected.txt ]; then
+            echo "No affected projects were found or an error occurred while executing the Nx command."
+            exit 1
+          fi
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+
+      - name: Configure Docker to use Google Artifact Registry
+        run: gcloud auth configure-docker ${{ secrets.GCP_REGION }}-docker.pkg.dev
+
+      - name: Build, tag, and push images for affected projects
+        if: success()
+        run: |
+          # Define o repositório no Google Container Registry
+          GCR_REGISTRY="${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_REPOSITORY }}"
+          IMAGE_TAG="${{ github.sha }}"  # Use the commit SHA as a tag to ensure uniqueness
+
+          # Para cada app, construir e enviar a imagem
+          while IFS= read -r app; do
+            echo "Building and pushing Docker image for project: $app"
+
+            safe_app=$(echo "$app" | tr '-' '_')
+
+            # Build the image using the app-specific Dockerfile
+            docker build -t $GCR_REGISTRY/$app:$IMAGE_TAG -f ./configs/docker/Dockerfile.$app .
+
+            # Push the image to the Google Container Registry
+            docker push $GCR_REGISTRY/$app:$IMAGE_TAG
+
+            # Set the environment variable with the image name for later use
+            echo "${safe_app}_IMAGE=$GCR_REGISTRY/$app:$IMAGE_TAG" >> $GITHUB_ENV
+          done < affected.txt
+
+      - name: Deploy to Google Cloud Run
+        if: success()
+        run: |
+          while IFS= read -r app; do
+            echo "Deploying $app to Google Cloud Run"
+            safe_app=$(echo "$app" | tr '-' '_')
+            IMAGE_VAR="${safe_app}_IMAGE"
+            gcloud run deploy $app \
+              --image "${!IMAGE_VAR}"  \
+              --platform managed \
+              --region ${{ secrets.GCP_CLOUD_REGION }} \
+              --allow-unauthenticated \
+              --project ${{ secrets.GCP_PROJECT_ID }}
+          done < affected.txt
