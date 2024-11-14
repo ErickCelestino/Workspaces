@@ -1,9 +1,13 @@
-import { Box, Button, MenuItem, TextField } from '@mui/material';
+import { Box, Button, TextField, useTheme } from '@mui/material';
 import { FC, useState } from 'react';
+import { CustomSelect } from '../../combo-box/select-custom';
 
 interface FormPreRegistrationProps {
   nameLabel: string;
+  textColor?: string;
+  textLabelColor?: string;
   companyNameLabel: string;
+  buttonTitle?: string;
   ladingpageUse: {
     ladingpageUseLabel: string;
     ladingpageUseList: string[];
@@ -17,104 +21,96 @@ interface FormPreRegistrationProps {
 export const FormPreRegistration: FC<FormPreRegistrationProps> = ({
   nameLabel,
   companyNameLabel,
-  ladingpageUse: { ladingpageUseLabel, ladingpageUseList },
-  ladingPageemphasis: { ladingPageemphasisLabel, ladingPageemphasisList },
+  textColor = 'black',
+  textLabelColor = '#fff',
+  ladingpageUse,
+  ladingPageemphasis,
+  buttonTitle = 'Fale com consultor',
 }) => {
-  const [ladingpageUse, setLadingpageUse] = useState<string>('');
-  const [ladingPageemphasis, setLadingPageemphasis] = useState<string>('');
-  const [customLadingpageUse, setCustomLadingpageUse] = useState<string>('');
-  const [customLadingPageemphasis, setCustomLadingPageemphasis] =
-    useState<string>('');
+  const [name, setName] = useState('');
+  const [companyName, setCompanyName] = useState('');
+  const [ladingpageUseValue, setLadingpageUseValue] = useState('');
+  const [ladingPageemphasisValue, setLadingPageemphasisValue] = useState('');
+  const [customLadingpageUse, setCustomLadingpageUse] = useState('');
+  const [customLadingPageemphasis, setCustomLadingPageemphasis] = useState('');
 
-  const handleSelectChange =
-    (
-      setter: React.Dispatch<React.SetStateAction<string>>,
-      customSetter?: React.Dispatch<React.SetStateAction<string>>
-    ) =>
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      const { value } = event.target;
-      setter(value);
-      if (value === 'Outros') {
-        customSetter && customSetter('');
-      }
+  const theme = useTheme();
+
+  const handleSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+    const formData = {
+      name,
+      companyName,
+      ladingpageUse:
+        ladingpageUseValue === 'Outros'
+          ? customLadingpageUse
+          : ladingpageUseValue,
+      ladingPageemphasis:
+        ladingPageemphasisValue === 'Outros'
+          ? customLadingPageemphasis
+          : ladingPageemphasisValue,
     };
+    console.log('Dados do formulário:', formData);
+  };
 
   return (
-    <Box component="form" noValidate autoComplete="off">
+    <Box component="form" noValidate autoComplete="off" onSubmit={handleSubmit}>
       <TextField
         label={nameLabel}
-        id={nameLabel}
-        variant="outlined"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
         fullWidth
-        margin="normal"
+        variant="outlined"
+        sx={{ mb: 2, bgcolor: 'rgba(255, 255, 255, 0.1)', borderRadius: 1 }}
+        InputLabelProps={{ style: { color: textColor } }}
+        InputProps={{
+          style: { color: textColor, fontSize: theme.spacing(1.8) },
+        }}
       />
       <TextField
         label={companyNameLabel}
-        id={companyNameLabel}
+        value={companyName}
+        onChange={(e) => setCompanyName(e.target.value)}
+        fullWidth
         variant="outlined"
-        fullWidth
-        margin="normal"
+        sx={{ mb: 2, bgcolor: 'rgba(255, 255, 255, 0.1)', borderRadius: 1 }}
+        InputLabelProps={{ style: { color: textColor } }}
+        InputProps={{
+          style: { color: textColor, fontSize: theme.spacing(1.8) },
+        }}
       />
-
-      <TextField
+      <CustomSelect
+        label={ladingpageUse.ladingpageUseLabel}
+        options={ladingpageUse.ladingpageUseList}
+        value={ladingpageUseValue}
+        onChange={setLadingpageUseValue}
+        customInput={customLadingpageUse}
+        setCustomInput={setCustomLadingpageUse}
+        textColor={textColor}
+        textLabelColor={textLabelColor}
+      />
+      <CustomSelect
+        label={ladingPageemphasis.ladingPageemphasisLabel}
+        options={ladingPageemphasis.ladingPageemphasisList}
+        value={ladingPageemphasisValue}
+        onChange={setLadingPageemphasisValue}
+        customInput={customLadingPageemphasis}
+        setCustomInput={setCustomLadingPageemphasis}
+        textColor={textColor}
+        textLabelColor={textLabelColor}
+      />
+      <Button
+        type="submit"
+        variant="outlined"
+        color="inherit"
+        sx={{
+          borderRadius: theme.spacing(1),
+          textTransform: 'none',
+          mt: theme.spacing(2),
+        }}
         fullWidth
-        select
-        value={ladingpageUse}
-        margin="normal"
-        InputLabelProps={{ shrink: true }}
-        label={ladingpageUseLabel}
-        onChange={handleSelectChange(setLadingpageUse, setCustomLadingpageUse)}
       >
-        {ladingpageUseList.map((item) => (
-          <MenuItem key={item} value={item}>
-            {item}
-          </MenuItem>
-        ))}
-        <MenuItem value="Outros">Outros</MenuItem>
-      </TextField>
-
-      {ladingpageUse === 'Outros' && (
-        <TextField
-          label="Especifique o uso da landing page"
-          value={customLadingpageUse}
-          onChange={(e) => setCustomLadingpageUse(e.target.value)}
-          fullWidth
-          margin="normal"
-        />
-      )}
-
-      <TextField
-        fullWidth
-        select
-        value={ladingPageemphasis}
-        margin="normal"
-        InputLabelProps={{ shrink: true }}
-        label={ladingPageemphasisLabel}
-        onChange={handleSelectChange(
-          setLadingPageemphasis,
-          setCustomLadingPageemphasis
-        )}
-      >
-        {ladingPageemphasisList.map((item) => (
-          <MenuItem key={item} value={item}>
-            {item}
-          </MenuItem>
-        ))}
-        <MenuItem value="Outros">Outros</MenuItem>
-      </TextField>
-
-      {ladingPageemphasis === 'Outros' && (
-        <TextField
-          label="Especifique o ênfase da landing page"
-          value={customLadingPageemphasis}
-          onChange={(e) => setCustomLadingPageemphasis(e.target.value)}
-          fullWidth
-          margin="normal"
-        />
-      )}
-
-      <Button variant="contained" color="primary" fullWidth>
-        Enviar
+        {buttonTitle}
       </Button>
     </Box>
   );
