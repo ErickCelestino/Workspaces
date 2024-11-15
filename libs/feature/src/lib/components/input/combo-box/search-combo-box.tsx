@@ -68,7 +68,7 @@ export const SearchComboBox: FC<SearchComboBoxProps> = ({
         setHasSearched(true);
       }
     }
-  }, [isOpened, debouncedSearchTerm, loadItems, hasSearched]);
+  }, [isOpened, debouncedSearchTerm, loadItems, hasSearched, options.length]);
 
   const handleSearchChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {

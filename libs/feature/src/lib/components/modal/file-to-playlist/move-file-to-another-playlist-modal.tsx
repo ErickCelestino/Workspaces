@@ -13,7 +13,7 @@ import {
 import axios, { AxiosError } from 'axios';
 import { ValidationsError } from '../../../shared';
 import { useLoggedUser } from '../../../contexts';
-import { SearchComboBox } from '../../combo-box';
+import { SearchComboBox } from '../../input';
 
 interface MoveFileToAnotherPlaylistModalProps {
   selectedFiles: Record<string, boolean>;

@@ -1,6 +1,6 @@
-import { Box, Button, TextField, useTheme } from '@mui/material';
+import { Box, Button, useTheme } from '@mui/material';
 import { FC, useState } from 'react';
-import { CustomSelect } from '../../combo-box/select-custom';
+import { CustomInput, CustomSelect } from '../../input';
 
 interface FormPreRegistrationProps {
   nameLabel: string;
@@ -55,29 +55,23 @@ export const FormPreRegistration: FC<FormPreRegistrationProps> = ({
 
   return (
     <Box component="form" noValidate autoComplete="off" onSubmit={handleSubmit}>
-      <TextField
+      <CustomInput
         label={nameLabel}
         value={name}
-        onChange={(e) => setName(e.target.value)}
-        fullWidth
-        variant="outlined"
-        sx={{ mb: 2, bgcolor: 'rgba(255, 255, 255, 0.1)', borderRadius: 1 }}
-        InputLabelProps={{ style: { color: textColor } }}
-        InputProps={{
-          style: { color: textColor, fontSize: theme.spacing(1.8) },
+        color={{
+          textColor: 'black',
+          backgroundInputColor: 'white',
         }}
+        onChange={(e) => setName(e.target.value)}
       />
-      <TextField
+      <CustomInput
         label={companyNameLabel}
         value={companyName}
-        onChange={(e) => setCompanyName(e.target.value)}
-        fullWidth
-        variant="outlined"
-        sx={{ mb: 2, bgcolor: 'rgba(255, 255, 255, 0.1)', borderRadius: 1 }}
-        InputLabelProps={{ style: { color: textColor } }}
-        InputProps={{
-          style: { color: textColor, fontSize: theme.spacing(1.8) },
+        color={{
+          textColor: 'black',
+          backgroundInputColor: 'white',
         }}
+        onChange={(e) => setCompanyName(e.target.value)}
       />
       <CustomSelect
         label={ladingpageUse.ladingpageUseLabel}
@@ -86,8 +80,10 @@ export const FormPreRegistration: FC<FormPreRegistrationProps> = ({
         onChange={setLadingpageUseValue}
         customInput={customLadingpageUse}
         setCustomInput={setCustomLadingpageUse}
-        textColor={textColor}
-        textLabelColor={textLabelColor}
+        color={{
+          textColor: textColor,
+          labelColor: textLabelColor,
+        }}
       />
       <CustomSelect
         label={ladingPageemphasis.ladingPageemphasisLabel}
@@ -96,8 +92,10 @@ export const FormPreRegistration: FC<FormPreRegistrationProps> = ({
         onChange={setLadingPageemphasisValue}
         customInput={customLadingPageemphasis}
         setCustomInput={setCustomLadingPageemphasis}
-        textColor={textColor}
-        textLabelColor={textLabelColor}
+        color={{
+          textColor: textColor,
+          labelColor: textLabelColor,
+        }}
       />
       <Button
         type="submit"

@@ -10,7 +10,7 @@ import {
 import { AddUserToAnotherCompanyRequest } from '../../../services';
 import axios, { AxiosError } from 'axios';
 import { ValidationsError } from '../../../shared';
-import { SearchComboBox } from '../../combo-box';
+import { SearchComboBox } from '../../input';
 import { useListCompanyData } from '../../../hooks';
 
 interface AddUserToAnotherCompanyModalProps {

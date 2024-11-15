@@ -1,10 +1,9 @@
 import {
   Box,
   FormControl,
-  InputLabel,
   MenuItem,
-  Select,
   TextField,
+  Typography,
   useTheme,
 } from '@mui/material';
 import { FC } from 'react';
@@ -17,8 +16,11 @@ interface CustomSelectProps {
   customInput?: string;
   setCustomInput?: (value: string) => void;
   customInputLabel?: string;
-  textLabelColor: string;
-  textColor: string;
+  color?: {
+    labelColor: string;
+    textColor: string;
+  };
+  fontSize?: number;
 }
 
 export const CustomSelect: FC<CustomSelectProps> = ({
@@ -28,28 +30,24 @@ export const CustomSelect: FC<CustomSelectProps> = ({
   onChange,
   customInput,
   setCustomInput,
-  textLabelColor,
-  textColor,
+  color,
+  fontSize = 1.8,
   customInputLabel = 'Especifique sua resposta',
 }) => {
   const theme = useTheme();
 
   return (
-    <Box sx={{ position: 'relative', mb: 3, mt: 2 }}>
-      <InputLabel
-        shrink
+    <Box sx={{ position: 'relative', mb: 3 }}>
+      <Typography
+        variant="body1"
         sx={{
-          color: textLabelColor,
-          fontSize: theme.spacing(1.8),
-          position: 'absolute',
-          top: '-15px',
-          left: -1,
-          backgroundColor: 'transparent',
-          px: 0.5,
+          fontSize: theme.spacing(fontSize),
+          textAlign: 'start',
+          color: color?.labelColor,
         }}
       >
         {label}
-      </InputLabel>
+      </Typography>
 
       <FormControl
         fullWidth
@@ -58,14 +56,16 @@ export const CustomSelect: FC<CustomSelectProps> = ({
           borderRadius: 1,
         }}
       >
-        <Select
+        <TextField
+          sx={{ color: color?.textColor, fontSize: fontSize }}
           value={value}
+          select
           onChange={(e) => {
+            console.log(e.target.value);
             onChange(e.target.value);
             if (e.target.value === 'Outros' && setCustomInput)
               setCustomInput('');
           }}
-          sx={{ color: textColor, fontSize: theme.spacing(1.8) }}
         >
           {options.map((option) => (
             <MenuItem key={option} value={option}>
@@ -73,7 +73,7 @@ export const CustomSelect: FC<CustomSelectProps> = ({
             </MenuItem>
           ))}
           <MenuItem value="Outros">Outros</MenuItem>
-        </Select>
+        </TextField>
 
         {value === 'Outros' && setCustomInput && (
           <Box sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -85,11 +85,16 @@ export const CustomSelect: FC<CustomSelectProps> = ({
               margin="normal"
               sx={{ maxWidth: '95%' }}
               InputLabelProps={{
-                shrink: true,
-                style: { color: 'black', fontSize: theme.spacing(1.5) },
+                style: {
+                  color: color?.textColor,
+                  fontSize: theme.spacing(fontSize),
+                },
               }}
               InputProps={{
-                style: { color: 'black', fontSize: theme.spacing(1.5) },
+                style: {
+                  color: color?.textColor,
+                  fontSize: theme.spacing(fontSize),
+                },
               }}
             />
           </Box>
