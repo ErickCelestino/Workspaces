@@ -22,13 +22,14 @@ export const CustomInput: FC<CustomInputProps> = ({
 }) => {
   const theme = useTheme();
   return (
-    <Box>
+    <Box sx={{ position: 'relative' }}>
       <Typography
         variant="body1"
         sx={{
           fontSize: theme.spacing(fontSize),
           textAlign: 'start',
           color: color?.labelColor,
+          zIndex: 1,
         }}
       >
         {label}

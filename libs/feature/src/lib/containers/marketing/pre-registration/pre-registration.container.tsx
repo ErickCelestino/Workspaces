@@ -13,7 +13,7 @@ export const PreRegistrationContainer: FC<PreRegistrationContainerProps> = ({
   title,
   textColor = '#fff',
   backgroundColor = '#111111',
-  backgroundCardColor = 'radial-gradient( ellipse at bottom right, #700B0E, #1E1E1E, #9C1B1F, #9C1B1F, #1E1E1E, #9C1B1F)',
+  backgroundCardColor = 'radial-gradient(ellipse at bottom right, #700B0E, #1E1E1E, #9C1B1F, #9C1B1F, #1E1E1E, #9C1B1F)',
 }) => {
   const theme = useTheme();
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
@@ -35,13 +35,24 @@ export const PreRegistrationContainer: FC<PreRegistrationContainerProps> = ({
       {!smDown && (
         <Box
           sx={{
+            position: 'relative',
             maxWidth: 450,
             boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
-            background: backgroundCardColor,
             borderRadius: 2,
             p: 6,
-            color: 'white',
             textAlign: 'center',
+            overflow: 'hidden',
+            '&::before': {
+              content: '""',
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              background: backgroundCardColor,
+              opacity: 0.4,
+              zIndex: 0,
+            },
           }}
         >
           <Typography
@@ -50,6 +61,8 @@ export const PreRegistrationContainer: FC<PreRegistrationContainerProps> = ({
             component="div"
             gutterBottom
             color={textColor}
+            zIndex={1}
+            position="relative"
           >
             {title}
           </Typography>

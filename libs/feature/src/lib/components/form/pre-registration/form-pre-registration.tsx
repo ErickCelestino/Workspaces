@@ -61,6 +61,7 @@ export const FormPreRegistration: FC<FormPreRegistrationProps> = ({
         color={{
           textColor: 'black',
           backgroundInputColor: 'white',
+          labelColor: 'white',
         }}
         onChange={(e) => setName(e.target.value)}
       />
@@ -70,6 +71,7 @@ export const FormPreRegistration: FC<FormPreRegistrationProps> = ({
         color={{
           textColor: 'black',
           backgroundInputColor: 'white',
+          labelColor: 'white',
         }}
         onChange={(e) => setCompanyName(e.target.value)}
       />
@@ -100,11 +102,15 @@ export const FormPreRegistration: FC<FormPreRegistrationProps> = ({
       <Button
         type="submit"
         variant="outlined"
-        color="inherit"
         sx={{
           borderRadius: theme.spacing(1),
           textTransform: 'none',
           mt: theme.spacing(2),
+          color: 'white',
+          borderColor: 'white',
+          '&:hover': {
+            borderColor: 'white',
+          },
         }}
         fullWidth
       >
