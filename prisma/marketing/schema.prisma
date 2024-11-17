@@ -66,3 +66,21 @@ model email_return_information {
   sending Sending @relation(fields: [sending_id], references: [sending_id])
   @@schema("marketing")
 }
+
+model pre_registration {
+  pre_registration_id String @id @default(uuid())
+  sending_id String
+  step PreRestrationStep  @default(INITIAL)
+  branch_of_the_company String
+  completed_questionnaire Boolean
+  pre_registration_date DateTime
+
+  @@schema("marketing")
+}
+
+enum PreRestrationStep {
+  INITIAL
+  FINAL
+
+  @@schema("marketing")
+}
