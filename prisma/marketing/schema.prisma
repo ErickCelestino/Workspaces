@@ -71,9 +71,9 @@ model pre_registration {
   pre_registration_id String @id @default(uuid())
   sending_id String
   step PreRestrationStep  @default(INITIAL)
-  branch_of_the_company String
-  completed_questionnaire Boolean
-  pre_registration_date DateTime
+  branch_of_the_company String?
+  completed_questionnaire Boolean @default(false)
+  pre_registration_date DateTime @default(now())
 
   @@schema("marketing")
 }
