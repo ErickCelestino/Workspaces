@@ -46,3 +46,5 @@ Thumbs.db
 /uploads
 
 vite.config.*.timestamp*
+
+/prisma/generated
