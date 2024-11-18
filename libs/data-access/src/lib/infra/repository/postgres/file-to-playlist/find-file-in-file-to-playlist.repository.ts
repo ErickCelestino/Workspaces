@@ -3,7 +3,7 @@ import {
   FindFileInFileToPlaylistDto,
   FindFileInFileToPlaylistRepository,
 } from '@workspaces/domain';
-import { PrismaService } from 'nestjs-prisma';
+import { PrismaService } from '../../../../application';
 
 export class FindFileInFileToPlaylistRepositoryImpl
   implements FindFileInFileToPlaylistRepository
@@ -11,12 +11,14 @@ export class FindFileInFileToPlaylistRepositoryImpl
   constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
   async find(input: FindFileInFileToPlaylistDto): Promise<string> {
     const filteredFile =
-      await this.prismaService.playlist_X_Content_Files.findFirst({
-        where: {
-          Content_Files_id: input.fileId,
-          playlist_id: input.playlsitId,
-        },
-      });
+      await this.prismaService.generalPrisma.playlist_X_Content_Files.findFirst(
+        {
+          where: {
+            Content_Files_id: input.fileId,
+            playlist_id: input.playlsitId,
+          },
+        }
+      );
 
     return filteredFile?.Content_Files_id ?? '';
   }

@@ -6,7 +6,7 @@ import {
   ListSchedulesRepository,
   Scheduling,
 } from '@workspaces/domain';
-import { PrismaService } from 'nestjs-prisma';
+import { PrismaService } from '../../../../application';
 
 export class ListSchedulesRepositoryImpl implements ListSchedulesRepository {
   constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
@@ -31,8 +31,8 @@ export class ListSchedulesRepositoryImpl implements ListSchedulesRepository {
     };
 
     const [scheduling, filteredTotal, total] =
-      await this.prismaService.$transaction([
-        this.prismaService.scheduling.findMany({
+      await this.prismaService.generalPrisma.$transaction([
+        this.prismaService.generalPrisma.scheduling.findMany({
           where: whereClause,
           select: {
             scheduling_id: true,
@@ -51,10 +51,10 @@ export class ListSchedulesRepositoryImpl implements ListSchedulesRepository {
           skip: parseInt(skip.toString()),
           take: parseInt(take.toString()),
         }),
-        this.prismaService.scheduling.count({
+        this.prismaService.generalPrisma.scheduling.count({
           where: whereClause,
         }),
-        this.prismaService.scheduling.count({
+        this.prismaService.generalPrisma.scheduling.count({
           where: {
             user_id: loggedUserId,
             company_id: companyId,

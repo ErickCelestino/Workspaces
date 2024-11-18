@@ -3,7 +3,7 @@ import {
   EditCompanyAddressDto,
   EditCompanyAddressRepository,
 } from '@workspaces/domain';
-import { PrismaService } from 'nestjs-prisma';
+import { PrismaService } from '../../../../../application';
 
 export class EditCompanyAddressRepositoryImpl
   implements EditCompanyAddressRepository
@@ -15,19 +15,20 @@ export class EditCompanyAddressRepositoryImpl
       companyAddressId,
     } = input;
 
-    const editedCompanyAddress = await this.prismaService.address.update({
-      where: {
-        address_id: companyAddressId,
-      },
-      data: {
-        city_id: cityId,
-        district: district,
-        number: number,
-        street: street,
-        zipcode: zipcode,
-        complement: complement ?? '',
-      },
-    });
+    const editedCompanyAddress =
+      await this.prismaService.generalPrisma.address.update({
+        where: {
+          address_id: companyAddressId,
+        },
+        data: {
+          city_id: cityId,
+          district: district,
+          number: number,
+          street: street,
+          zipcode: zipcode,
+          complement: complement ?? '',
+        },
+      });
 
     return editedCompanyAddress?.address_id ?? '';
   }

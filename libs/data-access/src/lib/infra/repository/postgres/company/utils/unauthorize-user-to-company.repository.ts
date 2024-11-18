@@ -3,7 +3,7 @@ import {
   UnauthorizeUserToCompanyDto,
   UnauthorizeUserToCompanyRepository,
 } from '@workspaces/domain';
-import { PrismaService } from 'nestjs-prisma';
+import { PrismaService } from '../../../../../application';
 
 export class UnauthorizeUserToCompanyRepositoryImpl
   implements UnauthorizeUserToCompanyRepository
@@ -13,7 +13,7 @@ export class UnauthorizeUserToCompanyRepositoryImpl
     const { companyId, userId } = input;
 
     const unauthorizedUserCompany =
-      await this.prismaService.user_X_Company.delete({
+      await this.prismaService.generalPrisma.user_X_Company.delete({
         where: {
           user_id_company_id: {
             company_id: companyId,
@@ -23,22 +23,23 @@ export class UnauthorizeUserToCompanyRepositoryImpl
       });
 
     if (unauthorizedUserCompany) {
-      const unauthorizedUserAuth = await this.prismaService.auth.deleteMany({
-        where: {
-          user_id: userId,
-        },
-      });
+      const unauthorizedUserAuth =
+        await this.prismaService.generalPrisma.auth.deleteMany({
+          where: {
+            user_id: userId,
+          },
+        });
 
       if (unauthorizedUserAuth.count > 0) {
         const userToApp =
-          await this.prismaService.user_X_Application.deleteMany({
+          await this.prismaService.generalPrisma.user_X_Application.deleteMany({
             where: {
               user_id: userId,
             },
           });
 
         if (userToApp.count > 0) {
-          await this.prismaService.user.delete({
+          await this.prismaService.generalPrisma.user.delete({
             where: {
               user_id: userId,
             },

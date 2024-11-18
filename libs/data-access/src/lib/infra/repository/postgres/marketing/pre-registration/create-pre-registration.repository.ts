@@ -3,7 +3,7 @@ import {
   CreatePreRegistrationDto,
   CreatePreRegistrationRepository,
 } from '@workspaces/domain';
-import { PrismaService } from 'nestjs-prisma';
+import { PrismaService } from '../../../../../application';
 
 export class CreatePreRegistrationRepostioryImpl
   implements CreatePreRegistrationRepository
@@ -13,7 +13,7 @@ export class CreatePreRegistrationRepostioryImpl
     const { sendingId } = input;
 
     const createdPreRegistration =
-      await this.prismaService.pre_registration.create({
+      await this.prismaService.marketingPrisma.pre_registration.create({
         data: {
           sending_id: sendingId,
         },

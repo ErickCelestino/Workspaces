@@ -3,7 +3,7 @@ import {
   CreateDirectoryDto,
   CreateDirectoryRepository,
 } from '@workspaces/domain';
-import { PrismaService } from 'nestjs-prisma';
+import { PrismaService } from '../../../../application';
 
 export class CreateDirectoryRepositoryImpl
   implements CreateDirectoryRepository
@@ -13,13 +13,14 @@ export class CreateDirectoryRepositoryImpl
   async create(input: CreateDirectoryDto): Promise<string> {
     const { body, loggedUserId, companyId } = input;
 
-    const createdDirectory = await this.prismaService.directory.create({
-      data: {
-        name: body.name,
-        user_id: loggedUserId,
-        company_id: companyId,
-      },
-    });
+    const createdDirectory =
+      await this.prismaService.generalPrisma.directory.create({
+        data: {
+          name: body.name,
+          user_id: loggedUserId,
+          company_id: companyId,
+        },
+      });
 
     return createdDirectory.directory_id;
   }

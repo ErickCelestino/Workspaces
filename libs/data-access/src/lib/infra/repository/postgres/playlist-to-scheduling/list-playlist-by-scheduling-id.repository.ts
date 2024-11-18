@@ -5,7 +5,7 @@ import {
   ListPlaylistResponseDto,
   Playlist,
 } from '@workspaces/domain';
-import { PrismaService } from 'nestjs-prisma';
+import { PrismaService } from '../../../../application';
 
 export class ListPlaylistBySchedulingIdRepositoryImpl
   implements ListPlaylistBySchedulingIdRepository
@@ -34,8 +34,8 @@ export class ListPlaylistBySchedulingIdRepositoryImpl
     };
 
     const [playlists, filteredTotal, total] =
-      await this.prismaService.$transaction([
-        this.prismaService.playlist_X_Scheduling.findMany({
+      await this.prismaService.generalPrisma.$transaction([
+        this.prismaService.generalPrisma.playlist_X_Scheduling.findMany({
           where: whereClause,
           select: {
             created_at: true,
@@ -60,10 +60,10 @@ export class ListPlaylistBySchedulingIdRepositoryImpl
           skip: parseInt(skip.toString()),
           take: parseInt(take.toString()),
         }),
-        this.prismaService.playlist_X_Scheduling.count({
+        this.prismaService.generalPrisma.playlist_X_Scheduling.count({
           where: whereClause,
         }),
-        this.prismaService.playlist_X_Scheduling.count({
+        this.prismaService.generalPrisma.playlist_X_Scheduling.count({
           where: {
             scheduling_id: id,
           },

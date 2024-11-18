@@ -3,36 +3,37 @@ import {
   CountryResponseDto,
   FindCountryByIdRepository,
 } from '@workspaces/domain';
-import { PrismaService } from 'nestjs-prisma';
+import { PrismaService } from '../../../../../application';
 
 export class FindCountryByIdRepositoryImpl
   implements FindCountryByIdRepository
 {
   constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
   async find(id: string): Promise<CountryResponseDto> {
-    const filteredCountry = await this.prismaService.country.findUnique({
-      where: {
-        country_id: id,
-      },
-      select: {
-        country_id: true,
-        name: true,
-        uf: true,
-        state: {
-          select: {
-            state_id: true,
-            name: true,
-            uf: true,
-            city: {
-              select: {
-                city_id: true,
-                name: true,
+    const filteredCountry =
+      await this.prismaService.generalPrisma.country.findUnique({
+        where: {
+          country_id: id,
+        },
+        select: {
+          country_id: true,
+          name: true,
+          uf: true,
+          state: {
+            select: {
+              state_id: true,
+              name: true,
+              uf: true,
+              city: {
+                select: {
+                  city_id: true,
+                  name: true,
+                },
               },
             },
           },
         },
-      },
-    });
+      });
 
     const mappedState =
       filteredCountry?.state.map((state) => {

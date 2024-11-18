@@ -5,7 +5,7 @@ import {
   ListDirectoryRepository,
   ListDirectoryResponseDto,
 } from '@workspaces/domain';
-import { PrismaService } from 'nestjs-prisma';
+import { PrismaService } from '../../../../application';
 
 export class ListDirectoryRepositoryImpl implements ListDirectoryRepository {
   constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
@@ -29,8 +29,8 @@ export class ListDirectoryRepositoryImpl implements ListDirectoryRepository {
     };
 
     const [directories, filteredTotal, total] =
-      await this.prismaService.$transaction([
-        this.prismaService.directory.findMany({
+      await this.prismaService.generalPrisma.$transaction([
+        this.prismaService.generalPrisma.directory.findMany({
           where: whereClause,
           select: {
             directory_id: true,
@@ -45,10 +45,10 @@ export class ListDirectoryRepositoryImpl implements ListDirectoryRepository {
           skip: parseInt(skip.toString()),
           take: parseInt(take.toString()),
         }),
-        this.prismaService.directory.count({
+        this.prismaService.generalPrisma.directory.count({
           where: whereClause,
         }),
-        this.prismaService.directory.count({
+        this.prismaService.generalPrisma.directory.count({
           where: {
             user_id: loggedUserId,
             company_id: companyId,

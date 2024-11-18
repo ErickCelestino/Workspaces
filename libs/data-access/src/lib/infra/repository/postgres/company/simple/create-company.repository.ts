@@ -1,6 +1,6 @@
 import { Inject } from '@nestjs/common';
 import { CreateCompanyDto, CreateCompanyRepository } from '@workspaces/domain';
-import { PrismaService } from 'nestjs-prisma';
+import { PrismaService } from '../../../../../application';
 
 export class CreateCompanyRepositoryImpl implements CreateCompanyRepository {
   constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
@@ -10,16 +10,17 @@ export class CreateCompanyRepositoryImpl implements CreateCompanyRepository {
       loggedUserId,
     } = input;
 
-    const createdCompany = await this.prismaService.company.create({
-      data: {
-        cnpj: cnpj,
-        fantasy_name: fantasyName,
-        social_reason: socialReason,
-        user_id: loggedUserId,
-      },
-    });
+    const createdCompany =
+      await this.prismaService.generalPrisma.company.create({
+        data: {
+          cnpj: cnpj,
+          fantasy_name: fantasyName,
+          social_reason: socialReason,
+          user_id: loggedUserId,
+        },
+      });
 
-    await this.prismaService.user_X_Company.create({
+    await this.prismaService.generalPrisma.user_X_Company.create({
       data: {
         company_id: createdCompany?.company_id ?? '',
         user_id: loggedUserId,

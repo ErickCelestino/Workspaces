@@ -3,7 +3,7 @@ import {
   FindPlaylistCategoryByIdRepository,
   PlaylistCategory,
 } from '@workspaces/domain';
-import { PrismaService } from 'nestjs-prisma';
+import { PrismaService } from '../../../../../application';
 
 export class FindPlaylistCategoryByIdRepositoryImpl
   implements FindPlaylistCategoryByIdRepository
@@ -11,7 +11,7 @@ export class FindPlaylistCategoryByIdRepositoryImpl
   constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
   async find(id: string): Promise<PlaylistCategory> {
     const playlistCategoryResult =
-      await this.prismaService.playlist_Category.findFirst({
+      await this.prismaService.generalPrisma.playlist_Category.findFirst({
         where: {
           playlist_category_id: id,
         },

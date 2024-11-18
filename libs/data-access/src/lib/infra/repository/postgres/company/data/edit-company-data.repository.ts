@@ -3,7 +3,7 @@ import {
   EditCompanyDataDto,
   EditCompanyDataRepository,
 } from '@workspaces/domain';
-import { PrismaService } from 'nestjs-prisma';
+import { PrismaService } from '../../../../../application';
 
 export class EditCompanyDataRepositoryImpl
   implements EditCompanyDataRepository
@@ -15,19 +15,20 @@ export class EditCompanyDataRepositoryImpl
       companyDataId,
     } = input;
 
-    const editedCompany = await this.prismaService.company_Data.update({
-      where: {
-        company_data_id: companyDataId,
-      },
-      data: {
-        legal_nature: legalNature,
-        opening: opening,
-        phone: phone,
-        port: port,
-        responsible_email: responsibleEmail,
-        situation: situation,
-      },
-    });
+    const editedCompany =
+      await this.prismaService.generalPrisma.company_Data.update({
+        where: {
+          company_data_id: companyDataId,
+        },
+        data: {
+          legal_nature: legalNature,
+          opening: opening,
+          phone: phone,
+          port: port,
+          responsible_email: responsibleEmail,
+          situation: situation,
+        },
+      });
 
     return editedCompany?.company_data_id ?? '';
   }

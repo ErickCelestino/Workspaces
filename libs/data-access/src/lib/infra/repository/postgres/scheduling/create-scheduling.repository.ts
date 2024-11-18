@@ -3,7 +3,7 @@ import {
   CreateSchedulingDto,
   CreateSchedulingRepository,
 } from '@workspaces/domain';
-import { PrismaService } from 'nestjs-prisma';
+import { PrismaService } from '../../../../application';
 
 export class CreateSchedulingRepositoryImpl
   implements CreateSchedulingRepository
@@ -16,17 +16,18 @@ export class CreateSchedulingRepositoryImpl
       body: { name, priority, startTime, endTime, lopping },
     } = input;
 
-    const schedulingResult = await this.prismaService.scheduling.create({
-      data: {
-        user_id: loggedUserId,
-        company_id: companyId,
-        name,
-        start_time: startTime,
-        end_time: endTime,
-        looping: lopping,
-        priority: parseInt(priority),
-      },
-    });
+    const schedulingResult =
+      await this.prismaService.generalPrisma.scheduling.create({
+        data: {
+          user_id: loggedUserId,
+          company_id: companyId,
+          name,
+          start_time: startTime,
+          end_time: endTime,
+          looping: lopping,
+          priority: parseInt(priority),
+        },
+      });
 
     return schedulingResult.scheduling_id;
   }

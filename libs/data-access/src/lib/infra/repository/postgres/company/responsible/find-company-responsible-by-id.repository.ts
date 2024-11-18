@@ -3,7 +3,7 @@ import {
   CompanyResponsibleResponseDto,
   FindCompanyResponsibleByIdRepository,
 } from '@workspaces/domain';
-import { PrismaService } from 'nestjs-prisma';
+import { PrismaService } from '../../../../../application';
 
 export class FindCompanyResponsibleByIdRepositoryImpl
   implements FindCompanyResponsibleByIdRepository
@@ -11,7 +11,7 @@ export class FindCompanyResponsibleByIdRepositoryImpl
   constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
   async find(id: string): Promise<CompanyResponsibleResponseDto> {
     const filteredCompanyResponsible =
-      await this.prismaService.company_Responsible.findFirst({
+      await this.prismaService.generalPrisma.company_Responsible.findFirst({
         where: {
           company_responsible_id: id,
         },

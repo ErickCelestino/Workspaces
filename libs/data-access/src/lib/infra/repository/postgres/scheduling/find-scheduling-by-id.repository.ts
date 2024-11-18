@@ -4,7 +4,7 @@ import {
   FormatDateInTime,
   Scheduling,
 } from '@workspaces/domain';
-import { PrismaService } from 'nestjs-prisma';
+import { PrismaService } from '../../../../application';
 
 export class FindSchedulingByIdRepositoryImpl
   implements FindSchedulingByIdRepository
@@ -12,25 +12,26 @@ export class FindSchedulingByIdRepositoryImpl
   constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
 
   async find(id: string): Promise<Scheduling> {
-    const filteredScheduling = await this.prismaService.scheduling.findUnique({
-      where: {
-        scheduling_id: id,
-      },
-      select: {
-        scheduling_id: true,
-        name: true,
-        looping: true,
-        start_time: true,
-        end_time: true,
-        created_at: true,
-        priority: true,
-        user: {
-          select: {
-            nick_name: true,
+    const filteredScheduling =
+      await this.prismaService.generalPrisma.scheduling.findUnique({
+        where: {
+          scheduling_id: id,
+        },
+        select: {
+          scheduling_id: true,
+          name: true,
+          looping: true,
+          start_time: true,
+          end_time: true,
+          created_at: true,
+          priority: true,
+          user: {
+            select: {
+              nick_name: true,
+            },
           },
         },
-      },
-    });
+      });
 
     const mappedScheduling: Scheduling = {
       id: filteredScheduling?.scheduling_id ?? '',
@@ -40,7 +41,7 @@ export class FindSchedulingByIdRepositoryImpl
         new Date(filteredScheduling?.start_time ?? '')
       ),
       lopping: filteredScheduling?.looping ?? false,
-      priority: `${filteredScheduling?.priority}` ?? '',
+      priority: filteredScheduling?.priority.toString() ?? '',
       createBy: filteredScheduling?.user?.nick_name ?? '',
       createdAt: filteredScheduling?.created_at ?? new Date(),
     };
