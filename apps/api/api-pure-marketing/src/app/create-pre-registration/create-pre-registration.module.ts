@@ -17,7 +17,7 @@ import {
       useClass: PrismaService,
     },
     {
-      provide: 'CreatePreRegistrationRepostiory',
+      provide: 'CreatePreRegistrationRepository',
       useClass: CreatePreRegistrationRepostioryImpl,
     },
   ],

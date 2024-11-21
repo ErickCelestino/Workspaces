@@ -14,7 +14,7 @@ export class CreatePreRegistrationController {
       sendingId,
     });
 
-    if (result.isRight()) return { companyAddressId: result.value };
+    if (result.isRight()) return { preRegisrationId: result.value };
     else await ErrorMessageResult(result.value.name, result.value.message);
   }
 }

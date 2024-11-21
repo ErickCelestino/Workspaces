@@ -1,3 +1,4 @@
+import { Inject } from '@nestjs/common';
 import { UseCase } from '../../../base/use-case';
 import { CreatePreRegistrationDto } from '../../../dto';
 import { EntityNotCreated, EntityNotEmpty } from '../../../error';
@@ -12,6 +13,7 @@ export class CreatePreRegistration
     >
 {
   constructor(
+    @Inject('CreatePreRegistrationRepository')
     private createPreRegistrationRepository: CreatePreRegistrationRepository
   ) {}
   async execute(

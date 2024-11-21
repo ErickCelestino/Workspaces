@@ -15,10 +15,12 @@ export class PrismaService implements OnModuleInit {
   async onModuleInit() {
     await this.generalPrisma.$connect();
     await this.marketingPrisma.$connect();
+    console.log('open alls banks');
   }
 
   async onModuleDestroy() {
     await this.generalPrisma.$disconnect();
     await this.marketingPrisma.$disconnect();
+    console.log('closed alls banks');
   }
 }

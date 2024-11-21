@@ -11,7 +11,6 @@ export class CreatePreRegistrationRepostioryImpl
   constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
   async create(input: CreatePreRegistrationDto): Promise<string> {
     const { sendingId } = input;
-    console.log(input);
     const createdPreRegistration =
       await this.prismaService.marketingPrisma.pre_registration.create({
         data: {
