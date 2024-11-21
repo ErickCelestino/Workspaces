@@ -4,7 +4,9 @@ import {
   CreatePreRegistrationRepository,
   EntityNotCreated,
   EntityNotEmpty,
+  EntityNotExists,
   FindSendingByIdRepository,
+  SendingResponseDto,
 } from '../../../../src';
 import { PreRegistrationMock } from '../../../entity';
 import { CreatePreRegistrationRepositoryMock } from '../../../repository/marketing/pre-registration/create-pre-registration.mock';
@@ -71,5 +73,18 @@ describe('CreatePreRegistration', () => {
     expect(result.isRight()).toBe(false);
     expect(result.isLeft()).toBe(true);
     expect(result.value).toBeInstanceOf(EntityNotCreated);
+  });
+
+  it('should return EntityNotExists when a not exist sending in database', async () => {
+    const { sut, createPreRegistrationDto } = makeSut();
+    jest
+      .spyOn(sut['findSendingByIdRepository'], 'find')
+      .mockResolvedValueOnce({} as SendingResponseDto);
+
+    const result = await sut.execute(createPreRegistrationDto);
+
+    expect(result.isRight()).toBe(false);
+    expect(result.isLeft()).toBe(true);
+    expect(result.value).toBeInstanceOf(EntityNotExists);
   });
 });
