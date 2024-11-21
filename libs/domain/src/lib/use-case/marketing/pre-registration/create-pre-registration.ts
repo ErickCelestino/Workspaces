@@ -1,8 +1,15 @@
 import { Inject } from '@nestjs/common';
 import { UseCase } from '../../../base/use-case';
 import { CreatePreRegistrationDto } from '../../../dto';
-import { EntityNotCreated, EntityNotEmpty } from '../../../error';
-import { CreatePreRegistrationRepository } from '../../../repository';
+import {
+  EntityNotCreated,
+  EntityNotEmpty,
+  EntityNotExists,
+} from '../../../error';
+import {
+  CreatePreRegistrationRepository,
+  FindSendingByIdRepository,
+} from '../../../repository';
 import { Either, left, right } from '../../../shared/either';
 
 export class CreatePreRegistration
@@ -13,6 +20,8 @@ export class CreatePreRegistration
     >
 {
   constructor(
+    @Inject('FindSendingByIdRepository')
+    private findSendingByIdRepository: FindSendingByIdRepository,
     @Inject('CreatePreRegistrationRepository')
     private createPreRegistrationRepository: CreatePreRegistrationRepository
   ) {}
@@ -23,6 +32,12 @@ export class CreatePreRegistration
 
     if (Object.keys(sendingId).length < 1) {
       return left(new EntityNotEmpty('Sending ID'));
+    }
+
+    const sendingResult = await this.findSendingByIdRepository.find(sendingId);
+
+    if (Object.keys(sendingResult?.id ?? sendingResult).length < 1) {
+      return left(new EntityNotExists('Sending'));
     }
 
     const createdPreRegistration =
