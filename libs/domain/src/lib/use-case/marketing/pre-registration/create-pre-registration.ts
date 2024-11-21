@@ -50,8 +50,7 @@ export class CreatePreRegistration
     if (
       Object.keys(preRegistrationResult?.id ?? preRegistrationResult).length >
         1 &&
-      compareDates(preRegistrationResult.createdAt, new Date()) &&
-      preRegistrationResult.step === 'FINAL'
+      compareDates(preRegistrationResult.createdAt, new Date())
     ) {
       return right(preRegistrationResult.id);
     }

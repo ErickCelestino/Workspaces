@@ -1,3 +1,4 @@
+import { faker } from '@faker-js/faker';
 import {
   CreatePreRegistration,
   CreatePreRegistrationDto,
@@ -7,6 +8,7 @@ import {
   EntityNotExists,
   FindPreRegistrationBySendingIdRepository,
   FindSendingByIdRepository,
+  PreRegistartionResponseDto,
   SendingResponseDto,
 } from '../../../../src';
 import { PreRegistrationMock } from '../../../entity';
@@ -93,5 +95,23 @@ describe('CreatePreRegistration', () => {
     expect(result.isRight()).toBe(false);
     expect(result.isLeft()).toBe(true);
     expect(result.value).toBeInstanceOf(EntityNotExists);
+  });
+
+  it('should return EntityNotExists when a not exist sending in database', async () => {
+    const { sut, createPreRegistrationDto } = makeSut();
+    const preRegisrationMock: PreRegistartionResponseDto = {
+      id: faker.string.uuid(),
+      createdAt: new Date(),
+      step: 'INITIAL',
+    };
+    jest
+      .spyOn(sut['findPreRegistrationBySendingIdRepository'], 'find')
+      .mockResolvedValueOnce(preRegisrationMock);
+
+    const result = await sut.execute(createPreRegistrationDto);
+
+    expect(result.isRight()).toBe(true);
+    expect(result.isLeft()).toBe(false);
+    expect(result.value).toStrictEqual(preRegisrationMock.id);
   });
 });
