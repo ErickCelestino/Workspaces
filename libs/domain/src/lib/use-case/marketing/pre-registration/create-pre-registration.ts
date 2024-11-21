@@ -8,9 +8,11 @@ import {
 } from '../../../error';
 import {
   CreatePreRegistrationRepository,
+  FindPreRegistrationBySendingIdRepository,
   FindSendingByIdRepository,
 } from '../../../repository';
 import { Either, left, right } from '../../../shared/either';
+import { compareDates } from '../../../utils';
 
 export class CreatePreRegistration
   implements
@@ -22,6 +24,8 @@ export class CreatePreRegistration
   constructor(
     @Inject('FindSendingByIdRepository')
     private findSendingByIdRepository: FindSendingByIdRepository,
+    @Inject('FindPreRegistrationBySendingIdRepository')
+    private findPreRegistrationBySendingIdRepository: FindPreRegistrationBySendingIdRepository,
     @Inject('CreatePreRegistrationRepository')
     private createPreRegistrationRepository: CreatePreRegistrationRepository
   ) {}
@@ -38,6 +42,18 @@ export class CreatePreRegistration
 
     if (Object.keys(sendingResult?.id ?? sendingResult).length < 1) {
       return left(new EntityNotExists('Sending'));
+    }
+
+    const preRegistrationResult =
+      await this.findPreRegistrationBySendingIdRepository.find(sendingId);
+
+    if (
+      Object.keys(preRegistrationResult?.id ?? preRegistrationResult).length >
+        1 &&
+      compareDates(preRegistrationResult.createdAt, new Date()) &&
+      preRegistrationResult.step === 'FINAL'
+    ) {
+      return right(preRegistrationResult.id);
     }
 
     const createdPreRegistration =

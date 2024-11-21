@@ -5,17 +5,20 @@ import {
   EntityNotCreated,
   EntityNotEmpty,
   EntityNotExists,
+  FindPreRegistrationBySendingIdRepository,
   FindSendingByIdRepository,
   SendingResponseDto,
 } from '../../../../src';
 import { PreRegistrationMock } from '../../../entity';
 import { CreatePreRegistrationRepositoryMock } from '../../../repository/marketing/pre-registration/create-pre-registration.mock';
+import { FindPreRegistrationBySendingIdRepositoryMock } from '../../../repository/marketing/pre-registration/find-pre-registration-by-sending-id.mock';
 import { FindSendingByIdRepositoryMock } from '../../../repository/marketing/sending/find-sending-by-id';
 
 interface SutTypes {
   sut: CreatePreRegistration;
   createPreRegistrationDto: CreatePreRegistrationDto;
   findSendingByIdRepository: FindSendingByIdRepository;
+  findPreRegistrationBySendingIdRepository: FindPreRegistrationBySendingIdRepository;
   createPreRegistrationRepository: CreatePreRegistrationRepository;
 }
 
@@ -23,6 +26,8 @@ const makeSut = (): SutTypes => {
   const createPreRegistrationRepository =
     new CreatePreRegistrationRepositoryMock();
   const findSendingByIdRepository = new FindSendingByIdRepositoryMock();
+  const findPreRegistrationBySendingIdRepository =
+    new FindPreRegistrationBySendingIdRepositoryMock();
 
   const createPreRegistrationDto: CreatePreRegistrationDto = {
     sendingId: PreRegistrationMock.id,
@@ -30,11 +35,13 @@ const makeSut = (): SutTypes => {
 
   const sut = new CreatePreRegistration(
     findSendingByIdRepository,
+    findPreRegistrationBySendingIdRepository,
     createPreRegistrationRepository
   );
 
   return {
     findSendingByIdRepository,
+    findPreRegistrationBySendingIdRepository,
     createPreRegistrationRepository,
     createPreRegistrationDto,
     sut,
