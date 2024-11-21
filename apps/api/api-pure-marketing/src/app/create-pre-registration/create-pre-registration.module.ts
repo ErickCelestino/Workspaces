@@ -4,6 +4,7 @@ import { CreatePreRegistrationController } from './create-pre-registration.contr
 import { CreatePreRegistration } from '@workspaces/domain';
 import {
   CreatePreRegistrationRepostioryImpl,
+  FindSendingByIdRepositoryImpl,
   PrismaService,
 } from '@workspaces/data-access';
 
@@ -15,6 +16,10 @@ import {
     {
       provide: 'PrismaService',
       useClass: PrismaService,
+    },
+    {
+      provide: 'FindSendingByIdRepository',
+      useClass: FindSendingByIdRepositoryImpl,
     },
     {
       provide: 'CreatePreRegistrationRepository',
