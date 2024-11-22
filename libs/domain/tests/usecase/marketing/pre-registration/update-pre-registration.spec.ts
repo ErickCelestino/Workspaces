@@ -27,6 +27,7 @@ const makeSut = (): SutType => {
 
   const updatePreRegistrationDto: UpdatePreRegistrationDto = {
     id: PreRegistartionResponseMock.id,
+    branchOfTheCompany: 'any',
   };
 
   const sut = new UpdatePreRegistration(
@@ -56,6 +57,16 @@ describe('UpdatePreRegistration', () => {
   it('should return EntityNotEmpty when pass incorrect ID', async () => {
     const { sut, updatePreRegistrationDto } = makeSut();
     updatePreRegistrationDto.id = '';
+    const result = await sut.execute(updatePreRegistrationDto);
+
+    expect(result.isRight()).toBeFalsy();
+    expect(result.isLeft()).toBeTruthy();
+    expect(result.value).toBeInstanceOf(EntityNotEmpty);
+  });
+
+  it('should return EntityNotEmpty when pass incorrect brach of the company', async () => {
+    const { sut, updatePreRegistrationDto } = makeSut();
+    updatePreRegistrationDto.branchOfTheCompany = '';
     const result = await sut.execute(updatePreRegistrationDto);
 
     expect(result.isRight()).toBeFalsy();

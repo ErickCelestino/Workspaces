@@ -20,10 +20,14 @@ export class UpdatePreRegistration
   async execute(
     input: UpdatePreRegistrationDto
   ): Promise<Either<EntityNotEmpty, string>> {
-    const { id } = input;
+    const { id, branchOfTheCompany } = input;
 
     if (Object.keys(id).length < 1) {
       return left(new EntityNotEmpty('ID'));
+    }
+
+    if (Object.keys(branchOfTheCompany).length < 1) {
+      return left(new EntityNotEmpty('Branch of the company'));
     }
 
     const filteredPreRegistration =
