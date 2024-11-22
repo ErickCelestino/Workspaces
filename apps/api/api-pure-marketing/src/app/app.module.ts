@@ -2,10 +2,13 @@ import { Module } from '@nestjs/common';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { CreatePreRegistrationModule } from './create-pre-registration/create-pre-registration.module';
+import {
+  CreatePreRegistrationModule,
+  UpdatePreRegistrationModule,
+} from './pre-registration';
 
 @Module({
-  imports: [CreatePreRegistrationModule],
+  imports: [CreatePreRegistrationModule, UpdatePreRegistrationModule],
   controllers: [AppController],
   providers: [AppService],
 })
