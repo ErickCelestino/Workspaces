@@ -11,6 +11,7 @@
     "start:back-pure-tv": "nx run api-pure-tv:serve",
     "start:back-general": "nx run api-general:serve",
     "start:back-pure-marketing": "nx run api-pure-marketing:serve",
+    "start:pure-marketing": "nx run-many --target=serve --projects=web-pure-marketing,api-pure-marketing --parallel",
     "start:pure-tv": "nx run-many --target=serve --projects=web-pure-tv,api-general,api-pure-tv --parallel",
     "start:summons": "nx run-many --target=serve --projects=web-summons,api-general,api-summons --parallel",
     "build:back-general": "nx build api-general",
