@@ -29,7 +29,10 @@ export class UpdatePreRegistration
     const filteredPreRegistration =
       await this.findPreRegistartionByIdRepository.find(id);
 
-    if (Object.keys(filteredPreRegistration?.id ?? filteredPreRegistration)) {
+    if (
+      Object.keys(filteredPreRegistration?.id ?? filteredPreRegistration)
+        .length < 1
+    ) {
       return left(new EntityNotExists('Pre Registration'));
     }
 
