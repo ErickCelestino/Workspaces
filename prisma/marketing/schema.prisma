@@ -75,6 +75,7 @@ model pre_registration {
   branch_of_the_company String?
   completed_questionnaire Boolean @default(false)
   pre_registration_date DateTime @default(now())
+  finished_at DateTime?
 
   @@schema("marketing")
 }
