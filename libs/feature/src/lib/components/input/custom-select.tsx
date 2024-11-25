@@ -21,6 +21,7 @@ interface CustomSelectProps {
     textColor: string;
   };
   fontSize?: number;
+  width: string;
 }
 
 export const CustomSelect: FC<CustomSelectProps> = ({
@@ -32,12 +33,13 @@ export const CustomSelect: FC<CustomSelectProps> = ({
   setCustomInput,
   color,
   fontSize = 1.8,
+  width,
   customInputLabel = 'Especifique sua resposta',
 }) => {
   const theme = useTheme();
 
   return (
-    <Box sx={{ position: 'relative', mb: 3 }}>
+    <Box sx={{ position: 'relative', mb: 3, width: width }}>
       <Typography
         variant="body1"
         sx={{

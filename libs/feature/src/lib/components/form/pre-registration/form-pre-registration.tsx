@@ -1,4 +1,4 @@
-import { Box, Button, useTheme } from '@mui/material';
+import { Box, Button, useMediaQuery, useTheme } from '@mui/material';
 import { FC, useCallback, useState } from 'react';
 import { CustomInput, CustomSelect } from '../../input';
 import {
@@ -11,8 +11,9 @@ import {
   UpdatePreRegistrationRequest,
 } from '../../../services';
 import axios, { AxiosError } from 'axios';
-import { ValidationsError } from '../../../shared';
+import { PreRegistrationFormSchema, ValidationsError } from '../../../shared';
 import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 interface FormPreRegistrationProps {
   preRegistrationId: string;
@@ -53,6 +54,7 @@ export const FormPreRegistration: FC<FormPreRegistrationProps> = ({
   const [customLadingPageemphasis, setCustomLadingPageemphasis] = useState('');
 
   const theme = useTheme();
+  const smDown = useMediaQuery(theme.breakpoints.down('sm'));
 
   const {
     handleSubmit,
@@ -61,7 +63,7 @@ export const FormPreRegistration: FC<FormPreRegistrationProps> = ({
   } = useForm<PreBriefingDto>({
     mode: 'all',
     criteriaMode: 'all',
-    //resolver: zodResolver(CreateCompanyDataFormSchema),
+    resolver: zodResolver(PreRegistrationFormSchema),
     defaultValues: {
       name: '',
       companyName: '',
@@ -119,6 +121,7 @@ export const FormPreRegistration: FC<FormPreRegistrationProps> = ({
           backgroundInputColor: 'white',
           labelColor: 'white',
         }}
+        required={true}
         error={!!errors.name}
         helperText={errors.name ? errors.name.message : ''}
         useForm={register('name')}
@@ -131,6 +134,7 @@ export const FormPreRegistration: FC<FormPreRegistrationProps> = ({
           backgroundInputColor: 'white',
           labelColor: 'white',
         }}
+        required={true}
         error={!!errors.companyName}
         helperText={errors.companyName ? errors.companyName.message : ''}
         useForm={register('companyName')}
@@ -143,36 +147,47 @@ export const FormPreRegistration: FC<FormPreRegistrationProps> = ({
           backgroundInputColor: 'white',
           labelColor: 'white',
         }}
+        required={true}
         error={!!errors.branchOfTheCompany}
         helperText={
           errors.branchOfTheCompany ? errors.branchOfTheCompany.message : ''
         }
         useForm={register('branchOfTheCompany')}
       />
-      <CustomSelect
-        label={ladingpageUse.ladingpageUseLabel}
-        options={ladingpageUse.ladingpageUseList}
-        value={ladingpageUseValue}
-        onChange={setLadingpageUseValue}
-        customInput={customLadingpageUse}
-        setCustomInput={setCustomLadingpageUse}
-        color={{
-          textColor: textColor,
-          labelColor: textLabelColor,
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: smDown ? 'column' : 'row',
+          justifyContent: smDown ? '' : 'space-between',
         }}
-      />
-      <CustomSelect
-        label={ladingPageemphasis.ladingPageemphasisLabel}
-        options={ladingPageemphasis.ladingPageemphasisList}
-        value={ladingPageemphasisValue}
-        onChange={setLadingPageemphasisValue}
-        customInput={customLadingPageemphasis}
-        setCustomInput={setCustomLadingPageemphasis}
-        color={{
-          textColor: textColor,
-          labelColor: textLabelColor,
-        }}
-      />
+      >
+        <CustomSelect
+          width={smDown ? '100%' : '49%'}
+          label={ladingpageUse.ladingpageUseLabel}
+          options={ladingpageUse.ladingpageUseList}
+          value={ladingpageUseValue}
+          onChange={setLadingpageUseValue}
+          customInput={customLadingpageUse}
+          setCustomInput={setCustomLadingpageUse}
+          color={{
+            textColor: textColor,
+            labelColor: textLabelColor,
+          }}
+        />
+        <CustomSelect
+          width={smDown ? '100%' : '49%'}
+          label={ladingPageemphasis.ladingPageemphasisLabel}
+          options={ladingPageemphasis.ladingPageemphasisList}
+          value={ladingPageemphasisValue}
+          onChange={setLadingPageemphasisValue}
+          customInput={customLadingPageemphasis}
+          setCustomInput={setCustomLadingPageemphasis}
+          color={{
+            textColor: textColor,
+            labelColor: textLabelColor,
+          }}
+        />
+      </Box>
       <Button
         type="submit"
         variant="outlined"

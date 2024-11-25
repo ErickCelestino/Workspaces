@@ -16,6 +16,7 @@ interface CustomInputProps {
   useForm?: UseFormRegisterReturn;
   error?: boolean;
   helperText?: string;
+  required?: boolean;
 }
 
 export const CustomInput = forwardRef<HTMLInputElement, CustomInputProps>(
@@ -30,6 +31,7 @@ export const CustomInput = forwardRef<HTMLInputElement, CustomInputProps>(
       useForm,
       error,
       helperText,
+      required = false,
     },
     ref
   ) => {
@@ -56,6 +58,7 @@ export const CustomInput = forwardRef<HTMLInputElement, CustomInputProps>(
           variant="outlined"
           id={id}
           error={error}
+          required={required}
           helperText={helperText}
           sx={{ mb: 2, bgcolor: color?.backgroundInputColor, borderRadius: 1 }}
           InputProps={{

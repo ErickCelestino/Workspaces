@@ -81,7 +81,7 @@ export const PreRegistrationContainer: FC<PreRegistrationContainerProps> = ({
           <Box
             sx={{
               position: 'relative',
-              maxWidth: 450,
+              maxWidth: 500,
               boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
               borderRadius: 2,
               p: 4,
