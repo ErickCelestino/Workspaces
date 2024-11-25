@@ -1,9 +1,9 @@
 import axios from 'axios';
 import { getUserLocalStorage } from '../../../utils';
 
-const url = `${process.env['NX_APP_DEFAULT_PROTOCOL'] ?? 'http://'}${
-  process.env['NX_APP_DEFAULT_HOST'] ?? 'localhost'
-}:${process.env['NX_APP_BACK_PURE_TV'] ?? '3000'}/api-pure-tv`;
+const url = `${process.env['NX_PUBLIC_DEFAULT_PROTOCOL'] ?? 'http://'}${
+  process.env['NX_PUBLIC_DEFAULT_HOST'] ?? 'localhost'
+}:${process.env['NX_PUBLIC_BACK_PURE_TV'] ?? '3000'}/api-pure-tv`;
 export const pureTvApi = axios.create({
   baseURL: url,
 });

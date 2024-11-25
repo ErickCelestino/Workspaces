@@ -5,7 +5,7 @@ services:
       context: .
       dockerfile: ./configs/docker/Dockerfile.api-general
     ports:
-      - '${NX_APP_BACK_GENERAL}:${NX_APP_BACK_GENERAL}'
+      - '${NX_PUBLIC_BACK_GENERAL}:${NX_PUBLIC_BACK_GENERAL}'
     environment:
       - NODE_ENV=production
       - DATABASE_GENERAL_URL=${DATABASE_GENERAL_URL}
@@ -18,7 +18,7 @@ services:
       context: .
       dockerfile: ./configs/docker/Dockerfile.api-pure-tv
     ports:
-      - '${NX_APP_BACK_PURE_TV}:${NX_APP_BACK_PURE_TV}'
+      - '${NX_PUBLIC_BACK_PURE_TV}:${NX_PUBLIC_BACK_PURE_TV}'
     environment:
       - NODE_ENV=production
       - DATABASE_GENERAL_URL=${DATABASE_GENERAL_URL}
@@ -31,9 +31,9 @@ services:
       context: .
       dockerfile: ./configs/docker/Dockerfile.web-pure-tv
     ports:
-      - '${NX_APP_FRONT_PURE_TV}:80'
+      - '${NX_PUBLIC_FRONT_PURE_TV}:80'
     environment:
       - NODE_ENV=production
-      - NX_APP_BACK_PURE_TV= ${NX_APP_BACK_PURE_TV}
-      - NX_APP_BACK_GENERAL= ${NX_APP_BACK_GENERAL}
-      - NX_APP_FRONT_PURE_TV= ${NX_APP_FRONT_PURE_TV}
+      - NX_PUBLIC_BACK_PURE_TV= ${NX_PUBLIC_BACK_PURE_TV}
+      - NX_PUBLIC_BACK_GENERAL= ${NX_PUBLIC_BACK_GENERAL}
+      - NX_PUBLIC_FRONT_PURE_TV= ${NX_PUBLIC_FRONT_PURE_TV}

@@ -23,6 +23,6 @@ COPY --from=builder /app/package*.json ./
 
 RUN npm install --production --ignore-scripts
 
-EXPOSE ${NX_APP_BACK_PURE_TV}
+EXPOSE ${NX_PUBLIC_BACK_PURE_TV}
 
 CMD ["node", "dist/api/main"]

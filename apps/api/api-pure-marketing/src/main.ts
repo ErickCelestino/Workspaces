@@ -17,7 +17,7 @@ async function bootstrap() {
   });
   const globalPrefix = 'api-pure-marketing';
   app.setGlobalPrefix(globalPrefix);
-  const port = process.env['NX_APP_BACK_MARKETING'] || 3000;
+  const port = process.env['NX_PUBLIC_BACK_MARKETING'] || 3000;
   await app.listen(port);
   Logger.log(
     `🚀 Application is running on: http://localhost:${port}/${globalPrefix}`
