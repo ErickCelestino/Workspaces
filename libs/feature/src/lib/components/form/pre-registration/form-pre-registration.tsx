@@ -1,12 +1,26 @@
 import { Box, Button, useTheme } from '@mui/material';
-import { FC, useState } from 'react';
+import { FC, useCallback, useState } from 'react';
 import { CustomInput, CustomSelect } from '../../input';
+import {
+  ErrorResponse,
+  PreBriefingDto,
+  UpdatePreRegistrationDto,
+} from '@workspaces/domain';
+import {
+  navigateToWaths,
+  UpdatePreRegistrationRequest,
+} from '../../../services';
+import axios, { AxiosError } from 'axios';
+import { ValidationsError } from '../../../shared';
+import { useForm } from 'react-hook-form';
 
 interface FormPreRegistrationProps {
+  preRegistrationId: string;
   nameLabel: string;
   textColor?: string;
   textLabelColor?: string;
   companyNameLabel: string;
+  branchOfTheCompanyLabel: string;
   buttonTitle?: string;
   ladingpageUse: {
     ladingpageUseLabel: string;
@@ -16,19 +30,23 @@ interface FormPreRegistrationProps {
     ladingPageemphasisLabel: string;
     ladingPageemphasisList: string[];
   };
+  phone: string;
+  showAlert: (message: string, success: boolean) => void;
 }
 
 export const FormPreRegistration: FC<FormPreRegistrationProps> = ({
+  preRegistrationId,
   nameLabel,
   companyNameLabel,
+  branchOfTheCompanyLabel,
   textColor = 'black',
   textLabelColor = '#fff',
   ladingpageUse,
   ladingPageemphasis,
+  showAlert,
+  phone,
   buttonTitle = 'Fale com consultor',
 }) => {
-  const [name, setName] = useState('');
-  const [companyName, setCompanyName] = useState('');
   const [ladingpageUseValue, setLadingpageUseValue] = useState('');
   const [ladingPageemphasisValue, setLadingPageemphasisValue] = useState('');
   const [customLadingpageUse, setCustomLadingpageUse] = useState('');
@@ -36,44 +54,100 @@ export const FormPreRegistration: FC<FormPreRegistrationProps> = ({
 
   const theme = useTheme();
 
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
-    const formData = {
-      name,
-      companyName,
-      ladingpageUse:
-        ladingpageUseValue === 'Outros'
-          ? customLadingpageUse
-          : ladingpageUseValue,
-      ladingPageemphasis:
-        ladingPageemphasisValue === 'Outros'
-          ? customLadingPageemphasis
-          : ladingPageemphasisValue,
-    };
-    console.log('Dados do formulário:', formData);
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = useForm<PreBriefingDto>({
+    mode: 'all',
+    criteriaMode: 'all',
+    //resolver: zodResolver(CreateCompanyDataFormSchema),
+    defaultValues: {
+      name: '',
+      companyName: '',
+      branchOfTheCompany: '',
+    },
+  });
+
+  const updatePreRegistration = useCallback(
+    async (input: UpdatePreRegistrationDto) => {
+      try {
+        const result = await UpdatePreRegistrationRequest(input);
+        return result;
+      } catch (error) {
+        console.error(error);
+        if (axios.isAxiosError(error)) {
+          const axiosError = error as AxiosError<ErrorResponse>;
+          const errors = ValidationsError(axiosError, 'Pre Cadastro');
+          if (errors) {
+            showAlert(errors, false);
+          }
+        }
+      }
+    },
+    [showAlert]
+  );
+
+  const handlePreRegistration = async (data: PreBriefingDto) => {
+    if (data) {
+      const updatedPreRegistration = await updatePreRegistration({
+        id: preRegistrationId,
+        branchOfTheCompany: data.branchOfTheCompany,
+      });
+
+      if (updatedPreRegistration) {
+        navigateToWaths(
+          phone,
+          `Nome: ${data.name},\n Nome da Empresa: ${data.companyName},\n Ramo de atuação: ${data.branchOfTheCompany},\n Objetivo Principal: ${ladingpageUseValue}, \n Destaque da Empresa: ${ladingPageemphasisValue}`
+        );
+      }
+    }
   };
 
   return (
-    <Box component="form" noValidate autoComplete="off" onSubmit={handleSubmit}>
+    <Box
+      component="form"
+      noValidate
+      autoComplete="off"
+      onSubmit={handleSubmit(handlePreRegistration)}
+    >
       <CustomInput
         label={nameLabel}
-        value={name}
+        id="name"
         color={{
           textColor: 'black',
           backgroundInputColor: 'white',
           labelColor: 'white',
         }}
-        onChange={(e) => setName(e.target.value)}
+        error={!!errors.name}
+        helperText={errors.name ? errors.name.message : ''}
+        useForm={register('name')}
       />
       <CustomInput
         label={companyNameLabel}
-        value={companyName}
+        id="companyName"
         color={{
           textColor: 'black',
           backgroundInputColor: 'white',
           labelColor: 'white',
         }}
-        onChange={(e) => setCompanyName(e.target.value)}
+        error={!!errors.companyName}
+        helperText={errors.companyName ? errors.companyName.message : ''}
+        useForm={register('companyName')}
+      />
+      <CustomInput
+        label={branchOfTheCompanyLabel}
+        id="branchOfTheCompany"
+        color={{
+          textColor: 'black',
+          backgroundInputColor: 'white',
+          labelColor: 'white',
+        }}
+        error={!!errors.branchOfTheCompany}
+        helperText={
+          errors.branchOfTheCompany ? errors.branchOfTheCompany.message : ''
+        }
+        useForm={register('branchOfTheCompany')}
       />
       <CustomSelect
         label={ladingpageUse.ladingpageUseLabel}

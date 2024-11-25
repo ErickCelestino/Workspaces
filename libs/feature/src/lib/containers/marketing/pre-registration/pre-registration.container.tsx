@@ -1,5 +1,5 @@
 import { Box, Typography, useMediaQuery, useTheme } from '@mui/material';
-import { FC, useCallback, useEffect } from 'react';
+import { FC, useCallback, useEffect, useState } from 'react';
 import { FormPreRegistration } from '../../../components';
 import { CreatePreRegistrationDto, ErrorResponse } from '@workspaces/domain';
 import { CreatePreRegistrationRequest } from '../../../services';
@@ -12,10 +12,12 @@ interface PreRegistrationContainerProps {
   textColor?: string;
   backgroundColor?: string;
   backgroundCardColor?: string;
+  phone: string;
 }
 
 export const PreRegistrationContainer: FC<PreRegistrationContainerProps> = ({
   title,
+  phone,
   textColor = '#fff',
   backgroundColor = '#111111',
   backgroundCardColor = 'radial-gradient(ellipse at bottom right, #700B0E, #1E1E1E, #9C1B1F, #9C1B1F, #1E1E1E, #9C1B1F)',
@@ -23,6 +25,7 @@ export const PreRegistrationContainer: FC<PreRegistrationContainerProps> = ({
   const theme = useTheme();
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
   const { showSnackbarAlert, SnackbarAlert } = useSnackbarAlert();
+  const [preRegistrationId, setPreRegistrationId] = useState('');
 
   const showAlert = useCallback(
     (message: string, success: boolean) => {
@@ -38,12 +41,14 @@ export const PreRegistrationContainer: FC<PreRegistrationContainerProps> = ({
     async (input: CreatePreRegistrationDto) => {
       try {
         const result = await CreatePreRegistrationRequest(input);
-        return result;
+        if (result) {
+          setPreRegistrationId(result.preRegisrationId);
+        }
       } catch (error) {
         console.error(error);
         if (axios.isAxiosError(error)) {
           const axiosError = error as AxiosError<ErrorResponse>;
-          const errors = ValidationsError(axiosError, 'Dados da Empresa');
+          const errors = ValidationsError(axiosError, 'Pre Cadastro');
           if (errors) {
             showAlert(errors, false);
           }
@@ -79,7 +84,7 @@ export const PreRegistrationContainer: FC<PreRegistrationContainerProps> = ({
               maxWidth: 450,
               boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
               borderRadius: 2,
-              p: 6,
+              p: 4,
               textAlign: 'center',
               overflow: 'hidden',
               '&::before': {
@@ -108,8 +113,10 @@ export const PreRegistrationContainer: FC<PreRegistrationContainerProps> = ({
             </Typography>
 
             <FormPreRegistration
+              preRegistrationId={preRegistrationId}
               nameLabel="Nome"
               companyNameLabel="Nome da Empresa"
+              branchOfTheCompanyLabel="Ramo da Empresa"
               ladingpageUse={{
                 ladingpageUseLabel: 'Para que você quer usar sua landing page?',
                 ladingpageUseList: [
@@ -118,6 +125,7 @@ export const PreRegistrationContainer: FC<PreRegistrationContainerProps> = ({
                   'Divulgar algo (evento, marca, etc.)',
                 ],
               }}
+              showAlert={showAlert}
               ladingPageemphasis={{
                 ladingPageemphasisLabel:
                   'Você já sabe o que gostaria de destacar na sua landing page?',
@@ -127,6 +135,7 @@ export const PreRegistrationContainer: FC<PreRegistrationContainerProps> = ({
                   'Não, preciso de ajuda desde o início.',
                 ],
               }}
+              phone={phone}
             />
           </Box>
         )}
@@ -146,8 +155,10 @@ export const PreRegistrationContainer: FC<PreRegistrationContainerProps> = ({
             </Typography>
 
             <FormPreRegistration
+              preRegistrationId={preRegistrationId}
               nameLabel="Nome"
               companyNameLabel="Nome da Empresa"
+              branchOfTheCompanyLabel="Ramo da Empresa"
               textColor={textColor}
               ladingpageUse={{
                 ladingpageUseLabel: 'Para que você quer usar sua landing page?',
@@ -157,6 +168,7 @@ export const PreRegistrationContainer: FC<PreRegistrationContainerProps> = ({
                   'Divulgar algo (evento, marca, etc.)',
                 ],
               }}
+              showAlert={showAlert}
               ladingPageemphasis={{
                 ladingPageemphasisLabel:
                   'Você já sabe o que gostaria de destacar na sua landing page?',
@@ -166,6 +178,7 @@ export const PreRegistrationContainer: FC<PreRegistrationContainerProps> = ({
                   'Não, preciso de ajuda desde o início.',
                 ],
               }}
+              phone={phone}
             />
           </Box>
         )}

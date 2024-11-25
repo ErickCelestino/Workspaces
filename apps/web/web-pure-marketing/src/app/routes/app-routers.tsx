@@ -7,7 +7,10 @@ export const AppRouters = () => {
       <Route
         path="/"
         element={
-          <PreRegistrationContainer title="Nos Conte Sobre Sua Empresa e Objetivos" />
+          <PreRegistrationContainer
+            title="Nos Conte Sobre Sua Empresa e Objetivos"
+            phone="44998494865"
+          />
         }
       />
       <Route path="*" element={<Navigate to="/" />} />

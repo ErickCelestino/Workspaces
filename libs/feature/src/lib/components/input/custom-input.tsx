@@ -1,5 +1,6 @@
 import { Box, TextField, Typography, useTheme } from '@mui/material';
-import { FC } from 'react';
+import { forwardRef } from 'react';
+import { UseFormRegisterReturn } from 'react-hook-form';
 
 interface CustomInputProps {
   label: string;
@@ -11,39 +12,63 @@ interface CustomInputProps {
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   value?: string;
   fontSize?: number;
+  id: string;
+  useForm?: UseFormRegisterReturn;
+  error?: boolean;
+  helperText?: string;
 }
 
-export const CustomInput: FC<CustomInputProps> = ({
-  label,
-  color,
-  onChange,
-  value,
-  fontSize = 1.8,
-}) => {
-  const theme = useTheme();
-  return (
-    <Box sx={{ position: 'relative' }}>
-      <Typography
-        variant="body1"
-        sx={{
-          fontSize: theme.spacing(fontSize),
-          textAlign: 'start',
-          color: color?.labelColor,
-          zIndex: 1,
-        }}
-      >
-        {label}
-      </Typography>
-      <TextField
-        value={value}
-        onChange={onChange}
-        fullWidth
-        variant="outlined"
-        sx={{ mb: 2, bgcolor: color?.backgroundInputColor, borderRadius: 1 }}
-        InputProps={{
-          style: { color: color?.textColor, fontSize: theme.spacing(fontSize) },
-        }}
-      />
-    </Box>
-  );
-};
+export const CustomInput = forwardRef<HTMLInputElement, CustomInputProps>(
+  (
+    {
+      label,
+      color,
+      onChange,
+      value,
+      fontSize = 1.8,
+      id,
+      useForm,
+      error,
+      helperText,
+    },
+    ref
+  ) => {
+    const theme = useTheme();
+
+    return (
+      <Box sx={{ position: 'relative' }}>
+        <Typography
+          variant="body1"
+          sx={{
+            fontSize: theme.spacing(fontSize),
+            textAlign: 'start',
+            color: color?.labelColor,
+            zIndex: 1,
+          }}
+        >
+          {label}
+        </Typography>
+        <TextField
+          ref={ref}
+          value={value}
+          onChange={onChange}
+          fullWidth
+          variant="outlined"
+          id={id}
+          error={error}
+          helperText={helperText}
+          sx={{ mb: 2, bgcolor: color?.backgroundInputColor, borderRadius: 1 }}
+          InputProps={{
+            style: {
+              color: color?.textColor,
+              fontSize: theme.spacing(fontSize),
+            },
+          }}
+          {...useForm}
+        />
+      </Box>
+    );
+  }
+);
+
+CustomInput.displayName = 'CustomInput';
