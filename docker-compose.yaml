@@ -1,39 +1,26 @@
 version: '3.8'
 services:
-  api-general:
+  api-pure-marketing:
     build:
       context: .
-      dockerfile: ./configs/docker/Dockerfile.api-general
+      dockerfile: ./configs/docker/Dockerfile.api-pure-marketing
     ports:
-      - '${NX_PUBLIC_BACK_GENERAL}:${NX_PUBLIC_BACK_GENERAL}'
+      - '${NX_PUBLIC_BACK_MARKETING}:${NX_PUBLIC_BACK_MARKETING}'
     environment:
       - NODE_ENV=production
       - DATABASE_GENERAL_URL=${DATABASE_GENERAL_URL}
+      - DATABASE_MARKETING_URL=${DATABASE_MARKETING_URL}
     env_file:
       - .env
-    command: sh -c "npm run prisma:generate && npm run prisma:deploy && node /app/dist/main.js"
+    command: sh -c "npm run prisma:generate && node /app/dist/main.js"
 
-  api-pure-tv:
+  web-pure-marketing:
     build:
       context: .
-      dockerfile: ./configs/docker/Dockerfile.api-pure-tv
+      dockerfile: ./configs/docker/Dockerfile.web-pure-marketing
     ports:
-      - '${NX_PUBLIC_BACK_PURE_TV}:${NX_PUBLIC_BACK_PURE_TV}'
+      - '${NX_PUBLIC_FRONT_PURE_MARKETING}:80'
     environment:
       - NODE_ENV=production
-      - DATABASE_GENERAL_URL=${DATABASE_GENERAL_URL}
-    env_file:
-      - .env
-    command: sh -c "npm run prisma:generate && npm run prisma:deploy && node /app/dist/main.js"
-
-  web-pure-tv:
-    build:
-      context: .
-      dockerfile: ./configs/docker/Dockerfile.web-pure-tv
-    ports:
-      - '${NX_PUBLIC_FRONT_PURE_TV}:80'
-    environment:
-      - NODE_ENV=production
-      - NX_PUBLIC_BACK_PURE_TV= ${NX_PUBLIC_BACK_PURE_TV}
-      - NX_PUBLIC_BACK_GENERAL= ${NX_PUBLIC_BACK_GENERAL}
-      - NX_PUBLIC_FRONT_PURE_TV= ${NX_PUBLIC_FRONT_PURE_TV}
+      - NX_PUBLIC_BACK_MARKETING= ${NX_PUBLIC_BACK_MARKETING}
+      - NX_PUBLIC_FRONT_PURE_MARKETING= ${NX_PUBLIC_FRONT_PURE_MARKETING}
