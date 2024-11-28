@@ -10,6 +10,8 @@ services:
       - NODE_ENV=production
       - DATABASE_GENERAL_URL=${DATABASE_GENERAL_URL}
       - DATABASE_MARKETING_URL=${DATABASE_MARKETING_URL}
+    networks:
+      - shared_network
     env_file:
       - .env
     command: sh -c "npm run prisma:generate && node /app/dist/main.js"
@@ -22,5 +24,11 @@ services:
       - '${NX_PUBLIC_FRONT_PURE_MARKETING}:80'
     environment:
       - NODE_ENV=production
-      - NX_PUBLIC_BACK_MARKETING= ${NX_PUBLIC_BACK_MARKETING}
-      - NX_PUBLIC_FRONT_PURE_MARKETING= ${NX_PUBLIC_FRONT_PURE_MARKETING}
+      - NX_PUBLIC_BACK_MARKETING=${NX_PUBLIC_BACK_MARKETING}
+      - NX_PUBLIC_FRONT_PURE_MARKETING=${NX_PUBLIC_FRONT_PURE_MARKETING}
+    networks:
+      - shared_network
+
+networks:
+  shared_network:
+    external: true
