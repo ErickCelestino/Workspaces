@@ -7,10 +7,12 @@ services:
       - POSTGRES_USER=${POSTGRES_GENERAL_USER}
       - POSTGRES_PASSWORD=${POSTGRES_GENERAL_PASSWORD}
       - POSTGRES_DB=${POSTGRES_GENERAL_DB}
+      - PGPORT=${POSTGRES_GENERAL_PORT}
     ports:
-      - '${POSTGRES_GENERAL_PORT}:5432'
+      - '${POSTGRES_GENERAL_PORT}:${POSTGRES_GENERAL_PORT}'
     volumes:
-      - /general_data:/var/lib/postgresql/data
+      - general_data:/var/lib/postgresql/data
+    command: postgres -p ${POSTGRES_GENERAL_PORT}
     networks:
       - shared_network
 
@@ -21,10 +23,12 @@ services:
       - POSTGRES_USER=${POSTGRES_MARKETING_USER}
       - POSTGRES_PASSWORD=${POSTGRES_MARKETING_PASSWORD}
       - POSTGRES_DB=${POSTGRES_MARKETING_DB}
+      - PGPORT=${POSTGRES_MARKETING_PORT}
     ports:
-      - '${POSTGRES_MARKETING_PORT}:5432'
+      - '${POSTGRES_MARKETING_PORT}:${POSTGRES_MARKETING_PORT}'
     volumes:
-      - /marketing_data:/var/lib/postgresql/data
+      - marketing_data:/var/lib/postgresql/data
+    command: postgres -p ${POSTGRES_MARKETING_PORT}
     networks:
       - shared_network
 
@@ -32,3 +36,7 @@ networks:
   shared_network:
     driver: bridge
     name: shared_network
+
+volumes:
+  general_data: {}
+  marketing_data: {}
