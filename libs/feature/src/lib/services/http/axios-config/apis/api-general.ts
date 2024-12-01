@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from 'axios';
-import { getUserLocalStorage } from '../../utils';
+import { getUserLocalStorage } from '../../../utils';
 
-const url = `${process.env['NX_PUBLIC_DEFAULT_PROTOCOL'] ?? 'http://'}${
-  process.env['NX_PUBLIC_DEFAULT_HOST'] ?? 'localhost'
-}:${process.env['NX_PUBLIC_BACK_GENERAL'] ?? '3001'}/api-general`;
+const url = `${
+  process.env['NX_PUBLIC_BACK_GENERAL_URL'] ?? 'http://localhost:3000'
+}/api-general`;
 export const generalApi = axios.create({
   baseURL: url,
 });
