@@ -20,12 +20,13 @@ services:
     build:
       context: .
       dockerfile: ./configs/docker/Dockerfile.web-pure-marketing
+      args:
+        NX_PUBLIC_BACK_PURE_MARKETING_URL: ${NX_PUBLIC_BACK_PURE_MARKETING_URL}
+        NX_PUBLIC_FRONT_PURE_MARKETING: ${NX_PUBLIC_FRONT_PURE_MARKETING}
     ports:
       - '${NX_PUBLIC_FRONT_PURE_MARKETING}:80'
     environment:
       - NODE_ENV=production
-      - NX_PUBLIC_BACK_MARKETING=${NX_PUBLIC_BACK_MARKETING}
-      - NX_PUBLIC_FRONT_PURE_MARKETING=${NX_PUBLIC_FRONT_PURE_MARKETING}
     networks:
       - shared_network
 

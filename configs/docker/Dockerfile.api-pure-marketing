@@ -21,8 +21,6 @@ COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package*.json ./
 
-RUN npm install --production --ignore-scripts
-
 EXPOSE ${NX_PUBLIC_BACK_MARKETING}
 
 CMD ["node", "dist/api/main"]
