@@ -1,7 +1,7 @@
 generator client {
   provider = "prisma-client-js"
   output   = "../generated/marketing"
-  previewFeatures = ["multiSchema", "fullTextSearch"]
+  previewFeatures = ["multiSchema", "fullTextSearchPostgres"]
 }
 
 datasource db {
@@ -32,7 +32,7 @@ model Enterprise_Meling {
   Sending Sending[]
 }
 
-model runner {
+model Runner {
   runner_id String @id @default(uuid())
   runner String
   platform String
@@ -45,18 +45,20 @@ model Sending {
   sending_id String @id @default(uuid())
   enterprise_meling_id String
   runner_id String
+  model_id String
   sended_email Boolean
   sended_email_date DateTime @default(now())
   sended_token String?
   sended_token_used Boolean @default(false)
 
   enterprise_meling Enterprise_Meling @relation(fields: [enterprise_meling_id], references: [enterprise_meling_id])
-  runner runner @relation(fields: [runner_id], references: [runner_id])
+  runner Runner @relation(fields: [runner_id], references: [runner_id])
+  model Models @relation(fields: [model_id], references: [model_id])
   @@schema("marketing")
-  email_return_information email_return_information[]
+  email_return_information Email_Return_Information[]
 }
 
-model email_return_information {
+model Email_Return_Information {
   email_return_information_id String @id @default(uuid())
   sending_id String
   email_opned Boolean?
@@ -68,7 +70,7 @@ model email_return_information {
   @@schema("marketing")
 }
 
-model pre_registration {
+model Pre_Registration {
   pre_registration_id String @id @default(uuid())
   sending_id String
   step PreRestrationStep  @default(INITIAL)
@@ -85,4 +87,13 @@ enum PreRestrationStep {
   FINAL
 
   @@schema("marketing")
+}
+model Models {
+  model_id String @id @default(uuid())
+  html String
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+
+  @@schema("marketing")
+  Sending Sending[]
 }
