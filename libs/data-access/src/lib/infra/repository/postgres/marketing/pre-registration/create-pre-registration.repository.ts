@@ -12,7 +12,7 @@ export class CreatePreRegistrationRepostioryImpl
   async create(input: CreatePreRegistrationDto): Promise<string> {
     const { sendingId } = input;
     const createdPreRegistration =
-      await this.prismaService.marketingPrisma.pre_registration.create({
+      await this.prismaService.marketingPrisma.pre_Registration.create({
         data: {
           sending_id: sendingId,
         },

@@ -11,7 +11,7 @@ export class FindPreRegistrationByIdRepositoryImpl
   constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
   async find(id: string): Promise<PreRegistartionResponseDto> {
     const filteredPreRegistration =
-      await this.prismaService.marketingPrisma.pre_registration.findFirst({
+      await this.prismaService.marketingPrisma.pre_Registration.findFirst({
         where: {
           pre_registration_id: id,
         },

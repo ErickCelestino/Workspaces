@@ -13,7 +13,7 @@ export class UpdatePreRegistrationRepositoryImpl
     const { id, branchOfTheCompany } = input;
 
     const updatedPreRegistration =
-      await this.prismaService.marketingPrisma.pre_registration.update({
+      await this.prismaService.marketingPrisma.pre_Registration.update({
         where: {
           pre_registration_id: id,
         },
