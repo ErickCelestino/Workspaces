@@ -1,11 +1,11 @@
 generator client {
   provider = "prisma-client-js"
   output   = "../generated/marketing"
-  previewFeatures = ["multiSchema", "fullTextSearch"]
+  previewFeatures = ["multiSchema"]
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "cockroachdb"
   url      = env("DATABASE_MARKETING_URL")
   schemas  = ["marketing"]
 }
