@@ -1,39 +1,34 @@
 version: '3.8'
 services:
-  api-general:
+  api-pure-marketing:
     build:
       context: .
-      dockerfile: ./configs/docker/Dockerfile.api-general
+      dockerfile: ./configs/docker/Dockerfile.api-pure-marketing
     ports:
-      - '${NX_APP_BACK_GENERAL}:${NX_APP_BACK_GENERAL}'
+      - '${NX_PUBLIC_BACK_MARKETING}:${NX_PUBLIC_BACK_MARKETING}'
     environment:
       - NODE_ENV=production
-      - DATABASE_URL=${DATABASE_URL}
+      - DATABASE_MARKETING_URL=${DATABASE_MARKETING_URL}
+    networks:
+      - shared_network
     env_file:
       - .env
-    command: sh -c "npm run prisma:generate && npm run prisma:deploy && node /app/dist/main.js"
+    command: sh -c "npm run prisma:migrate-prod:marketing && node /app/dist/main.js"
 
-  api-pure-tv:
+  web-pure-marketing:
     build:
       context: .
-      dockerfile: ./configs/docker/Dockerfile.api-pure-tv
+      dockerfile: ./configs/docker/Dockerfile.web-pure-marketing
+      args:
+        NX_PUBLIC_BACK_PURE_MARKETING_URL: ${NX_PUBLIC_BACK_PURE_MARKETING_URL}
+        NX_PUBLIC_FRONT_PURE_MARKETING: ${NX_PUBLIC_FRONT_PURE_MARKETING}
     ports:
-      - '${NX_APP_BACK_PURE_TV}:${NX_APP_BACK_PURE_TV}'
+      - '${NX_PUBLIC_FRONT_PURE_MARKETING}:80'
     environment:
       - NODE_ENV=production
-      - DATABASE_URL=${DATABASE_URL}
-    env_file:
-      - .env
-    command: sh -c "npm run prisma:generate && npm run prisma:deploy && node /app/dist/main.js"
+    networks:
+      - shared_network
 
-  web-pure-tv:
-    build:
-      context: .
-      dockerfile: ./configs/docker/Dockerfile.web-pure-tv
-    ports:
-      - '${NX_APP_FRONT_PURE_TV}:80'
-    environment:
-      - NODE_ENV=production
-      - NX_APP_BACK_PURE_TV= ${NX_APP_BACK_PURE_TV}
-      - NX_APP_BACK_GENERAL= ${NX_APP_BACK_GENERAL}
-      - NX_APP_FRONT_PURE_TV= ${NX_APP_FRONT_PURE_TV}
+networks:
+  shared_network:
+    external: true

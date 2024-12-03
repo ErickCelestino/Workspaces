@@ -1,18 +1,11 @@
-import { FC, useCallback, useState } from 'react';
+import { FC, useState } from 'react';
 import { Box, Button, useMediaQuery, useTheme } from '@mui/material';
-import {
-  ComboBoxListResult,
-  ErrorResponse,
-  ListDeviceDto,
-} from '@workspaces/domain';
-import {
-  ListDeviceRequest,
-  MoveSchedulesToAnotherDeviceRequest,
-} from '../../../services';
+import { ComboBoxListResult, ErrorResponse } from '@workspaces/domain';
+import { MoveSchedulesToAnotherDeviceRequest } from '../../../services';
 import axios, { AxiosError } from 'axios';
 import { ValidationsError } from '../../../shared';
 import { SimpleFormModal } from '../simple';
-import { SearchComboBox } from '../../combo-box';
+import { SearchComboBox } from '../../input';
 import { useListDeviceData } from '../../../hooks';
 
 interface MoveSchedulesToAnotherDeviceModalProps {

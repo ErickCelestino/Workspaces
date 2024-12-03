@@ -4,7 +4,7 @@ import {
   ListUserRepository,
   ListUserResponseDto,
 } from '@workspaces/domain';
-import { PrismaService } from 'nestjs-prisma';
+import { PrismaService } from '../../../../application';
 
 export class ListUserRepositoryImpl implements ListUserRepository {
   constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
@@ -13,8 +13,8 @@ export class ListUserRepositoryImpl implements ListUserRepository {
     const skip = input?.skip || 0;
     const take = input?.take || 6;
 
-    const [users, total] = await this.prismaService.$transaction([
-      this.prismaService.user.findMany({
+    const [users, total] = await this.prismaService.generalPrisma.$transaction([
+      this.prismaService.generalPrisma.user.findMany({
         where: {
           ...(input !== null
             ? {
@@ -52,7 +52,7 @@ export class ListUserRepositoryImpl implements ListUserRepository {
         skip: parseInt(skip.toString()),
         take: parseInt(take.toString()),
       }),
-      this.prismaService.user.count(),
+      this.prismaService.generalPrisma.user.count(),
     ]);
 
     const totalPages = Math.ceil(total / take);

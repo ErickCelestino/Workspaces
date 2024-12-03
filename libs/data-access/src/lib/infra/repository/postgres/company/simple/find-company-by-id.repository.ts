@@ -3,7 +3,7 @@ import {
   CompanyResponseDto,
   FindCompanyByIdRepository,
 } from '@workspaces/domain';
-import { PrismaService } from 'nestjs-prisma';
+import { PrismaService } from '../../../../../application';
 
 export class FindCompanyByIdRepositoryImpl
   implements FindCompanyByIdRepository
@@ -11,65 +11,66 @@ export class FindCompanyByIdRepositoryImpl
   constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
 
   async find(id: string): Promise<CompanyResponseDto> {
-    const filteredCompany = await this.prismaService.company.findFirst({
-      where: {
-        company_id: id,
-      },
-      select: {
-        company_id: true,
-        cnpj: true,
-        fantasy_name: true,
-        social_reason: true,
-        created_at: true,
-        company_data: {
-          where: {
-            company_id: id,
-          },
-          select: {
-            company_data_id: true,
-            legal_nature: true,
-            opening: true,
-            phone: true,
-            port: true,
-            situation: true,
-            responsible_email: true,
-          },
+    const filteredCompany =
+      await this.prismaService.generalPrisma.company.findFirst({
+        where: {
+          company_id: id,
         },
-        company_x_address: {
-          where: {
-            company_id: id,
+        select: {
+          company_id: true,
+          cnpj: true,
+          fantasy_name: true,
+          social_reason: true,
+          created_at: true,
+          company_data: {
+            where: {
+              company_id: id,
+            },
+            select: {
+              company_data_id: true,
+              legal_nature: true,
+              opening: true,
+              phone: true,
+              port: true,
+              situation: true,
+              responsible_email: true,
+            },
           },
-          select: {
-            address: {
-              select: {
-                city: {
-                  select: {
-                    name: true,
-                    state: {
-                      select: {
-                        country: {
-                          select: {
-                            name: true,
+          company_x_address: {
+            where: {
+              company_id: id,
+            },
+            select: {
+              address: {
+                select: {
+                  city: {
+                    select: {
+                      name: true,
+                      state: {
+                        select: {
+                          country: {
+                            select: {
+                              name: true,
+                            },
                           },
+                          name: true,
+                          uf: true,
                         },
-                        name: true,
-                        uf: true,
                       },
                     },
                   },
+                  address_id: true,
+                  complement: true,
+                  district: true,
+                  number: true,
+                  street: true,
+                  zipcode: true,
                 },
-                address_id: true,
-                complement: true,
-                district: true,
-                number: true,
-                street: true,
-                zipcode: true,
               },
             },
           },
         },
-      },
-    });
+      });
 
     const mappedCompany: CompanyResponseDto = {
       data: {

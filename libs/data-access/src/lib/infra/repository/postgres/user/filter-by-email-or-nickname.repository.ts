@@ -4,7 +4,7 @@ import {
   FilterByEmailOrNicknameRepository,
   User,
 } from '@workspaces/domain';
-import { PrismaService } from 'nestjs-prisma';
+import { PrismaService } from '../../../../application';
 
 export class FilterByEmailOrNicknameRepositoryImpl
   implements FilterByEmailOrNicknameRepository
@@ -12,7 +12,7 @@ export class FilterByEmailOrNicknameRepositoryImpl
   constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
 
   async filter(input: string): Promise<User> {
-    const userResult = await this.prismaService.user.findFirst({
+    const userResult = await this.prismaService.generalPrisma.user.findFirst({
       where: {
         OR: [
           {

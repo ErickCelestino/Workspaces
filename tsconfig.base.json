@@ -18,7 +18,9 @@
     "paths": {
       "@workspaces/data-access": ["libs/data-access/src/index.ts"],
       "@workspaces/domain": ["libs/domain/src/index.ts"],
-      "@workspaces/feature": ["libs/feature/src/index.ts"]
+      "@workspaces/feature": ["libs/feature/src/index.ts"],
+      "@workspaces/prisma/general": ["prisma/generated/general"],
+      "@workspaces/prisma/marketing": ["prisma/generated/marketing"]
     }
   },
   "exclude": ["node_modules", "tmp"]

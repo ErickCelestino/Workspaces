@@ -3,7 +3,7 @@ import {
   PlaylistToSchedulingDto,
   AddPlaylistToSchedulingRepository,
 } from '@workspaces/domain';
-import { PrismaService } from 'nestjs-prisma';
+import { PrismaService } from '../../../../application';
 
 export class AddPlaylistToSchedulingRepositoryImpl
   implements AddPlaylistToSchedulingRepository
@@ -13,7 +13,7 @@ export class AddPlaylistToSchedulingRepositoryImpl
     const { playlistId, schedulingId } = input;
 
     const createdPlaylistToScheduling =
-      await this.prismaService.playlist_X_Scheduling.create({
+      await this.prismaService.generalPrisma.playlist_X_Scheduling.create({
         data: {
           playlist_id: playlistId,
           scheduling_id: schedulingId,

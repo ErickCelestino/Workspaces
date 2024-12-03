@@ -4,7 +4,7 @@ import {
   FindSimpleCompanyByIdDto,
   FindSimpleCompanyByIdRepository,
 } from '@workspaces/domain';
-import { PrismaService } from 'nestjs-prisma';
+import { PrismaService } from '../../../../../application';
 
 export class FindSimpleCompanyByIdRepositoryImpl
   implements FindSimpleCompanyByIdRepository
@@ -13,20 +13,21 @@ export class FindSimpleCompanyByIdRepositoryImpl
   async find(
     input: FindSimpleCompanyByIdDto
   ): Promise<CompanySimpleResponseDto> {
-    const { companyId, loggedUserId } = input;
+    const { companyId } = input;
 
-    const filteredCompany = await this.prismaService.company.findFirst({
-      where: {
-        company_id: companyId,
-      },
-      select: {
-        company_id: true,
-        cnpj: true,
-        fantasy_name: true,
-        social_reason: true,
-        created_at: true,
-      },
-    });
+    const filteredCompany =
+      await this.prismaService.generalPrisma.company.findFirst({
+        where: {
+          company_id: companyId,
+        },
+        select: {
+          company_id: true,
+          cnpj: true,
+          fantasy_name: true,
+          social_reason: true,
+          created_at: true,
+        },
+      });
 
     return {
       id: filteredCompany?.company_id ?? '',

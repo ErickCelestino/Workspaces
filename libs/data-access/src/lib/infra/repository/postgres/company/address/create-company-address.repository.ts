@@ -3,7 +3,7 @@ import {
   CreateCompanyAddressDto,
   CreateCompanyAddressRepository,
 } from '@workspaces/domain';
-import { PrismaService } from 'nestjs-prisma';
+import { PrismaService } from '../../../../../application';
 
 export class CreateCompanyAddressRepositoryImpl
   implements CreateCompanyAddressRepository
@@ -15,18 +15,19 @@ export class CreateCompanyAddressRepositoryImpl
       companyId,
     } = input;
 
-    const createdCompanyAddress = await this.prismaService.address.create({
-      data: {
-        city_id: cityId,
-        district: district,
-        number: number,
-        street: street,
-        zipcode: zipcode,
-        complement: complement ?? '',
-      },
-    });
+    const createdCompanyAddress =
+      await this.prismaService.generalPrisma.address.create({
+        data: {
+          city_id: cityId,
+          district: district,
+          number: number,
+          street: street,
+          zipcode: zipcode,
+          complement: complement ?? '',
+        },
+      });
 
-    await this.prismaService.company_X_Address.create({
+    await this.prismaService.generalPrisma.company_X_Address.create({
       data: {
         company_id: companyId,
         address_id: createdCompanyAddress.address_id,

@@ -1,6 +1,6 @@
 import { Inject } from '@nestjs/common';
 import { CreateDeviceDto, CreateDeviceRepository } from '@workspaces/domain';
-import { PrismaService } from 'nestjs-prisma';
+import { PrismaService } from '../../../../application';
 
 export class CreateDeviceRepositoryImpl implements CreateDeviceRepository {
   constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
@@ -11,7 +11,7 @@ export class CreateDeviceRepositoryImpl implements CreateDeviceRepository {
       companyId,
     } = input;
 
-    const createdDevice = await this.prismaService.device.create({
+    const createdDevice = await this.prismaService.generalPrisma.device.create({
       data: {
         name: name,
         user_id: loggedUserId,

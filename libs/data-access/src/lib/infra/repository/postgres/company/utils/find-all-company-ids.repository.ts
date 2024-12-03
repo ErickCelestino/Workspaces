@@ -4,7 +4,7 @@ import {
   FindAllCompanyIdsDto,
   FindAllCompanyIdsRepository,
 } from '@workspaces/domain';
-import { PrismaService } from 'nestjs-prisma';
+import { PrismaService } from '../../../../../application';
 
 export class FindAllCompanyIdsRepositoryImpl
   implements FindAllCompanyIdsRepository
@@ -13,29 +13,30 @@ export class FindAllCompanyIdsRepositoryImpl
   async find(input: FindAllCompanyIdsDto): Promise<CompanyAllIdsResponseDto> {
     const { companyId } = input;
 
-    const allCompanyIds = await this.prismaService.company.findFirst({
-      where: {
-        company_id: companyId,
-      },
-      select: {
-        company_id: true,
-        company_data: {
-          select: {
-            company_data_id: true,
+    const allCompanyIds =
+      await this.prismaService.generalPrisma.company.findFirst({
+        where: {
+          company_id: companyId,
+        },
+        select: {
+          company_id: true,
+          company_data: {
+            select: {
+              company_data_id: true,
+            },
+          },
+          company_x_address: {
+            select: {
+              address_id: true,
+            },
+          },
+          company_responsible: {
+            select: {
+              company_responsible_id: true,
+            },
           },
         },
-        company_x_address: {
-          select: {
-            address_id: true,
-          },
-        },
-        company_responsible: {
-          select: {
-            company_responsible_id: true,
-          },
-        },
-      },
-    });
+      });
 
     return {
       companyAddressId: allCompanyIds?.company_x_address[0].address_id ?? '',

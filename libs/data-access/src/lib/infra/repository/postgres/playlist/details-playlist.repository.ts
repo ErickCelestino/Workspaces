@@ -4,7 +4,7 @@ import {
   DetailsPlaylistRepository,
   PlaylistResponseDto,
 } from '@workspaces/domain';
-import { PrismaService } from 'nestjs-prisma';
+import { PrismaService } from '../../../../application';
 
 export class DetailsPlaylistRepositoryImpl
   implements DetailsPlaylistRepository
@@ -13,27 +13,28 @@ export class DetailsPlaylistRepositoryImpl
   async details(input: DetailsPlaylistDto): Promise<PlaylistResponseDto> {
     const { playlistId } = input;
 
-    const resultPlaylist = await this.prismaService.playlist.findUnique({
-      where: {
-        playlist_id: playlistId,
-      },
-      select: {
-        playlist_id: true,
-        name: true,
-        created_at: true,
-        user: {
-          select: {
-            nick_name: true,
+    const resultPlaylist =
+      await this.prismaService.generalPrisma.playlist.findUnique({
+        where: {
+          playlist_id: playlistId,
+        },
+        select: {
+          playlist_id: true,
+          name: true,
+          created_at: true,
+          user: {
+            select: {
+              nick_name: true,
+            },
+          },
+          category: {
+            select: {
+              playlist_category_id: true,
+              name: true,
+            },
           },
         },
-        category: {
-          select: {
-            playlist_category_id: true,
-            name: true,
-          },
-        },
-      },
-    });
+      });
 
     const mappedPlaylist: PlaylistResponseDto = {
       category: {

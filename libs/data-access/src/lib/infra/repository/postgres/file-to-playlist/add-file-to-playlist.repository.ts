@@ -3,7 +3,7 @@ import {
   AddFileToPlaylistDto,
   AddFileToPlaylistRepository,
 } from '@workspaces/domain';
-import { PrismaService } from 'nestjs-prisma';
+import { PrismaService } from '../../../../application';
 
 export class AddFileToPlaylistRepositoryImpl
   implements AddFileToPlaylistRepository
@@ -14,7 +14,7 @@ export class AddFileToPlaylistRepositoryImpl
     const listId: string[] = [];
     for (const file of filesId) {
       const createdFileToPlaylist =
-        await this.prismaService.playlist_X_Content_Files.create({
+        await this.prismaService.generalPrisma.playlist_X_Content_Files.create({
           data: {
             playlist_id: playlistId,
             Content_Files_id: file,

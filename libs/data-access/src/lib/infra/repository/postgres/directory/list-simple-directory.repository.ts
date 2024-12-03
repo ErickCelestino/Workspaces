@@ -5,7 +5,7 @@ import {
   ListSimpleDirectoryRepository,
   ListSimpleDirectoryResponseDto,
 } from '@workspaces/domain';
-import { PrismaService } from 'nestjs-prisma';
+import { PrismaService } from '../../../../application';
 
 export class ListSimpleDirectoryRepositoryImpl
   implements ListSimpleDirectoryRepository
@@ -24,15 +24,15 @@ export class ListSimpleDirectoryRepositoryImpl
         ? {
             name: {
               contains: userInput,
-              mode: 'insensitive' as 'insensitive',
+              mode: 'insensitive' as const,
             },
           }
         : {}),
     };
 
     const [directories, filteredTotal, total] =
-      await this.prismaService.$transaction([
-        this.prismaService.directory.findMany({
+      await this.prismaService.generalPrisma.$transaction([
+        this.prismaService.generalPrisma.directory.findMany({
           where: whereClause,
           select: {
             name: true,
@@ -41,10 +41,10 @@ export class ListSimpleDirectoryRepositoryImpl
           skip: parseInt(skip.toString()),
           take: parseInt(take.toString()),
         }),
-        this.prismaService.directory.count({
+        this.prismaService.generalPrisma.directory.count({
           where: whereClause,
         }),
-        this.prismaService.directory.count({
+        this.prismaService.generalPrisma.directory.count({
           where: {
             user_id: loggedUserId,
             company_id: companyId,

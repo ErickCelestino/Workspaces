@@ -3,7 +3,7 @@ import {
   DeleteDirectoryDto,
   DeleteDirectoryRepository,
 } from '@workspaces/domain';
-import { PrismaService } from 'nestjs-prisma';
+import { PrismaService } from '../../../../application';
 
 export class DeleteDirectoryRepositoryImpl
   implements DeleteDirectoryRepository
@@ -12,7 +12,7 @@ export class DeleteDirectoryRepositoryImpl
   async delete(input: DeleteDirectoryDto): Promise<void> {
     const { id } = input;
 
-    await this.prismaService.directory.delete({
+    await this.prismaService.generalPrisma.directory.delete({
       where: {
         directory_id: id,
       },

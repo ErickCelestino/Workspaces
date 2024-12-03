@@ -9,7 +9,7 @@ export class ConsultCompanyByCnpjRepositoryImpl
   implements ConsultCompanyByCnpjRepository
 {
   async consult(cnpj: string): Promise<CompanyResponseDto> {
-    const url = process.env['NX_APP_CONSULT_CNPJ_URL'] ?? '';
+    const url = process.env['NX_PUBLIC_CONSULT_CNPJ_URL'] ?? '';
 
     const response = await axios.get<ConsultCompanyBrDto>(`${url}/${cnpj}`);
 

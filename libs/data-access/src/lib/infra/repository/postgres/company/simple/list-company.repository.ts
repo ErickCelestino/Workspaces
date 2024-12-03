@@ -5,7 +5,7 @@ import {
   ListCompanyResponseDto,
   ListSimpleCompanyResponseDto,
 } from '@workspaces/domain';
-import { PrismaService } from 'nestjs-prisma';
+import { PrismaService } from '../../../../../application';
 
 export class ListCompanyRepositoryImpl implements ListCompanyRepository {
   constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
@@ -37,8 +37,8 @@ export class ListCompanyRepositoryImpl implements ListCompanyRepository {
     };
 
     const [companies, filteredTotal, total] =
-      await this.prismaService.$transaction([
-        this.prismaService.company.findMany({
+      await this.prismaService.generalPrisma.$transaction([
+        this.prismaService.generalPrisma.company.findMany({
           where: whereClause,
           select: {
             created_at: true,
@@ -69,10 +69,10 @@ export class ListCompanyRepositoryImpl implements ListCompanyRepository {
           skip: parseInt(skip.toString()),
           take: parseInt(take.toString()),
         }),
-        this.prismaService.company.count({
+        this.prismaService.generalPrisma.company.count({
           where: whereClause,
         }),
-        this.prismaService.company.count({
+        this.prismaService.generalPrisma.company.count({
           where: {
             user_id: loggedUserId,
           },

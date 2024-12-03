@@ -1,21 +1,22 @@
 import { Inject } from '@nestjs/common';
 import { SelectCompanyDto, SelectCompanyRepository } from '@workspaces/domain';
-import { PrismaService } from 'nestjs-prisma';
+import { PrismaService } from '../../../../../application';
 
 export class SelectCompanyRepositoryImpl implements SelectCompanyRepository {
   constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
   async select(input: SelectCompanyDto): Promise<string> {
     const { companyId, loggedUserId } = input;
 
-    const selectedCompany = await this.prismaService.user_X_Company.create({
-      data: {
-        company_id: companyId,
-        user_id: loggedUserId,
-      },
-    });
+    const selectedCompany =
+      await this.prismaService.generalPrisma.user_X_Company.create({
+        data: {
+          company_id: companyId,
+          user_id: loggedUserId,
+        },
+      });
 
     if (selectedCompany.company_id) {
-      await this.prismaService.user.update({
+      await this.prismaService.generalPrisma.user.update({
         where: {
           user_id: loggedUserId,
         },

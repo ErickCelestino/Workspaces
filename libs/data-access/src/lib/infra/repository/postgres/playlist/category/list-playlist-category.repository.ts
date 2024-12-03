@@ -5,7 +5,7 @@ import {
   ListPlaylistCategoryRepository,
   PlaylistCategory,
 } from '@workspaces/domain';
-import { PrismaService } from 'nestjs-prisma';
+import { PrismaService } from '../../../../../application';
 
 export class ListPlaylistCategoryRepositoryImpl
   implements ListPlaylistCategoryRepository
@@ -26,15 +26,15 @@ export class ListPlaylistCategoryRepositoryImpl
         ? {
             name: {
               contains: userInput,
-              mode: 'insensitive' as 'insensitive',
+              mode: 'insensitive' as const,
             },
           }
         : {}),
     };
 
     const [categories, filteredTotal, total] =
-      await this.prismaService.$transaction([
-        this.prismaService.playlist_Category.findMany({
+      await this.prismaService.generalPrisma.$transaction([
+        this.prismaService.generalPrisma.playlist_Category.findMany({
           where: whereClause,
           select: {
             playlist_category_id: true,
@@ -50,10 +50,10 @@ export class ListPlaylistCategoryRepositoryImpl
           skip: parseInt(skip.toString()),
           take: parseInt(take.toString()),
         }),
-        this.prismaService.playlist_Category.count({
+        this.prismaService.generalPrisma.playlist_Category.count({
           where: whereClause,
         }),
-        this.prismaService.playlist_Category.count({
+        this.prismaService.generalPrisma.playlist_Category.count({
           where: {
             user_id: loggedUserId,
             company_id: companyId,

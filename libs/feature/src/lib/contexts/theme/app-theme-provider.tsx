@@ -1,4 +1,4 @@
-import { Box, ThemeProvider, stepContentClasses } from '@mui/material';
+import { Box, Theme, ThemeProvider } from '@mui/material';
 import React, { ReactNode, useCallback, useMemo, useState } from 'react';
 import { ThemeContext } from './theme-context';
 import { ThemeName } from '../../types';
@@ -7,10 +7,14 @@ import { getItemLocalStorage, setItemLocalStorage } from '../../services';
 
 interface AppThemeProviderProps {
   children: ReactNode;
+  selectedLightTheme?: Theme;
+  selectedDarkTheme?: Theme;
 }
 
 export const AppThemeProvider: React.FC<AppThemeProviderProps> = ({
   children,
+  selectedLightTheme = RedLightTheme,
+  selectedDarkTheme = RedDarkTheme,
 }) => {
   const [themeName, setThemeName] = useState<ThemeName>(() => {
     return getItemLocalStorage('theme') || 'light';
@@ -25,10 +29,10 @@ export const AppThemeProvider: React.FC<AppThemeProviderProps> = ({
   }, []);
 
   const theme = useMemo(() => {
-    if (themeName === 'light') return RedLightTheme;
+    if (themeName === 'light') return selectedLightTheme;
 
-    return RedDarkTheme;
-  }, [themeName]);
+    return selectedDarkTheme;
+  }, [themeName, selectedLightTheme, selectedDarkTheme]);
 
   return (
     <ThemeContext.Provider value={{ themeName, toggleTheme }}>

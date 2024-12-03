@@ -5,7 +5,7 @@ import {
   FindUserByEmailRepository,
   LoggedUser,
 } from '@workspaces/domain';
-import { PrismaService } from 'nestjs-prisma';
+import { PrismaService } from '../../../../application';
 
 export class FindUserByEmailRepositoryImpl
   implements FindUserByEmailRepository
@@ -13,7 +13,7 @@ export class FindUserByEmailRepositoryImpl
   constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
   async find(input: FindUserByEmailDto): Promise<LoggedUser> {
     const { email } = input;
-    const filteredUser = await this.prismaService.user.findFirst({
+    const filteredUser = await this.prismaService.generalPrisma.user.findFirst({
       where: {
         auth: {
           some: {

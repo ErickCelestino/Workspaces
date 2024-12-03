@@ -4,7 +4,7 @@ import {
   ListUsersByCompanyIdRepository,
   ListUsersByCompanyIdResponseDto,
 } from '@workspaces/domain';
-import { PrismaService } from 'nestjs-prisma';
+import { PrismaService } from '../../../../../application';
 
 export class ListUsersByCompanyIdRepositoryImpl
   implements ListUsersByCompanyIdRepository
@@ -52,9 +52,9 @@ export class ListUsersByCompanyIdRepositoryImpl
         : {}),
     };
 
-    const [users, filteredTotal, total] = await this.prismaService.$transaction(
-      [
-        this.prismaService.user_X_Company.findMany({
+    const [users, filteredTotal, total] =
+      await this.prismaService.generalPrisma.$transaction([
+        this.prismaService.generalPrisma.user_X_Company.findMany({
           where: whereClause,
           select: {
             user_id: true,
@@ -83,16 +83,15 @@ export class ListUsersByCompanyIdRepositoryImpl
           skip: parseInt(skip.toString()),
           take: parseInt(take.toString()),
         }),
-        this.prismaService.user_X_Company.count({
+        this.prismaService.generalPrisma.user_X_Company.count({
           where: whereClause,
         }),
-        this.prismaService.user_X_Company.count({
+        this.prismaService.generalPrisma.user_X_Company.count({
           where: {
             company_id: companyId,
           },
         }),
-      ]
-    );
+      ]);
 
     const totalPages = Math.ceil(filteredTotal / take);
 

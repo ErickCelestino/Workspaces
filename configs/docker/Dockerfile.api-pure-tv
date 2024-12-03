@@ -1,4 +1,4 @@
-FROM node:18-alpine AS builder
+FROM node:20-alpine AS builder
 
 WORKDIR /app
 
@@ -6,23 +6,21 @@ COPY package*.json ./
 RUN npm install
 
 COPY . .
-ARG DATABASE_URL
-RUN npm run prisma:generate
+ARG DATABASE_GENERAL_URL
+RUN npm run prisma:generate:general
 RUN npm run build:back-pure-tv
 
-FROM node:18-alpine
+FROM node:20-alpine
 
 WORKDIR /app
 
-
 COPY --from=builder /app/dist/apps/api/api-pure-tv ./dist
 COPY --from=builder /app/dist/libs ./dist
-COPY --from=builder /app/prisma ./
+COPY --from=builder /app/prisma ./prisma
+COPY --from=builder /app/configs/scripts/update-files ./configs/scripts/update-files
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package*.json ./
 
-RUN npm install --production --ignore-scripts
-
-EXPOSE ${NX_APP_BACK_PURE_TV}
+EXPOSE ${NX_PUBLIC_BACK_PURE_TV}
 
 CMD ["node", "dist/api/main"]

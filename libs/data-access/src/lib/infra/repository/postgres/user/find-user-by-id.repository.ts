@@ -1,12 +1,12 @@
 import { Inject } from '@nestjs/common';
 import { FindUserByIdRepository, UserList } from '@workspaces/domain';
-import { PrismaService } from 'nestjs-prisma';
+import { PrismaService } from '../../../../application';
 
 export class FindUserByIdRepositoryImpl implements FindUserByIdRepository {
   constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
 
   async find(id: string): Promise<UserList> {
-    const userResult = await this.prismaService.user.findFirst({
+    const userResult = await this.prismaService.generalPrisma.user.findFirst({
       where: {
         user_id: id,
       },

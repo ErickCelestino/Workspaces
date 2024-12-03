@@ -3,7 +3,7 @@ import {
   EditContentFileDto,
   EditContentFileRepository,
 } from '@workspaces/domain';
-import { PrismaService } from 'nestjs-prisma';
+import { PrismaService } from '../../../../application';
 
 export class EditContentFileRepositoryImpl
   implements EditContentFileRepository
@@ -11,7 +11,7 @@ export class EditContentFileRepositoryImpl
   constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
   async edit(input: EditContentFileDto): Promise<void> {
     const { directoryId, idToEdit, newFileName: originalName } = input;
-    await this.prismaService.content_Files.update({
+    await this.prismaService.generalPrisma.content_Files.update({
       where: {
         Content_Files_id: idToEdit,
         directory_id: directoryId,

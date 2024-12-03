@@ -3,7 +3,7 @@ import {
   CreateCompanyDataDto,
   CreateCompanyDataRepository,
 } from '@workspaces/domain';
-import { PrismaService } from 'nestjs-prisma';
+import { PrismaService } from '../../../../../application';
 
 export class CreateCompanyDataRepositoryImpl
   implements CreateCompanyDataRepository
@@ -15,17 +15,18 @@ export class CreateCompanyDataRepositoryImpl
       companyId,
     } = input;
 
-    const createdCompany = await this.prismaService.company_Data.create({
-      data: {
-        legal_nature: legalNature,
-        opening: `${opening}`,
-        phone: phone,
-        port: port,
-        situation: situation,
-        company_id: companyId,
-        responsible_email: responsibleEmail,
-      },
-    });
+    const createdCompany =
+      await this.prismaService.generalPrisma.company_Data.create({
+        data: {
+          legal_nature: legalNature,
+          opening: `${opening}`,
+          phone: phone,
+          port: port,
+          situation: situation,
+          company_id: companyId,
+          responsible_email: responsibleEmail,
+        },
+      });
 
     return createdCompany?.company_id ?? '';
   }

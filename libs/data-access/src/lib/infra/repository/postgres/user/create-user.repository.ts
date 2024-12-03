@@ -1,6 +1,6 @@
 import { Inject } from '@nestjs/common';
 import { CreateUserDto, CreateUserRepository } from '@workspaces/domain';
-import { PrismaService } from 'nestjs-prisma';
+import { PrismaService } from '../../../../application';
 
 export class CreateUserRepositoryImpl implements CreateUserRepository {
   constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
@@ -8,14 +8,14 @@ export class CreateUserRepositoryImpl implements CreateUserRepository {
   async create(input: CreateUserDto): Promise<string> {
     const { name, nickname, birthDate, appId } = input;
 
-    await this.prismaService.user.create({
+    await this.prismaService.generalPrisma.user.create({
       data: {
         name: name,
         nick_name: nickname,
         birth_date: new Date(birthDate),
       },
     });
-    const resultUser = await this.prismaService.user.findFirst({
+    const resultUser = await this.prismaService.generalPrisma.user.findFirst({
       where: {
         nick_name: nickname,
       },
@@ -23,7 +23,7 @@ export class CreateUserRepositoryImpl implements CreateUserRepository {
 
     const id = resultUser?.user_id == undefined ? '' : resultUser?.user_id;
 
-    await this.prismaService.user_X_Application.create({
+    await this.prismaService.generalPrisma.user_X_Application.create({
       data: {
         app_id: appId,
         user_id: id,

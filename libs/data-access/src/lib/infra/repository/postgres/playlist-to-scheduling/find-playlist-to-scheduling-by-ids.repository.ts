@@ -3,7 +3,7 @@ import {
   FindPlaylistToSchedulingByIdsRepository,
   PlaylistToSchedulingDto,
 } from '@workspaces/domain';
-import { PrismaService } from 'nestjs-prisma';
+import { PrismaService } from '../../../../application';
 
 export class FindPlaylistToSchedulingByIdsRepositoryImpl
   implements FindPlaylistToSchedulingByIdsRepository
@@ -13,7 +13,7 @@ export class FindPlaylistToSchedulingByIdsRepositoryImpl
     const { playlistId, schedulingId } = input;
 
     const filteredPlaylistToScheduling =
-      await this.prismaService.playlist_X_Scheduling.findFirst({
+      await this.prismaService.generalPrisma.playlist_X_Scheduling.findFirst({
         where: {
           playlist_id: playlistId,
           scheduling_id: schedulingId,
