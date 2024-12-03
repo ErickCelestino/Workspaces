@@ -1,6 +1,7 @@
 import { Inject } from '@nestjs/common';
 import {
   ContentFile,
+  FilePrismaDto,
   ListContentFileDto,
   ListContentFileRepository,
   ListContentFileResponseDto,
@@ -72,7 +73,7 @@ export class ListContentFileRepositoryImpl
 
     const totalPages = Math.ceil(total / take);
 
-    const mappedContentFiles: ContentFile[] = files.map((file) => {
+    const mappedContentFiles: ContentFile[] = files.map((file: FilePrismaDto) => {
       return {
         id: file.Content_Files_id,
         fileName: file.file_name,

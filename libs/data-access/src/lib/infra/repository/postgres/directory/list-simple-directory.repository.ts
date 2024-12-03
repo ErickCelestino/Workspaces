@@ -1,5 +1,6 @@
 import { Inject } from '@nestjs/common';
 import {
+  DirectoryPrismaDto,
   ListDirectoryNameResponseDto,
   ListSimpleDirectoryDto,
   ListSimpleDirectoryRepository,
@@ -55,7 +56,7 @@ export class ListSimpleDirectoryRepositoryImpl
     const totalPages = Math.ceil(filteredTotal / take);
 
     const mappedDirectoryList: ListDirectoryNameResponseDto[] = directories.map(
-      (directory) => {
+      (directory: Pick<DirectoryPrismaDto, 'directory_id' | 'name'>) => {
         return {
           id: directory.directory_id,
           name: directory.name,

@@ -4,6 +4,7 @@ import {
   ListPlaylistResponseDto,
   ListPlaylistRepository,
   Playlist,
+  PlaylistPrismaDto,
 } from '@workspaces/domain';
 import { PrismaService } from '../../../../application';
 
@@ -63,7 +64,7 @@ export class ListPlaylistRepositoryImpl implements ListPlaylistRepository {
 
     const totalPages = Math.ceil(filteredTotal / take);
 
-    const mappedPlaylist: Playlist[] = playlists.map((playlist) => {
+    const mappedPlaylist: Playlist[] = playlists.map((playlist: PlaylistPrismaDto) => {
       return {
         category: playlist.category.name,
         created_at: playlist.created_at,

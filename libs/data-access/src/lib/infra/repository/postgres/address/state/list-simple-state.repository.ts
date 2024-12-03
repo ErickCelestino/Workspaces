@@ -3,6 +3,7 @@ import {
   ListSimpleStateDto,
   ListSimpleStateRepository,
   ListSimpleStateResponseDto,
+  StatePrismaDto,
 } from '@workspaces/domain';
 import { PrismaService } from '../../../../../application';
 
@@ -23,7 +24,7 @@ export class ListSimpleStateRepositoryImpl
     });
 
     const mappedSimpleState: ListSimpleStateResponseDto[] = listStates.map(
-      (state) => {
+      (state: Omit<StatePrismaDto, 'city'>) => {
         return {
           id: state.state_id,
           name: state.name,

@@ -4,6 +4,7 @@ import {
   ListPlaylistCategoryReponseDto,
   ListPlaylistCategoryRepository,
   PlaylistCategory,
+  PlaylistCategoryPrismaDto,
 } from '@workspaces/domain';
 import { PrismaService } from '../../../../../application';
 
@@ -61,7 +62,7 @@ export class ListPlaylistCategoryRepositoryImpl
         }),
       ]);
     const totalPages = Math.ceil(filteredTotal / take);
-    const mappedCategories: PlaylistCategory[] = categories.map((category) => {
+    const mappedCategories: PlaylistCategory[] = categories.map((category: PlaylistCategoryPrismaDto) => {
       return {
         id: category.playlist_category_id,
         created_at: category.created_at,

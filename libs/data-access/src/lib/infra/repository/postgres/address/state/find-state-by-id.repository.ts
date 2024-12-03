@@ -1,5 +1,6 @@
 import { Inject } from '@nestjs/common';
 import {
+  CityPrismaDto,
   CityResponseDto,
   FindStateByIdRepository,
   StateResponseDto,
@@ -28,7 +29,7 @@ export class FindStateByIdRepositoryImpl implements FindStateByIdRepository {
       });
 
     const mappedCity: CityResponseDto[] =
-      filteredState?.city.map((city) => {
+      filteredState?.city.map((city: CityPrismaDto) => {
         return {
           id: city?.city_id ?? '',
           name: city?.name ?? '',

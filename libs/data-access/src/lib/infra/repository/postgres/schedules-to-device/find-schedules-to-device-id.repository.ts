@@ -3,6 +3,7 @@ import {
   FindSchedulesByDeviceIdDto,
   FindSchedulesByDeviceIdRepository,
   FormatDateInTime,
+  SchedulesToDevicePrismaDto,
   Scheduling,
 } from '@workspaces/domain';
 import { PrismaService } from '../../../../application';
@@ -37,7 +38,7 @@ export class FindSchedulesByDeviceIdRepositoryImpl
         },
       });
 
-    const mappedSchedules: Scheduling[] = filteredSchedules.map((item) => {
+    const mappedSchedules: Scheduling[] = filteredSchedules.map((item: SchedulesToDevicePrismaDto) => {
       return {
         id: item.scheduling?.scheduling_id ?? '',
         name: item.scheduling?.name ?? '',

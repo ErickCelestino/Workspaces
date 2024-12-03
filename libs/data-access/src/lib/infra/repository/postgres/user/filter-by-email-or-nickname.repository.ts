@@ -1,6 +1,7 @@
 import { Inject } from '@nestjs/common';
 import {
   Auth,
+  AuthPrismaDto,
   FilterByEmailOrNicknameRepository,
   User,
 } from '@workspaces/domain';
@@ -45,7 +46,7 @@ export class FilterByEmailOrNicknameRepositoryImpl
     });
 
     const mappedAuth = userResult?.auth == null ? [] : userResult.auth;
-    const findedAuth: Auth[] = mappedAuth.map((auth) => {
+    const findedAuth: Auth[] = mappedAuth.map((auth: AuthPrismaDto) => {
       return {
         authId: auth.auth_id,
         userId: auth.user_id,

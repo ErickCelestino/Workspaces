@@ -4,6 +4,7 @@ import {
   ListPlaylistBySchedulingIdRepository,
   ListPlaylistResponseDto,
   Playlist,
+  PlaylistToSchedulingPrismaDto,
 } from '@workspaces/domain';
 import { PrismaService } from '../../../../application';
 
@@ -72,7 +73,7 @@ export class ListPlaylistBySchedulingIdRepositoryImpl
 
     const totalPages = Math.ceil(filteredTotal / take);
 
-    const mappedPlaylist: Playlist[] = playlists.map((item) => {
+    const mappedPlaylist: Playlist[] = playlists.map((item: PlaylistToSchedulingPrismaDto) => {
       return {
         category: item.playlist.category.name,
         created_at: item.playlist.created_at,

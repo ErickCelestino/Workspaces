@@ -2,6 +2,7 @@ import { Inject } from '@nestjs/common';
 import {
   ListCompaniesByUserIdDto,
   ListCompaniesByUserIdRepository,
+  ListCompaniesByUserPrismaDto,
   ListCompanyResponseDto,
   ListSimpleCompanyResponseDto,
 } from '@workspaces/domain';
@@ -91,7 +92,7 @@ export class ListCompaniesByUserIdRepositoryImpl
     const totalPages = Math.ceil(filteredTotal / take);
 
     const mappedCompany: ListSimpleCompanyResponseDto[] = companies.map(
-      (company) => {
+      (company: ListCompaniesByUserPrismaDto) => {
         return {
           id: company?.company.company_id ?? '',
           cnpj: company?.company.cnpj ?? '',

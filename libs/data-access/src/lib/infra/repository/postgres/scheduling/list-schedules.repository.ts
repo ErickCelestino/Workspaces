@@ -5,6 +5,7 @@ import {
   ListSchedulesReponseDto,
   ListSchedulesRepository,
   Scheduling,
+  SchedulingPrismaDto,
 } from '@workspaces/domain';
 import { PrismaService } from '../../../../application';
 
@@ -64,7 +65,7 @@ export class ListSchedulesRepositoryImpl implements ListSchedulesRepository {
 
     const totalPages = Math.ceil(filteredTotal / take);
 
-    const mappedScheduling: Scheduling[] = scheduling.map((scheduling) => {
+    const mappedScheduling: Scheduling[] = scheduling.map((scheduling: SchedulingPrismaDto) => {
       return {
         id: scheduling.scheduling_id,
         createBy: scheduling.user.nick_name,

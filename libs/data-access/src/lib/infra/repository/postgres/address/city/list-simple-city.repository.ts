@@ -1,5 +1,6 @@
 import { Inject } from '@nestjs/common';
 import {
+  CityPrismaDto,
   CityResponseDto,
   ListSimpleCityDto,
   ListSimpleCityRepository,
@@ -19,7 +20,7 @@ export class ListSimpleCityRepositoryImpl implements ListSimpleCityRepository {
       },
     });
 
-    const mappedCities: CityResponseDto[] = listCities.map((city) => {
+    const mappedCities: CityResponseDto[] = listCities.map((city: CityPrismaDto) => {
       return {
         id: city.city_id,
         name: city.name,

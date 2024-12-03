@@ -11,17 +11,33 @@
     "esModuleInterop": true,
     "target": "es2015",
     "module": "esnext",
-    "lib": ["es2020", "dom"],
+    "lib": [
+      "es2020",
+      "dom"
+    ],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@workspaces/data-access": ["libs/data-access/src/index.ts"],
-      "@workspaces/domain": ["libs/domain/src/index.ts"],
-      "@workspaces/feature": ["libs/feature/src/index.ts"],
-      "@workspaces/prisma/general": ["prisma/generated/general"],
-      "@workspaces/prisma/marketing": ["prisma/generated/marketing"]
+      "@workspaces/data-access": [
+        "libs/data-access/src/index.ts"
+      ],
+      "@workspaces/domain": [
+        "libs/domain/src/index.ts"
+      ],
+      "@workspaces/feature": [
+        "libs/feature/src/index.ts"
+      ],
+      "@workspaces/prisma/general": [
+        "prisma/generated/general"
+      ],
+      "@workspaces/prisma/marketing": [
+        "prisma/generated/marketing"
+      ]
     }
   },
-  "exclude": ["node_modules", "tmp"]
+  "exclude": [
+    "node_modules",
+    "tmp"
+  ]
 }

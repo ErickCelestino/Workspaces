@@ -3,6 +3,7 @@ import {
   ListUsersByCompanyIdDto,
   ListUsersByCompanyIdRepository,
   ListUsersByCompanyIdResponseDto,
+  UserPrismaDto,
 } from '@workspaces/domain';
 import { PrismaService } from '../../../../../application';
 
@@ -95,7 +96,7 @@ export class ListUsersByCompanyIdRepositoryImpl
 
     const totalPages = Math.ceil(filteredTotal / take);
 
-    const mappedUsers = users.map((user) => {
+    const mappedUsers = users.map((user: UserPrismaDto) => {
       return {
         name: user.user.name ?? '',
         nickname: user.user.nick_name ?? '',

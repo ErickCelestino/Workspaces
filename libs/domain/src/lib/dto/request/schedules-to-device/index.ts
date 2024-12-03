@@ -6,3 +6,4 @@ export * from './find-schedules-by-device-id.dto';
 export * from './find-scheduling-to-device-by-ids.dto';
 export * from './move-schedules-to-another-device.dto';
 export * from './move-scheduling-to-another-device.dto';
+export * from './schedules-to-device-prisma.dto';

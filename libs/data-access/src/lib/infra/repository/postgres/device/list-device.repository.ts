@@ -1,6 +1,7 @@
 import { Inject } from '@nestjs/common';
 import {
   Device,
+  DevicePrismaDto,
   ListDeviceDto,
   ListDeviceRepository,
   ListDeviceResponseDto,
@@ -58,7 +59,7 @@ export class ListDeviceRepositoryImpl implements ListDeviceRepository {
 
     const totalPages = Math.ceil(filteredTotal / take);
 
-    const mappedDevices: Device[] = devices.map((device) => ({
+    const mappedDevices: Device[] = devices.map((device: DevicePrismaDto) => ({
       createdAt: device.created_at ?? new Date(),
       createdBy: device.user?.nick_name ?? '',
       id: device.device_id ?? '',

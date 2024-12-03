@@ -8,4 +8,7 @@ export * from './filter-by-email-or-nickname.dto';
 export * from './find-user-by-email.dto';
 export * from './find-user-by-id.dto';
 export * from './list-companies-by-user-id.dto';
+export * from './list-companies-by-user-prisma.dto';
 export * from './list-user.dto';
+export * from './simple-user-prisma.dto';
+export * from './user-prisma.dto';

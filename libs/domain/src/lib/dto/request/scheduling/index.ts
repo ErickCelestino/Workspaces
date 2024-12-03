@@ -6,3 +6,4 @@ export * from './edit-scheduling.dto';
 export * from './find-scheduling-by-id.dto';
 export * from './find-scheduling-by-name.dto';
 export * from './list-schedules.dto';
+export * from './scheduling-prisma.dto';

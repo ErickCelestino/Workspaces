@@ -1,5 +1,6 @@
 import { Inject } from '@nestjs/common';
 import {
+  CompanyPrismaDto,
   ListCompanyDto,
   ListCompanyRepository,
   ListCompanyResponseDto,
@@ -82,7 +83,7 @@ export class ListCompanyRepositoryImpl implements ListCompanyRepository {
     const totalPages = Math.ceil(filteredTotal / take);
 
     const mappedCompany: ListSimpleCompanyResponseDto[] = companies.map(
-      (company) => {
+      (company: CompanyPrismaDto) => {
         return {
           id: company?.company_id ?? '',
           cnpj: company?.cnpj ?? '',

@@ -2,6 +2,7 @@ import { Inject } from '@nestjs/common';
 import {
   CountryResponseDto,
   FindCountryByIdRepository,
+  StatePrismaDto,
 } from '@workspaces/domain';
 import { PrismaService } from '../../../../../application';
 
@@ -36,7 +37,7 @@ export class FindCountryByIdRepositoryImpl
       });
 
     const mappedState =
-      filteredCountry?.state.map((state) => {
+      filteredCountry?.state.map((state: StatePrismaDto) => {
         const mappedCity =
           state?.city.map((city) => {
             return {

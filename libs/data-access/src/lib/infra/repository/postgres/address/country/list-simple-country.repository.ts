@@ -1,5 +1,6 @@
 import { Inject } from '@nestjs/common';
 import {
+  CountryPrismaDto,
   ListSimpleCountryRepository,
   ListSimpleCountryResponseDto,
 } from '@workspaces/domain';
@@ -21,7 +22,7 @@ export class ListSimpleCountryRepositoryImpl
     );
 
     const mappedCountry: ListSimpleCountryResponseDto[] = listCountry.map(
-      (country) => {
+      (country: CountryPrismaDto) => {
         return {
           id: country?.country_id ?? '',
           name: country?.name ?? '',

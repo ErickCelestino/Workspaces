@@ -7,6 +7,11 @@ import {
 } from '@workspaces/domain';
 import { PrismaService } from '../../../../application';
 
+type MappedCompany = {
+  company: { company_id: string; fantasy_name: string; social_reason: string; cnpj: string; };
+};
+
+
 export class FindUserByEmailRepositoryImpl
   implements FindUserByEmailRepository
 {
@@ -51,9 +56,9 @@ export class FindUserByEmailRepositoryImpl
     });
 
     const userCompanies: CompanySimpleResponseDto[] =
-      filteredUser?.user_x_company.map((company) => {
+      filteredUser?.user_x_company.map((company: MappedCompany) => {
         return {
-          id: company?.company?.company_id ?? '',
+          id: company?.company.company_id ?? '',
           cnpj: company?.company?.cnpj ?? '',
           fantasyName: company?.company?.fantasy_name ?? '',
           socialReason: company?.company?.social_reason ?? '',

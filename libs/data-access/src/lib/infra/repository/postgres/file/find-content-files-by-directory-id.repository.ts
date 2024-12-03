@@ -1,6 +1,7 @@
 import { Inject } from '@nestjs/common';
 import {
   ContentFile,
+  FilePrismaDto,
   FindContentFilesByDirectoryIdRepository,
 } from '@workspaces/domain';
 import { PrismaService } from '../../../../application';
@@ -32,7 +33,7 @@ export class FindContentFilesByDirectoryIdRepositoryImpl
         },
       });
 
-    const mappedContentFiles: ContentFile[] = filteredFiles.map((file) => {
+    const mappedContentFiles: ContentFile[] = filteredFiles.map((file: FilePrismaDto) => {
       return {
         id: file?.Content_Files_id ?? '',
         fileName: file?.file_name ?? '',

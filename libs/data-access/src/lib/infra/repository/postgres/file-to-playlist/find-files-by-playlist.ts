@@ -4,6 +4,7 @@ import {
   FindFilesByPlaylistDto,
   FindFilesByPlaylistRepository,
   FindFilesByPlaylistResponseDto,
+  FindToPlaylistPrismaDto,
 } from '@workspaces/domain';
 import { PrismaService } from '../../../../application';
 
@@ -55,7 +56,7 @@ export class FindFilesByPlaylistRepositoryImpl
 
     const totalPages = Math.ceil(total / take);
 
-    const mappedFiles: ContentFile[] = files.map((file) => {
+    const mappedFiles: ContentFile[] = files.map((file: FindToPlaylistPrismaDto) => {
       return {
         id: file.Content_Files.Content_Files_id,
         size: file.Content_Files.size,
