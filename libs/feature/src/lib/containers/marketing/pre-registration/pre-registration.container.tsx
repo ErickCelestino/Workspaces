@@ -1,5 +1,5 @@
 import { Box, Typography, useMediaQuery, useTheme } from '@mui/material';
-import { FC, useCallback, useEffect, useState } from 'react';
+import { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { FormPreRegistration } from '../../../components';
 import { CreatePreRegistrationDto, ErrorResponse } from '@workspaces/domain';
 import { CreatePreRegistrationRequest } from '../../../services';
@@ -57,14 +57,17 @@ export const PreRegistrationContainer: FC<PreRegistrationContainerProps> = ({
     },
     [showAlert]
   );
-
+  const isPreRegistrationCreated = useRef(false);
   useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const sendingId = urlParams.get('sending_id');
-    if (sendingId) {
-      createPreRegistration({
-        sendingId,
-      });
+    if (!isPreRegistrationCreated.current) {
+      const urlParams = new URLSearchParams(window.location.search);
+      const sendingId = urlParams.get('sending_id');
+      if (sendingId) {
+        createPreRegistration({
+          sendingId,
+        });
+        isPreRegistrationCreated.current = true;
+      }
     }
   }, [createPreRegistration]);
 
