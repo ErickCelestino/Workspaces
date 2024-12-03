@@ -5,7 +5,7 @@ import {
   FindFilesByPlaylistRepository,
   FindFilesByPlaylistResponseDto,
 } from '@workspaces/domain';
-import { PrismaService } from 'nestjs-prisma';
+import { PrismaService } from '../../../../application';
 
 export class FindFilesByPlaylistRepositoryImpl
   implements FindFilesByPlaylistRepository
@@ -18,8 +18,8 @@ export class FindFilesByPlaylistRepositoryImpl
     const skip = input?.skip || 0;
     const take = input?.take || 6;
 
-    const [files, total] = await this.prismaService.$transaction([
-      this.prismaService.playlist_X_Content_Files.findMany({
+    const [files, total] = await this.prismaService.generalPrisma.$transaction([
+      this.prismaService.generalPrisma.playlist_X_Content_Files.findMany({
         where: {
           playlist_id: idPlaylist,
         },
@@ -46,7 +46,7 @@ export class FindFilesByPlaylistRepositoryImpl
         skip: parseInt(skip.toString()),
         take: parseInt(take.toString()),
       }),
-      this.prismaService.playlist_X_Content_Files.count({
+      this.prismaService.generalPrisma.playlist_X_Content_Files.count({
         where: {
           playlist_id: idPlaylist,
         },

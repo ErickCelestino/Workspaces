@@ -3,15 +3,15 @@ import {
   CompanyDataResponseDto,
   FindCompanyDataByIdRepository,
 } from '@workspaces/domain';
-import { PrismaService } from 'nestjs-prisma';
+import { PrismaService } from '../../../../../application';
 
 export class FindCompanyDataByIdRepositoryImpl
   implements FindCompanyDataByIdRepository
 {
   constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
   async find(id: string): Promise<CompanyDataResponseDto> {
-    const filteredCompanyData = await this.prismaService.company_Data.findFirst(
-      {
+    const filteredCompanyData =
+      await this.prismaService.generalPrisma.company_Data.findFirst({
         where: {
           company_data_id: id,
         },
@@ -24,8 +24,7 @@ export class FindCompanyDataByIdRepositoryImpl
           situation: true,
           responsible_email: true,
         },
-      }
-    );
+      });
 
     return {
       id: filteredCompanyData?.company_data_id ?? '',

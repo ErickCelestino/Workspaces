@@ -1,4 +1,4 @@
-FROM node:18-alpine AS builder
+FROM node:20-alpine AS builder
 
 WORKDIR /app
 
@@ -7,21 +7,20 @@ RUN npm install
 
 COPY . .
 ARG DATABASE_GENERAL_URL
-RUN npm run prisma:generate
+RUN npm run prisma:generate:general
 RUN npm run build:back-general
 
-FROM node:18-alpine
+FROM node:20-alpine
 
 WORKDIR /app
 
 COPY --from=builder /app/dist/apps/api/api-general ./dist
 COPY --from=builder /app/dist/libs ./dist
-COPY --from=builder /app/prisma ./
+COPY --from=builder /app/prisma ./prisma
+COPY --from=builder /app/configs/scripts/update-files ./configs/scripts/update-files
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package*.json ./
 
-RUN npm install --production --ignore-scripts
-
-EXPOSE ${NX_APP_BACK_GENERAL}
+EXPOSE ${NX_PUBLIC_BACK_GENERAL}
 
 CMD ["node", "dist/api/main"]

@@ -3,7 +3,7 @@ import {
   FindSchedulingToDeviceByIdsDto,
   FindSchedulingToDeviceByIdsRepository,
 } from '@workspaces/domain';
-import { PrismaService } from 'nestjs-prisma';
+import { PrismaService } from '../../../../application';
 
 export class FindSchedulingToDeviceByIdsRepositoryImpl
   implements FindSchedulingToDeviceByIdsRepository
@@ -11,7 +11,7 @@ export class FindSchedulingToDeviceByIdsRepositoryImpl
   constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
   async find(input: FindSchedulingToDeviceByIdsDto): Promise<string> {
     const filteredSchedulingToDevice =
-      await this.prismaService.scheduling_X_Device.findMany({
+      await this.prismaService.generalPrisma.scheduling_X_Device.findMany({
         where: {
           device_id: input.idDevice,
           scheduling_id: input.idScheduling,

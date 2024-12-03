@@ -5,7 +5,7 @@ import {
   FormatDateInTime,
   Scheduling,
 } from '@workspaces/domain';
-import { PrismaService } from 'nestjs-prisma';
+import { PrismaService } from '../../../../application';
 
 export class FindSchedulesByDeviceIdRepositoryImpl
   implements FindSchedulesByDeviceIdRepository
@@ -13,7 +13,7 @@ export class FindSchedulesByDeviceIdRepositoryImpl
   constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
   async find(input: FindSchedulesByDeviceIdDto): Promise<Scheduling[]> {
     const filteredSchedules =
-      await this.prismaService.scheduling_X_Device.findMany({
+      await this.prismaService.generalPrisma.scheduling_X_Device.findMany({
         where: {
           device_id: input.idDevice,
         },
@@ -46,7 +46,7 @@ export class FindSchedulesByDeviceIdRepositoryImpl
           new Date(item.scheduling?.start_time ?? '')
         ),
         lopping: item.scheduling?.looping ?? false,
-        priority: `${item.scheduling?.priority}` ?? '',
+        priority: item.scheduling?.priority.toString() ?? '',
         createBy: item.scheduling?.user?.nick_name ?? '',
         createdAt: item.scheduling?.created_at ?? new Date(),
       };

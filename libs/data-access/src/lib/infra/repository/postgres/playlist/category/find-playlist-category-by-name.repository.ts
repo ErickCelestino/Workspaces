@@ -4,7 +4,7 @@ import {
   FindPlaylistCategoryByNameRepository,
   PlaylistCategory,
 } from '@workspaces/domain';
-import { PrismaService } from 'nestjs-prisma';
+import { PrismaService } from '../../../../../application';
 
 export class FindPlaylistCategoryByNameRepositoryImpl
   implements FindPlaylistCategoryByNameRepository
@@ -14,7 +14,7 @@ export class FindPlaylistCategoryByNameRepositoryImpl
     const { loggedUserId, name } = input;
 
     const filteredPlaylistCategory =
-      await this.prismaService.playlist_Category.findFirst({
+      await this.prismaService.generalPrisma.playlist_Category.findFirst({
         where: {
           user_id: loggedUserId,
           name: name,

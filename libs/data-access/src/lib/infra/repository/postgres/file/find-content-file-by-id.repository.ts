@@ -1,32 +1,33 @@
 import { Inject } from '@nestjs/common';
 import { ContentFile, FindContentFileByIdRepository } from '@workspaces/domain';
-import { PrismaService } from 'nestjs-prisma';
+import { PrismaService } from '../../../../application';
 
 export class FindContentFileByIdRepositoryImpl
   implements FindContentFileByIdRepository
 {
   constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
   async find(id: string): Promise<ContentFile> {
-    const contentFileResult = await this.prismaService.content_Files.findFirst({
-      where: {
-        Content_Files_id: id,
-      },
-      select: {
-        Content_Files_id: true,
-        size: true,
-        format: true,
-        upload_date: true,
-        file_name: true,
-        path: true,
-        original_name: true,
-        thumbnail: true,
-        user: {
-          select: {
-            nick_name: true,
+    const contentFileResult =
+      await this.prismaService.generalPrisma.content_Files.findFirst({
+        where: {
+          Content_Files_id: id,
+        },
+        select: {
+          Content_Files_id: true,
+          size: true,
+          format: true,
+          upload_date: true,
+          file_name: true,
+          path: true,
+          original_name: true,
+          thumbnail: true,
+          user: {
+            select: {
+              nick_name: true,
+            },
           },
         },
-      },
-    });
+      });
 
     const mappedContentFile: ContentFile = {
       id: contentFileResult?.Content_Files_id ?? '',

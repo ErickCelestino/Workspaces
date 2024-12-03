@@ -1,6 +1,6 @@
 import { Inject } from '@nestjs/common';
 import { EditDirectoryDto, EditDirectoryRepository } from '@workspaces/domain';
-import { PrismaService } from 'nestjs-prisma';
+import { PrismaService } from '../../../../application';
 
 export class EditDirectoryRepositoryImpl implements EditDirectoryRepository {
   constructor(
@@ -11,14 +11,15 @@ export class EditDirectoryRepositoryImpl implements EditDirectoryRepository {
   async edit(input: EditDirectoryDto): Promise<string> {
     const { id, newName } = input;
 
-    const editedDirectory = await this.prismaService.directory.update({
-      where: {
-        directory_id: id,
-      },
-      data: {
-        name: newName,
-      },
-    });
+    const editedDirectory =
+      await this.prismaService.generalPrisma.directory.update({
+        where: {
+          directory_id: id,
+        },
+        data: {
+          name: newName,
+        },
+      });
 
     return editedDirectory.directory_id;
   }

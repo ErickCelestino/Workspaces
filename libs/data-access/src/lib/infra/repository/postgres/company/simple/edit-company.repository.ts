@@ -1,6 +1,6 @@
 import { Inject } from '@nestjs/common';
 import { EditCompanyDto, EditCompanyRepository } from '@workspaces/domain';
-import { PrismaService } from 'nestjs-prisma';
+import { PrismaService } from '../../../../../application';
 
 export class EditCompanyRepositoryImpl implements EditCompanyRepository {
   constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
@@ -10,16 +10,18 @@ export class EditCompanyRepositoryImpl implements EditCompanyRepository {
       companyId,
     } = input;
 
-    const editedCompany = await this.prismaService.company.update({
-      where: {
-        company_id: companyId,
-      },
-      data: {
-        cnpj: cnpj,
-        fantasy_name: fantasyName,
-        social_reason: socialReason,
-      },
-    });
+    const editedCompany = await this.prismaService.generalPrisma.company.update(
+      {
+        where: {
+          company_id: companyId,
+        },
+        data: {
+          cnpj: cnpj,
+          fantasy_name: fantasyName,
+          social_reason: socialReason,
+        },
+      }
+    );
 
     return editedCompany?.company_id ?? '';
   }

@@ -4,8 +4,8 @@ import {
   FindUnauthorizedUsersByCompanyIdRepository,
   UnauthorizedUsersByCompanyIdResponseDto,
 } from '@workspaces/domain';
-import { PrismaService } from 'nestjs-prisma';
-import { Status } from '@prisma/client';
+import { PrismaService } from '../../../../../application';
+import { Status } from '@workspaces/prisma/general';
 
 export class FindUnauthorizedUsersByCompanyIdRepositoryImpl
   implements FindUnauthorizedUsersByCompanyIdRepository
@@ -23,8 +23,8 @@ export class FindUnauthorizedUsersByCompanyIdRepositoryImpl
       },
     };
 
-    const [users, total] = await this.prismaService.$transaction([
-      this.prismaService.user_X_Company.findMany({
+    const [users, total] = await this.prismaService.generalPrisma.$transaction([
+      this.prismaService.generalPrisma.user_X_Company.findMany({
         where: whereClause,
         select: {
           user_id: true,
@@ -46,7 +46,7 @@ export class FindUnauthorizedUsersByCompanyIdRepositoryImpl
           },
         },
       }),
-      this.prismaService.user_X_Company.count({
+      this.prismaService.generalPrisma.user_X_Company.count({
         where: whereClause,
       }),
     ]);

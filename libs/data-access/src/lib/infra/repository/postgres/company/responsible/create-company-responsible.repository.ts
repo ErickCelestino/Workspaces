@@ -3,7 +3,7 @@ import {
   CreateCompanyResponsibleDto,
   CreateCompanyResponsibleRespository,
 } from '@workspaces/domain';
-import { PrismaService } from 'nestjs-prisma';
+import { PrismaService } from '../../../../../application';
 
 export class CreateCompanyResponsibleRespositoryImpl
   implements CreateCompanyResponsibleRespository
@@ -11,7 +11,7 @@ export class CreateCompanyResponsibleRespositoryImpl
   constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
   async create(input: CreateCompanyResponsibleDto): Promise<string> {
     const createdCompanyResponsible =
-      await this.prismaService.company_Responsible.create({
+      await this.prismaService.generalPrisma.company_Responsible.create({
         data: {
           cpf: input.body.document,
           email: input.body.email,

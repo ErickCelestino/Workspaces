@@ -3,7 +3,7 @@ import {
   AuthorizeUserToCompanyDto,
   AuthorizeUserToCompanyRepository,
 } from '@workspaces/domain';
-import { PrismaService } from 'nestjs-prisma';
+import { PrismaService } from '../../../../../application';
 
 export class AuthorizeUserToCompanyRepositoryImpl
   implements AuthorizeUserToCompanyRepository
@@ -11,7 +11,7 @@ export class AuthorizeUserToCompanyRepositoryImpl
   constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
   async auth(input: AuthorizeUserToCompanyDto): Promise<string> {
     const { userId } = input;
-    const authorizedUser = await this.prismaService.user.update({
+    const authorizedUser = await this.prismaService.generalPrisma.user.update({
       where: {
         user_id: userId,
       },

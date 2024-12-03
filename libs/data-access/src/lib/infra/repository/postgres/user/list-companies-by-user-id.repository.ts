@@ -5,7 +5,7 @@ import {
   ListCompanyResponseDto,
   ListSimpleCompanyResponseDto,
 } from '@workspaces/domain';
-import { PrismaService } from 'nestjs-prisma';
+import { PrismaService } from '../../../../application';
 
 export class ListCompaniesByUserIdRepositoryImpl
   implements ListCompaniesByUserIdRepository
@@ -42,8 +42,8 @@ export class ListCompaniesByUserIdRepositoryImpl
     };
 
     const [companies, filteredTotal, total] =
-      await this.prismaService.$transaction([
-        this.prismaService.user_X_Company.findMany({
+      await this.prismaService.generalPrisma.$transaction([
+        this.prismaService.generalPrisma.user_X_Company.findMany({
           where: whereClause,
           select: {
             company: {
@@ -78,10 +78,10 @@ export class ListCompaniesByUserIdRepositoryImpl
           skip: parseInt(skip.toString()),
           take: parseInt(take.toString()),
         }),
-        this.prismaService.user_X_Company.count({
+        this.prismaService.generalPrisma.user_X_Company.count({
           where: whereClause,
         }),
-        this.prismaService.user_X_Company.count({
+        this.prismaService.generalPrisma.user_X_Company.count({
           where: {
             user_id: userId,
           },

@@ -5,7 +5,7 @@ import {
   ListContentFileRepository,
   ListContentFileResponseDto,
 } from '@workspaces/domain';
-import { PrismaService } from 'nestjs-prisma';
+import { PrismaService } from '../../../../application';
 
 export class ListContentFileRepositoryImpl
   implements ListContentFileRepository
@@ -15,8 +15,8 @@ export class ListContentFileRepositoryImpl
     const skip = input?.skip || 0;
     const take = input?.take || 8;
 
-    const [files, total] = await this.prismaService.$transaction([
-      this.prismaService.content_Files.findMany({
+    const [files, total] = await this.prismaService.generalPrisma.$transaction([
+      this.prismaService.generalPrisma.content_Files.findMany({
         where: {
           user_id: input.loggedUserId,
           directory_id: input.directoryId,
@@ -53,7 +53,7 @@ export class ListContentFileRepositoryImpl
         skip: parseInt(skip.toString()),
         take: parseInt(take.toString()),
       }),
-      this.prismaService.content_Files.count({
+      this.prismaService.generalPrisma.content_Files.count({
         where: {
           user_id: input.loggedUserId,
           directory_id: input.directoryId,

@@ -3,7 +3,7 @@ import {
   EditCompanyResponsibleDto,
   EditCompanyResponsibleRepository,
 } from '@workspaces/domain';
-import { PrismaService } from 'nestjs-prisma';
+import { PrismaService } from '../../../../../application';
 
 export class EditCompanyResponsibleRepositoryImpl
   implements EditCompanyResponsibleRepository
@@ -11,7 +11,7 @@ export class EditCompanyResponsibleRepositoryImpl
   constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
   async edit(input: EditCompanyResponsibleDto): Promise<string> {
     const editedCompanyResponsible =
-      await this.prismaService.company_Responsible.update({
+      await this.prismaService.generalPrisma.company_Responsible.update({
         where: {
           company_responsible_id: input.companyResponsibleId,
         },

@@ -4,14 +4,14 @@ import {
   ListSimpleStateRepository,
   ListSimpleStateResponseDto,
 } from '@workspaces/domain';
-import { PrismaService } from 'nestjs-prisma';
+import { PrismaService } from '../../../../../application';
 
 export class ListSimpleStateRepositoryImpl
   implements ListSimpleStateRepository
 {
   constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
   async list(input: ListSimpleStateDto): Promise<ListSimpleStateResponseDto[]> {
-    const listStates = await this.prismaService.state.findMany({
+    const listStates = await this.prismaService.generalPrisma.state.findMany({
       where: {
         coutry_id: input.countryId,
       },

@@ -5,7 +5,7 @@ import {
   ListDeviceRepository,
   ListDeviceResponseDto,
 } from '@workspaces/domain';
-import { PrismaService } from 'nestjs-prisma';
+import { PrismaService } from '../../../../application';
 
 export class ListDeviceRepositoryImpl implements ListDeviceRepository {
   constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
@@ -29,8 +29,8 @@ export class ListDeviceRepositoryImpl implements ListDeviceRepository {
     };
 
     const [devices, filteredTotal, total] =
-      await this.prismaService.$transaction([
-        this.prismaService.device.findMany({
+      await this.prismaService.generalPrisma.$transaction([
+        this.prismaService.generalPrisma.device.findMany({
           where: whereClause,
           select: {
             device_id: true,
@@ -45,10 +45,10 @@ export class ListDeviceRepositoryImpl implements ListDeviceRepository {
           skip: parseInt(skip.toString()),
           take: parseInt(take.toString()),
         }),
-        this.prismaService.device.count({
+        this.prismaService.generalPrisma.device.count({
           where: whereClause,
         }),
-        this.prismaService.device.count({
+        this.prismaService.generalPrisma.device.count({
           where: {
             user_id: loggedUserId,
             company_id: companyId,

@@ -3,7 +3,7 @@ import {
   AddSchedulingToDeviceDto,
   AddSchedulingToDeviceRepository,
 } from '@workspaces/domain';
-import { PrismaService } from 'nestjs-prisma';
+import { PrismaService } from '../../../../application';
 
 export class AddSchedulingToDeviceRepositoryImpl
   implements AddSchedulingToDeviceRepository
@@ -13,7 +13,7 @@ export class AddSchedulingToDeviceRepositoryImpl
     const { idDevice, idScheduing } = input;
 
     const createdSchedulingToDevice =
-      await this.prismaService.scheduling_X_Device.create({
+      await this.prismaService.generalPrisma.scheduling_X_Device.create({
         data: {
           device_id: idDevice,
           scheduling_id: idScheduing,

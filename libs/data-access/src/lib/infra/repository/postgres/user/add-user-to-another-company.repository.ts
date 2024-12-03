@@ -3,7 +3,7 @@ import {
   AddUserToAnotherCompanyDto,
   AddUserToAnotherCompanyRepository,
 } from '@workspaces/domain';
-import { PrismaService } from 'nestjs-prisma';
+import { PrismaService } from '../../../../application';
 
 export class AddUserToAnotherCompanyRepositoryImpl
   implements AddUserToAnotherCompanyRepository
@@ -12,12 +12,13 @@ export class AddUserToAnotherCompanyRepositoryImpl
   async add(input: AddUserToAnotherCompanyDto): Promise<string> {
     const { companyId, userId } = input;
 
-    const addedUser = await this.prismaService.user_X_Company.create({
-      data: {
-        company_id: companyId,
-        user_id: userId,
-      },
-    });
+    const addedUser =
+      await this.prismaService.generalPrisma.user_X_Company.create({
+        data: {
+          company_id: companyId,
+          user_id: userId,
+        },
+      });
 
     return addedUser?.user_id
       ? `${addedUser?.user_id}-${addedUser?.company_id}`

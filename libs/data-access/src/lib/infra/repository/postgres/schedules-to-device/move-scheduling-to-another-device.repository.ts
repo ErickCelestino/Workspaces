@@ -3,7 +3,7 @@ import {
   MoveSchedulingToAnotherDeviceDto,
   MoveSchedulingToAnotherDeviceRepository,
 } from '@workspaces/domain';
-import { PrismaService } from 'nestjs-prisma';
+import { PrismaService } from '../../../../application';
 
 export class MoveSchedulingToAnotherDeviceRepositoryImpl
   implements MoveSchedulingToAnotherDeviceRepository
@@ -13,7 +13,7 @@ export class MoveSchedulingToAnotherDeviceRepositoryImpl
     const { newDeviceId, oldDeviceId, schedulingId } = input;
 
     const updatedSchedulingToDevice =
-      await this.prismaService.scheduling_X_Device.update({
+      await this.prismaService.generalPrisma.scheduling_X_Device.update({
         where: {
           device_id_scheduling_id: {
             device_id: oldDeviceId,

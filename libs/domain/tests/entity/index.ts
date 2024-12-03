@@ -5,6 +5,7 @@ export * from './company';
 export * from './device';
 export * from './directory';
 export * from './file';
+export * from './marketing';
 export * from './playlist';
 export * from './playlist-to-scheduling';
 export * from './schedules-to-device';

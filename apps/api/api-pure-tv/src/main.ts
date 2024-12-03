@@ -19,7 +19,7 @@ async function bootstrap() {
   });
   const globalPrefix = 'api-pure-tv';
   app.setGlobalPrefix(globalPrefix);
-  const port = process.env['NX_APP_BACK_PURE_TV'] || 3000;
+  const port = process.env['NX_PUBLIC_BACK_PURE_TV'] || 3000;
 
   app.useStaticAssets(path.join(__dirname, '../../../../uploads'));
   await app.listen(port);

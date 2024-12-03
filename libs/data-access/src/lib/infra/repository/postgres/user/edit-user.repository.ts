@@ -1,6 +1,6 @@
 import { Inject } from '@nestjs/common';
 import { EditUserDto, EditUserRepository, userTypes } from '@workspaces/domain';
-import { PrismaService } from 'nestjs-prisma';
+import { PrismaService } from '../../../../application';
 
 export class EditUserRepositoryImpl implements EditUserRepository {
   constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
@@ -9,7 +9,7 @@ export class EditUserRepositoryImpl implements EditUserRepository {
       body: { id, name, birthDate, status, type },
     } = input;
 
-    const editedUser = await this.prismaService.user.update({
+    const editedUser = await this.prismaService.generalPrisma.user.update({
       where: {
         user_id: id,
       },

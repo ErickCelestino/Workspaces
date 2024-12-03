@@ -3,14 +3,14 @@ import {
   ChangeUserTypeDto,
   ChangeUserTypeRepository,
 } from '@workspaces/domain';
-import { PrismaService } from 'nestjs-prisma';
+import { PrismaService } from '../../../../application';
 
 export class ChangeUserTypeRepositoryImpl implements ChangeUserTypeRepository {
   constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
   async change(input: ChangeUserTypeDto): Promise<string> {
     const { type, userId } = input;
 
-    const changedUserType = await this.prismaService.user.update({
+    const changedUserType = await this.prismaService.generalPrisma.user.update({
       where: {
         user_id: userId,
       },

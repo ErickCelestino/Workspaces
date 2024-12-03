@@ -1,13 +1,13 @@
 import { Inject } from '@nestjs/common';
 import { EditPlaylistDto, EditPlaylistRepository } from '@workspaces/domain';
-import { PrismaService } from 'nestjs-prisma';
+import { PrismaService } from '../../../../application';
 
 export class EditPlaylistRepositoryImpl implements EditPlaylistRepository {
   constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
   async edit(input: EditPlaylistDto): Promise<void> {
     const { id, body } = input;
 
-    await this.prismaService.playlist.update({
+    await this.prismaService.generalPrisma.playlist.update({
       where: {
         playlist_id: id,
       },

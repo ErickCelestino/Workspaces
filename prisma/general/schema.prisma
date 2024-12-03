@@ -1,6 +1,7 @@
 generator client {
   provider = "prisma-client-js"
-  previewFeatures = ["multiSchema", "fullTextSearch"]
+  output   = "../generated/general"
+  previewFeatures = ["multiSchema"]
 }
 
 datasource db {
