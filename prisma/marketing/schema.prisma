@@ -1,7 +1,7 @@
 generator client {
   provider = "prisma-client-js"
   output   = "../generated/marketing"
-  previewFeatures = ["multiSchema", "fullTextSearchPostgres"]
+  previewFeatures = ["multiSchema", "fullTextSearch"]
 }
 
 datasource db {
