@@ -114,6 +114,7 @@ export const FormPreRegistration: FC<FormPreRegistrationProps> = ({
       onSubmit={handleSubmit(handlePreRegistration)}
     >
       <CustomInput
+        width="100%"
         label={nameLabel}
         id="name"
         color={{
@@ -126,34 +127,6 @@ export const FormPreRegistration: FC<FormPreRegistrationProps> = ({
         helperText={errors.name ? errors.name.message : ''}
         useForm={register('name')}
       />
-      <CustomInput
-        label={companyNameLabel}
-        id="companyName"
-        color={{
-          textColor: 'black',
-          backgroundInputColor: 'white',
-          labelColor: 'white',
-        }}
-        required={true}
-        error={!!errors.companyName}
-        helperText={errors.companyName ? errors.companyName.message : ''}
-        useForm={register('companyName')}
-      />
-      <CustomInput
-        label={branchOfTheCompanyLabel}
-        id="branchOfTheCompany"
-        color={{
-          textColor: 'black',
-          backgroundInputColor: 'white',
-          labelColor: 'white',
-        }}
-        required={true}
-        error={!!errors.branchOfTheCompany}
-        helperText={
-          errors.branchOfTheCompany ? errors.branchOfTheCompany.message : ''
-        }
-        useForm={register('branchOfTheCompany')}
-      />
       <Box
         sx={{
           display: 'flex',
@@ -161,33 +134,63 @@ export const FormPreRegistration: FC<FormPreRegistrationProps> = ({
           justifyContent: smDown ? '' : 'space-between',
         }}
       >
-        <CustomSelect
+        <CustomInput
           width={smDown ? '100%' : '49%'}
-          label={ladingpageUse.ladingpageUseLabel}
-          options={ladingpageUse.ladingpageUseList}
-          value={ladingpageUseValue}
-          onChange={setLadingpageUseValue}
-          customInput={customLadingpageUse}
-          setCustomInput={setCustomLadingpageUse}
+          label={companyNameLabel}
+          id="companyName"
           color={{
-            textColor: textColor,
-            labelColor: textLabelColor,
+            textColor: 'black',
+            backgroundInputColor: 'white',
+            labelColor: 'white',
           }}
+          required={true}
+          error={!!errors.companyName}
+          helperText={errors.companyName ? errors.companyName.message : ''}
+          useForm={register('companyName')}
         />
-        <CustomSelect
+        <CustomInput
           width={smDown ? '100%' : '49%'}
-          label={ladingPageemphasis.ladingPageemphasisLabel}
-          options={ladingPageemphasis.ladingPageemphasisList}
-          value={ladingPageemphasisValue}
-          onChange={setLadingPageemphasisValue}
-          customInput={customLadingPageemphasis}
-          setCustomInput={setCustomLadingPageemphasis}
+          label={branchOfTheCompanyLabel}
+          id="branchOfTheCompany"
           color={{
-            textColor: textColor,
-            labelColor: textLabelColor,
+            textColor: 'black',
+            backgroundInputColor: 'white',
+            labelColor: 'white',
           }}
+          required={true}
+          error={!!errors.branchOfTheCompany}
+          helperText={
+            errors.branchOfTheCompany ? errors.branchOfTheCompany.message : ''
+          }
+          useForm={register('branchOfTheCompany')}
         />
       </Box>
+      <CustomSelect
+        width="100%"
+        label={ladingpageUse.ladingpageUseLabel}
+        options={ladingpageUse.ladingpageUseList}
+        value={ladingpageUseValue}
+        onChange={setLadingpageUseValue}
+        customInput={customLadingpageUse}
+        setCustomInput={setCustomLadingpageUse}
+        color={{
+          textColor: textColor,
+          labelColor: textLabelColor,
+        }}
+      />
+      <CustomSelect
+        width="100%"
+        label={ladingPageemphasis.ladingPageemphasisLabel}
+        options={ladingPageemphasis.ladingPageemphasisList}
+        value={ladingPageemphasisValue}
+        onChange={setLadingPageemphasisValue}
+        customInput={customLadingPageemphasis}
+        setCustomInput={setCustomLadingPageemphasis}
+        color={{
+          textColor: textColor,
+          labelColor: textLabelColor,
+        }}
+      />
       <Button
         type="submit"
         variant="outlined"

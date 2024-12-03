@@ -63,7 +63,6 @@ export const CustomSelect: FC<CustomSelectProps> = ({
           value={value}
           select
           onChange={(e) => {
-            console.log(e.target.value);
             onChange(e.target.value);
             if (e.target.value === 'Outros' && setCustomInput)
               setCustomInput('');

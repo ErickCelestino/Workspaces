@@ -17,6 +17,7 @@ interface CustomInputProps {
   error?: boolean;
   helperText?: string;
   required?: boolean;
+  width: string;
 }
 
 export const CustomInput = forwardRef<HTMLInputElement, CustomInputProps>(
@@ -32,13 +33,14 @@ export const CustomInput = forwardRef<HTMLInputElement, CustomInputProps>(
       error,
       helperText,
       required = false,
+      width,
     },
     ref
   ) => {
     const theme = useTheme();
 
     return (
-      <Box sx={{ position: 'relative' }}>
+      <Box sx={{ position: 'relative', width: width }}>
         <Typography
           variant="body1"
           sx={{
