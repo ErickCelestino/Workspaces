@@ -3,18 +3,20 @@ import { PrismaClient } from '@workspaces/prisma/general';
 
 @Injectable()
 export class PrismaGeneralService implements OnModuleDestroy {
-  private prisma = new PrismaClient();
+  private static prisma: PrismaClient;
 
   constructor() {
-    this.prisma.$connect().then(() => console.log('General DB connected'));
+    if (!PrismaGeneralService.prisma) {
+      PrismaGeneralService.prisma = new PrismaClient();
+      PrismaGeneralService.prisma.$connect();
+    }
   }
 
   get generalPrisma(): PrismaClient {
-    return this.prisma;
+    return PrismaGeneralService.prisma;
   }
 
   async onModuleDestroy() {
-    await this.prisma.$disconnect();
-    console.log('General DB disconnected');
+    await PrismaGeneralService.prisma.$disconnect();
   }
 }

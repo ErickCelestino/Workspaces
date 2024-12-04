@@ -1,20 +1,22 @@
-import { Injectable, OnModuleDestroy } from '@nestjs/common';
+import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import { PrismaClient } from '@workspaces/prisma/marketing';
 
 @Injectable()
 export class PrismaMarketingService implements OnModuleDestroy {
-  private prisma = new PrismaClient();
+  private static prisma: PrismaClient;
 
   constructor() {
-    this.prisma.$connect().then(() => console.log('Marketing DB connected'));
+    if (!PrismaMarketingService.prisma) {
+      PrismaMarketingService.prisma = new PrismaClient();
+      PrismaMarketingService.prisma.$connect();
+    }
   }
 
   get marketingPrisma(): PrismaClient {
-    return this.prisma;
+    return PrismaMarketingService.prisma;
   }
 
   async onModuleDestroy() {
-    await this.prisma.$disconnect();
-    console.log('Marketing DB disconnected');
+    await PrismaMarketingService.prisma.$disconnect();
   }
 }
