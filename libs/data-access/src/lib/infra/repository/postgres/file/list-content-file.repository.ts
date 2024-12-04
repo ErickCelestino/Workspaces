@@ -6,12 +6,14 @@ import {
   ListContentFileRepository,
   ListContentFileResponseDto,
 } from '@workspaces/domain';
-import { PrismaService } from '../../../../application';
+import { PrismaGeneralService } from '../../../../application';
 
 export class ListContentFileRepositoryImpl
   implements ListContentFileRepository
 {
-  constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
+  constructor(
+    @Inject('PrismaService') private prismaService: PrismaGeneralService
+  ) {}
   async list(input: ListContentFileDto): Promise<ListContentFileResponseDto> {
     const skip = input?.skip || 0;
     const take = input?.take || 8;
@@ -73,19 +75,21 @@ export class ListContentFileRepositoryImpl
 
     const totalPages = Math.ceil(total / take);
 
-    const mappedContentFiles: ContentFile[] = files.map((file: FilePrismaDto) => {
-      return {
-        id: file.Content_Files_id,
-        fileName: file.file_name,
-        format: file.format,
-        originalName: file.original_name,
-        path: file.path,
-        size: file.size,
-        uploadDate: file.upload_date,
-        created_by: file.user.nick_name,
-        thumbnail: file.thumbnail ?? '',
-      };
-    });
+    const mappedContentFiles: ContentFile[] = files.map(
+      (file: FilePrismaDto) => {
+        return {
+          id: file.Content_Files_id,
+          fileName: file.file_name,
+          format: file.format,
+          originalName: file.original_name,
+          path: file.path,
+          size: file.size,
+          uploadDate: file.upload_date,
+          created_by: file.user.nick_name,
+          thumbnail: file.thumbnail ?? '',
+        };
+      }
+    );
 
     return {
       total,

@@ -1,9 +1,11 @@
 import { Inject } from '@nestjs/common';
 import { FindUserByIdRepository, UserList } from '@workspaces/domain';
-import { PrismaService } from '../../../../application';
+import { PrismaGeneralService } from '../../../../application';
 
 export class FindUserByIdRepositoryImpl implements FindUserByIdRepository {
-  constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
+  constructor(
+    @Inject('PrismaService') private prismaService: PrismaGeneralService
+  ) {}
 
   async find(id: string): Promise<UserList> {
     const userResult = await this.prismaService.generalPrisma.user.findFirst({

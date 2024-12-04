@@ -1,11 +1,13 @@
 import { Inject } from '@nestjs/common';
 import { Directory, FindDirectoryByIdRepository } from '@workspaces/domain';
-import { PrismaService } from '../../../../application';
+import { PrismaGeneralService } from '../../../../application';
 
 export class FindDirectoryByIdRepositoryImpl
   implements FindDirectoryByIdRepository
 {
-  constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
+  constructor(
+    @Inject('PrismaService') private prismaService: PrismaGeneralService
+  ) {}
   async find(id: string): Promise<Directory> {
     const filteredDirectory =
       await this.prismaService.generalPrisma.directory.findFirst({

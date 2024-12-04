@@ -5,12 +5,14 @@ import {
   FilterByEmailOrNicknameRepository,
   User,
 } from '@workspaces/domain';
-import { PrismaService } from '../../../../application';
+import { PrismaGeneralService } from '../../../../application';
 
 export class FilterByEmailOrNicknameRepositoryImpl
   implements FilterByEmailOrNicknameRepository
 {
-  constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
+  constructor(
+    @Inject('PrismaService') private prismaService: PrismaGeneralService
+  ) {}
 
   async filter(input: string): Promise<User> {
     const userResult = await this.prismaService.generalPrisma.user.findFirst({

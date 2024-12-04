@@ -6,10 +6,12 @@ import {
   ListDeviceRepository,
   ListDeviceResponseDto,
 } from '@workspaces/domain';
-import { PrismaService } from '../../../../application';
+import { PrismaGeneralService } from '../../../../application';
 
 export class ListDeviceRepositoryImpl implements ListDeviceRepository {
-  constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
+  constructor(
+    @Inject('PrismaService') private prismaService: PrismaGeneralService
+  ) {}
   async list(input: ListDeviceDto): Promise<ListDeviceResponseDto> {
     const { loggedUserId, companyId, filter } = input;
 

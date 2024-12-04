@@ -4,12 +4,14 @@ import {
   DetailsPlaylistRepository,
   PlaylistResponseDto,
 } from '@workspaces/domain';
-import { PrismaService } from '../../../../application';
+import { PrismaGeneralService } from '../../../../application';
 
 export class DetailsPlaylistRepositoryImpl
   implements DetailsPlaylistRepository
 {
-  constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
+  constructor(
+    @Inject('PrismaService') private prismaService: PrismaGeneralService
+  ) {}
   async details(input: DetailsPlaylistDto): Promise<PlaylistResponseDto> {
     const { playlistId } = input;
 

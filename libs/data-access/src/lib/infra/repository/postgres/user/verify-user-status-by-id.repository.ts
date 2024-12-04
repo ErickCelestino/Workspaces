@@ -1,11 +1,13 @@
 import { Inject } from '@nestjs/common';
 import { VerifyUserStatusByIdRepository } from '@workspaces/domain';
-import { PrismaService } from '../../../../application';
+import { PrismaGeneralService } from '../../../../application';
 
 export class VerifyUserStatusByIdRepositoryImpl
   implements VerifyUserStatusByIdRepository
 {
-  constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
+  constructor(
+    @Inject('PrismaService') private prismaService: PrismaGeneralService
+  ) {}
   async verify(input: string): Promise<string> {
     const result = await this.prismaService.generalPrisma.user.findFirst({
       where: {

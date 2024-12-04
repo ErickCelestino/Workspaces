@@ -3,12 +3,14 @@ import {
   DeletePlaylistToSchedulingDto,
   DeletePlaylistToSchedulingRepository,
 } from '@workspaces/domain';
-import { PrismaService } from '../../../../application';
+import { PrismaGeneralService } from '../../../../application';
 
 export class DeletePlaylistToSchedulingRepositoryImpl
   implements DeletePlaylistToSchedulingRepository
 {
-  constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
+  constructor(
+    @Inject('PrismaService') private prismaService: PrismaGeneralService
+  ) {}
   async delete(input: DeletePlaylistToSchedulingDto): Promise<void> {
     const { playlistId, schedulingId } = input;
     await this.prismaService.generalPrisma.playlist_X_Scheduling.deleteMany({

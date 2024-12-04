@@ -5,10 +5,12 @@ import {
   ListUserResponseDto,
   SimpleUserPrismaDto,
 } from '@workspaces/domain';
-import { PrismaService } from '../../../../application';
+import { PrismaGeneralService } from '../../../../application';
 
 export class ListUserRepositoryImpl implements ListUserRepository {
-  constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
+  constructor(
+    @Inject('PrismaService') private prismaService: PrismaGeneralService
+  ) {}
 
   async list(input: ListUserDto): Promise<ListUserResponseDto> {
     const skip = input?.skip || 0;

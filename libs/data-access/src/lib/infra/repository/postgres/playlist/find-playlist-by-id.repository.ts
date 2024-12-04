@@ -3,12 +3,14 @@ import {
   FindPlaylistByIdRepository,
   PlaylistResponseDto,
 } from '@workspaces/domain';
-import { PrismaService } from '../../../../application';
+import { PrismaGeneralService } from '../../../../application';
 
 export class FindPlaylistByIdRepositoryImpl
   implements FindPlaylistByIdRepository
 {
-  constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
+  constructor(
+    @Inject('PrismaService') private prismaService: PrismaGeneralService
+  ) {}
   async find(id: string): Promise<PlaylistResponseDto> {
     const filteredPlaylist =
       await this.prismaService.generalPrisma.playlist.findFirst({

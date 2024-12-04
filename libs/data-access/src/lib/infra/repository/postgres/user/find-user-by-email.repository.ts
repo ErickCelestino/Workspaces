@@ -5,17 +5,23 @@ import {
   FindUserByEmailRepository,
   LoggedUser,
 } from '@workspaces/domain';
-import { PrismaService } from '../../../../application';
+import { PrismaGeneralService } from '../../../../application';
 
 type MappedCompany = {
-  company: { company_id: string; fantasy_name: string; social_reason: string; cnpj: string; };
+  company: {
+    company_id: string;
+    fantasy_name: string;
+    social_reason: string;
+    cnpj: string;
+  };
 };
-
 
 export class FindUserByEmailRepositoryImpl
   implements FindUserByEmailRepository
 {
-  constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
+  constructor(
+    @Inject('PrismaService') private prismaService: PrismaGeneralService
+  ) {}
   async find(input: FindUserByEmailDto): Promise<LoggedUser> {
     const { email } = input;
     const filteredUser = await this.prismaService.generalPrisma.user.findFirst({

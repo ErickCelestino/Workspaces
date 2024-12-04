@@ -3,12 +3,14 @@ import {
   FindSchedulingToDeviceByIdsDto,
   FindSchedulingToDeviceByIdsRepository,
 } from '@workspaces/domain';
-import { PrismaService } from '../../../../application';
+import { PrismaGeneralService } from '../../../../application';
 
 export class FindSchedulingToDeviceByIdsRepositoryImpl
   implements FindSchedulingToDeviceByIdsRepository
 {
-  constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
+  constructor(
+    @Inject('PrismaService') private prismaService: PrismaGeneralService
+  ) {}
   async find(input: FindSchedulingToDeviceByIdsDto): Promise<string> {
     const filteredSchedulingToDevice =
       await this.prismaService.generalPrisma.scheduling_X_Device.findMany({

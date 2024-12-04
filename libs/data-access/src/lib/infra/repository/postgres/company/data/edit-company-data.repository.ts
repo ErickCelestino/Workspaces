@@ -3,12 +3,14 @@ import {
   EditCompanyDataDto,
   EditCompanyDataRepository,
 } from '@workspaces/domain';
-import { PrismaService } from '../../../../../application';
+import { PrismaGeneralService } from '../../../../../application';
 
 export class EditCompanyDataRepositoryImpl
   implements EditCompanyDataRepository
 {
-  constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
+  constructor(
+    @Inject('PrismaService') private prismaService: PrismaGeneralService
+  ) {}
   async edit(input: EditCompanyDataDto): Promise<string> {
     const {
       body: { legalNature, opening, phone, port, responsibleEmail, situation },

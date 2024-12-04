@@ -3,12 +3,14 @@ import {
   PlaylistToSchedulingDto,
   AddPlaylistToSchedulingRepository,
 } from '@workspaces/domain';
-import { PrismaService } from '../../../../application';
+import { PrismaGeneralService } from '../../../../application';
 
 export class AddPlaylistToSchedulingRepositoryImpl
   implements AddPlaylistToSchedulingRepository
 {
-  constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
+  constructor(
+    @Inject('PrismaService') private prismaService: PrismaGeneralService
+  ) {}
   async add(input: PlaylistToSchedulingDto): Promise<string> {
     const { playlistId, schedulingId } = input;
 

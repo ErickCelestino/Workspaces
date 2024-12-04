@@ -3,12 +3,14 @@ import {
   DeleteCompanyByIdDto,
   DeleteCompanyByIdRepository,
 } from '@workspaces/domain';
-import { PrismaService } from '../../../../../application';
+import { PrismaGeneralService } from '../../../../../application';
 
 export class DeleteCompanyByIdRepositoryImpl
   implements DeleteCompanyByIdRepository
 {
-  constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
+  constructor(
+    @Inject('PrismaService') private prismaService: PrismaGeneralService
+  ) {}
   async delete(input: DeleteCompanyByIdDto): Promise<string> {
     const { companyId, description, loggedUserId } = input;
     const deletedCompany =

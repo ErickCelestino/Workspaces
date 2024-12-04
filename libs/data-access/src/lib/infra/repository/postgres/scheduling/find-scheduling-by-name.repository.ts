@@ -4,12 +4,14 @@ import {
   FindSchedulingByNameRepository,
   Scheduling,
 } from '@workspaces/domain';
-import { PrismaService } from '../../../../application';
+import { PrismaGeneralService } from '../../../../application';
 
 export class FindSchedulingByNameRepositoryImpl
   implements FindSchedulingByNameRepository
 {
-  constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
+  constructor(
+    @Inject('PrismaService') private prismaService: PrismaGeneralService
+  ) {}
   async find(input: FindSchedulingByNameDto): Promise<Scheduling> {
     const filteredScheduling =
       await this.prismaService.generalPrisma.scheduling.findFirst({

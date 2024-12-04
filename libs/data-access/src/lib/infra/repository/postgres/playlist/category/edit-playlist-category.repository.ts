@@ -3,12 +3,14 @@ import {
   EditPlaylistCategoryDto,
   EditPlaylistCategoryRepository,
 } from '@workspaces/domain';
-import { PrismaService } from '../../../../../application';
+import { PrismaGeneralService } from '../../../../../application';
 
 export class EditPlaylistCategoryRepositoryImpl
   implements EditPlaylistCategoryRepository
 {
-  constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
+  constructor(
+    @Inject('PrismaService') private prismaService: PrismaGeneralService
+  ) {}
   async edit(input: EditPlaylistCategoryDto): Promise<void> {
     const { id, body } = input;
 

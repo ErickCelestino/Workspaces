@@ -3,12 +3,14 @@ import {
   CreateContentFileRepository,
   RegisterContentFileDto,
 } from '@workspaces/domain';
-import { PrismaService } from '../../../../application';
+import { PrismaGeneralService } from '../../../../application';
 
 export class CreateContentFileRepositoryImpl
   implements CreateContentFileRepository
 {
-  constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
+  constructor(
+    @Inject('PrismaService') private prismaService: PrismaGeneralService
+  ) {}
   async create(input: RegisterContentFileDto): Promise<string> {
     const { file, loggedUserId, directoryId, thumbnail, companyId } = input;
     const createdContentVideo =

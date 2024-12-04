@@ -3,12 +3,14 @@ import {
   MoveFileToDirectoryDto,
   MoveFileToDirectoryRepository,
 } from '@workspaces/domain';
-import { PrismaService } from '../../../../application';
+import { PrismaGeneralService } from '../../../../application';
 
 export class MoveFileToDirectoryRepositoryImpl
   implements MoveFileToDirectoryRepository
 {
-  constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
+  constructor(
+    @Inject('PrismaService') private prismaService: PrismaGeneralService
+  ) {}
   async move(input: MoveFileToDirectoryDto): Promise<void> {
     const { idToMove, idToMoveDirectory } = input;
 

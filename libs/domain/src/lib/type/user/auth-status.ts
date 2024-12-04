@@ -1,1 +1,1 @@
-export type AuthStatus = 'GOOGLE' | 'DEFAULT'
+export type AuthStatus = 'GOOGLE' | 'DEFAULT';

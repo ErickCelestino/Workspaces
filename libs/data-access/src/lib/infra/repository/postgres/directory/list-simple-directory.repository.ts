@@ -6,12 +6,14 @@ import {
   ListSimpleDirectoryRepository,
   ListSimpleDirectoryResponseDto,
 } from '@workspaces/domain';
-import { PrismaService } from '../../../../application';
+import { PrismaGeneralService } from '../../../../application';
 
 export class ListSimpleDirectoryRepositoryImpl
   implements ListSimpleDirectoryRepository
 {
-  constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
+  constructor(
+    @Inject('PrismaService') private prismaService: PrismaGeneralService
+  ) {}
   async list(
     input: ListSimpleDirectoryDto
   ): Promise<ListSimpleDirectoryResponseDto> {

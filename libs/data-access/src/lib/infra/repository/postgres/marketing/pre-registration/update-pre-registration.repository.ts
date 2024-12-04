@@ -2,13 +2,15 @@ import {
   UpdatePreRegistrationDto,
   UpdatePreRegistrationRepository,
 } from '@workspaces/domain';
-import { PrismaService } from '../../../../../application';
+import { PrismaMarketingService } from '../../../../../application';
 import { Inject } from '@nestjs/common';
 
 export class UpdatePreRegistrationRepositoryImpl
   implements UpdatePreRegistrationRepository
 {
-  constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
+  constructor(
+    @Inject('PrismaService') private prismaService: PrismaMarketingService
+  ) {}
   async update(input: UpdatePreRegistrationDto): Promise<string> {
     const { id, branchOfTheCompany } = input;
 

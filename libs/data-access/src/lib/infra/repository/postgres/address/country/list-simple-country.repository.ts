@@ -4,12 +4,14 @@ import {
   ListSimpleCountryRepository,
   ListSimpleCountryResponseDto,
 } from '@workspaces/domain';
-import { PrismaService } from '../../../../../application';
+import { PrismaGeneralService } from '../../../../../application';
 
 export class ListSimpleCountryRepositoryImpl
   implements ListSimpleCountryRepository
 {
-  constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
+  constructor(
+    @Inject('PrismaService') private prismaService: PrismaGeneralService
+  ) {}
   async list(): Promise<ListSimpleCountryResponseDto[]> {
     const listCountry = await this.prismaService.generalPrisma.country.findMany(
       {

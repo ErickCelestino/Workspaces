@@ -3,12 +3,14 @@ import {
   AddUserToAnotherCompanyDto,
   AddUserToAnotherCompanyRepository,
 } from '@workspaces/domain';
-import { PrismaService } from '../../../../application';
+import { PrismaGeneralService } from '../../../../application';
 
 export class AddUserToAnotherCompanyRepositoryImpl
   implements AddUserToAnotherCompanyRepository
 {
-  constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
+  constructor(
+    @Inject('PrismaService') private prismaService: PrismaGeneralService
+  ) {}
   async add(input: AddUserToAnotherCompanyDto): Promise<string> {
     const { companyId, userId } = input;
 

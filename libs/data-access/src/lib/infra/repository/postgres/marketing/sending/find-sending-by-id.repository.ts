@@ -2,13 +2,15 @@ import {
   FindSendingByIdRepository,
   SendingResponseDto,
 } from '@workspaces/domain';
-import { PrismaService } from '../../../../../application';
+import { PrismaMarketingService } from '../../../../../application';
 import { Inject } from '@nestjs/common';
 
 export class FindSendingByIdRepositoryImpl
   implements FindSendingByIdRepository
 {
-  constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
+  constructor(
+    @Inject('PrismaService') private prismaService: PrismaMarketingService
+  ) {}
   async find(id: string): Promise<SendingResponseDto> {
     const filteredSending =
       await this.prismaService.marketingPrisma.sending.findFirst({

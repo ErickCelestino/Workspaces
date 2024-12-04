@@ -6,12 +6,14 @@ import {
   SchedulesToDevicePrismaDto,
   Scheduling,
 } from '@workspaces/domain';
-import { PrismaService } from '../../../../application';
+import { PrismaGeneralService } from '../../../../application';
 
 export class FindSchedulesByDeviceIdRepositoryImpl
   implements FindSchedulesByDeviceIdRepository
 {
-  constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
+  constructor(
+    @Inject('PrismaService') private prismaService: PrismaGeneralService
+  ) {}
   async find(input: FindSchedulesByDeviceIdDto): Promise<Scheduling[]> {
     const filteredSchedules =
       await this.prismaService.generalPrisma.scheduling_X_Device.findMany({
@@ -38,20 +40,22 @@ export class FindSchedulesByDeviceIdRepositoryImpl
         },
       });
 
-    const mappedSchedules: Scheduling[] = filteredSchedules.map((item: SchedulesToDevicePrismaDto) => {
-      return {
-        id: item.scheduling?.scheduling_id ?? '',
-        name: item.scheduling?.name ?? '',
-        endTime: FormatDateInTime(new Date(item.scheduling?.end_time ?? '')),
-        startTime: FormatDateInTime(
-          new Date(item.scheduling?.start_time ?? '')
-        ),
-        lopping: item.scheduling?.looping ?? false,
-        priority: item.scheduling?.priority.toString() ?? '',
-        createBy: item.scheduling?.user?.nick_name ?? '',
-        createdAt: item.scheduling?.created_at ?? new Date(),
-      };
-    });
+    const mappedSchedules: Scheduling[] = filteredSchedules.map(
+      (item: SchedulesToDevicePrismaDto) => {
+        return {
+          id: item.scheduling?.scheduling_id ?? '',
+          name: item.scheduling?.name ?? '',
+          endTime: FormatDateInTime(new Date(item.scheduling?.end_time ?? '')),
+          startTime: FormatDateInTime(
+            new Date(item.scheduling?.start_time ?? '')
+          ),
+          lopping: item.scheduling?.looping ?? false,
+          priority: item.scheduling?.priority.toString() ?? '',
+          createBy: item.scheduling?.user?.nick_name ?? '',
+          createdAt: item.scheduling?.created_at ?? new Date(),
+        };
+      }
+    );
 
     return mappedSchedules;
   }

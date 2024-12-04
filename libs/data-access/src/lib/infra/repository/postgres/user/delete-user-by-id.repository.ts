@@ -3,10 +3,12 @@ import {
   DeleteUserByIdDto,
   DeleteUserByIdRepository,
 } from '@workspaces/domain';
-import { PrismaService } from '../../../../application';
+import { PrismaGeneralService } from '../../../../application';
 
 export class DeleteUserByIdRepositoryImpl implements DeleteUserByIdRepository {
-  constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
+  constructor(
+    @Inject('PrismaService') private prismaService: PrismaGeneralService
+  ) {}
   async delete(input: DeleteUserByIdDto): Promise<string> {
     await this.prismaService.generalPrisma.confirm_Delete_User.create({
       data: {

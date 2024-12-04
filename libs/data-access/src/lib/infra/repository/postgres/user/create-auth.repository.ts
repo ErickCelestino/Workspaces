@@ -1,9 +1,11 @@
 import { Inject } from '@nestjs/common';
 import { CreateAuthDto, CreateAuthRepository } from '@workspaces/domain';
-import { PrismaService } from '../../../../application';
+import { PrismaGeneralService } from '../../../../application';
 
 export class CreateAuthRepositoryImpl implements CreateAuthRepository {
-  constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
+  constructor(
+    @Inject('PrismaService') private prismaService: PrismaGeneralService
+  ) {}
 
   async create(input: CreateAuthDto): Promise<void> {
     await this.prismaService.generalPrisma.auth.create({

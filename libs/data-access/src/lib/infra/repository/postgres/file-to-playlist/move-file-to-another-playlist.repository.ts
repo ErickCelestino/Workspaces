@@ -3,12 +3,14 @@ import {
   MoveFileToAnotherPlaylistDto,
   MoveFileToAnotherPlaylistRepository,
 } from '@workspaces/domain';
-import { PrismaService } from '../../../../application';
+import { PrismaGeneralService } from '../../../../application';
 
 export class MoveFileToAnotherPlaylistRepositoryImpl
   implements MoveFileToAnotherPlaylistRepository
 {
-  constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
+  constructor(
+    @Inject('PrismaService') private prismaService: PrismaGeneralService
+  ) {}
   async move(input: MoveFileToAnotherPlaylistDto): Promise<void> {
     const { fileId, newPlaylistId, oldPlaylistId } = input;
 

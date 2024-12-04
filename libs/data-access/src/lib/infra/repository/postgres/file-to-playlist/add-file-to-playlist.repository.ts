@@ -3,12 +3,14 @@ import {
   AddFileToPlaylistDto,
   AddFileToPlaylistRepository,
 } from '@workspaces/domain';
-import { PrismaService } from '../../../../application';
+import { PrismaGeneralService } from '../../../../application';
 
 export class AddFileToPlaylistRepositoryImpl
   implements AddFileToPlaylistRepository
 {
-  constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
+  constructor(
+    @Inject('PrismaService') private prismaService: PrismaGeneralService
+  ) {}
   async add(input: AddFileToPlaylistDto): Promise<string[]> {
     const { filesId, playlistId } = input;
     const listId: string[] = [];

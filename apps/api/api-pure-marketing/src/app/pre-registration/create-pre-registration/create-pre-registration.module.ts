@@ -6,7 +6,7 @@ import {
   CreatePreRegistrationRepostioryImpl,
   FindPreRegistrationBySendingIdRepositoryImpl,
   FindSendingByIdRepositoryImpl,
-  PrismaService,
+  PrismaMarketingService,
 } from '@workspaces/data-access';
 
 @Module({
@@ -16,7 +16,7 @@ import {
     CreatePreRegistration,
     {
       provide: 'PrismaService',
-      useClass: PrismaService,
+      useClass: PrismaMarketingService,
     },
     {
       provide: 'FindSendingByIdRepository',

@@ -3,12 +3,14 @@ import {
   CompanyResponsibleResponseDto,
   FindCompanyResponsibleByDocumentRepository,
 } from '@workspaces/domain';
-import { PrismaService } from '../../../../../application';
+import { PrismaGeneralService } from '../../../../../application';
 
 export class FindCompanyResponsibleByDocumentRepositoryImpl
   implements FindCompanyResponsibleByDocumentRepository
 {
-  constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
+  constructor(
+    @Inject('PrismaService') private prismaService: PrismaGeneralService
+  ) {}
   async find(document: string): Promise<CompanyResponsibleResponseDto> {
     const filteredCompanyResponsible =
       await this.prismaService.generalPrisma.company_Responsible.findFirst({

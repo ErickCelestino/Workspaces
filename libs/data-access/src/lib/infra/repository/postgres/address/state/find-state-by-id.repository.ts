@@ -5,10 +5,12 @@ import {
   FindStateByIdRepository,
   StateResponseDto,
 } from '@workspaces/domain';
-import { PrismaService } from '../../../../../application';
+import { PrismaGeneralService } from '../../../../../application';
 
 export class FindStateByIdRepositoryImpl implements FindStateByIdRepository {
-  constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
+  constructor(
+    @Inject('PrismaService') private prismaService: PrismaGeneralService
+  ) {}
   async find(id: string): Promise<StateResponseDto> {
     const filteredState =
       await this.prismaService.generalPrisma.state.findUnique({
