@@ -23,4 +23,4 @@ COPY --from=builder /app/package*.json ./
 
 EXPOSE ${NX_PUBLIC_BACK_GENERAL}
 
-CMD ["node", "dist/api/main"]
+CMD ["sh", "-c", "npm run prisma:migrate-prod && node /app/dist/main.js"]

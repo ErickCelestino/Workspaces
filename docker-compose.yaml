@@ -15,7 +15,6 @@ services:
       - shared_network
     env_file:
       - .env
-    command: sh -c "npm run prisma:migrate-prod && node /app/dist/main.js"
 
   web-pure-marketing:
     build:
