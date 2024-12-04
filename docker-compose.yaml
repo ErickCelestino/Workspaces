@@ -4,16 +4,18 @@ services:
     build:
       context: .
       dockerfile: ./configs/docker/Dockerfile.api-pure-marketing
+      args:
+        DATABASE_GENERAL_URL: ${DATABASE_MARKETING_URL}
+        DATABASE_MARKETING_URL: ${DATABASE_MARKETING_URL}
     ports:
       - '${NX_PUBLIC_BACK_MARKETING}:${NX_PUBLIC_BACK_MARKETING}'
     environment:
       - NODE_ENV=production
-      - DATABASE_MARKETING_URL=${DATABASE_MARKETING_URL}
     networks:
       - shared_network
     env_file:
       - .env
-    command: sh -c "npm run prisma:migrate-prod:marketing && node /app/dist/main.js"
+    command: sh -c "npm run prisma:migrate-prod && node /app/dist/main.js"
 
   web-pure-marketing:
     build:

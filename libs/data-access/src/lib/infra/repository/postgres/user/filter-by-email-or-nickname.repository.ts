@@ -1,15 +1,18 @@
 import { Inject } from '@nestjs/common';
 import {
   Auth,
+  AuthPrismaDto,
   FilterByEmailOrNicknameRepository,
   User,
 } from '@workspaces/domain';
-import { PrismaService } from '../../../../application';
+import { PrismaGeneralService } from '../../../../application';
 
 export class FilterByEmailOrNicknameRepositoryImpl
   implements FilterByEmailOrNicknameRepository
 {
-  constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
+  constructor(
+    @Inject('PrismaService') private prismaService: PrismaGeneralService
+  ) {}
 
   async filter(input: string): Promise<User> {
     const userResult = await this.prismaService.generalPrisma.user.findFirst({
@@ -45,7 +48,7 @@ export class FilterByEmailOrNicknameRepositoryImpl
     });
 
     const mappedAuth = userResult?.auth == null ? [] : userResult.auth;
-    const findedAuth: Auth[] = mappedAuth.map((auth) => {
+    const findedAuth: Auth[] = mappedAuth.map((auth: AuthPrismaDto) => {
       return {
         authId: auth.auth_id,
         userId: auth.user_id,

@@ -3,12 +3,14 @@ import {
   AddSchedulingToDeviceDto,
   AddSchedulingToDeviceRepository,
 } from '@workspaces/domain';
-import { PrismaService } from '../../../../application';
+import { PrismaGeneralService } from '../../../../application';
 
 export class AddSchedulingToDeviceRepositoryImpl
   implements AddSchedulingToDeviceRepository
 {
-  constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
+  constructor(
+    @Inject('PrismaService') private prismaService: PrismaGeneralService
+  ) {}
   async add(input: AddSchedulingToDeviceDto): Promise<string> {
     const { idDevice, idScheduing } = input;
 

@@ -3,12 +3,14 @@ import {
   EditContentFileDto,
   EditContentFileRepository,
 } from '@workspaces/domain';
-import { PrismaService } from '../../../../application';
+import { PrismaGeneralService } from '../../../../application';
 
 export class EditContentFileRepositoryImpl
   implements EditContentFileRepository
 {
-  constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
+  constructor(
+    @Inject('PrismaService') private prismaService: PrismaGeneralService
+  ) {}
   async edit(input: EditContentFileDto): Promise<void> {
     const { directoryId, idToEdit, newFileName: originalName } = input;
     await this.prismaService.generalPrisma.content_Files.update({

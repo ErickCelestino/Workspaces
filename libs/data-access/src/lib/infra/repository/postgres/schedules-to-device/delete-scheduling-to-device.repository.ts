@@ -3,12 +3,14 @@ import {
   DeleteSchedulingToDeviceDto,
   DeleteSchedulingToDeviceRepository,
 } from '@workspaces/domain';
-import { PrismaService } from '../../../../application';
+import { PrismaGeneralService } from '../../../../application';
 
 export class DeleteSchedulingToDeviceRepositoryImpl
   implements DeleteSchedulingToDeviceRepository
 {
-  constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
+  constructor(
+    @Inject('PrismaService') private prismaService: PrismaGeneralService
+  ) {}
   async delete(input: DeleteSchedulingToDeviceDto): Promise<string> {
     const deletedScheduling =
       await this.prismaService.generalPrisma.scheduling_X_Device.delete({

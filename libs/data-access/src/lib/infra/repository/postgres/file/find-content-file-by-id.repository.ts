@@ -1,11 +1,13 @@
 import { Inject } from '@nestjs/common';
 import { ContentFile, FindContentFileByIdRepository } from '@workspaces/domain';
-import { PrismaService } from '../../../../application';
+import { PrismaGeneralService } from '../../../../application';
 
 export class FindContentFileByIdRepositoryImpl
   implements FindContentFileByIdRepository
 {
-  constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
+  constructor(
+    @Inject('PrismaService') private prismaService: PrismaGeneralService
+  ) {}
   async find(id: string): Promise<ContentFile> {
     const contentFileResult =
       await this.prismaService.generalPrisma.content_Files.findFirst({

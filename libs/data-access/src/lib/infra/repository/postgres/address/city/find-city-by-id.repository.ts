@@ -1,9 +1,11 @@
 import { Inject } from '@nestjs/common';
 import { CityResponseDto, FindCityByIdRepository } from '@workspaces/domain';
-import { PrismaService } from '../../../../../application';
+import { PrismaGeneralService } from '../../../../../application';
 
 export class FindCityByIdRepositoryImpl implements FindCityByIdRepository {
-  constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
+  constructor(
+    @Inject('PrismaService') private prismaService: PrismaGeneralService
+  ) {}
   async find(id: string): Promise<CityResponseDto> {
     const filteredCity = await this.prismaService.generalPrisma.city.findUnique(
       {

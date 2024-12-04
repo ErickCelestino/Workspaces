@@ -5,11 +5,14 @@ import {
   ListSchedulesReponseDto,
   ListSchedulesRepository,
   Scheduling,
+  SchedulingPrismaDto,
 } from '@workspaces/domain';
-import { PrismaService } from '../../../../application';
+import { PrismaGeneralService } from '../../../../application';
 
 export class ListSchedulesRepositoryImpl implements ListSchedulesRepository {
-  constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
+  constructor(
+    @Inject('PrismaService') private prismaService: PrismaGeneralService
+  ) {}
 
   async list(input: ListSchedulesDto): Promise<ListSchedulesReponseDto> {
     const { loggedUserId, companyId, filter } = input;
@@ -64,18 +67,20 @@ export class ListSchedulesRepositoryImpl implements ListSchedulesRepository {
 
     const totalPages = Math.ceil(filteredTotal / take);
 
-    const mappedScheduling: Scheduling[] = scheduling.map((scheduling) => {
-      return {
-        id: scheduling.scheduling_id,
-        createBy: scheduling.user.nick_name,
-        createdAt: scheduling.created_at,
-        endTime: FormatDateInTime(scheduling.end_time),
-        lopping: scheduling.looping,
-        name: scheduling.name,
-        priority: `${scheduling.priority}`,
-        startTime: FormatDateInTime(scheduling.start_time),
-      };
-    });
+    const mappedScheduling: Scheduling[] = scheduling.map(
+      (scheduling: SchedulingPrismaDto) => {
+        return {
+          id: scheduling.scheduling_id,
+          createBy: scheduling.user.nick_name,
+          createdAt: scheduling.created_at,
+          endTime: FormatDateInTime(scheduling.end_time),
+          lopping: scheduling.looping,
+          name: scheduling.name,
+          priority: `${scheduling.priority}`,
+          startTime: FormatDateInTime(scheduling.start_time),
+        };
+      }
+    );
 
     return {
       schedules: mappedScheduling,

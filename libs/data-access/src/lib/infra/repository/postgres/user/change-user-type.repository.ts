@@ -3,10 +3,12 @@ import {
   ChangeUserTypeDto,
   ChangeUserTypeRepository,
 } from '@workspaces/domain';
-import { PrismaService } from '../../../../application';
+import { PrismaGeneralService } from '../../../../application';
 
 export class ChangeUserTypeRepositoryImpl implements ChangeUserTypeRepository {
-  constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
+  constructor(
+    @Inject('PrismaService') private prismaService: PrismaGeneralService
+  ) {}
   async change(input: ChangeUserTypeDto): Promise<string> {
     const { type, userId } = input;
 

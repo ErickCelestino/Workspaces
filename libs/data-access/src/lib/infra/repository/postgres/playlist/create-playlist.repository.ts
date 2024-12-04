@@ -3,10 +3,12 @@ import {
   CreatePlaylistDto,
   CreatePlaylistRepository,
 } from '@workspaces/domain';
-import { PrismaService } from '../../../../application';
+import { PrismaGeneralService } from '../../../../application';
 
 export class CreatePlaylistRepositoryImpl implements CreatePlaylistRepository {
-  constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
+  constructor(
+    @Inject('PrismaService') private prismaService: PrismaGeneralService
+  ) {}
   async create(input: CreatePlaylistDto): Promise<string> {
     const { loggedUserId, playlistCategoryId, companyId, name } = input;
     const playlistResult =

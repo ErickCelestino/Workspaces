@@ -3,12 +3,14 @@ import {
   EditCompanyResponsibleDto,
   EditCompanyResponsibleRepository,
 } from '@workspaces/domain';
-import { PrismaService } from '../../../../../application';
+import { PrismaGeneralService } from '../../../../../application';
 
 export class EditCompanyResponsibleRepositoryImpl
   implements EditCompanyResponsibleRepository
 {
-  constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
+  constructor(
+    @Inject('PrismaService') private prismaService: PrismaGeneralService
+  ) {}
   async edit(input: EditCompanyResponsibleDto): Promise<string> {
     const editedCompanyResponsible =
       await this.prismaService.generalPrisma.company_Responsible.update({

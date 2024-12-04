@@ -3,12 +3,14 @@ import {
   MoveSchedulingToAnotherDeviceDto,
   MoveSchedulingToAnotherDeviceRepository,
 } from '@workspaces/domain';
-import { PrismaService } from '../../../../application';
+import { PrismaGeneralService } from '../../../../application';
 
 export class MoveSchedulingToAnotherDeviceRepositoryImpl
   implements MoveSchedulingToAnotherDeviceRepository
 {
-  constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
+  constructor(
+    @Inject('PrismaService') private prismaService: PrismaGeneralService
+  ) {}
   async move(input: MoveSchedulingToAnotherDeviceDto): Promise<string> {
     const { newDeviceId, oldDeviceId, schedulingId } = input;
 

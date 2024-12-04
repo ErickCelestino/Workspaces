@@ -4,13 +4,16 @@ import {
   ListPlaylistCategoryReponseDto,
   ListPlaylistCategoryRepository,
   PlaylistCategory,
+  PlaylistCategoryPrismaDto,
 } from '@workspaces/domain';
-import { PrismaService } from '../../../../../application';
+import { PrismaGeneralService } from '../../../../../application';
 
 export class ListPlaylistCategoryRepositoryImpl
   implements ListPlaylistCategoryRepository
 {
-  constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
+  constructor(
+    @Inject('PrismaService') private prismaService: PrismaGeneralService
+  ) {}
   async list(
     input: ListPlaylistCategoryDto
   ): Promise<ListPlaylistCategoryReponseDto> {
@@ -61,15 +64,17 @@ export class ListPlaylistCategoryRepositoryImpl
         }),
       ]);
     const totalPages = Math.ceil(filteredTotal / take);
-    const mappedCategories: PlaylistCategory[] = categories.map((category) => {
-      return {
-        id: category.playlist_category_id,
-        created_at: category.created_at,
-        created_by: category.user.nick_name,
-        description: category.description,
-        name: category.name,
-      };
-    });
+    const mappedCategories: PlaylistCategory[] = categories.map(
+      (category: PlaylistCategoryPrismaDto) => {
+        return {
+          id: category.playlist_category_id,
+          created_at: category.created_at,
+          created_by: category.user.nick_name,
+          description: category.description,
+          name: category.name,
+        };
+      }
+    );
 
     return {
       categories: mappedCategories,

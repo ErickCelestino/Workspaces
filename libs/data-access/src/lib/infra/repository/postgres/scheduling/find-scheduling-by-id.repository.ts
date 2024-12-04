@@ -4,12 +4,14 @@ import {
   FormatDateInTime,
   Scheduling,
 } from '@workspaces/domain';
-import { PrismaService } from '../../../../application';
+import { PrismaGeneralService } from '../../../../application';
 
 export class FindSchedulingByIdRepositoryImpl
   implements FindSchedulingByIdRepository
 {
-  constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
+  constructor(
+    @Inject('PrismaService') private prismaService: PrismaGeneralService
+  ) {}
 
   async find(id: string): Promise<Scheduling> {
     const filteredScheduling =

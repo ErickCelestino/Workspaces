@@ -3,12 +3,14 @@ import {
   VerifyUserPermissionsByIdRepository,
   PermissionsUserResponseDto,
 } from '@workspaces/domain';
-import { PrismaService } from '../../../../application';
+import { PrismaGeneralService } from '../../../../application';
 
 export class VerifyUserPermissionsByIdRepositoryImpl
   implements VerifyUserPermissionsByIdRepository
 {
-  constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
+  constructor(
+    @Inject('PrismaService') private prismaService: PrismaGeneralService
+  ) {}
   async verify(id: string): Promise<PermissionsUserResponseDto> {
     const result = await this.prismaService.generalPrisma.user.findFirst({
       where: {

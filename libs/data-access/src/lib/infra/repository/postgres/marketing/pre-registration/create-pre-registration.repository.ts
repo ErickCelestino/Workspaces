@@ -3,12 +3,14 @@ import {
   CreatePreRegistrationDto,
   CreatePreRegistrationRepository,
 } from '@workspaces/domain';
-import { PrismaService } from '../../../../../application';
+import { PrismaMarketingService } from '../../../../../application';
 
 export class CreatePreRegistrationRepostioryImpl
   implements CreatePreRegistrationRepository
 {
-  constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
+  constructor(
+    @Inject('PrismaService') private prismaService: PrismaMarketingService
+  ) {}
   async create(input: CreatePreRegistrationDto): Promise<string> {
     const { sendingId } = input;
     const createdPreRegistration =

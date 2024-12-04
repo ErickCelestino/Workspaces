@@ -3,12 +3,14 @@ import {
   RemoveUserAccessToTheCompanyDto,
   RemoveUserAccessToTheCompanyRepository,
 } from '@workspaces/domain';
-import { PrismaService } from '../../../../../application';
+import { PrismaGeneralService } from '../../../../../application';
 
 export class RemoveUserAccessToTheCompanyRepositoryImpl
   implements RemoveUserAccessToTheCompanyRepository
 {
-  constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
+  constructor(
+    @Inject('PrismaService') private prismaService: PrismaGeneralService
+  ) {}
   async remove(input: RemoveUserAccessToTheCompanyDto): Promise<string> {
     const { companyId, userId } = input;
 

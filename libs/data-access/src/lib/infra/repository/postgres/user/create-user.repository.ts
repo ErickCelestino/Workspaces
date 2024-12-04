@@ -1,9 +1,11 @@
 import { Inject } from '@nestjs/common';
 import { CreateUserDto, CreateUserRepository } from '@workspaces/domain';
-import { PrismaService } from '../../../../application';
+import { PrismaGeneralService } from '../../../../application';
 
 export class CreateUserRepositoryImpl implements CreateUserRepository {
-  constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
+  constructor(
+    @Inject('PrismaService') private prismaService: PrismaGeneralService
+  ) {}
 
   async create(input: CreateUserDto): Promise<string> {
     const { name, nickname, birthDate, appId } = input;

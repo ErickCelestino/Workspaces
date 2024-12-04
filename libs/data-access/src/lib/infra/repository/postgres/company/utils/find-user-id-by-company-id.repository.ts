@@ -3,12 +3,14 @@ import {
   FindUserAndCompanyIdDto,
   FindUserIdByCompanyIdRepository,
 } from '@workspaces/domain';
-import { PrismaService } from '../../../../../application';
+import { PrismaGeneralService } from '../../../../../application';
 
 export class FindUserIdByCompanyIdRepositoryImpl
   implements FindUserIdByCompanyIdRepository
 {
-  constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
+  constructor(
+    @Inject('PrismaService') private prismaService: PrismaGeneralService
+  ) {}
   async find(input: FindUserAndCompanyIdDto): Promise<string> {
     const { companyId, userId } = input;
 

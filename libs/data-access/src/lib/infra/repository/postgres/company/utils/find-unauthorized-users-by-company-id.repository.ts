@@ -3,14 +3,17 @@ import {
   FindUnauthorizedUsersByCompanyIdDto,
   FindUnauthorizedUsersByCompanyIdRepository,
   UnauthorizedUsersByCompanyIdResponseDto,
+  UserPrismaDto,
 } from '@workspaces/domain';
-import { PrismaService } from '../../../../../application';
+import { PrismaGeneralService } from '../../../../../application';
 import { Status } from '@workspaces/prisma/general';
 
 export class FindUnauthorizedUsersByCompanyIdRepositoryImpl
   implements FindUnauthorizedUsersByCompanyIdRepository
 {
-  constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
+  constructor(
+    @Inject('PrismaService') private prismaService: PrismaGeneralService
+  ) {}
   async find(
     input: FindUnauthorizedUsersByCompanyIdDto
   ): Promise<UnauthorizedUsersByCompanyIdResponseDto> {
@@ -51,7 +54,7 @@ export class FindUnauthorizedUsersByCompanyIdRepositoryImpl
       }),
     ]);
 
-    const mappedUsers = users.map((user) => {
+    const mappedUsers = users.map((user: UserPrismaDto) => {
       return {
         name: user.user.name ?? '',
         nickname: user.user.nick_name ?? '',

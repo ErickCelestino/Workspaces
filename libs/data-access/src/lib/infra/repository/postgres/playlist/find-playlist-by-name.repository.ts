@@ -4,12 +4,14 @@ import {
   FindPlaylistByNameRepository,
   Playlist,
 } from '@workspaces/domain';
-import { PrismaService } from '../../../../application';
+import { PrismaGeneralService } from '../../../../application';
 
 export class FindPlaylistByNameRepositoryImpl
   implements FindPlaylistByNameRepository
 {
-  constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
+  constructor(
+    @Inject('PrismaService') private prismaService: PrismaGeneralService
+  ) {}
   async find(input: FindPlaylistByNameDto): Promise<Playlist> {
     const { loggedUserId, name } = input;
     const playlistResult =

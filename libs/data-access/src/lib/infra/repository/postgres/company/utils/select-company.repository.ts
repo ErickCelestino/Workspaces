@@ -1,9 +1,11 @@
 import { Inject } from '@nestjs/common';
 import { SelectCompanyDto, SelectCompanyRepository } from '@workspaces/domain';
-import { PrismaService } from '../../../../../application';
+import { PrismaGeneralService } from '../../../../../application';
 
 export class SelectCompanyRepositoryImpl implements SelectCompanyRepository {
-  constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
+  constructor(
+    @Inject('PrismaService') private prismaService: PrismaGeneralService
+  ) {}
   async select(input: SelectCompanyDto): Promise<string> {
     const { companyId, loggedUserId } = input;
 

@@ -2,13 +2,16 @@ import { Inject } from '@nestjs/common';
 import {
   CountryResponseDto,
   FindCountryByIdRepository,
+  StatePrismaDto,
 } from '@workspaces/domain';
-import { PrismaService } from '../../../../../application';
+import { PrismaGeneralService } from '../../../../../application';
 
 export class FindCountryByIdRepositoryImpl
   implements FindCountryByIdRepository
 {
-  constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
+  constructor(
+    @Inject('PrismaService') private prismaService: PrismaGeneralService
+  ) {}
   async find(id: string): Promise<CountryResponseDto> {
     const filteredCountry =
       await this.prismaService.generalPrisma.country.findUnique({
@@ -36,7 +39,7 @@ export class FindCountryByIdRepositoryImpl
       });
 
     const mappedState =
-      filteredCountry?.state.map((state) => {
+      filteredCountry?.state.map((state: StatePrismaDto) => {
         const mappedCity =
           state?.city.map((city) => {
             return {

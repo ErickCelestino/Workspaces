@@ -3,12 +3,14 @@ import {
   EditCompanyAddressDto,
   EditCompanyAddressRepository,
 } from '@workspaces/domain';
-import { PrismaService } from '../../../../../application';
+import { PrismaGeneralService } from '../../../../../application';
 
 export class EditCompanyAddressRepositoryImpl
   implements EditCompanyAddressRepository
 {
-  constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
+  constructor(
+    @Inject('PrismaService') private prismaService: PrismaGeneralService
+  ) {}
   async edit(input: EditCompanyAddressDto): Promise<string> {
     const {
       body: { cityId, district, number, street, zipcode, complement },
