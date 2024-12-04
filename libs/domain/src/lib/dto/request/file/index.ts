@@ -4,6 +4,7 @@ export * from './delete-content-file-by-id.dto';
 export * from './details-content-file.dto';
 export * from './download-content-file.dto';
 export * from './edit-content-file.dto';
+export * from './file-prisma.dto';
 export * from './find-url-file.dto';
 export * from './generate-thumbnail.dto';
 export * from './list-content-file.dto';

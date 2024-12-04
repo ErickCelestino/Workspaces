@@ -1,9 +1,11 @@
 import { Inject } from '@nestjs/common';
 import { EditCompanyDto, EditCompanyRepository } from '@workspaces/domain';
-import { PrismaService } from '../../../../../application';
+import { PrismaGeneralService } from '../../../../../application';
 
 export class EditCompanyRepositoryImpl implements EditCompanyRepository {
-  constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
+  constructor(
+    @Inject('PrismaService') private prismaService: PrismaGeneralService
+  ) {}
   async edit(input: EditCompanyDto): Promise<string> {
     const {
       body: { cnpj, fantasyName, socialReason },

@@ -3,10 +3,12 @@ import {
   EditSchedulingDto,
   EditSchedulingRepository,
 } from '@workspaces/domain';
-import { PrismaService } from '../../../../application';
+import { PrismaGeneralService } from '../../../../application';
 
 export class EditSchedulingRepositoryImpl implements EditSchedulingRepository {
-  constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
+  constructor(
+    @Inject('PrismaService') private prismaService: PrismaGeneralService
+  ) {}
   async edit(input: EditSchedulingDto): Promise<string> {
     const editedScheduling =
       await this.prismaService.generalPrisma.scheduling.update({

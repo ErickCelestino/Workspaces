@@ -3,12 +3,14 @@ import {
   AuthorizeUserToCompanyDto,
   AuthorizeUserToCompanyRepository,
 } from '@workspaces/domain';
-import { PrismaService } from '../../../../../application';
+import { PrismaGeneralService } from '../../../../../application';
 
 export class AuthorizeUserToCompanyRepositoryImpl
   implements AuthorizeUserToCompanyRepository
 {
-  constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
+  constructor(
+    @Inject('PrismaService') private prismaService: PrismaGeneralService
+  ) {}
   async auth(input: AuthorizeUserToCompanyDto): Promise<string> {
     const { userId } = input;
     const authorizedUser = await this.prismaService.generalPrisma.user.update({

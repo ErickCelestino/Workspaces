@@ -3,12 +3,14 @@ import {
   DeleteDirectoryDto,
   DeleteDirectoryRepository,
 } from '@workspaces/domain';
-import { PrismaService } from '../../../../application';
+import { PrismaGeneralService } from '../../../../application';
 
 export class DeleteDirectoryRepositoryImpl
   implements DeleteDirectoryRepository
 {
-  constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
+  constructor(
+    @Inject('PrismaService') private prismaService: PrismaGeneralService
+  ) {}
   async delete(input: DeleteDirectoryDto): Promise<void> {
     const { id } = input;
 

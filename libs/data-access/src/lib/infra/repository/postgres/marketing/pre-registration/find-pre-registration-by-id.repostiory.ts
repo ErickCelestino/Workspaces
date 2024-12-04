@@ -3,12 +3,14 @@ import {
   FindPreRegistrationByIdRepository,
   PreRegistartionResponseDto,
 } from '@workspaces/domain';
-import { PrismaService } from '../../../../../application';
+import { PrismaMarketingService } from '../../../../../application';
 
 export class FindPreRegistrationByIdRepositoryImpl
   implements FindPreRegistrationByIdRepository
 {
-  constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
+  constructor(
+    @Inject('PrismaService') private prismaService: PrismaMarketingService
+  ) {}
   async find(id: string): Promise<PreRegistartionResponseDto> {
     const filteredPreRegistration =
       await this.prismaService.marketingPrisma.pre_Registration.findFirst({

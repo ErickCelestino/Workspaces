@@ -1,14 +1,17 @@
 import { Inject } from '@nestjs/common';
 import {
+  CompanyPrismaDto,
   ListCompanyDto,
   ListCompanyRepository,
   ListCompanyResponseDto,
   ListSimpleCompanyResponseDto,
 } from '@workspaces/domain';
-import { PrismaService } from '../../../../../application';
+import { PrismaGeneralService } from '../../../../../application';
 
 export class ListCompanyRepositoryImpl implements ListCompanyRepository {
-  constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
+  constructor(
+    @Inject('PrismaService') private prismaService: PrismaGeneralService
+  ) {}
   async list(input: ListCompanyDto): Promise<ListCompanyResponseDto> {
     const { filter, loggedUserId } = input;
 
@@ -82,7 +85,7 @@ export class ListCompanyRepositoryImpl implements ListCompanyRepository {
     const totalPages = Math.ceil(filteredTotal / take);
 
     const mappedCompany: ListSimpleCompanyResponseDto[] = companies.map(
-      (company) => {
+      (company: CompanyPrismaDto) => {
         return {
           id: company?.company_id ?? '',
           cnpj: company?.cnpj ?? '',

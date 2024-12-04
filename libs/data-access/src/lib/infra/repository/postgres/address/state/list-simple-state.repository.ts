@@ -3,13 +3,16 @@ import {
   ListSimpleStateDto,
   ListSimpleStateRepository,
   ListSimpleStateResponseDto,
+  StatePrismaDto,
 } from '@workspaces/domain';
-import { PrismaService } from '../../../../../application';
+import { PrismaGeneralService } from '../../../../../application';
 
 export class ListSimpleStateRepositoryImpl
   implements ListSimpleStateRepository
 {
-  constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
+  constructor(
+    @Inject('PrismaService') private prismaService: PrismaGeneralService
+  ) {}
   async list(input: ListSimpleStateDto): Promise<ListSimpleStateResponseDto[]> {
     const listStates = await this.prismaService.generalPrisma.state.findMany({
       where: {
@@ -23,7 +26,7 @@ export class ListSimpleStateRepositoryImpl
     });
 
     const mappedSimpleState: ListSimpleStateResponseDto[] = listStates.map(
-      (state) => {
+      (state: Omit<StatePrismaDto, 'city'>) => {
         return {
           id: state.state_id,
           name: state.name,

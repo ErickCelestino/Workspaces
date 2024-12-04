@@ -3,12 +3,14 @@ import {
   CreateCompanyAddressDto,
   CreateCompanyAddressRepository,
 } from '@workspaces/domain';
-import { PrismaService } from '../../../../../application';
+import { PrismaGeneralService } from '../../../../../application';
 
 export class CreateCompanyAddressRepositoryImpl
   implements CreateCompanyAddressRepository
 {
-  constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
+  constructor(
+    @Inject('PrismaService') private prismaService: PrismaGeneralService
+  ) {}
   async create(input: CreateCompanyAddressDto): Promise<string> {
     const {
       body: { cityId, district, number, street, zipcode, complement },

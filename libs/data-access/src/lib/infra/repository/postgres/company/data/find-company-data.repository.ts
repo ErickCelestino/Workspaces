@@ -3,12 +3,14 @@ import {
   CompanyDataResponseDto,
   FindCompanyDataByIdRepository,
 } from '@workspaces/domain';
-import { PrismaService } from '../../../../../application';
+import { PrismaGeneralService } from '../../../../../application';
 
 export class FindCompanyDataByIdRepositoryImpl
   implements FindCompanyDataByIdRepository
 {
-  constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
+  constructor(
+    @Inject('PrismaService') private prismaService: PrismaGeneralService
+  ) {}
   async find(id: string): Promise<CompanyDataResponseDto> {
     const filteredCompanyData =
       await this.prismaService.generalPrisma.company_Data.findFirst({

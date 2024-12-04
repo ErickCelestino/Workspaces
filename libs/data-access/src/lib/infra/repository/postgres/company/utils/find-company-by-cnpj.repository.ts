@@ -1,11 +1,13 @@
 import { Inject } from '@nestjs/common';
 import { Company, FindCompanyByCnpjRepository } from '@workspaces/domain';
-import { PrismaService } from '../../../../../application';
+import { PrismaGeneralService } from '../../../../../application';
 
 export class FindCompanyByCnpjRepositoryImpl
   implements FindCompanyByCnpjRepository
 {
-  constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
+  constructor(
+    @Inject('PrismaService') private prismaService: PrismaGeneralService
+  ) {}
   async find(cnpj: string): Promise<Company> {
     const filteredCompany =
       await this.prismaService.generalPrisma.company.findFirst({

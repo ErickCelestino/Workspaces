@@ -3,13 +3,16 @@ import {
   ListUsersByCompanyIdDto,
   ListUsersByCompanyIdRepository,
   ListUsersByCompanyIdResponseDto,
+  UserPrismaDto,
 } from '@workspaces/domain';
-import { PrismaService } from '../../../../../application';
+import { PrismaGeneralService } from '../../../../../application';
 
 export class ListUsersByCompanyIdRepositoryImpl
   implements ListUsersByCompanyIdRepository
 {
-  constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
+  constructor(
+    @Inject('PrismaService') private prismaService: PrismaGeneralService
+  ) {}
   async list(
     input: ListUsersByCompanyIdDto
   ): Promise<ListUsersByCompanyIdResponseDto> {
@@ -95,7 +98,7 @@ export class ListUsersByCompanyIdRepositoryImpl
 
     const totalPages = Math.ceil(filteredTotal / take);
 
-    const mappedUsers = users.map((user) => {
+    const mappedUsers = users.map((user: UserPrismaDto) => {
       return {
         name: user.user.name ?? '',
         nickname: user.user.nick_name ?? '',

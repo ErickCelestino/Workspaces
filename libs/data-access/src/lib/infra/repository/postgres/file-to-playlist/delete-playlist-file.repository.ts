@@ -3,12 +3,14 @@ import {
   DeletePlaylistFileDto,
   DeletePlaylistFileRepository,
 } from '@workspaces/domain';
-import { PrismaService } from '../../../../application';
+import { PrismaGeneralService } from '../../../../application';
 
 export class DeletePlaylistFileRepositoryImpl
   implements DeletePlaylistFileRepository
 {
-  constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
+  constructor(
+    @Inject('PrismaService') private prismaService: PrismaGeneralService
+  ) {}
   async delete(input: DeletePlaylistFileDto): Promise<void> {
     const { playlistId, fileId } = input;
 

@@ -3,11 +3,14 @@ import {
   ListUserDto,
   ListUserRepository,
   ListUserResponseDto,
+  SimpleUserPrismaDto,
 } from '@workspaces/domain';
-import { PrismaService } from '../../../../application';
+import { PrismaGeneralService } from '../../../../application';
 
 export class ListUserRepositoryImpl implements ListUserRepository {
-  constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
+  constructor(
+    @Inject('PrismaService') private prismaService: PrismaGeneralService
+  ) {}
 
   async list(input: ListUserDto): Promise<ListUserResponseDto> {
     const skip = input?.skip || 0;
@@ -57,7 +60,7 @@ export class ListUserRepositoryImpl implements ListUserRepository {
 
     const totalPages = Math.ceil(total / take);
 
-    const mappedUsers = users.map((user) => {
+    const mappedUsers = users.map((user: SimpleUserPrismaDto) => {
       return {
         name: user.name ?? '',
         nickname: user.nick_name ?? '',

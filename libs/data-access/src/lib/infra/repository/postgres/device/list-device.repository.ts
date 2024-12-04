@@ -1,14 +1,17 @@
 import { Inject } from '@nestjs/common';
 import {
   Device,
+  DevicePrismaDto,
   ListDeviceDto,
   ListDeviceRepository,
   ListDeviceResponseDto,
 } from '@workspaces/domain';
-import { PrismaService } from '../../../../application';
+import { PrismaGeneralService } from '../../../../application';
 
 export class ListDeviceRepositoryImpl implements ListDeviceRepository {
-  constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
+  constructor(
+    @Inject('PrismaService') private prismaService: PrismaGeneralService
+  ) {}
   async list(input: ListDeviceDto): Promise<ListDeviceResponseDto> {
     const { loggedUserId, companyId, filter } = input;
 
@@ -58,7 +61,7 @@ export class ListDeviceRepositoryImpl implements ListDeviceRepository {
 
     const totalPages = Math.ceil(filteredTotal / take);
 
-    const mappedDevices: Device[] = devices.map((device) => ({
+    const mappedDevices: Device[] = devices.map((device: DevicePrismaDto) => ({
       createdAt: device.created_at ?? new Date(),
       createdBy: device.user?.nick_name ?? '',
       id: device.device_id ?? '',

@@ -4,12 +4,14 @@ import {
   FindSimpleCompanyByIdDto,
   FindSimpleCompanyByIdRepository,
 } from '@workspaces/domain';
-import { PrismaService } from '../../../../../application';
+import { PrismaGeneralService } from '../../../../../application';
 
 export class FindSimpleCompanyByIdRepositoryImpl
   implements FindSimpleCompanyByIdRepository
 {
-  constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
+  constructor(
+    @Inject('PrismaService') private prismaService: PrismaGeneralService
+  ) {}
   async find(
     input: FindSimpleCompanyByIdDto
   ): Promise<CompanySimpleResponseDto> {

@@ -1,16 +1,19 @@
 import { Inject } from '@nestjs/common';
 import {
+  DirectoryPrismaDto,
   ListDirectoryNameResponseDto,
   ListSimpleDirectoryDto,
   ListSimpleDirectoryRepository,
   ListSimpleDirectoryResponseDto,
 } from '@workspaces/domain';
-import { PrismaService } from '../../../../application';
+import { PrismaGeneralService } from '../../../../application';
 
 export class ListSimpleDirectoryRepositoryImpl
   implements ListSimpleDirectoryRepository
 {
-  constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
+  constructor(
+    @Inject('PrismaService') private prismaService: PrismaGeneralService
+  ) {}
   async list(
     input: ListSimpleDirectoryDto
   ): Promise<ListSimpleDirectoryResponseDto> {
@@ -55,7 +58,7 @@ export class ListSimpleDirectoryRepositoryImpl
     const totalPages = Math.ceil(filteredTotal / take);
 
     const mappedDirectoryList: ListDirectoryNameResponseDto[] = directories.map(
-      (directory) => {
+      (directory: Pick<DirectoryPrismaDto, 'directory_id' | 'name'>) => {
         return {
           id: directory.directory_id,
           name: directory.name,

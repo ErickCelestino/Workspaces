@@ -3,12 +3,14 @@ import {
   CreateCompanyResponsibleDto,
   CreateCompanyResponsibleRespository,
 } from '@workspaces/domain';
-import { PrismaService } from '../../../../../application';
+import { PrismaGeneralService } from '../../../../../application';
 
 export class CreateCompanyResponsibleRespositoryImpl
   implements CreateCompanyResponsibleRespository
 {
-  constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
+  constructor(
+    @Inject('PrismaService') private prismaService: PrismaGeneralService
+  ) {}
   async create(input: CreateCompanyResponsibleDto): Promise<string> {
     const createdCompanyResponsible =
       await this.prismaService.generalPrisma.company_Responsible.create({

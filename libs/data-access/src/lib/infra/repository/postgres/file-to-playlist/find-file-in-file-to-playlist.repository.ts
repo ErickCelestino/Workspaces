@@ -3,12 +3,14 @@ import {
   FindFileInFileToPlaylistDto,
   FindFileInFileToPlaylistRepository,
 } from '@workspaces/domain';
-import { PrismaService } from '../../../../application';
+import { PrismaGeneralService } from '../../../../application';
 
 export class FindFileInFileToPlaylistRepositoryImpl
   implements FindFileInFileToPlaylistRepository
 {
-  constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
+  constructor(
+    @Inject('PrismaService') private prismaService: PrismaGeneralService
+  ) {}
   async find(input: FindFileInFileToPlaylistDto): Promise<string> {
     const filteredFile =
       await this.prismaService.generalPrisma.playlist_X_Content_Files.findFirst(

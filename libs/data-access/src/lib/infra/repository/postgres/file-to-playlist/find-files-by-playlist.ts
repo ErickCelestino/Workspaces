@@ -4,13 +4,16 @@ import {
   FindFilesByPlaylistDto,
   FindFilesByPlaylistRepository,
   FindFilesByPlaylistResponseDto,
+  FindToPlaylistPrismaDto,
 } from '@workspaces/domain';
-import { PrismaService } from '../../../../application';
+import { PrismaGeneralService } from '../../../../application';
 
 export class FindFilesByPlaylistRepositoryImpl
   implements FindFilesByPlaylistRepository
 {
-  constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
+  constructor(
+    @Inject('PrismaService') private prismaService: PrismaGeneralService
+  ) {}
   async find(
     input: FindFilesByPlaylistDto
   ): Promise<FindFilesByPlaylistResponseDto> {
@@ -55,18 +58,20 @@ export class FindFilesByPlaylistRepositoryImpl
 
     const totalPages = Math.ceil(total / take);
 
-    const mappedFiles: ContentFile[] = files.map((file) => {
-      return {
-        id: file.Content_Files.Content_Files_id,
-        size: file.Content_Files.size,
-        format: file.Content_Files.format,
-        uploadDate: file.Content_Files.created_at,
-        fileName: file.Content_Files.file_name,
-        created_by: file.Content_Files.user.nick_name,
-        originalName: file.Content_Files.original_name,
-        path: file.Content_Files.path,
-      };
-    });
+    const mappedFiles: ContentFile[] = files.map(
+      (file: FindToPlaylistPrismaDto) => {
+        return {
+          id: file.Content_Files.Content_Files_id,
+          size: file.Content_Files.size,
+          format: file.Content_Files.format,
+          uploadDate: file.Content_Files.created_at,
+          fileName: file.Content_Files.file_name,
+          created_by: file.Content_Files.user.nick_name,
+          originalName: file.Content_Files.original_name,
+          path: file.Content_Files.path,
+        };
+      }
+    );
 
     return {
       total,

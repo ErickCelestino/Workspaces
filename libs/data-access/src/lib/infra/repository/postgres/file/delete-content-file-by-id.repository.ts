@@ -3,12 +3,14 @@ import {
   DeleteContentFileByIdDto,
   DeleteContentFileByIdRepository,
 } from '@workspaces/domain';
-import { PrismaService } from '../../../../application';
+import { PrismaGeneralService } from '../../../../application';
 
 export class DeleteContentFileByIdRepositoryImpl
   implements DeleteContentFileByIdRepository
 {
-  constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
+  constructor(
+    @Inject('PrismaService') private prismaService: PrismaGeneralService
+  ) {}
   async delete(input: DeleteContentFileByIdDto): Promise<void> {
     await this.prismaService.generalPrisma.playlist_X_Content_Files.deleteMany({
       where: {

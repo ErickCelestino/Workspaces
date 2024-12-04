@@ -4,12 +4,14 @@ import {
   FindDeviceByNameDto,
   FindDeviceByNameRepository,
 } from '@workspaces/domain';
-import { PrismaService } from '../../../../application';
+import { PrismaGeneralService } from '../../../../application';
 
 export class FindDeviceByNameRepositoryImpl
   implements FindDeviceByNameRepository
 {
-  constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
+  constructor(
+    @Inject('PrismaService') private prismaService: PrismaGeneralService
+  ) {}
   async find(input: FindDeviceByNameDto): Promise<Device> {
     const { name, loggedUserId } = input;
     const filteredDevice =

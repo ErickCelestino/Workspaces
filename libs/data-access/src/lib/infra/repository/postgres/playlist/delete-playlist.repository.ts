@@ -1,9 +1,11 @@
 import { Inject } from '@nestjs/common';
 import { DeletePlaylistRepoistory } from '@workspaces/domain';
-import { PrismaService } from '../../../../application';
+import { PrismaGeneralService } from '../../../../application';
 
 export class DeletePlaylistRepositoryImpl implements DeletePlaylistRepoistory {
-  constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
+  constructor(
+    @Inject('PrismaService') private prismaService: PrismaGeneralService
+  ) {}
   async delete(id: string): Promise<void> {
     await this.prismaService.generalPrisma.playlist_X_Scheduling.deleteMany({
       where: {

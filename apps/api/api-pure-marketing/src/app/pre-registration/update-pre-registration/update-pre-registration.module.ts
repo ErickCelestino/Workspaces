@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { UpdatePreRegistration } from '@workspaces/domain';
 import {
   FindPreRegistrationByIdRepositoryImpl,
-  PrismaService,
+  PrismaMarketingService,
   UpdatePreRegistrationRepositoryImpl,
 } from '@workspaces/data-access';
 import { UpdatePreRegistrationService } from './update-pre-registration.service';
@@ -15,7 +15,7 @@ import { UpdatePreRegistrationController } from './update-pre-registration.contr
     UpdatePreRegistration,
     {
       provide: 'PrismaService',
-      useClass: PrismaService,
+      useClass: PrismaMarketingService,
     },
     {
       provide: 'FindPreRegistrationByIdRepository',

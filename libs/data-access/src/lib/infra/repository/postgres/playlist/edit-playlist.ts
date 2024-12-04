@@ -1,9 +1,11 @@
 import { Inject } from '@nestjs/common';
 import { EditPlaylistDto, EditPlaylistRepository } from '@workspaces/domain';
-import { PrismaService } from '../../../../application';
+import { PrismaGeneralService } from '../../../../application';
 
 export class EditPlaylistRepositoryImpl implements EditPlaylistRepository {
-  constructor(@Inject('PrismaService') private prismaService: PrismaService) {}
+  constructor(
+    @Inject('PrismaService') private prismaService: PrismaGeneralService
+  ) {}
   async edit(input: EditPlaylistDto): Promise<void> {
     const { id, body } = input;
 
