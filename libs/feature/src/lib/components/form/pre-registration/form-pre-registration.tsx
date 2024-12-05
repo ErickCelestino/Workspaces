@@ -100,7 +100,8 @@ export const FormPreRegistration: FC<FormPreRegistrationProps> = ({
       if (updatedPreRegistration) {
         navigateToWaths(
           phone,
-          `Nome: ${data.name},\n Nome da Empresa: ${data.companyName},\n Ramo de atuação: ${data.branchOfTheCompany},\n Objetivo Principal: ${ladingpageUseValue}, \n Destaque da Empresa: ${ladingPageemphasisValue}`
+          `Nome: ${data.name},\n Nome da Empresa: ${data.companyName},\n Ramo de atuação: ${data.branchOfTheCompany},\n Objetivo Principal: ${ladingpageUseValue}, \n Destaque da Empresa: ${ladingPageemphasisValue}`,
+          true
         );
       }
     }
