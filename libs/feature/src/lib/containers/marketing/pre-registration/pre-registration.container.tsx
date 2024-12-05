@@ -13,6 +13,15 @@ interface PreRegistrationContainerProps {
   backgroundColor?: string;
   backgroundCardColor?: string;
   phone: string;
+  preRegistration?: {
+    nameLabel?: string;
+    companyNameLabel?: string;
+    branchOfTheCompanyLabel?: string;
+    ladingpageUseLabel?: string;
+    ladingpageUseList?: string[];
+    ladingPageemphasisLabel?: string;
+    ladingPageemphasisList?: string[];
+  };
 }
 
 export const PreRegistrationContainer: FC<PreRegistrationContainerProps> = ({
@@ -21,6 +30,24 @@ export const PreRegistrationContainer: FC<PreRegistrationContainerProps> = ({
   textColor = '#fff',
   backgroundColor = '#111111',
   backgroundCardColor = 'radial-gradient(ellipse at bottom right, #700B0E, #1E1E1E, #9C1B1F, #9C1B1F, #1E1E1E, #9C1B1F)',
+  preRegistration = {
+    companyNameLabel: 'Nome da Empresa',
+    nameLabel: 'Nome',
+    branchOfTheCompanyLabel: 'Ramo da Empresa',
+    ladingpageUseLabel: 'Para que você quer usar sua landing page?',
+    ladingpageUseList: [
+      'Gerar vendas',
+      'Capturar contatos (leads)',
+      'Divulgar algo (evento, marca, etc.)',
+    ],
+    ladingPageemphasisLabel:
+      'Você já sabe o que gostaria de destacar na sua landing page?',
+    ladingPageemphasisList: [
+      'Sim, já tenho uma ideia clara.',
+      'Tenho algumas ideias, mas preciso de orientação.',
+      'Não, preciso de ajuda desde o início.',
+    ],
+  },
 }) => {
   const theme = useTheme();
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
@@ -117,26 +144,21 @@ export const PreRegistrationContainer: FC<PreRegistrationContainerProps> = ({
 
             <FormPreRegistration
               preRegistrationId={preRegistrationId}
-              nameLabel="Nome"
-              companyNameLabel="Nome da Empresa"
-              branchOfTheCompanyLabel="Ramo da Empresa"
+              nameLabel={preRegistration?.nameLabel ?? ''}
+              companyNameLabel={preRegistration?.companyNameLabel ?? ''}
+              branchOfTheCompanyLabel={
+                preRegistration?.branchOfTheCompanyLabel ?? ''
+              }
               ladingpageUse={{
-                ladingpageUseLabel: 'Para que você quer usar sua landing page?',
-                ladingpageUseList: [
-                  'Gerar vendas',
-                  'Capturar contatos (leads)',
-                  'Divulgar algo (evento, marca, etc.)',
-                ],
+                ladingpageUseLabel: preRegistration?.ladingpageUseLabel ?? '',
+                ladingpageUseList: preRegistration?.ladingpageUseList ?? [],
               }}
               showAlert={showAlert}
               ladingPageemphasis={{
                 ladingPageemphasisLabel:
-                  'Você já sabe o que gostaria de destacar na sua landing page?',
-                ladingPageemphasisList: [
-                  'Sim, já tenho uma ideia clara.',
-                  'Tenho algumas ideias, mas preciso de orientação.',
-                  'Não, preciso de ajuda desde o início.',
-                ],
+                  preRegistration?.ladingPageemphasisLabel ?? '',
+                ladingPageemphasisList:
+                  preRegistration?.ladingPageemphasisList ?? [],
               }}
               phone={phone}
             />
@@ -159,27 +181,21 @@ export const PreRegistrationContainer: FC<PreRegistrationContainerProps> = ({
 
             <FormPreRegistration
               preRegistrationId={preRegistrationId}
-              nameLabel="Nome"
-              companyNameLabel="Nome da Empresa"
-              branchOfTheCompanyLabel="Ramo da Empresa"
-              textColor={textColor}
+              nameLabel={preRegistration?.nameLabel ?? ''}
+              companyNameLabel={preRegistration?.companyNameLabel ?? ''}
+              branchOfTheCompanyLabel={
+                preRegistration?.branchOfTheCompanyLabel ?? ''
+              }
               ladingpageUse={{
-                ladingpageUseLabel: 'Para que você quer usar sua landing page?',
-                ladingpageUseList: [
-                  'Gerar vendas',
-                  'Capturar contatos (leads)',
-                  'Divulgar algo (evento, marca, etc.)',
-                ],
+                ladingpageUseLabel: preRegistration?.ladingpageUseLabel ?? '',
+                ladingpageUseList: preRegistration?.ladingpageUseList ?? [],
               }}
               showAlert={showAlert}
               ladingPageemphasis={{
                 ladingPageemphasisLabel:
-                  'Você já sabe o que gostaria de destacar na sua landing page?',
-                ladingPageemphasisList: [
-                  'Sim, já tenho uma ideia clara.',
-                  'Tenho algumas ideias, mas preciso de orientação.',
-                  'Não, preciso de ajuda desde o início.',
-                ],
+                  preRegistration?.ladingPageemphasisLabel ?? '',
+                ladingPageemphasisList:
+                  preRegistration?.ladingPageemphasisList ?? [],
               }}
               phone={phone}
             />
