@@ -14,7 +14,7 @@ import {
     FindCompanyResponsibleByIdService,
     FindCompanyResponsibleById,
     {
-      provide: 'PrismaGeneralService',
+      provide: 'PrismaService',
       useClass: PrismaGeneralService,
     },
     {

@@ -15,7 +15,7 @@ import {
     EditCompanyResponsibleService,
     EditCompanyResponsible,
     {
-      provide: 'PrismaGeneralService',
+      provide: 'PrismaService',
       useClass: PrismaGeneralService,
     },
     {
