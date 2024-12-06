@@ -5,7 +5,7 @@ export async function UpdatePreRegistrationRequest(
   input: UpdatePreRegistrationDto
 ) {
   const result = await pureMaketingApi.put<{ preRegisrationId: string }>(
-    `update-pre-registration/${input.id}`,
+    `update-pre-registration/${input.id || '0'}`,
     {
       branchOfTheCompany: input.branchOfTheCompany,
     }

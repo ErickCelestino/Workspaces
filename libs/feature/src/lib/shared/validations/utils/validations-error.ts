@@ -18,6 +18,7 @@ import {
   EntityNotValid,
   EntityNotComplete,
   EntityMinValue,
+  EntityNotExist,
 } from '../../messages';
 
 export function ValidationsError(
@@ -26,10 +27,13 @@ export function ValidationsError(
   quantity?: string,
   destiny?: string
 ) {
-  if (!quantity) return;
-  if (!destiny) return;
+  if (!quantity) quantity = '';
+  if (!destiny) destiny = '';
 
   switch (errors.response?.data.error.name) {
+    case 'EntityNotExists':
+      return EntityNotExist(entitie, 'PT-BR');
+
     case 'EntityNotEmpty':
       return EntityNotEmpty(entitie, 'PT-BR');
 

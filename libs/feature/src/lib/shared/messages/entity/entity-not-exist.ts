@@ -5,10 +5,10 @@ export const EntityNotExist = (entity: string, langue: Langue) => {
 
   switch (langue) {
     case 'EN':
-      message = `The value ${entity} was not found in database!`;
+      message = `The value ${entity} was not found!`;
       break;
     default:
-      message = `O valor ${entity} não foi encontrado no banco!`;
+      message = `O valor ${entity} não foi encontrado!`;
       break;
   }
 
