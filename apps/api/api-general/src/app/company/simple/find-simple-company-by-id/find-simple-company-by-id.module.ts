@@ -5,7 +5,7 @@ import { FindSimpleCompanyById } from '@workspaces/domain';
 import {
   FindSimpleCompanyByIdRepositoryImpl,
   FindUserByIdRepositoryImpl,
-  PrismaService,
+  PrismaGeneralService,
 } from '@workspaces/data-access';
 
 @Module({
@@ -15,7 +15,7 @@ import {
     FindSimpleCompanyById,
     {
       provide: 'PrismaService',
-      useClass: PrismaService,
+      useClass: PrismaGeneralService,
     },
     {
       provide: 'FindUserByIdRepository',

@@ -6,7 +6,7 @@ import {
   DeleteDeviceRepositoryImpl,
   FindDeviceByIdRepositoryImpl,
   FindUserByIdRepositoryImpl,
-  PrismaService,
+  PrismaGeneralService,
 } from '@workspaces/data-access';
 
 @Module({
@@ -16,7 +16,7 @@ import {
     DeleteDevice,
     {
       provide: 'PrismaService',
-      useClass: PrismaService,
+      useClass: PrismaGeneralService,
     },
     {
       provide: 'FindUserByIdRepository',

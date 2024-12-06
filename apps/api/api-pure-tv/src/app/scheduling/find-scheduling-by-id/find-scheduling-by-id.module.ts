@@ -5,7 +5,7 @@ import { FindSchedulingById } from '@workspaces/domain';
 import {
   FindSchedulingByIdRepositoryImpl,
   FindUserByIdRepositoryImpl,
-  PrismaService,
+  PrismaGeneralService,
 } from '@workspaces/data-access';
 
 @Module({
@@ -15,7 +15,7 @@ import {
     FindSchedulingById,
     {
       provide: 'PrismaService',
-      useClass: PrismaService,
+      useClass: PrismaGeneralService,
     },
     {
       provide: 'FindUserByIdRepository',

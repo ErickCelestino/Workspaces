@@ -4,7 +4,7 @@ import { EditUserController } from './edit-user.controller';
 import {
   EditUserRepositoryImpl,
   FindUserByIdRepositoryImpl,
-  PrismaService,
+  PrismaGeneralService,
   VerifyUserPermissionsByIdRepositoryImpl,
 } from '@workspaces/data-access';
 import { EditUser } from '@workspaces/domain';
@@ -16,7 +16,7 @@ import { EditUser } from '@workspaces/domain';
     EditUser,
     {
       provide: 'PrismaService',
-      useClass: PrismaService,
+      useClass: PrismaGeneralService,
     },
     {
       provide: 'EditUserRepository',

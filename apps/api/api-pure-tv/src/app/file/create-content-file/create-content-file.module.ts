@@ -8,7 +8,7 @@ import {
   FindDirectoryByIdRepositoryImpl,
   FindUserByIdRepositoryImpl,
   GenerateThumbnailRepositoryImpl,
-  PrismaService,
+  PrismaGeneralService,
   UploadContentFileRepositoryImpl,
 } from '@workspaces/data-access';
 @Module({
@@ -18,7 +18,7 @@ import {
     CreateContentFile,
     {
       provide: 'PrismaService',
-      useClass: PrismaService,
+      useClass: PrismaGeneralService,
     },
     {
       provide: 'CreateContentFileRepository',

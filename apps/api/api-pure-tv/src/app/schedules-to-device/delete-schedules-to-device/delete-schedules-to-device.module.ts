@@ -8,7 +8,7 @@ import {
   FindSchedulingByIdRepositoryImpl,
   FindSchedulingToDeviceByIdsRepositoryImpl,
   FindUserByIdRepositoryImpl,
-  PrismaService,
+  PrismaGeneralService,
 } from '@workspaces/data-access';
 
 @Module({
@@ -18,7 +18,7 @@ import {
     DeleteSchedulesToDevice,
     {
       provide: 'PrismaService',
-      useClass: PrismaService,
+      useClass: PrismaGeneralService,
     },
     {
       provide: 'FindUserByIdRepository',

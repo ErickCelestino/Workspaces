@@ -5,7 +5,7 @@ import {
   CreateUserRepositoryImpl,
   FilterByEmailOrNicknameRepositoryImpl,
   FindAppByIdRepositoryImpl,
-  PrismaService,
+  PrismaGeneralService,
 } from '@workspaces/data-access';
 import { CreateUser } from '@workspaces/domain';
 
@@ -28,7 +28,7 @@ import { CreateUser } from '@workspaces/domain';
     },
     {
       provide: 'PrismaService',
-      useClass: PrismaService,
+      useClass: PrismaGeneralService,
     },
   ],
 })

@@ -6,7 +6,7 @@ import {
   FindCompanyByIdRepositoryImpl,
   FindUserByIdRepositoryImpl,
   FindUserIdByCompanyIdRepositoryImpl,
-  PrismaService,
+  PrismaGeneralService,
   VerifyUserPermissionsByIdRepositoryImpl,
 } from '@workspaces/data-access';
 import { AuthorizeUserToCompany } from '@workspaces/domain';
@@ -18,7 +18,7 @@ import { AuthorizeUserToCompany } from '@workspaces/domain';
     AuthorizeUserToCompany,
     {
       provide: 'PrismaService',
-      useClass: PrismaService,
+      useClass: PrismaGeneralService,
     },
     {
       provide: 'FindUserByIdRepository',

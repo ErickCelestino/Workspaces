@@ -1,5 +1,5 @@
 import { Box, Button, useMediaQuery, useTheme } from '@mui/material';
-import { FC, useCallback, useState } from 'react';
+import { FC, useState } from 'react';
 import { CustomInput, CustomSelect } from '../../input';
 import {
   ErrorResponse,
@@ -71,24 +71,23 @@ export const FormPreRegistration: FC<FormPreRegistrationProps> = ({
     },
   });
 
-  const updatePreRegistration = useCallback(
-    async (input: UpdatePreRegistrationDto) => {
-      try {
-        const result = await UpdatePreRegistrationRequest(input);
-        return result;
-      } catch (error) {
-        console.error(error);
-        if (axios.isAxiosError(error)) {
-          const axiosError = error as AxiosError<ErrorResponse>;
-          const errors = ValidationsError(axiosError, 'Pre Cadastro');
-          if (errors) {
-            showAlert(errors, false);
-          }
+  const updatePreRegistration = async (input: UpdatePreRegistrationDto) => {
+    try {
+      const result = await UpdatePreRegistrationRequest(input);
+      return result;
+    } catch (error) {
+      console.error(error);
+      if (axios.isAxiosError(error)) {
+        const axiosError = error as AxiosError<ErrorResponse>;
+        const errors = ValidationsError(axiosError, 'Pre Cadastro');
+        console.log(errors);
+        if (errors) {
+          console.log('mostrou o erro');
+          showAlert(errors, false);
         }
       }
-    },
-    [showAlert]
-  );
+    }
+  };
 
   const handlePreRegistration = async (data: PreBriefingDto) => {
     if (data) {

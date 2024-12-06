@@ -7,7 +7,7 @@ import {
   FindCompanyByIdRepositoryImpl,
   FindDirectoryByNameRepositoryImpl,
   FindUserByIdRepositoryImpl,
-  PrismaService,
+  PrismaGeneralService,
 } from '@workspaces/data-access';
 
 @Module({
@@ -33,7 +33,7 @@ import {
     },
     {
       provide: 'PrismaService',
-      useClass: PrismaService,
+      useClass: PrismaGeneralService,
     },
   ],
 })

@@ -7,7 +7,7 @@ import {
   FindPlaylistByIdRepositoryImpl,
   FindSchedulingByIdRepositoryImpl,
   FindUserByIdRepositoryImpl,
-  PrismaService,
+  PrismaGeneralService,
 } from '@workspaces/data-access';
 
 @Module({
@@ -17,7 +17,7 @@ import {
     DeletePlaylistToScheduling,
     {
       provide: 'PrismaService',
-      useClass: PrismaService,
+      useClass: PrismaGeneralService,
     },
     {
       provide: 'FindUserByIdRepository',

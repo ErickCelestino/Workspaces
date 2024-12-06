@@ -2,12 +2,12 @@ import { Module } from '@nestjs/common';
 import { EditDirectoryController } from './edit-directory.controller';
 import { EditDirectoryService } from './edit-directory.service';
 import { EditDirectory } from '@workspaces/domain';
-import { PrismaService } from 'nestjs-prisma';
 import {
   EditDirectoryRepositoryImpl,
   FindDirectoryByIdRepositoryImpl,
   FindDirectoryByNameRepositoryImpl,
   FindUserByIdRepositoryImpl,
+  PrismaGeneralService,
 } from '@workspaces/data-access';
 
 @Module({
@@ -17,7 +17,7 @@ import {
     EditDirectory,
     {
       provide: 'PrismaService',
-      useClass: PrismaService,
+      useClass: PrismaGeneralService,
     },
     {
       provide: 'EditDirectoryRepository',

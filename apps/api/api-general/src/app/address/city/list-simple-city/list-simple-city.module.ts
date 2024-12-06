@@ -6,7 +6,7 @@ import {
   FindStateByIdRepositoryImpl,
   FindUserByIdRepositoryImpl,
   ListSimpleCityRepositoryImpl,
-  PrismaService,
+  PrismaGeneralService,
 } from '@workspaces/data-access';
 
 @Module({
@@ -16,7 +16,7 @@ import {
     ListSimpleCity,
     {
       provide: 'PrismaService',
-      useClass: PrismaService,
+      useClass: PrismaGeneralService,
     },
     {
       provide: 'FindUserByIdRepository',
