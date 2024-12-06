@@ -6,7 +6,7 @@ import {
   FindUserByIdRepositoryImpl,
   ListCompaniesByUserIdRepositoryImpl,
   VerifyUserPermissionsByIdRepositoryImpl,
-  PrismaGeneralService
+  PrismaGeneralService,
 } from '@workspaces/data-access';
 
 @Module({

@@ -7,7 +7,7 @@ import {
   FindDirectoryByIdRepositoryImpl,
   FindDirectoryByNameRepositoryImpl,
   FindUserByIdRepositoryImpl,
-  PrismaGeneralService
+  PrismaGeneralService,
 } from '@workspaces/data-access';
 
 @Module({

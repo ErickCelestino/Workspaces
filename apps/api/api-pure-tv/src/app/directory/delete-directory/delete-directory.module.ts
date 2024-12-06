@@ -6,7 +6,7 @@ import {
   FindContentFilesByDirectoryIdRepositoryImpl,
   FindDirectoryByIdRepositoryImpl,
   FindUserByIdRepositoryImpl,
-  PrismaGeneralService
+  PrismaGeneralService,
 } from '@workspaces/data-access';
 import { Module } from '@nestjs/common';
 
