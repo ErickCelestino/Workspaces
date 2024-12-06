@@ -5,7 +5,7 @@ import { ConsultZipcode } from '@workspaces/domain';
 import {
   ConsultZipcodeRepositoryImpl,
   FindUserByIdRepositoryImpl,
-  PrismaService,
+  PrismaGeneralService,
 } from '@workspaces/data-access';
 
 @Module({
@@ -15,7 +15,7 @@ import {
     ConsultZipcode,
     {
       provide: 'PrismaService',
-      useClass: PrismaService,
+      useClass: PrismaGeneralService,
     },
     {
       provide: 'FindUserByIdRepository',

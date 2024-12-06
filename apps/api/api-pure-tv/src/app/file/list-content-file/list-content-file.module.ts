@@ -7,7 +7,7 @@ import {
   FindDirectoryByIdRepositoryImpl,
   FindUserByIdRepositoryImpl,
   ListContentFileRepositoryImpl,
-  PrismaService,
+  PrismaGeneralService,
 } from '@workspaces/data-access';
 
 @Module({
@@ -17,7 +17,7 @@ import {
     ListContentFile,
     {
       provide: 'PrismaService',
-      useClass: PrismaService,
+      useClass: PrismaGeneralService,
     },
     {
       provide: 'ListContentFileRepository',

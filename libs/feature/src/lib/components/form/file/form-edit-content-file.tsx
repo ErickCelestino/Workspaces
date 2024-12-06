@@ -10,13 +10,7 @@ import DescriptionIcon from '@mui/icons-material/Description';
 import SendIcon from '@mui/icons-material/Send';
 import { FC } from 'react';
 import { EditContentFileRequest } from '../../../services';
-import {
-  EntityNotEmpty,
-  EntityNotExist,
-  ConnectionError,
-  EditContentFileSchema,
-  ValidationsError,
-} from '../../../shared';
+import { EditContentFileSchema, ValidationsError } from '../../../shared';
 import { EditContentFileDto, ErrorResponse } from '@workspaces/domain';
 import { useForm } from 'react-hook-form';
 import axios, { AxiosError } from 'axios';

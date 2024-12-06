@@ -7,7 +7,7 @@ import {
   FindPlaylistToSchedulingByIdsRepositoryImpl,
   FindSchedulingByIdRepositoryImpl,
   FindUserByIdRepositoryImpl,
-  PrismaService,
+  PrismaGeneralService,
 } from '@workspaces/data-access';
 import { AddPlaylistsToScheduling } from '@workspaces/domain';
 
@@ -18,7 +18,7 @@ import { AddPlaylistsToScheduling } from '@workspaces/domain';
     AddPlaylistsToScheduling,
     {
       provide: 'PrismaService',
-      useClass: PrismaService,
+      useClass: PrismaGeneralService,
     },
     {
       provide: 'FindUserByIdRepository',

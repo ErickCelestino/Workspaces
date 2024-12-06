@@ -7,7 +7,7 @@ import {
   FindCompanyByIdRepositoryImpl,
   FindDeviceByNameRepositoryImpl,
   FindUserByIdRepositoryImpl,
-  PrismaService,
+  PrismaGeneralService,
 } from '@workspaces/data-access';
 
 @Module({
@@ -17,7 +17,7 @@ import {
     CreateDevice,
     {
       provide: 'PrismaService',
-      useClass: PrismaService,
+      useClass: PrismaGeneralService,
     },
     {
       provide: 'FindUserByIdRepository',

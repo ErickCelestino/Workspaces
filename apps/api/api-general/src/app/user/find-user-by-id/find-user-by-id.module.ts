@@ -3,7 +3,7 @@ import { FindUserByIdService } from './find-user-by-id.service';
 import { FindUserByIdController } from './find-user-by-id.controller';
 import {
   FindUserByIdRepositoryImpl,
-  PrismaService,
+  PrismaGeneralService,
 } from '@workspaces/data-access';
 import { FindUserById } from '@workspaces/domain';
 
@@ -18,7 +18,7 @@ import { FindUserById } from '@workspaces/domain';
     },
     {
       provide: 'PrismaService',
-      useClass: PrismaService,
+      useClass: PrismaGeneralService,
     },
   ],
 })

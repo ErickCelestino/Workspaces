@@ -3,7 +3,7 @@ import { FindUserByEmailService } from './find-user-by-email.service';
 import { FindUserByEmailController } from './find-user-by-email.controller';
 import {
   FindUserByEmailRepositoryImpl,
-  PrismaService,
+  PrismaGeneralService,
 } from '@workspaces/data-access';
 import { FindUserByEmail } from '@workspaces/domain';
 
@@ -14,7 +14,7 @@ import { FindUserByEmail } from '@workspaces/domain';
     FindUserByEmail,
     {
       provide: 'PrismaService',
-      useClass: PrismaService,
+      useClass: PrismaGeneralService,
     },
     {
       provide: 'FindUserByEmailRepository',

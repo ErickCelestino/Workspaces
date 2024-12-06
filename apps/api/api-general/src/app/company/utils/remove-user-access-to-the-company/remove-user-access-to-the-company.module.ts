@@ -7,7 +7,7 @@ import {
   FindUserByIdRepositoryImpl,
   FindUserIdByCompanyIdRepositoryImpl,
   ListCompaniesByUserIdRepositoryImpl,
-  PrismaService,
+  PrismaGeneralService,
   RemoveUserAccessToTheCompanyRepositoryImpl,
   VerifyUserPermissionsByIdRepositoryImpl,
 } from '@workspaces/data-access';
@@ -19,7 +19,7 @@ import {
     RemoveUserAccessToTheCompany,
     {
       provide: 'PrismaService',
-      useClass: PrismaService,
+      useClass: PrismaGeneralService,
     },
     {
       provide: 'FindUserByIdRepository',

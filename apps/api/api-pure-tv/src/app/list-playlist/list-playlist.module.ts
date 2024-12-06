@@ -5,7 +5,7 @@ import { ListPlaylist } from '@workspaces/domain';
 import {
   FindUserByIdRepositoryImpl,
   ListPlaylistRepositoryImpl,
-  PrismaService,
+  PrismaGeneralService,
 } from '@workspaces/data-access';
 
 @Module({
@@ -15,7 +15,7 @@ import {
     ListPlaylist,
     {
       provide: 'PrismaService',
-      useClass: PrismaService,
+      useClass: PrismaGeneralService,
     },
     {
       provide: 'FindUserByIdRepository',
