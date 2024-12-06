@@ -7,7 +7,7 @@ import {
   FindCompanyByIdRepositoryImpl,
   FindCompanyResponsibleByDocumentRepositoryImpl,
   FindUserByIdRepositoryImpl,
-  PrismaService,
+  PrismaGeneralService,
 } from '@workspaces/data-access';
 
 @Module({
@@ -16,8 +16,8 @@ import {
     CreateCompanyResponsibleService,
     CreateCompanyResponsible,
     {
-      provide: 'PrismaService',
-      useClass: PrismaService,
+      provide: 'PrismaGeneralService',
+      useClass: PrismaGeneralService,
     },
     {
       provide: 'FindUserByIdRepository',

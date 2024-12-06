@@ -5,7 +5,7 @@ import {
   BtrinSanitizeRepositoryImpl,
   FindUserByIdRepositoryImpl,
   ListUserRepositoryImpl,
-  PrismaService,
+  PrismaGeneralService,
   VerifyUserPermissionsByIdRepositoryImpl,
 } from '@workspaces/data-access';
 import { Module } from '@nestjs/common';
@@ -33,7 +33,7 @@ import { Module } from '@nestjs/common';
     },
     {
       provide: 'PrismaService',
-      useClass: PrismaService,
+      useClass: PrismaGeneralService,
     },
   ],
 })

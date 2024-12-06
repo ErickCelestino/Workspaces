@@ -2,11 +2,11 @@ import { Module } from '@nestjs/common';
 import { ListCompaniesByUserIdService } from './list-companies-by-user-id.service';
 import { ListCompaniesByUserIdController } from './list-companies-by-user-id.controller';
 import { ListCompaniesByUserId } from '@workspaces/domain';
-import { PrismaService } from 'nestjs-prisma';
 import {
   FindUserByIdRepositoryImpl,
   ListCompaniesByUserIdRepositoryImpl,
   VerifyUserPermissionsByIdRepositoryImpl,
+  PrismaGeneralService
 } from '@workspaces/data-access';
 
 @Module({
@@ -16,7 +16,7 @@ import {
     ListCompaniesByUserId,
     {
       provide: 'PrismaService',
-      useClass: PrismaService,
+      useClass: PrismaGeneralService,
     },
     {
       provide: 'FindUserByIdRepository',

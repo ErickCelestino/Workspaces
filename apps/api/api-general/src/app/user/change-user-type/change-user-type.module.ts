@@ -5,7 +5,7 @@ import { ChangeUserType } from '@workspaces/domain';
 import {
   ChangeUserTypeRepositoryImpl,
   FindUserByIdRepositoryImpl,
-  PrismaService,
+  PrismaGeneralService,
   VerifyUserPermissionsByIdRepositoryImpl,
 } from '@workspaces/data-access';
 
@@ -16,7 +16,7 @@ import {
     ChangeUserType,
     {
       provide: 'PrismaService',
-      useClass: PrismaService,
+      useClass: PrismaGeneralService,
     },
     {
       provide: 'FindUserByIdRepository',

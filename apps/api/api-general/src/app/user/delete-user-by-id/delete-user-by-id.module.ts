@@ -4,7 +4,7 @@ import { DeleteUserByIdController } from './delete-user-by-id.controller';
 import {
   DeleteUserByIdRepositoryImpl,
   FindUserByIdRepositoryImpl,
-  PrismaService,
+  PrismaGeneralService,
   VerifyUserPermissionsByIdRepositoryImpl,
 } from '@workspaces/data-access';
 import { DeleteUserById } from '@workspaces/domain';
@@ -16,7 +16,7 @@ import { DeleteUserById } from '@workspaces/domain';
     DeleteUserByIdService,
     {
       provide: 'PrismaService',
-      useClass: PrismaService,
+      useClass: PrismaGeneralService,
     },
     {
       provide: 'FindUserByIdRepository',

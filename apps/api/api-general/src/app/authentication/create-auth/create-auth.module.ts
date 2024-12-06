@@ -6,7 +6,7 @@ import {
   CreateAuthRepositoryImpl,
   FilterByEmailOrNicknameRepositoryImpl,
   FindUserByIdRepositoryImpl,
-  PrismaService,
+  PrismaGeneralService,
   HashGeneratorImpl,
 } from '@workspaces/data-access';
 
@@ -33,7 +33,7 @@ import {
     },
     {
       provide: 'PrismaService',
-      useClass: PrismaService,
+      useClass: PrismaGeneralService,
     },
   ],
 })
