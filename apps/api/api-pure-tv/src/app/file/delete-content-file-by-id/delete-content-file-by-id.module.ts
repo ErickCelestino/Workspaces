@@ -7,7 +7,7 @@ import {
   FindContentFileByIdRepositoryImpl,
   FindDirectoryByIdRepositoryImpl,
   FindUserByIdRepositoryImpl,
-  PrismaService,
+  PrismaGeneralService,
 } from '@workspaces/data-access';
 import { DeleteContentFileById } from '@workspaces/domain';
 
@@ -18,7 +18,7 @@ import { DeleteContentFileById } from '@workspaces/domain';
     DeleteContentFileById,
     {
       provide: 'PrismaService',
-      useClass: PrismaService,
+      useClass: PrismaGeneralService,
     },
     {
       provide: 'FindUserByIdRepository',

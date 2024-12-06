@@ -4,7 +4,7 @@ import { CreatePlaylistCategoryController } from './create-playlist-category.con
 import { CreatePlaylistCategory } from '@workspaces/domain';
 import {
   FindUserByIdRepositoryImpl,
-  PrismaService,
+  PrismaGeneralService,
   CreatePlaylistCategoryRepositoryImpl,
   FindPlaylistCategoryByNameRepositoryImpl,
   FindCompanyByIdRepositoryImpl,
@@ -17,7 +17,7 @@ import {
     CreatePlaylistCategory,
     {
       provide: 'PrismaService',
-      useClass: PrismaService,
+      useClass: PrismaGeneralService,
     },
     {
       provide: 'FindUserByIdRepository',

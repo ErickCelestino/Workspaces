@@ -8,7 +8,7 @@ import {
   FindPlaylistByIdRepositoryImpl,
   FindUserByIdRepositoryImpl,
   MoveFileToAnotherPlaylistRepositoryImpl,
-  PrismaService,
+  PrismaGeneralService,
 } from '@workspaces/data-access';
 
 @Module({
@@ -18,7 +18,7 @@ import {
     MoveFilesToAnotherPlaylist,
     {
       provide: 'PrismaService',
-      useClass: PrismaService,
+      useClass: PrismaGeneralService,
     },
     {
       provide: 'FindUserByIdRepository',

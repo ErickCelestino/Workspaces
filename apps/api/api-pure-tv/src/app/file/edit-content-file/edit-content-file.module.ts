@@ -6,7 +6,7 @@ import {
   FindContentFileByIdRepositoryImpl,
   FindDirectoryByIdRepositoryImpl,
   FindUserByIdRepositoryImpl,
-  PrismaService,
+  PrismaGeneralService,
 } from '@workspaces/data-access';
 import { EditContentFile } from '@workspaces/domain';
 
@@ -17,7 +17,7 @@ import { EditContentFile } from '@workspaces/domain';
     EditContentFileService,
     {
       provide: 'PrismaService',
-      useClass: PrismaService,
+      useClass: PrismaGeneralService,
     },
     {
       provide: 'FindUserByIdRepository',

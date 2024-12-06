@@ -1,12 +1,12 @@
 import { DeleteDirectory } from '@workspaces/domain';
 import { DeleteDirectoryController } from './delete-directory.controller';
 import { DeleteDirectoryService } from './delete-directory.service';
-import { PrismaService } from 'nestjs-prisma';
 import {
   DeleteDirectoryRepositoryImpl,
   FindContentFilesByDirectoryIdRepositoryImpl,
   FindDirectoryByIdRepositoryImpl,
   FindUserByIdRepositoryImpl,
+  PrismaGeneralService
 } from '@workspaces/data-access';
 import { Module } from '@nestjs/common';
 
@@ -17,7 +17,7 @@ import { Module } from '@nestjs/common';
     DeleteDirectory,
     {
       provide: 'PrismaService',
-      useClass: PrismaService,
+      useClass: PrismaGeneralService,
     },
     {
       provide: 'FindUserByIdRepository',
