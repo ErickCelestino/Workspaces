@@ -69,7 +69,8 @@
       "executor": "@nx/vite:test",
       "outputs": ["{options.reportsDirectory}"],
       "options": {
-        "reportsDirectory": "../../../coverage/apps/web/web-pure-the-creator"
+        "reportsDirectory": "../../../coverage/apps/web/web-pure-the-creator",
+        "passWithNoTests": true
       }
     },
     "lint": {

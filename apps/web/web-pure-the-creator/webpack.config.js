@@ -12,6 +12,11 @@ module.exports = composePlugins(
   (config) => {
     // Update the webpack config as needed here.
     // e.g. `config.plugins.push(new MyPlugin())`
+    config.devServer = {
+      host: process.env['NX_PUBLIC_DEFAULT_HOST'] || 'localhost',
+      port: process.env['NX_PUBLIC_FRONT_PURE_THE_CREATOR'] || 4200,
+      historyApiFallback: true,
+    };
     return config;
   }
 );
