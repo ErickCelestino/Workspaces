@@ -7,5 +7,6 @@ export const userMock: User = {
   name: faker.string.alpha(3),
   nickname: faker.string.alpha(3),
   birthDate: faker.date.birthdate(),
+  type: 'ADM',
   auth: [authMock],
 };

@@ -35,6 +35,7 @@ export class FilterByEmailOrNicknameRepositoryImpl
         name: true,
         nick_name: true,
         birth_date: true,
+        type: true,
         auth: {
           select: {
             auth_id: true,
@@ -61,6 +62,7 @@ export class FilterByEmailOrNicknameRepositoryImpl
     const mappedUser: User = {
       name: userResult?.name == null ? '' : userResult.name,
       nickname: userResult?.nick_name == null ? '' : userResult.nick_name,
+      type: userResult?.type == null ? '' : userResult?.type,
       birthDate:
         userResult?.birth_date == null ? new Date() : userResult.birth_date,
       userId: userResult?.user_id == null ? '' : userResult.user_id,
