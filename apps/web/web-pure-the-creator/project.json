@@ -52,7 +52,8 @@
       "defaultConfiguration": "development",
       "options": {
         "buildTarget": "web-pure-the-creator:build",
-        "hmr": true
+        "hmr": true,
+        "proxyConfig": "apps/web/web-pure-the-creator/proxy.conf.json"
       },
       "configurations": {
         "development": {
