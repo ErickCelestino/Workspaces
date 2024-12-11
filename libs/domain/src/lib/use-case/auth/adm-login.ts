@@ -44,7 +44,9 @@ export class AdmLogin
 
     const filteredUserEmail = await this.filterEmailRepository.filter(email);
 
-    if (Object.keys(filteredUserEmail?.userId).length < 1) {
+    if (
+      Object.keys(filteredUserEmail?.userId || filteredUserEmail).length < 1
+    ) {
       return left(new EntityNotExists('User'));
     }
 
