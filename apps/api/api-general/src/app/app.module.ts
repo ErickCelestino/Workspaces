@@ -2,7 +2,12 @@ import { Module } from '@nestjs/common';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { CreateAuthModule, AuthModule } from './authentication';
+import {
+  CreateAuthModule,
+  AuthModule,
+  ValidateTokenModule,
+  AdmLoginModule,
+} from './authentication';
 import {
   ListUserModule,
   FindUserByIdModule,
@@ -44,7 +49,6 @@ import {
   ListSimpleCityModule,
   ConsultZipcodeModule,
 } from './address';
-import { AdmLoginModule } from './authentication/adm-login/adm-login.module';
 
 @Module({
   imports: [
@@ -86,6 +90,7 @@ import { AdmLoginModule } from './authentication/adm-login/adm-login.module';
     RemoveUserAccessToTheCompanyModule,
     ListCompaniesByUserIdModule,
     ChangeUserTypeModule,
+    ValidateTokenModule,
   ],
   controllers: [AppController],
   providers: [AppService],

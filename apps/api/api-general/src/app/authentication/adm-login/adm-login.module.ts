@@ -5,10 +5,10 @@ import { AdmLogin, ValidateUser } from '@workspaces/domain';
 import {
   FilterByEmailOrNicknameRepositoryImpl,
   SignInRepositoryImpl,
-  ValidateHashRepositoryImpl,
   LocalAuthGuard,
   LocalStrategy,
   JwtStrategy,
+  ValidateHashRepositoryImpl,
   PrismaGeneralService,
 } from '@workspaces/data-access';
 import { JwtModule, JwtService } from '@nestjs/jwt';
@@ -19,7 +19,7 @@ import { PassportModule } from '@nestjs/passport';
     PassportModule,
     JwtModule.register({
       secret: process.env['JWT_SECRET'],
-      signOptions: { expiresIn: '2h' },
+      signOptions: { expiresIn: '2m' },
     }),
   ],
   controllers: [AdmLoginController],
