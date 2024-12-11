@@ -9,7 +9,7 @@ import {
 } from '../../error';
 import {
   FindUserByIdRepository,
-  ValidationTokenExpirationRepository,
+  ValidateTokenExpirationRepository,
 } from '../../repository';
 import { Either, left, right } from '../../shared/either';
 
@@ -23,8 +23,8 @@ export class ValidateToken
   constructor(
     @Inject('FindUserByIdRepository')
     private findUserByIdRepository: FindUserByIdRepository,
-    @Inject('ValidationTokenExpirationRepository')
-    private validationTokenExpirationRepository: ValidationTokenExpirationRepository
+    @Inject('ValidateTokenExpirationRepository')
+    private validateTokenExpirationRepository: ValidateTokenExpirationRepository
   ) {}
   async execute(
     input: ValidateTokenDto
@@ -45,8 +45,9 @@ export class ValidateToken
       return left(new EntityNotExists('User'));
     }
 
-    const validateHash =
-      await this.validationTokenExpirationRepository.validate(token);
+    const validateHash = await this.validateTokenExpirationRepository.validate(
+      token
+    );
 
     if (!validateHash) {
       return left(new EntityNotValid('token'));
