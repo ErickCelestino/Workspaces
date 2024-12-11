@@ -1,4 +1,4 @@
 export interface ValidateTokenDto {
-  userId: string;
+  loggedUserId: string;
   token: string;
 }

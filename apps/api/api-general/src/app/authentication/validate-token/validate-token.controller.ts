@@ -10,11 +10,11 @@ export class ValidateTokenController {
   //@UsePipes(new ZodValidationPipe(createAuthSchema))
   async validate(
     @Headers('authorization') token: string,
-    @Query('userId') userId: string
+    @Query('loggedUserId') loggedUserId: string
   ) {
     const result = await this.validateTokenService.validate({
-      token: token.split(' ')[1],
-      userId,
+      token: token ?? '',
+      loggedUserId: loggedUserId ?? '',
     });
 
     if (result.isRight()) return { token: result.value };

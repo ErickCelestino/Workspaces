@@ -29,9 +29,9 @@ export class ValidateToken
   async execute(
     input: ValidateTokenDto
   ): Promise<Either<EntityNotEmpty | EntityNotExists, string>> {
-    const { userId, token } = input;
+    const { loggedUserId, token } = input;
 
-    if (Object.keys(userId).length < 1) {
+    if (Object.keys(loggedUserId).length < 1) {
       return left(new EntityNotEmpty('User ID'));
     }
 
@@ -39,7 +39,7 @@ export class ValidateToken
       return left(new EntityNotEmpty('Token'));
     }
 
-    const filteredUser = await this.findUserByIdRepository.find(userId);
+    const filteredUser = await this.findUserByIdRepository.find(loggedUserId);
 
     if (Object.keys(filteredUser?.userId ?? filteredUser).length < 1) {
       return left(new EntityNotExists('User'));
