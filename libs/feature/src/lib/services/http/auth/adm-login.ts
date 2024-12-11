@@ -1,8 +1,8 @@
 import { LoginResponse } from '@workspaces/domain';
 import { generalApi } from '../axios-config';
 
-export async function LoginRequest(email: string, password: string) {
-  const request = await generalApi.post<LoginResponse>('auth/login', {
+export async function AdmLoginRequest(email: string, password: string) {
+  const request = await generalApi.post<LoginResponse>('auth/adm-login', {
     email,
     password,
   });

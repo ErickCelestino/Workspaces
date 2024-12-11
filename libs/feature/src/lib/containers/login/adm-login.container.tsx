@@ -19,8 +19,8 @@ import { useForm } from 'react-hook-form';
 import { LoginSchema } from '../../shared';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
+  AdmLoginRequest,
   FindUserByEmailRequest,
-  LoginRequest,
   setItemLocalStorage,
 } from '../../services';
 import { useLoggedUser } from '../../contexts';
@@ -38,7 +38,7 @@ interface LoginContainerProps {
   children?: ReactNode;
 }
 
-export const LoginContainer: React.FC<LoginContainerProps> = ({
+export const AdmLoginContainer: React.FC<LoginContainerProps> = ({
   cardImage = '',
   logo = '',
   title = 'Fazer Login',
@@ -93,7 +93,7 @@ export const LoginContainer: React.FC<LoginContainerProps> = ({
 
   const onFinish = async (data: ValidateUserDto) => {
     try {
-      await auth.authenticate(data.email, data.password, LoginRequest);
+      await auth.authenticate(data.email, data.password, AdmLoginRequest);
       setSuccess(true);
       setLoading(false);
       await setLocalUserId(data.email);
@@ -169,13 +169,6 @@ export const LoginContainer: React.FC<LoginContainerProps> = ({
                   control={<Checkbox value={remenberTitle} color="primary" />}
                   label={remenberTitle}
                 />
-                <Typography
-                  component={Link}
-                  underline="hover"
-                  href={registerHref}
-                >
-                  {registerTitle}
-                </Typography>
               </Box>
               <FormButton
                 success={success}

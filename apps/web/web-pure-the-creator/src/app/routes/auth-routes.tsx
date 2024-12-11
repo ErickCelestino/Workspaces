@@ -1,4 +1,8 @@
-import { CreateUser, LoginContainer } from '@workspaces/feature';
+import {
+  AdmLoginContainer,
+  CreateUser,
+  LoginContainer,
+} from '@workspaces/feature';
 import { Route, Routes } from 'react-router-dom';
 
 export const AuthRouters = () => {
@@ -17,7 +21,7 @@ export const AuthRouters = () => {
       <Route
         path="/login"
         element={
-          <LoginContainer
+          <AdmLoginContainer
             cardImage="/assets/svg/login-image.svg"
             logo="/assets/png/summons-image.png"
           />

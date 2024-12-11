@@ -10,7 +10,12 @@ import {
   getUserLocalStorage,
   setUserLocalStorage,
 } from '../../services';
-import { IAuthContext, IAuthProvider, ILoggedUser } from '@workspaces/domain';
+import {
+  IAuthContext,
+  IAuthProvider,
+  ILoggedUser,
+  LoginResponse,
+} from '@workspaces/domain';
 
 export const AuthContext = createContext<IAuthContext>({} as IAuthContext);
 
@@ -25,13 +30,20 @@ export const AuthProvider = ({ children }: IAuthProvider) => {
     }
   }, []);
 
-  const authenticate = useCallback(async (email: string, password: string) => {
-    const response = await LoginRequest(email, password);
-    const payload = { token: response.token, email };
+  const authenticate = useCallback(
+    async (
+      email: string,
+      password: string,
+      service: (email: string, password: string) => Promise<LoginResponse>
+    ) => {
+      const response = await service(email, password);
+      const payload = { token: response.token, email };
 
-    setUser(payload);
-    setUserLocalStorage(payload);
-  }, []);
+      setUser(payload);
+      setUserLocalStorage(payload);
+    },
+    []
+  );
 
   const logout = useCallback(() => {
     setUser(null);
