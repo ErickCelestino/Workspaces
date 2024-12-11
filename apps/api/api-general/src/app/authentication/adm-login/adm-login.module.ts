@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { AdmLoginService } from './adm-login.service';
 import { AdmLoginController } from './adm-login.controller';
-import { Login, ValidateUser } from '@workspaces/domain';
+import { AdmLogin, ValidateUser } from '@workspaces/domain';
 import {
   FilterByEmailOrNicknameRepositoryImpl,
   SignInRepositoryImpl,
@@ -29,7 +29,7 @@ import { PassportModule } from '@nestjs/passport';
     LocalAuthGuard,
     LocalStrategy,
     JwtStrategy,
-    Login,
+    AdmLogin,
     {
       provide: 'SignInRepository',
       useClass: SignInRepositoryImpl,

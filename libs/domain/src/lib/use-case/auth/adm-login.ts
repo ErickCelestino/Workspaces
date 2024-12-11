@@ -52,7 +52,7 @@ export class AdmLogin
 
     if (
       Object.keys(filteredUserEmail?.type).length < 1 ||
-      filteredUserEmail.type !== 'ADM'
+      filteredUserEmail.type !== 'ADMIN'
     ) {
       return left(new EntityNotPermissions('User'));
     }

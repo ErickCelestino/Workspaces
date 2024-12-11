@@ -4,7 +4,7 @@ import { AdmLoginService } from './adm-login.service';
 import { LocalAuthGuard } from '@workspaces/data-access';
 import { ErrorMessageResult } from '@workspaces/domain';
 
-@Controller('adm-login')
+@Controller('auth')
 export class AdmLoginController {
   constructor(private readonly authService: AdmLoginService) {}
 

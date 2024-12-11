@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Injectable } from '@nestjs/common';
-import { Login, LoginDto } from '@workspaces/domain';
+import { AdmLogin, LoginDto } from '@workspaces/domain';
 
 @Injectable()
 export class AdmLoginService {
-  constructor(private useCase: Login) {}
+  constructor(private useCase: AdmLogin) {}
 
   async login(user: any) {
     let error = `${user.value}`;
