@@ -44,12 +44,14 @@ import {
   ListSimpleCityModule,
   ConsultZipcodeModule,
 } from './address';
+import { AdmLoginModule } from './authentication/adm-login/adm-login.module';
 
 @Module({
   imports: [
     CreateUserModule,
     CreateAuthModule,
     AuthModule,
+    AdmLoginModule,
     ListUserModule,
     EditUserModule,
     FindUserByIdModule,

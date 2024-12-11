@@ -1,0 +1,55 @@
+import { Module } from '@nestjs/common';
+import { AdmLoginService } from './adm-login.service';
+import { AdmLoginController } from './adm-login.controller';
+import { Login, ValidateUser } from '@workspaces/domain';
+import {
+  FilterByEmailOrNicknameRepositoryImpl,
+  SignInRepositoryImpl,
+  ValidateHashRepositoryImpl,
+  LocalAuthGuard,
+  LocalStrategy,
+  JwtStrategy,
+  PrismaGeneralService,
+} from '@workspaces/data-access';
+import { JwtModule, JwtService } from '@nestjs/jwt';
+import { PassportModule } from '@nestjs/passport';
+
+@Module({
+  imports: [
+    PassportModule,
+    JwtModule.register({
+      secret: process.env['JWT_SECRET'],
+      signOptions: { expiresIn: '2h' },
+    }),
+  ],
+  controllers: [AdmLoginController],
+  providers: [
+    AdmLoginService,
+    ValidateUser,
+    LocalAuthGuard,
+    LocalStrategy,
+    JwtStrategy,
+    Login,
+    {
+      provide: 'SignInRepository',
+      useClass: SignInRepositoryImpl,
+    },
+    {
+      provide: 'ValidateHashRepository',
+      useClass: ValidateHashRepositoryImpl,
+    },
+    {
+      provide: 'FilterByEmailOrNicknameRepository',
+      useClass: FilterByEmailOrNicknameRepositoryImpl,
+    },
+    {
+      provide: 'PrismaService',
+      useClass: PrismaGeneralService,
+    },
+    {
+      provide: 'JwtService',
+      useClass: JwtService,
+    },
+  ],
+})
+export class AdmLoginModule {}
