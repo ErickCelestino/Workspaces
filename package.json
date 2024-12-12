@@ -37,7 +37,7 @@
     "prisma:generate-prod:general": "npx prisma generate --schema=./prisma/general/schema-production.prisma",
     "prisma:migrate": "npm run prisma:migrate:general && npm run prisma:migrate:marketing",
     "prisma:migrate-prod": "npm run prisma:migrate-prod:general && npm run prisma:migrate-prod:marketing",
-    "prisma:migrate:general": "npx prisma migrate dev --schema=./prisma/general/schema.prisma",
+    "prisma:migrate:general": "npm run update-lock:dev:general && npx prisma migrate dev --schema=./prisma/general/schema.prisma",
     "prisma:migrate:marketing": "npm run update-lock:dev:marketing && npx prisma migrate dev --schema=./prisma/marketing/schema.prisma",
     "prisma:migrate-prod:marketing": "npm run update-lock:prod:marketing && npx prisma db push --schema=./prisma/marketing/schema-production.prisma",
     "prisma:migrate-prod:general": "npm run update-lock:prod:general && npx prisma db push --schema=./prisma/general/schema-production.prisma",

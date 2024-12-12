@@ -7,7 +7,7 @@ generator client {
 datasource db {
   provider = "cockroachdb"
   url      = env("DATABASE_GENERAL_URL")
-  schemas  = ["summons", "general", "pure_tv"]
+  schemas  = ["summons", "general", "pure_tv", "pure_finance"]
 }
 
 model Auth {
@@ -78,6 +78,12 @@ model User {
   company Company[]
   departament Departament[]
   confirm_Delete_Company Confirm_Delete_Company[]
+  products_created Product[] @relation("ProductCreatedBy")
+  products_updated Product[] @relation("ProductUpdatedBy")
+  salles_created Sale[] @relation("SaleUpdatedBy")
+  salles_updated Sale[] @relation("SaleCreatedBy")
+  sellers Seller[]
+  paymentModel PaymentModel[]
 
   @@schema("general")
 }
@@ -178,6 +184,7 @@ model Company {
   playlist_Category Playlist_Category[]
   content_Files Content_Files[]
   directory Directory[]
+  sale Sale[]
   user User @relation(fields: [user_id], references: [user_id])
 
   @@schema("general")
@@ -555,4 +562,85 @@ enum SummonsStatus {
   FINISHED
 
   @@schema("summons")
+}
+
+model Product {
+  product_id String @id @default(uuid())
+  name String
+  standard_price String
+  maximum_discount String
+  status Status @default(ACTIVE)
+  created_at DateTime @default(now())
+  created_by String
+  updated_at DateTime @default(now())
+  updated_by String
+  deleted_at DateTime?
+  user_created User @relation("ProductCreatedBy",fields: [created_by], references: [user_id])
+  user_updated User @relation("ProductUpdatedBy",fields: [updated_by], references: [user_id])
+  salles Sale[]
+  @@schema("pure_finance")
+}
+
+model Seller {
+  seller_id String @id @default(uuid())
+  name String
+  phone String
+  email String
+  status Status @default(ACTIVE)
+  models SellerModel @default(DEFAULT)
+  created_at DateTime @default(now())
+  created_by String
+  updated_at DateTime @default(now())
+  user User @relation(fields: [created_by], references: [user_id])
+  salle Sale[]
+  @@schema("pure_finance")
+}
+
+model PaymentModel {
+  payment_model_id String @id @default(uuid())
+  name String
+  description String
+  status Status @default(ACTIVE)
+  created_at DateTime @default(now())
+  created_by String
+  updated_at DateTime @default(now())
+  user User @relation(fields: [created_by], references: [user_id])
+  salles Sale[]
+  @@schema("pure_finance")
+}
+
+model Sale {
+  salle_id String @id @default(uuid())
+  seller_id String
+  product_id String
+  payment_model_id String
+  company_id String
+  amount String
+  value String
+  status SaleStatus @default(STARTED)
+  created_by String
+  updated_by String
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+  product Product @relation(fields: [product_id], references: [product_id])
+  seller Seller @relation(fields: [seller_id], references: [seller_id])
+  payment_model PaymentModel @relation(fields: [payment_model_id], references: [payment_model_id])
+  company Company @relation(fields: [company_id], references: [company_id])
+  user_created User @relation("SaleCreatedBy",fields: [created_by], references: [user_id])
+  user_updated User @relation("SaleUpdatedBy",fields: [updated_by], references: [user_id])
+  @@schema("pure_finance")
+}
+
+enum SellerModel {
+  DEFAULT
+  PATNER
+  OWNER
+  @@schema("pure_finance")
+}
+
+
+enum SaleStatus {
+  STARTED
+  FINISHED
+  @@schema("pure_finance")
 }
