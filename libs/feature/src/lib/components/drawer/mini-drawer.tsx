@@ -62,6 +62,7 @@ interface MiniDrawerProps {
   image: string;
   logoutTitle?: string;
   themeTitle?: string;
+  companyList?: boolean;
 }
 
 export const MiniDrawer: FC<MiniDrawerProps> = ({
@@ -69,6 +70,7 @@ export const MiniDrawer: FC<MiniDrawerProps> = ({
   image,
   logoutTitle = 'Fazer Logout',
   themeTitle = 'Alterar Tema',
+  companyList,
 }) => {
   const theme = useTheme();
   const { isDrawerOpen, toggleDrawerOpen, drawerOptions } = useDrawerContext();
@@ -133,6 +135,7 @@ export const MiniDrawer: FC<MiniDrawerProps> = ({
                   logoutTitle={logoutTitle}
                   themeTitle={themeTitle}
                   showAlert={showAlert}
+                  companyList={companyList}
                 />
               )}
               {!isDrawerOpen && (

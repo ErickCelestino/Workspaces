@@ -2,6 +2,7 @@ export * from './company';
 export * from './device';
 export * from './directory';
 export * from './file';
+export * from './home';
 export * from './login';
 export * from './marketing';
 export * from './playlist';

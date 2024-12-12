@@ -20,7 +20,6 @@ export const ContentApp = () => {
 
   useEffect(() => {
     const token = getItemLocalStorage('u');
-    console.log(auth.isAuthenticated);
     if (
       !token &&
       location.pathname !== '/register' &&
@@ -38,7 +37,10 @@ export const ContentApp = () => {
           <SimpleLoading open={isLoading} />
           <DrawerProvider>
             <FileModalProvider>
-              <MiniDrawer image="https://github.com/ErickCelestino.png">
+              <MiniDrawer
+                companyList={false}
+                image="https://github.com/ErickCelestino.png"
+              >
                 <AppRouters />
                 <FileModalContainer />
               </MiniDrawer>
