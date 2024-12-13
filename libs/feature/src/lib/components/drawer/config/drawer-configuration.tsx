@@ -17,12 +17,14 @@ interface DrawerConfigurationProps {
   logoutTitle: string;
   themeTitle: string;
   companyLabel?: string;
+  companyList?: boolean;
   showAlert: (message: string, success: boolean) => void;
 }
 
 export const DrawerConfiguration: FC<DrawerConfigurationProps> = ({
   logoutTitle,
   themeTitle,
+  companyList = true,
   companyLabel = 'Alterar Empresa',
   showAlert,
 }) => {
@@ -83,29 +85,33 @@ export const DrawerConfiguration: FC<DrawerConfigurationProps> = ({
         padding: theme.spacing(2),
       }}
     >
-      <TextField
-        fullWidth
-        select
-        value={selectedCompany}
-        margin="normal"
-        id="companyId"
-        label={companyLabel}
-        onChange={handleChange}
-        SelectProps={{
-          renderValue: (value) => {
-            const selectedItem = loggedUser?.companies.find(
-              (item) => item.id === value
-            );
-            return selectedItem ? selectedItem.socialReason.split(' ')[0] : '';
-          },
-        }}
-      >
-        {loggedUser?.companies.map((item) => (
-          <MenuItem key={item.id} value={item.id}>
-            {item.socialReason}
-          </MenuItem>
-        ))}
-      </TextField>
+      {companyList && (
+        <TextField
+          fullWidth
+          select
+          value={selectedCompany}
+          margin="normal"
+          id="companyId"
+          label={companyLabel}
+          onChange={handleChange}
+          SelectProps={{
+            renderValue: (value) => {
+              const selectedItem = loggedUser?.companies.find(
+                (item) => item.id === value
+              );
+              return selectedItem
+                ? selectedItem.socialReason.split(' ')[0]
+                : '';
+            },
+          }}
+        >
+          {loggedUser?.companies.map((item: CompanySimpleResponseDto) => (
+            <MenuItem key={item.id} value={item.id}>
+              {item.socialReason}
+            </MenuItem>
+          ))}
+        </TextField>
+      )}
       <Button
         onClick={logout}
         color="inherit"

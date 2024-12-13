@@ -2,7 +2,12 @@ import { Module } from '@nestjs/common';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { CreateAuthModule, AuthModule } from './authentication';
+import {
+  CreateAuthModule,
+  AuthModule,
+  ValidateTokenModule,
+  AdmLoginModule,
+} from './authentication';
 import {
   ListUserModule,
   FindUserByIdModule,
@@ -50,6 +55,7 @@ import {
     CreateUserModule,
     CreateAuthModule,
     AuthModule,
+    AdmLoginModule,
     ListUserModule,
     EditUserModule,
     FindUserByIdModule,
@@ -84,6 +90,7 @@ import {
     RemoveUserAccessToTheCompanyModule,
     ListCompaniesByUserIdModule,
     ChangeUserTypeModule,
+    ValidateTokenModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -2,7 +2,7 @@ import { List, useTheme } from '@mui/material';
 import AddBusinessIcon from '@mui/icons-material/AddBusiness';
 import StoreIcon from '@mui/icons-material/Store';
 import { useLoggedUser } from '../../contexts';
-import { FC, useCallback, useEffect, useRef, useState } from 'react';
+import { FC, ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 import {
   CompanyPopUp,
   CompanyPopupType,
@@ -20,10 +20,12 @@ import {
 
 interface ListAllCompaniesContainerProps {
   createCompanyButtonTitle?: string;
+  toolbar?: ReactNode;
 }
 
 export const ListAllCompaniesContainer: FC<ListAllCompaniesContainerProps> = ({
   createCompanyButtonTitle = 'Nova Empresa',
+  toolbar = <ToolbarPureTV />,
 }) => {
   const { loggedUser } = useLoggedUser();
   const theme = useTheme();
@@ -132,7 +134,7 @@ export const ListAllCompaniesContainer: FC<ListAllCompaniesContainerProps> = ({
       <LayoutBase
         title="Listagem de Empresas"
         iconMenuItemList={rightClickMenuList}
-        toolBar={<ToolbarPureTV />}
+        toolBar={toolbar}
       >
         <ContainerSimpleList
           search={{

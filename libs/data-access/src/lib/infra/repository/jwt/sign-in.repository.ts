@@ -9,6 +9,7 @@ export class SignInRepositoryImpl implements SignInRepository {
     const payload = { email: input.email, sub: input.userId };
     const result = this.jwtService.sign(payload, {
       secret: `${process.env['JWT_SECRET']}`,
+      expiresIn: '6h',
     });
     return { token: result };
   }

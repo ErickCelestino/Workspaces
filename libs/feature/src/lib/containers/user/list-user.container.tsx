@@ -7,13 +7,19 @@ import {
   UserModals,
 } from '../../components';
 import { LayoutBase } from '../../layout';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { FC, ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 import { UserPopupType } from '@workspaces/domain';
 import { useListUserData, useSnackbarAlert } from '../../hooks';
 import { useLoggedUser } from '../../contexts';
 import { ContainerSimpleList } from '../utils';
 
-export const ListUserContainer = () => {
+interface ListUserContainerProps {
+  toolbar?: ReactNode;
+}
+
+export const ListUserContainer: FC<ListUserContainerProps> = ({
+  toolbar = <ToolbarPureTV />,
+}) => {
   const [selectedId, setSelectedId] = useState<string>('');
   const theme = useTheme();
   const { loggedUser } = useLoggedUser();
@@ -85,7 +91,7 @@ export const ListUserContainer = () => {
         showAlert={showAlert}
         selectedId={selectedId}
       />
-      <LayoutBase title="Listagem de Usuários" toolBar={<ToolbarPureTV />}>
+      <LayoutBase title="Listagem de Usuários" toolBar={toolbar}>
         <ContainerSimpleList
           search={{
             placeholder: 'Pesquisar por agendamento',

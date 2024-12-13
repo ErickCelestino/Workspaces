@@ -18,7 +18,11 @@ import { useSnackbarAlert } from '../../hooks';
 import { useForm } from 'react-hook-form';
 import { LoginSchema } from '../../shared';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { FindUserByEmailRequest, setItemLocalStorage } from '../../services';
+import {
+  FindUserByEmailRequest,
+  LoginRequest,
+  setItemLocalStorage,
+} from '../../services';
 import { useLoggedUser } from '../../contexts';
 
 interface LoginContainerProps {
@@ -89,7 +93,7 @@ export const LoginContainer: React.FC<LoginContainerProps> = ({
 
   const onFinish = async (data: ValidateUserDto) => {
     try {
-      await auth.authenticate(data.email, data.password);
+      await auth.authenticate(data.email, data.password, LoginRequest);
       setSuccess(true);
       setLoading(false);
       await setLocalUserId(data.email);
