@@ -79,7 +79,6 @@ export class CreateProduct
     }
 
     const filteredProduct = await this.findProductByNameRespository.find({
-      loggedUserId,
       name,
     });
 

@@ -324,6 +324,7 @@ model Country {
 model Product {
   product_id String @id @default(uuid())
   name String
+  description String
   standard_price String
   maximum_discount String
   status Status @default(ACTIVE)
