@@ -4,6 +4,7 @@ import { CreateProductDto } from '../../dto';
 import {
   EntityAlreadyExists,
   EntityIsNotEmpty,
+  EntityNotaNumber,
   EntityNotCreated,
   EntityNotEmpty,
   EntityNotExists,
@@ -14,7 +15,7 @@ import {
   FindUserByIdRepository,
 } from '../../repository';
 import { Either, left, right } from '../../shared/either';
-import { ValidationUserId } from '../../utils';
+import { ValidationNumberInString, ValidationUserId } from '../../utils';
 
 export class CreateProduct
   implements
@@ -67,6 +68,18 @@ export class CreateProduct
 
     if (Object.keys(standardPrice).length < 1) {
       return left(new EntityNotEmpty('Standard Price'));
+    }
+
+    const validateMaximumDiscount = ValidationNumberInString(maximumDiscount);
+
+    if (!validateMaximumDiscount) {
+      return left(new EntityNotaNumber(maximumDiscount));
+    }
+
+    const validateStandardPrice = ValidationNumberInString(standardPrice);
+
+    if (!validateStandardPrice) {
+      return left(new EntityNotaNumber(standardPrice));
     }
 
     const userValidation = await ValidationUserId(
