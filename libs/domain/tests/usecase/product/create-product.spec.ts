@@ -3,6 +3,7 @@ import {
   CreateProductDto,
   CreateProductRepository,
   EntityAlreadyExists,
+  EntityNotaNumber,
   EntityNotCreated,
   EntityNotEmpty,
   EntityNotExists,
@@ -112,6 +113,26 @@ describe('CreateProduct', () => {
     expect(result.isRight()).toBeFalsy();
     expect(result.isLeft()).toBeTruthy();
     expect(result.value).toBeInstanceOf(EntityNotEmpty);
+  });
+
+  it('should return EntityNotaNumber when a pass not a number standardPrice in validateTokenDto', async () => {
+    const { sut, createProductDto } = makeSut();
+    createProductDto.body.standardPrice = 'any_string';
+    const result = await sut.execute(createProductDto);
+
+    expect(result.isRight()).toBeFalsy();
+    expect(result.isLeft()).toBeTruthy();
+    expect(result.value).toBeInstanceOf(EntityNotaNumber);
+  });
+
+  it('should return EntityNotaNumber when a pass not a number maximumDiscount in validateTokenDto', async () => {
+    const { sut, createProductDto } = makeSut();
+    createProductDto.body.maximumDiscount = 'any_string';
+    const result = await sut.execute(createProductDto);
+
+    expect(result.isRight()).toBeFalsy();
+    expect(result.isLeft()).toBeTruthy();
+    expect(result.value).toBeInstanceOf(EntityNotaNumber);
   });
 
   it('should return EntityNotExists when a return empty user in findUserByIdRepository', async () => {
