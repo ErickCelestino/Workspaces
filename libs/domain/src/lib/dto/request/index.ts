@@ -9,6 +9,7 @@ export * from './file-to-playlist';
 export * from './marketing';
 export * from './playlist';
 export * from './playlist-to-scheduling';
+export * from './product';
 export * from './schedules-to-device';
 export * from './scheduling';
 export * from './user';

@@ -1,5 +1,6 @@
 import {
   ListAllCompaniesContainer,
+  ListProductContainer,
   ListUserContainer,
   TestContainer,
   TheCreatorHomeContainer,
@@ -33,6 +34,7 @@ export const AppRouters = () => {
         path="/auth/company"
         element={<ListAllCompaniesContainer toolbar={null} />}
       />
+      <Route path="product" element={<ListProductContainer />} />
     </Routes>
   );
 };

@@ -7,5 +7,6 @@ export * from './file';
 export * from './file-to-playlist';
 export * from './marketing';
 export * from './playlist';
+export * from './product';
 export * from './scheduling';
 export * from './user';
