@@ -3,7 +3,7 @@ import {
   FindProductByNameRespository,
   ProductResponseDto,
 } from '@workspaces/domain';
-import { PrismaGeneralService } from '../../../../application';
+import { PrismaGeneralService } from '../../../../../application';
 import { Inject } from '@nestjs/common';
 
 export class FindProductByNameRepositoryImpl

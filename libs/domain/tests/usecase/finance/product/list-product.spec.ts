@@ -24,7 +24,7 @@ const makeSut = (): SutTypes => {
 
   const listProductDto: ListProductDto = {
     loggedUserId: userMock.userId,
-    userInput: '',
+    filter: '',
   };
 
   const sut = new ListProduct(findUserByIdRepository, listProductRepository);

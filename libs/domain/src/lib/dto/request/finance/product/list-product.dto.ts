@@ -1,5 +1,5 @@
 export interface ListProductDto {
-  userInput: string;
+  filter: string;
   loggedUserId: string;
   take?: number;
   skip?: number;
