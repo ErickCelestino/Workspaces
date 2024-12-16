@@ -2,7 +2,7 @@ import axios from 'axios';
 import { getUserLocalStorage } from '../../../utils';
 
 const url = `${
-  process.env['NX_PUBLIC_BACK_PURE_FINANCE'] ?? 'http://localhost:3000'
+  process.env['NX_PUBLIC_BACK_FINANCE_URL'] ?? 'http://localhost:3000'
 }/api-pure-finance`;
 export const pureFinanceApi = axios.create({
   baseURL: url,
