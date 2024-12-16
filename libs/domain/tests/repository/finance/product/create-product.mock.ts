@@ -1,5 +1,5 @@
-import { CreateProductDto, CreateProductRepository } from '../../../src';
-import { ProductMock } from '../../entity/product/product.mock';
+import { CreateProductDto, CreateProductRepository } from '../../../../src';
+import { ProductMock } from '../../../entity';
 
 export class CreateProductRepositoryMock implements CreateProductRepository {
   inputMock = {} as CreateProductDto;

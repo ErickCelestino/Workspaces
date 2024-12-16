@@ -2,7 +2,7 @@ import {
   FindProductByNameDto,
   FindProductByNameRespository,
   ProductResponseDto,
-} from '../../../src';
+} from '../../../../src';
 
 export class FindProductByNameRespositoryMock
   implements FindProductByNameRespository

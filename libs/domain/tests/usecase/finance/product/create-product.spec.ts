@@ -10,11 +10,13 @@ import {
   FindProductByNameRespository,
   FindUserByIdRepository,
   UserList,
-} from '../../../src';
-import { ProductMock, userMock } from '../../entity';
-import { FindUserByIdRepositoryMock } from '../../repository';
-import { CreateProductRepositoryMock } from '../../repository/product/create-product.mock';
-import { FindProductByNameRespositoryMock } from '../../repository/product/find-product-by-name.mock';
+} from '../../../../src';
+import { ProductMock, userMock } from '../../../entity';
+import {
+  FindUserByIdRepositoryMock,
+  FindProductByNameRespositoryMock,
+  CreateProductRepositoryMock,
+} from '../../../repository';
 
 interface SutTypes {
   sut: CreateProduct;

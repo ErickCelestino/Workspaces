@@ -4,5 +4,5 @@ export interface ListProductResponseDto {
   total: number;
   filteredTotal: number;
   totalPages: number;
-  directories: ProductResponseDto[];
+  products: ProductResponseDto[];
 }

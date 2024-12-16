@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { ProductResponseDto } from '../../../src';
+import { ProductResponseDto } from '../../../../src';
 
 export const ProductMock: ProductResponseDto = {
   id: faker.string.uuid(),
