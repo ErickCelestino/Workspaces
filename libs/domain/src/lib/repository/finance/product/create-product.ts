@@ -1,4 +1,4 @@
-import { CreateProductDto } from '../../dto';
+import { CreateProductDto } from '../../../dto';
 
 export interface CreateProductRepository {
   create(input: CreateProductDto): Promise<string>;

@@ -1,6 +1,6 @@
 import { Inject } from '@nestjs/common';
-import { UseCase } from '../../base/use-case';
-import { CreateProductDto } from '../../dto';
+
+import { CreateProductDto } from '../../../dto';
 import {
   EntityAlreadyExists,
   EntityIsNotEmpty,
@@ -8,14 +8,15 @@ import {
   EntityNotCreated,
   EntityNotEmpty,
   EntityNotExists,
-} from '../../error';
+} from '../../../error';
 import {
   CreateProductRepository,
   FindProductByNameRespository,
   FindUserByIdRepository,
-} from '../../repository';
-import { Either, left, right } from '../../shared/either';
-import { ValidationNumberInString, ValidationUserId } from '../../utils';
+} from '../../../repository';
+import { Either, left, right } from '../../../shared/either';
+import { ValidationNumberInString, ValidationUserId } from '../../../utils';
+import { UseCase } from '../../../base/use-case';
 
 export class CreateProduct
   implements
