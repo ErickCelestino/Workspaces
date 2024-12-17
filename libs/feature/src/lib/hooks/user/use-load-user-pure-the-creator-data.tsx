@@ -26,7 +26,9 @@ export const useLoadUserPureTheCreatorData = () => {
         'Página Inicial': [
           { label: 'Página Inicial', icon: 'home', path: '/' },
         ],
-        Produtos: [{ label: 'Produtos', icon: 'folder', path: '/product' }],
+        Produtos: [
+          { label: 'Produtos', icon: 'point_of_sale', path: '/product' },
+        ],
       };
 
       if (loggedUser.type === 'ADMIN') {
