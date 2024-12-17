@@ -1,4 +1,5 @@
 export * from './create-product.dto';
+export * from './delete-product.dto';
 export * from './find-product-by-name.dto';
 export * from './list-product.dto';
 export * from './product-body.dto';

@@ -16,6 +16,7 @@ import { ButtonFileMenu } from '../../menu';
 
 interface ProductItemProps {
   product: ProductResponseDto;
+  deleteProduct: () => Promise<void>;
   titleDescription?: string;
   titleUpdatedBy?: string;
   titleCreatedAt?: string;
@@ -23,6 +24,7 @@ interface ProductItemProps {
 
 export const ProductItem: FC<ProductItemProps> = ({
   product,
+  deleteProduct,
   titleDescription = 'Descrição',
   titleUpdatedBy = 'Atualizado por',
   titleCreatedAt = 'Criado em',
@@ -41,9 +43,7 @@ export const ProductItem: FC<ProductItemProps> = ({
     {
       icon: <DeleteIcon />,
       title: 'Deletar',
-      handleClick: async () => {
-        console.log('Deletar Produto');
-      },
+      handleClick: deleteProduct,
     },
   ];
   return (

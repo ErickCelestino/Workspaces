@@ -78,7 +78,11 @@ export const ListProductContainer = () => {
   const renderProducts = () =>
     listProduct.length > 0 ? (
       listProduct.map((product) => (
-        <ProductItem key={product.id} product={product} />
+        <ProductItem
+          key={product.id}
+          product={product}
+          deleteProduct={() => handlePopUpOpen('delete', product.id)}
+        />
       ))
     ) : (
       <EmptyListResponse
