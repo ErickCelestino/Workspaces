@@ -1,16 +1,21 @@
-import { CrudType, IconMenuItem } from '@workspaces/domain';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
-import { useRef, useCallback, useState } from 'react';
-import { ProductModals, ToolbarPureTV } from '../../../components';
+import ProductionQuantityLimitsIcon from '@mui/icons-material/ProductionQuantityLimits';
+import { CrudType, IconMenuItem } from '@workspaces/domain';
+import { useRef, useCallback, useState, useEffect } from 'react';
+import {
+  EmptyListResponse,
+  ProductItem,
+  ProductModals,
+} from '../../../components';
 import { LayoutBase } from '../../../layout';
 import { useLoggedUser } from '../../../contexts';
 import { List, useTheme } from '@mui/material';
-import { useSnackbarAlert } from '../../../hooks';
+import { useListProductData, useSnackbarAlert } from '../../../hooks';
 import { ContainerSimpleList } from '../../utils';
 
 export const ListProductContainer = () => {
-  //const { loggedUser } = useLoggedUser();
-  //const theme = useTheme();
+  const { loggedUser } = useLoggedUser();
+  const theme = useTheme();
   const { showSnackbarAlert, SnackbarAlert } = useSnackbarAlert();
   const [selectedId, setSelectedId] = useState<string>('');
   const [openModal, setOpenModal] = useState({
@@ -31,14 +36,28 @@ export const ListProductContainer = () => {
     },
     [showSnackbarAlert]
   );
+
+  const { listProduct, totalPage, getListProductData } = useListProductData({
+    showAlert,
+    loggedUserId: loggedUser?.id ?? '',
+  });
+
+  useEffect(() => {
+    if (!hasLoadedUserData.current) {
+      getListProductData();
+      hasLoadedUserData.current = true;
+    }
+  }, [getListProductData]);
+
   const searchData = async (input: string) => {
-    //getListSchedulesData(input);
+    getListProductData(input);
   };
+
   const handleChange = async (
     event: React.ChangeEvent<unknown>,
     value: number
   ) => {
-    //getListSchedulesData('', value);
+    getListProductData('', value);
   };
   const handlePopUpOpen = async (type: CrudType, id?: string) => {
     setSelectedId(id ?? '');
@@ -53,13 +72,31 @@ export const ListProductContainer = () => {
       ...prev,
       [type]: false,
     }));
-    // getListSchedulesData();
+    getListProductData();
   };
+
+  const renderProducts = () =>
+    listProduct.length > 0 ? (
+      listProduct.map((product) => (
+        <ProductItem key={product.id} product={product} />
+      ))
+    ) : (
+      <EmptyListResponse
+        message="Sem Produtos"
+        icon={
+          <ProductionQuantityLimitsIcon
+            sx={{
+              fontSize: theme.spacing(10),
+            }}
+          />
+        }
+      />
+    );
 
   const rightClickMenuList: IconMenuItem[] = [
     {
       icon: <AddShoppingCartIcon />,
-      title: 'Novo Agendamento',
+      title: 'Novo Produto',
       handleClick: async () => handlePopUpOpen('create'),
     },
   ];
@@ -82,10 +119,10 @@ export const ListProductContainer = () => {
             searchData: searchData,
             createPopUp: () => handlePopUpOpen('create'),
           }}
-          totalPage={0}
+          totalPage={totalPage}
           handleChange={handleChange}
         >
-          <List></List>
+          <List> {renderProducts()} </List>
         </ContainerSimpleList>
       </LayoutBase>
       {SnackbarAlert}
