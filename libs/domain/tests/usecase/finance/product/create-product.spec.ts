@@ -151,7 +151,7 @@ describe('CreateProduct', () => {
     expect(result.value).toBeInstanceOf(EntityNotExists);
   });
 
-  it('should return EntityAlreadyExists when a return empty product in findUserByIdRepository', async () => {
+  it('should return EntityAlreadyExists when a return empty product in findProductByNameRespository', async () => {
     const { sut, createProductDto } = makeSut();
 
     jest

@@ -39,6 +39,10 @@ export class DeleteProduct
       return left(userValidation.value);
     }
 
+    if (Object.keys(id).length < 1) {
+      return left(new EntityNotEmpty('Product'));
+    }
+
     const filteredProduct = await this.findProductByIdRepository.find(id);
 
     if (Object.keys(filteredProduct.id ?? filteredProduct).length < 1) {
