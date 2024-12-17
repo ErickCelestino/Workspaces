@@ -1,1 +1,1 @@
-export * from './list-products.container';
+export * from './list-product.container';
