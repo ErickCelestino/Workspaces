@@ -74,6 +74,7 @@ export class ListProductRepositoryImpl implements ListProductRepository {
         standardPrice: product.standard_price ?? '',
         updatedAt: product.updated_at ?? new Date(),
         updatedBy: product.user_updated.name ?? '',
+        status: product.status ?? 'INACTIVE',
       };
     });
 

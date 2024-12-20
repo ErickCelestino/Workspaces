@@ -11,4 +11,5 @@ export const ProductMock: ProductResponseDto = {
   description: faker.string.nanoid(),
   maximumDiscount: faker.number.int().toString(),
   standardPrice: faker.number.int().toString(),
+  status: 'ACTIVE',
 };

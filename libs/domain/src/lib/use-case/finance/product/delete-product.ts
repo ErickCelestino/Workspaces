@@ -12,11 +12,14 @@ import {
   FindUserByIdRepository,
 } from '../../../repository';
 import { Either, left, right } from '../../../shared/either';
-import { ValidationUserId } from '../../../utils';
+import { ValidationProductId, ValidationUserId } from '../../../utils';
 
 export class DeleteProduct
   implements
-    UseCase<DeleteProductDto, Either<EntityNotEmpty | EntityNotExists, string>>
+    UseCase<
+      DeleteProductDto,
+      Either<EntityNotEmpty | EntityNotExists | EntityNotDeleted, string>
+    >
 {
   constructor(
     @Inject('FindUserByIdRepository')
@@ -28,7 +31,9 @@ export class DeleteProduct
   ) {}
   async execute(
     input: DeleteProductDto
-  ): Promise<Either<EntityNotEmpty | EntityNotExists, string>> {
+  ): Promise<
+    Either<EntityNotEmpty | EntityNotExists | EntityNotDeleted, string>
+  > {
     const { id, loggedUserId } = input;
 
     const userValidation = await ValidationUserId(
@@ -39,14 +44,12 @@ export class DeleteProduct
       return left(userValidation.value);
     }
 
-    if (Object.keys(id).length < 1) {
-      return left(new EntityNotEmpty('Product'));
-    }
-
-    const filteredProduct = await this.findProductByIdRepository.find(id);
-
-    if (Object.keys(filteredProduct.id ?? filteredProduct).length < 1) {
-      return left(new EntityNotExists('Product'));
+    const productValidation = await ValidationProductId(
+      id,
+      this.findProductByIdRepository
+    );
+    if (productValidation.isLeft()) {
+      return left(productValidation.value);
     }
 
     const deletedProduct = await this.deleteProductRepository.delete(input);

@@ -9,6 +9,7 @@ import {
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import InfoIcon from '@mui/icons-material/Info';
 import { IconMenuItem, ProductResponseDto } from '@workspaces/domain';
 import { FC } from 'react';
 import { formatBrDate } from '../../../shared';
@@ -17,6 +18,11 @@ import { ButtonFileMenu } from '../../menu';
 interface ProductItemProps {
   product: ProductResponseDto;
   deleteProduct: () => Promise<void>;
+  detailsProduct: () => Promise<void>;
+  editProduct: () => Promise<void>;
+  deleteProductTitle?: string;
+  detailsProductTitle?: string;
+  editProductTitle?: string;
   titleDescription?: string;
   titleUpdatedBy?: string;
   titleCreatedAt?: string;
@@ -25,6 +31,11 @@ interface ProductItemProps {
 export const ProductItem: FC<ProductItemProps> = ({
   product,
   deleteProduct,
+  editProduct,
+  detailsProduct,
+  deleteProductTitle = 'Deletar',
+  detailsProductTitle = 'Detalhes',
+  editProductTitle = 'Editar',
   titleDescription = 'Descrição',
   titleUpdatedBy = 'Atualizado por',
   titleCreatedAt = 'Criado em',
@@ -35,14 +46,17 @@ export const ProductItem: FC<ProductItemProps> = ({
   const iconMenuList: IconMenuItem[] = [
     {
       icon: <EditIcon />,
-      title: 'Editar',
-      handleClick: async () => {
-        console.log('Editar Produto');
-      },
+      title: editProductTitle,
+      handleClick: editProduct,
+    },
+    {
+      icon: <InfoIcon />,
+      title: detailsProductTitle,
+      handleClick: detailsProduct,
     },
     {
       icon: <DeleteIcon />,
-      title: 'Deletar',
+      title: deleteProductTitle,
       handleClick: deleteProduct,
     },
   ];
