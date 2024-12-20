@@ -29,6 +29,7 @@ export class FindProductByIdRepositoryImpl
       standardPrice: filteredProduct?.standard_price ?? '',
       updatedAt: filteredProduct?.updated_at ?? new Date(),
       updatedBy: filteredProduct?.updated_by ?? '',
+      status: filteredProduct?.status ?? 'INACTIVE',
     };
   }
 }

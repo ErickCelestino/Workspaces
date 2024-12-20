@@ -12,6 +12,7 @@ import {
   EditProductDto,
   ErrorResponse,
   ProductBodyDto,
+  ProductResponseDto,
 } from '@workspaces/domain';
 import { useLoggedUser } from '../../../../contexts';
 import { EditProductRequest } from '../../../../services';
@@ -24,7 +25,7 @@ interface EditProductModalProps {
   idToEdit: string;
   open: boolean;
   title: string;
-  product: ProductBodyDto;
+  product: ProductResponseDto;
   handlePopUpClose: () => void;
   showAlert: (message: string, success: boolean) => void;
   nameLabel?: string;

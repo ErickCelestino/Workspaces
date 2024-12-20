@@ -4,6 +4,7 @@ export interface ProductResponseDto {
   description: string;
   maximumDiscount: string;
   standardPrice: string;
+  status: string;
   createdAt: Date;
   createdBy: string;
   updatedAt: Date;

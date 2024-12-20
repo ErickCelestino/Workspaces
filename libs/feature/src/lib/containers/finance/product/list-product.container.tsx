@@ -1,6 +1,11 @@
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import ProductionQuantityLimitsIcon from '@mui/icons-material/ProductionQuantityLimits';
-import { CrudType, IconMenuItem, ProductBodyDto } from '@workspaces/domain';
+import {
+  CrudType,
+  IconMenuItem,
+  ProductBodyDto,
+  ProductResponseDto,
+} from '@workspaces/domain';
 import { useRef, useCallback, useState, useEffect } from 'react';
 import {
   EmptyListResponse,
@@ -25,7 +30,9 @@ export const ListProductContainer = () => {
     details: false,
     add: false,
   });
-  const [product, setProduct] = useState<ProductBodyDto>({} as ProductBodyDto);
+  const [product, setProduct] = useState<ProductResponseDto>(
+    {} as ProductResponseDto
+  );
   const hasLoadedUserData = useRef(false);
 
   const showAlert = useCallback(
@@ -63,10 +70,10 @@ export const ListProductContainer = () => {
   const handlePopUpOpen = async (
     type: CrudType,
     id?: string,
-    product?: ProductBodyDto
+    product?: ProductResponseDto
   ) => {
     setSelectedId(id ?? '');
-    setProduct(product ?? ({} as ProductBodyDto));
+    setProduct(product ?? ({} as ProductResponseDto));
     setOpenModal((prev) => ({
       ...prev,
       [type]: true,
@@ -88,14 +95,8 @@ export const ListProductContainer = () => {
           key={product.id}
           product={product}
           deleteProduct={() => handlePopUpOpen('delete', product.id)}
-          editProduct={() =>
-            handlePopUpOpen('edit', product.id, {
-              description: product.description,
-              maximumDiscount: product.maximumDiscount,
-              name: product.name,
-              standardPrice: product.standardPrice,
-            })
-          }
+          editProduct={() => handlePopUpOpen('edit', product.id, product)}
+          detailsProduct={() => handlePopUpOpen('details', product.id, product)}
         />
       ))
     ) : (

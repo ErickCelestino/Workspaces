@@ -1,8 +1,9 @@
-import { CrudType, ProductBodyDto } from '@workspaces/domain';
+import { CrudType, ProductResponseDto } from '@workspaces/domain';
 import { FC } from 'react';
 import { CreateProductModal } from './create-product-modal';
 import { DeleteProductModal } from './delete-product-modal';
 import { EditProductModal } from './edit-product-modal';
+import { DetailsProductModal } from './details-product-modal';
 
 interface ProductmodalsProps {
   selectedId: string;
@@ -18,7 +19,8 @@ interface ProductmodalsProps {
   deleteProductTitle?: string;
   deleteProductSubTitle?: string;
   editProductTitle?: string;
-  product?: ProductBodyDto;
+  detailsProductTitle?: string;
+  product?: ProductResponseDto;
 }
 
 export const ProductModals: FC<ProductmodalsProps> = ({
@@ -30,6 +32,7 @@ export const ProductModals: FC<ProductmodalsProps> = ({
   createProductTitle = 'Cadastrar Produto',
   editProductTitle = 'Editar Produto',
   deleteProductTitle = 'Deletar Produto',
+  detailsProductTitle = 'Detalhes do Produto',
   deleteProductSubTitle = 'Tem certeza que desejar deletar este produto ?',
 }) => {
   return (
@@ -52,11 +55,18 @@ export const ProductModals: FC<ProductmodalsProps> = ({
 
       <EditProductModal
         open={openModal.edit}
-        product={product ?? ({} as ProductBodyDto)}
+        product={product ?? ({} as ProductResponseDto)}
         idToEdit={selectedId}
         title={editProductTitle}
         handlePopUpClose={() => handlePopUpClose('edit')}
         showAlert={showAlert}
+      />
+
+      <DetailsProductModal
+        open={openModal.details}
+        product={product ?? ({} as ProductResponseDto)}
+        title={detailsProductTitle}
+        handlePopUpClose={() => handlePopUpClose('details')}
       />
     </>
   );
