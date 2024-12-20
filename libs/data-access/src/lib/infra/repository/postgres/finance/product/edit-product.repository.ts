@@ -13,8 +13,6 @@ export class EditProductRepositoryImpl implements EditProductRepository {
       body: { description, maximumDiscount, name, standardPrice },
     } = input;
 
-    const now = new Date();
-
     const editedProduct = await this.prismaService.generalPrisma.product.update(
       {
         where: {
@@ -25,7 +23,7 @@ export class EditProductRepositoryImpl implements EditProductRepository {
           maximum_discount: maximumDiscount,
           name: name,
           standard_price: standardPrice,
-          updated_at: now.toLocaleString('pt-BR'),
+          updated_at: new Date(),
           updated_by: loggedUserId,
         },
       }
