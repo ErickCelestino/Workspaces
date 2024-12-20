@@ -1,7 +1,7 @@
-export function FormatDateInTime(time: Date) {
-  const horas: number = time.getHours();
-  const minutos: number = time.getMinutes();
-  return `${horas < 10 ? `0${horas}` : horas}:${
-    minutos === 0 ? '00' : minutos
+export function FormatDateInTime(date: Date) {
+  const hours: number = date.getHours();
+  const minutes: number = date.getMinutes();
+  return `${hours < 10 ? `0${hours}` : hours}:${
+    minutes === 0 ? '00' : minutes
   }`;
 }
