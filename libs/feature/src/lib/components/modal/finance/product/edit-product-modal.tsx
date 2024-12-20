@@ -1,3 +1,6 @@
+import axios, { AxiosError } from 'axios';
+import { FC, useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import {
   Box,
   InputAdornment,
@@ -5,50 +8,51 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
-import { useLoggedUser } from '../../../../contexts';
-import { FC, useState } from 'react';
 import {
-  CreateProductDto,
+  EditProductDto,
   ErrorResponse,
   ProductBodyDto,
 } from '@workspaces/domain';
-import { CreateProductRequest } from '../../../../services';
-import axios, { AxiosError } from 'axios';
+import { useLoggedUser } from '../../../../contexts';
+import { EditProductRequest } from '../../../../services';
 import { ProductFormSchema, ValidationsError } from '../../../../shared';
-import { SimpleFormModal } from '../../simple';
 import { FormButton } from '../../../form';
-import { useForm } from 'react-hook-form';
+import { SimpleFormModal } from '../../simple';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-interface CreateProductModalProps {
+interface EditProductModalProps {
+  idToEdit: string;
   open: boolean;
   title: string;
+  product: ProductBodyDto;
   handlePopUpClose: () => void;
   showAlert: (message: string, success: boolean) => void;
   nameLabel?: string;
   descriptionLabel?: string;
-  successMessage?: string;
   maximumDiscountLabel?: string;
   standardPriceLabel?: string;
+  successMessage?: string;
 }
 
-export const CreateProductModal: FC<CreateProductModalProps> = ({
+export const EditProductModal: FC<EditProductModalProps> = ({
+  idToEdit,
   open,
   title,
+  product,
   handlePopUpClose,
   showAlert,
   nameLabel = 'Nome',
   descriptionLabel = 'Descrição',
   maximumDiscountLabel = 'Máximo de desconto',
   standardPriceLabel = 'Preço inicial',
-  successMessage = 'Produto criado com sucesso',
+  successMessage = 'Dispositivo Editado com Sucesso',
 }) => {
+  const { loggedUser } = useLoggedUser();
   const theme = useTheme();
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
-  const { loggedUser } = useLoggedUser();
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-
+  const [dataLoaded, setDataLoaded] = useState(false);
   const {
     handleSubmit,
     register,
@@ -66,14 +70,32 @@ export const CreateProductModal: FC<CreateProductModalProps> = ({
     },
   });
 
-  const createProduct = async (input: CreateProductDto) => {
+  useEffect(() => {
+    if (open && product?.name && !dataLoaded) {
+      reset({
+        name: product.name,
+        description: product.description,
+        maximumDiscount: product.maximumDiscount,
+        standardPrice: product.standardPrice,
+      });
+      setDataLoaded(true);
+    }
+  }, [open, product, reset]);
+
+  useEffect(() => {
+    if (!open) {
+      setDataLoaded(false);
+    }
+  }, [open]);
+
+  const editProduct = async (input: EditProductDto) => {
     try {
-      const result = await CreateProductRequest(input);
-      return result;
+      const editedProduct = await EditProductRequest(input);
+      return editedProduct;
     } catch (error) {
       setLoading(false);
       setSuccess(false);
-      console.log(error);
+      console.error(error);
       if (axios.isAxiosError(error)) {
         const axiosError = error as AxiosError<ErrorResponse>;
         const errors = ValidationsError(axiosError, 'Produto');
@@ -87,8 +109,9 @@ export const CreateProductModal: FC<CreateProductModalProps> = ({
   const handleProductData = async (data: ProductBodyDto) => {
     setLoading(true);
     setSuccess(false);
-    const result = await createProduct({
+    const result = await editProduct({
       body: data,
+      id: idToEdit,
       loggedUserId: loggedUser?.id ?? '',
     });
     if (result) {
@@ -102,6 +125,7 @@ export const CreateProductModal: FC<CreateProductModalProps> = ({
       });
       showAlert(successMessage, true);
       handlePopUpClose();
+      setSuccess(false);
     }
   };
 

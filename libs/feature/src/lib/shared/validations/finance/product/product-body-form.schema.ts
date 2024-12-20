@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { EntityMaxLength, EntityMinLength } from '../../../messages';
 
-export const CreateProductFormSchema = z.object({
+export const ProductFormSchema = z.object({
   name: z
     .string()
     .min(2, {

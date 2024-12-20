@@ -17,6 +17,7 @@ import { ButtonFileMenu } from '../../menu';
 interface ProductItemProps {
   product: ProductResponseDto;
   deleteProduct: () => Promise<void>;
+  editProduct: () => Promise<void>;
   titleDescription?: string;
   titleUpdatedBy?: string;
   titleCreatedAt?: string;
@@ -25,6 +26,7 @@ interface ProductItemProps {
 export const ProductItem: FC<ProductItemProps> = ({
   product,
   deleteProduct,
+  editProduct,
   titleDescription = 'Descrição',
   titleUpdatedBy = 'Atualizado por',
   titleCreatedAt = 'Criado em',
@@ -36,9 +38,7 @@ export const ProductItem: FC<ProductItemProps> = ({
     {
       icon: <EditIcon />,
       title: 'Editar',
-      handleClick: async () => {
-        console.log('Editar Produto');
-      },
+      handleClick: editProduct,
     },
     {
       icon: <DeleteIcon />,
