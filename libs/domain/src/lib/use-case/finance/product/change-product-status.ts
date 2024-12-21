@@ -1,7 +1,7 @@
 import { Inject } from '@nestjs/common';
 import { UseCase } from '../../../base/use-case';
 import { ChangeProductStatusDto } from '../../../dto';
-import { EntityIsNotEmpty, EntityNotEdit } from '../../../error';
+import { EntityNotEdit, EntityNotEmpty } from '../../../error';
 import {
   ChangeProductStatusRepository,
   FindProductByIdRepository,
@@ -19,7 +19,7 @@ export class ChangeProductStatus
   implements
     UseCase<
       ChangeProductStatusDto,
-      Either<EntityIsNotEmpty | EntityNotEdit, string>
+      Either<EntityNotEmpty | EntityNotEdit, string>
     >
 {
   constructor(
@@ -34,7 +34,7 @@ export class ChangeProductStatus
   ) {}
   async execute(
     input: ChangeProductStatusDto
-  ): Promise<Either<EntityIsNotEmpty | EntityNotEdit, string>> {
+  ): Promise<Either<EntityNotEmpty | EntityNotEdit, string>> {
     const { id, loggedUserId, status } = input;
 
     const userValidation = await ValidationUserId(
@@ -64,7 +64,7 @@ export class ChangeProductStatus
     }
 
     if (Object.keys(status).length < 1) {
-      return left(new EntityIsNotEmpty('Status'));
+      return left(new EntityNotEmpty('Status'));
     }
 
     const changedProduct = await this.changeProductStatusRepository.change(
