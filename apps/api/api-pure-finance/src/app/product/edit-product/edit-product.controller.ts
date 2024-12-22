@@ -1,13 +1,18 @@
-import { Body, Controller, Param, Put, Query } from '@nestjs/common';
-import { ErrorMessageResult, ProductBodyDto } from '@workspaces/domain';
+import { Body, Controller, Param, Put, Query, UsePipes } from '@nestjs/common';
+import {
+  editProductSchema,
+  ErrorMessageResult,
+  ProductBodyDto,
+} from '@workspaces/domain';
 import { EditProductService } from './edit-product.service';
+import { ZodValidationPipe } from '../../pipes/zod-validation-pipe';
 
 @Controller('edit-product')
 export class EditProductController {
   constructor(private readonly editProductService: EditProductService) {}
 
   @Put(':productId')
-  //@UsePipes(new ZodValidationPipe(createProductSchema))
+  @UsePipes(new ZodValidationPipe(editProductSchema))
   async edit(
     @Query('loggedUserId') loggedUserId: string,
     @Param('productId') productId: string,

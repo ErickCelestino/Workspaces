@@ -1,6 +1,10 @@
-import { Body, Controller, Param, Put, Query } from '@nestjs/common';
-import { ErrorMessageResult } from '@workspaces/domain';
+import { Body, Controller, Param, Put, Query, UsePipes } from '@nestjs/common';
+import {
+  changeProductStatusSchema,
+  ErrorMessageResult,
+} from '@workspaces/domain';
 import { ChangeProductStatusService } from './change-product-status.service';
+import { ZodValidationPipe } from '../../pipes/zod-validation-pipe';
 
 @Controller('change-product-status')
 export class ChangeProductStatusController {
@@ -9,7 +13,7 @@ export class ChangeProductStatusController {
   ) {}
 
   @Put(':productId')
-  //@UsePipes(new ZodValidationPipe(createProductSchema))
+  @UsePipes(new ZodValidationPipe(changeProductStatusSchema))
   async change(
     @Query('loggedUserId') loggedUserId: string,
     @Param('productId') productId: string,
