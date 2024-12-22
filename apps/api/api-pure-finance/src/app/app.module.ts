@@ -4,6 +4,7 @@ import {
   ListProductModule,
   DeleteProductModule,
   EditProductModule,
+  ChangeProductStatusModule,
 } from './product';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -14,6 +15,7 @@ import { AppService } from './app.service';
     ListProductModule,
     DeleteProductModule,
     EditProductModule,
+    ChangeProductStatusModule,
   ],
   controllers: [AppController],
   providers: [AppService],
