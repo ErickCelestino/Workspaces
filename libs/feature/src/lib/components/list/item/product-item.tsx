@@ -10,6 +10,7 @@ import {
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import InfoIcon from '@mui/icons-material/Info';
+import ChangeCircleIcon from '@mui/icons-material/ChangeCircle';
 import { IconMenuItem, ProductResponseDto } from '@workspaces/domain';
 import { FC } from 'react';
 import { formatBrDate } from '../../../shared';
@@ -20,9 +21,11 @@ interface ProductItemProps {
   deleteProduct: () => Promise<void>;
   detailsProduct: () => Promise<void>;
   editProduct: () => Promise<void>;
+  changeProduct: () => Promise<void>;
   deleteProductTitle?: string;
   detailsProductTitle?: string;
   editProductTitle?: string;
+  changeProductTitle?: string;
   titleDescription?: string;
   titleUpdatedBy?: string;
   titleCreatedAt?: string;
@@ -33,9 +36,11 @@ export const ProductItem: FC<ProductItemProps> = ({
   deleteProduct,
   editProduct,
   detailsProduct,
+  changeProduct,
   deleteProductTitle = 'Deletar',
   detailsProductTitle = 'Detalhes',
   editProductTitle = 'Editar',
+  changeProductTitle = 'Alterar Status',
   titleDescription = 'Descrição',
   titleUpdatedBy = 'Atualizado por',
   titleCreatedAt = 'Criado em',
@@ -53,6 +58,11 @@ export const ProductItem: FC<ProductItemProps> = ({
       icon: <InfoIcon />,
       title: detailsProductTitle,
       handleClick: detailsProduct,
+    },
+    {
+      icon: <ChangeCircleIcon />,
+      title: changeProductTitle,
+      handleClick: changeProduct,
     },
     {
       icon: <DeleteIcon />,

@@ -1,3 +1,4 @@
+export * from './lists';
 export * from './format-br-date';
 export * from './format-number-to-brl';
 export * from './format-value-mask';

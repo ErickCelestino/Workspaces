@@ -1,3 +1,4 @@
+export * from './change-product-status.repository';
 export * from './create-product.repository';
 export * from './delete-product.repository';
 export * from './edit-product.repository';

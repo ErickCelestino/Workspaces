@@ -9,7 +9,7 @@ import {
   FindUserByIdRepository,
   InsufficientCharacters,
   PermissionsUserResponseDto,
-  StatusUser,
+  GeneralStatus,
   UserList,
   VerifyUserPermissionsByIdRepository,
 } from '../../../src';
@@ -73,7 +73,7 @@ describe('EditUser', () => {
 
   it('should return EntityNotEmpty if this status is empty', async () => {
     const { sut, editUserDto } = makeSut();
-    editUserDto.body.status = {} as StatusUser;
+    editUserDto.body.status = {} as GeneralStatus;
 
     const result = await sut.execute(editUserDto);
 

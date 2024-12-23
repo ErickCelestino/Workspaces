@@ -176,7 +176,7 @@ describe('EditProduct', () => {
     expect(result.value).toBeInstanceOf(EntityNotExists);
   });
 
-  it('should return EntityNotEdit when a return empty product in findProductByIdRepository', async () => {
+  it('should return EntityNotEdit when a return empty product in editProductRepository', async () => {
     const { sut, editProductDto } = makeSut();
 
     jest.spyOn(sut['editProductRepository'], 'edit').mockResolvedValueOnce('');

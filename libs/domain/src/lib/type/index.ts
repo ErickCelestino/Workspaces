@@ -1,4 +1,5 @@
 export * from './company';
+export * from './general';
 export * from './makerting';
 export * from './user';
 export * from './crud-type';

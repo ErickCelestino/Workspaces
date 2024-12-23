@@ -1,3 +1,4 @@
+export * from './change-product-status.mock';
 export * from './create-product.mock';
 export * from './delete-product.mock';
 export * from './edit-product.mock';

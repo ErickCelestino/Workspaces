@@ -1,4 +1,4 @@
-import { StatusUser, userTypes } from '../../../type';
+import { GeneralStatus, userTypes } from '../../../type';
 
 export interface SimpleUserPrismaDto {
   auth: {
@@ -7,7 +7,7 @@ export interface SimpleUserPrismaDto {
   user_id: string;
   name: string;
   nick_name: string;
-  status: StatusUser;
+  status: GeneralStatus;
   type: userTypes;
   birth_date: Date | null;
 }

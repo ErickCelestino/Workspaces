@@ -3,7 +3,7 @@ import { useLoggedUser } from '../../../contexts';
 import {
   BodyUserDto,
   ErrorResponse,
-  StatusUser,
+  GeneralStatus,
   userTypes,
 } from '@workspaces/domain';
 import { useForm } from 'react-hook-form';
@@ -133,7 +133,7 @@ export const EditUserModal: FC<EditUserModalProps> = ({
           ...request,
           id: idToEdit,
           type: type,
-          status: status as StatusUser,
+          status: status as GeneralStatus,
         },
         loggedUserId: loggedUser?.id ?? '',
       });

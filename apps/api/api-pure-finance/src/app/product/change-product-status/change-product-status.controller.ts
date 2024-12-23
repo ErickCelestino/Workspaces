@@ -1,26 +1,27 @@
 import { Body, Controller, Param, Put, Query, UsePipes } from '@nestjs/common';
 import {
-  editProductSchema,
+  changeProductStatusSchema,
   ErrorMessageResult,
-  ProductBodyDto,
 } from '@workspaces/domain';
-import { EditProductService } from './edit-product.service';
+import { ChangeProductStatusService } from './change-product-status.service';
 import { ZodValidationPipe } from '../../pipes/zod-validation-pipe';
 
-@Controller('edit-product')
-export class EditProductController {
-  constructor(private readonly editProductService: EditProductService) {}
+@Controller('change-product-status')
+export class ChangeProductStatusController {
+  constructor(
+    private readonly changeProductStatusService: ChangeProductStatusService
+  ) {}
 
   @Put(':productId')
-  @UsePipes(new ZodValidationPipe(editProductSchema))
-  async edit(
+  @UsePipes(new ZodValidationPipe(changeProductStatusSchema))
+  async change(
     @Query('loggedUserId') loggedUserId: string,
     @Param('productId') productId: string,
-    @Body() body: ProductBodyDto
+    @Body() body: { status: string }
   ) {
-    const result = await this.editProductService.edit({
+    const result = await this.changeProductStatusService.change({
       id: productId ?? '',
-      body: body ?? ({} as ProductBodyDto),
+      status: body.status ?? '',
       loggedUserId: loggedUserId ?? '',
     });
 

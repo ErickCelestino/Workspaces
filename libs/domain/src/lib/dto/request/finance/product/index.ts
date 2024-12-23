@@ -1,3 +1,4 @@
+export * from './change-product-status.dto';
 export * from './create-product.dto';
 export * from './delete-product.dto';
 export * from './edit-product.dto';
