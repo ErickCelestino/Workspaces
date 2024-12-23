@@ -70,6 +70,7 @@ export const AuthProvider = ({ children }: IAuthProvider) => {
   const logout = useCallback(() => {
     setUser(null);
     setUserLocalStorage(null);
+    window.location.reload();
   }, []);
 
   // Checks if the user is authenticated
