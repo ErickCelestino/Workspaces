@@ -1,1 +1,1 @@
-export type CrudType = 'create' | 'edit' | 'delete' | 'details';
+export type CrudType = 'create' | 'edit' | 'delete' | 'details' | 'change';

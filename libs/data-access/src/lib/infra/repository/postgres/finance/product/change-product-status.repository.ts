@@ -2,7 +2,7 @@ import { Inject } from '@nestjs/common';
 import {
   ChangeProductStatusDto,
   ChangeProductStatusRepository,
-  StatusUser,
+  GeneralStatus,
 } from '@workspaces/domain';
 import { PrismaGeneralService } from '../../../../../application';
 
@@ -23,7 +23,7 @@ export class ChangeProductStatusRepositoryImpl
         data: {
           updated_by: loggedUserId,
           updated_at: new Date(),
-          status: status as StatusUser,
+          status: status as GeneralStatus,
         },
       });
 

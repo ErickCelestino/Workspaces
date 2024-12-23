@@ -1,9 +1,9 @@
-import { StatusUser, userTypes } from '../../../type';
+import { GeneralStatus, userTypes } from '../../../type';
 
 export interface UserPrismaDto {
   user_id: string;
   user: {
-    status: StatusUser;
+    status: GeneralStatus;
     name: string;
     nick_name: string;
     type: userTypes;

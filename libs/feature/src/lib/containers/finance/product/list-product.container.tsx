@@ -1,11 +1,6 @@
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import ProductionQuantityLimitsIcon from '@mui/icons-material/ProductionQuantityLimits';
-import {
-  CrudType,
-  IconMenuItem,
-  ProductBodyDto,
-  ProductResponseDto,
-} from '@workspaces/domain';
+import { CrudType, IconMenuItem, ProductResponseDto } from '@workspaces/domain';
 import { useRef, useCallback, useState, useEffect } from 'react';
 import {
   EmptyListResponse,
@@ -28,7 +23,7 @@ export const ListProductContainer = () => {
     delete: false,
     edit: false,
     details: false,
-    add: false,
+    change: false,
   });
   const [product, setProduct] = useState<ProductResponseDto>(
     {} as ProductResponseDto
@@ -97,6 +92,7 @@ export const ListProductContainer = () => {
           deleteProduct={() => handlePopUpOpen('delete', product.id)}
           editProduct={() => handlePopUpOpen('edit', product.id, product)}
           detailsProduct={() => handlePopUpOpen('details', product.id, product)}
+          changeProduct={() => handlePopUpOpen('change', product.id, product)}
         />
       ))
     ) : (

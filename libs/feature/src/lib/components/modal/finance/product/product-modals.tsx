@@ -4,6 +4,7 @@ import { CreateProductModal } from './create-product-modal';
 import { DeleteProductModal } from './delete-product-modal';
 import { EditProductModal } from './edit-product-modal';
 import { DetailsProductModal } from './details-product-modal';
+import { ChangeProductStatusModal } from './change-product-status-modal';
 
 interface ProductmodalsProps {
   selectedId: string;
@@ -12,6 +13,7 @@ interface ProductmodalsProps {
     delete: boolean;
     edit: boolean;
     details: boolean;
+    change: boolean;
   };
   handlePopUpClose: (type: CrudType) => void;
   showAlert: (message: string, success: boolean) => void;
@@ -20,6 +22,7 @@ interface ProductmodalsProps {
   deleteProductSubTitle?: string;
   editProductTitle?: string;
   detailsProductTitle?: string;
+  changeProductTitle?: string;
   product?: ProductResponseDto;
 }
 
@@ -33,6 +36,7 @@ export const ProductModals: FC<ProductmodalsProps> = ({
   editProductTitle = 'Editar Produto',
   deleteProductTitle = 'Deletar Produto',
   detailsProductTitle = 'Detalhes do Produto',
+  changeProductTitle = 'Alterar Status do Produto',
   deleteProductSubTitle = 'Tem certeza que desejar deletar este produto ?',
 }) => {
   return (
@@ -67,6 +71,15 @@ export const ProductModals: FC<ProductmodalsProps> = ({
         product={product ?? ({} as ProductResponseDto)}
         title={detailsProductTitle}
         handlePopUpClose={() => handlePopUpClose('details')}
+      />
+
+      <ChangeProductStatusModal
+        open={openModal.change}
+        idToChange={selectedId}
+        showAlert={showAlert}
+        status={product?.status ?? ''}
+        title={changeProductTitle}
+        handlePopUpClose={() => handlePopUpClose('change')}
       />
     </>
   );
